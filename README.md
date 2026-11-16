@@ -1,0 +1,44 @@
+# Grillé !
+
+Jeu de soirée : mini-jeux et missions secrètes, chacun sur son téléphone (3 à 6 joueurs).
+Cahier des charges : `SPEC.md`. Web app Vite + TypeScript, Firebase Realtime Database (offre gratuite Spark), GitHub Pages.
+
+## Créer le projet Firebase (une seule fois, ~10 min, sans carte bancaire)
+
+1. Va sur https://console.firebase.google.com et connecte-toi avec ton compte Google.
+2. Clique **Créer un projet** → nom : `grille` → **Continuer** → **désactive Google Analytics** → **Créer le projet**.
+3. Menu de gauche **Créer › Authentication** (ou *Build › Authentication*) → **Commencer** → onglet **Mode de connexion**
+   → **Anonyme** → active l'interrupteur → **Enregistrer**.
+4. Menu de gauche **Créer › Realtime Database** → **Créer une base de données** → emplacement **Belgique (europe-west1)**
+   → **Démarrer en mode verrouillé** → **Activer**.
+5. Dans Realtime Database, onglet **Règles** : efface tout, colle le contenu du fichier `database.rules.json`, puis **Publier**.
+6. Roue dentée en haut à gauche → **Paramètres du projet** → en bas, « Vos applications » → icône **`</>`** (Web)
+   → surnom `grille` → ne coche pas Hosting → **Enregistrer l'application**.
+   Firebase affiche un bloc `const firebaseConfig = { apiKey: …, … }` : **copie ces valeurs dans `src/firebase-config.ts`**
+   (ou envoie-les à Claude). Elles ne sont pas secrètes : ce sont les règles de l'étape 5 qui protègent les données.
+7. **Authentication › Paramètres › Domaines autorisés** → **Ajouter un domaine** → `naylik.github.io`.
+
+L'offre Spark (gratuite) est celle par défaut : ne clique jamais sur « Passer à Blaze ».
+
+## Publier sur GitHub Pages
+
+Dans le dépôt GitHub : **Settings › Pages › Source : GitHub Actions**. Ensuite, chaque envoi sur `main` publie le site
+(onglet **Actions** pour suivre). Adresse : `https://naylik.github.io/<nom-du-dépôt>/`.
+
+## Tester sans téléphone (développeur)
+
+```bash
+npm install
+npm run emulateur          # Firebase local (Java requis)
+VITE_EMULATEUR=1 npm run dev
+npm test                   # règles de sécurité (si l'émulateur tourne) + logique
+```
+Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur.
+
+## Décisions
+
+- 16/11/2026 · Pari détective : pas de propositions à choix multiple (trop facile). Chacun écrit sa supposition
+  librement sur son téléphone, puis le groupe valide à la révélation.
+- 16/11/2026 · Missions vraiment secrètes : chaque téléphone tire ses propres missions ; même l'hôte ne peut pas les lire
+  (vérifié par `tests/regles.test.ts`). Le téléphone de l'hôte connaît en revanche l'imposteur et les mises du Parieur
+  (sans les afficher) : l'offre gratuite n'a pas de serveur pour faire ces calculs à sa place.

@@ -1,0 +1,106 @@
+{
+  "rules": {
+    "salons": {
+      "$code": {
+        ".write": "auth != null && $code.matches(/^[A-Z]{4}$/) && data.child('infos/hote').val() === auth.uid",
+        "infos": {
+          ".read": "auth != null",
+          ".write": "auth != null && $code.matches(/^[A-Z]{4}$/) && (!data.exists() || data.child('creeLe').val() < now - 43200000 || data.child('hote').val() === auth.uid)",
+          ".validate": "newData.hasChildren(['hote', 'duree', 'modeChoix', 'creeLe'])",
+          "hote": {
+            ".write": "auth != null && newData.val() === auth.uid && root.child('salons/' + $code + '/joueurs/' + auth.uid + '/connecte').val() === true && root.child('salons/' + $code + '/joueurs/' + data.val() + '/connecte').val() !== true"
+          },
+          "duree": {
+            ".validate": "newData.val() === 4 || newData.val() === 6 || newData.val() === 8"
+          },
+          "modeChoix": {
+            ".validate": "newData.val() === 'roue' || newData.val() === 'vote'"
+          }
+        },
+        "joueurs": {
+          ".read": "auth != null",
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.hasChildren(['prenom', 'nomCode', 'couleur', 'rejointLe', 'connecte']) && (data.exists() || newData.parent().parent().child('deroule/phase').val() === 'salon')",
+            "prenom": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 16"
+            },
+            "connecte": {
+              ".validate": "newData.isBoolean()"
+            }
+          }
+        },
+        "deroule": {
+          ".read": "auth != null"
+        },
+        "jeu": {
+          ".read": "auth != null"
+        },
+        "scores": {
+          ".read": "auth != null"
+        },
+        "reponses": {
+          ".read": "auth != null && root.child('salons/' + $code + '/infos/hote').val() === auth.uid",
+          "$uid": {
+            ".read": "auth != null && auth.uid === $uid",
+            ".write": "auth != null && auth.uid === $uid && root.child('salons/' + $code + '/joueurs/' + auth.uid).exists()"
+          }
+        },
+        "compteurs": {
+          ".read": "auth != null",
+          ".write": "auth != null && root.child('salons/' + $code + '/joueurs/' + auth.uid).exists()"
+        },
+        "tirage": {
+          ".read": "auth != null && root.child('salons/' + $code + '/joueurs/' + auth.uid).exists()",
+          "prises": {
+            "$empreinte": {
+              ".write": "auth != null && !data.exists() && root.child('salons/' + $code + '/joueurs/' + auth.uid).exists()",
+              ".validate": "newData.val() === true"
+            }
+          },
+          "cibles": {
+            "$cible": {
+              ".write": "auth != null && root.child('salons/' + $code + '/joueurs/' + auth.uid).exists()",
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 2"
+            }
+          }
+        },
+        "revelation": {
+          ".read": "auth != null",
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid"
+          }
+        },
+        "votes": {
+          ".read": "auth != null",
+          "$sujet": {
+            "$uid": {
+              ".write": "auth != null && auth.uid === $uid && root.child('salons/' + $code + '/joueurs/' + auth.uid).exists()"
+            }
+          }
+        },
+        "paris": {
+          ".read": "auth != null && root.child('salons/' + $code + '/infos/hote').val() === auth.uid",
+          "$uid": {
+            ".read": "auth != null && auth.uid === $uid",
+            ".write": "auth != null && auth.uid === $uid && root.child('salons/' + $code + '/joueurs/' + auth.uid).exists()"
+          }
+        },
+        "motsImposteur": {
+          "$uid": {
+            ".read": "auth != null && auth.uid === $uid"
+          }
+        }
+      }
+    },
+    "secrets": {
+      "$code": {
+        ".write": "auth != null && !newData.exists() && root.child('salons/' + $code + '/infos/hote').val() === auth.uid",
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    }
+  }
+}

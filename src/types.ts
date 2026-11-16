@@ -1,0 +1,87 @@
+// Types partagés : la forme des données dans Firebase.
+
+export type Duree = 4 | 6 | 8;
+export type ModeChoix = 'roue' | 'vote';
+export type Niveau = 'soft' | 'epice' | 'hot';
+export type Difficulte = 'facile' | 'difficile';
+export type TypeMission = 'vie' | 'jeu';
+
+export type Phase =
+  | 'salon'
+  | 'missions' // choix de la 1re mission
+  | 'choixJeu' // roue ou vote
+  | 'jeu' // un mini-jeu en cours
+  | 'classement' // classement provisoire entre deux jeux
+  | 'miPartie' // choix de la 2e mission
+  | 'detective'
+  | 'revelation'
+  | 'fin';
+
+export interface Infos {
+  hote: string; // uid du téléphone qui pilote
+  duree: Duree;
+  modeChoix: ModeChoix;
+  creeLe: number;
+}
+
+export interface Joueur {
+  prenom: string;
+  nomCode: string;
+  couleur: string;
+  rejointLe: number;
+  connecte: boolean;
+}
+
+export interface Deroule {
+  phase: Phase;
+  numeroJeu: number; // 0 avant le premier jeu, puis 1, 2, …
+  jeuxJoues?: string[];
+  jeuEnCours?: string; // id du mini-jeu
+  propositions?: string[]; // mode vote : les 2 jeux proposés
+  roue?: { gagnant: string; lanceLe: number }; // mode roue
+  vanne?: string; // vanne du narrateur affichée au classement
+  finChrono?: number; // horodatage serveur (ms)
+  revelation?: EtatRevelation;
+}
+
+export interface EtatRevelation {
+  ordre: string[]; // uids dans l'ordre de passage
+  index: number;
+  etape: 'recit' | 'vote' | 'detective' | 'resultat';
+  finChrono?: number;
+}
+
+export interface Mission {
+  id: string;
+  type: TypeMission;
+  difficulte: Difficulte;
+  niveau: Niveau;
+  categorie: string;
+  texte: string; // avec {cible}
+}
+
+export interface MissionTiree {
+  id: string;
+  type: TypeMission;
+  difficulte: Difficulte;
+  texte: string; // {cible} déjà remplacé
+  cible?: string; // uid
+}
+
+/** Ce que seul le joueur peut lire : secrets/{code}/{uid}. */
+export interface Secrets {
+  propositions1?: MissionTiree[];
+  mission1?: MissionTiree;
+  propositions2?: MissionTiree[];
+  mission2?: MissionTiree;
+  nouvelleMissionVue?: boolean;
+}
+
+/** Points de la partie, écrits par l'hôte. */
+export interface Score {
+  jeux: number; // points de place cumulés
+  parieur: number; // vrais points gagnés/perdus au Parieur
+  missions: number; // révélés à la fin seulement
+  detective: number;
+  detail?: Record<string, number>; // points par jeu (clé : numéro du jeu)
+}
