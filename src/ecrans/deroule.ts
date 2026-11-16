@@ -10,6 +10,7 @@ import { RAPPELS_MISSION } from '../narrateur';
 import { brouillons } from '../ui';
 import { attenteDes, bulle, chrono, pastille } from './commun';
 import { carteMission } from './missions';
+import { sequenceGrille } from '../chamal';
 
 /** Mémoire locale des jeux sur ce téléphone (ex. « j'ai répondu oui »). */
 export const localJeu: Record<string, unknown> = {};
@@ -184,7 +185,11 @@ export function ecranRevelation(): string {
     return `<div class="verdict ${n ? 'grille' : 'ko'}"><strong>${nom(p.de)} : ${n ? `grillé, mission ${n} !` : 'pari raté'}</strong><span>${n ? 'vol de points' : '−2 pts'}</span></div>`;
   });
   const dernier = r.index + 1 >= r.ordre.length;
-  return `${entete}<div class="pile">${verdicts.join('')}${grillages.join('')}</div>
+  const grille = (r.paris ?? []).some((p) => missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number)) > 0);
+  const moment = grille
+    ? `<div class="moment-grille">${sequenceGrille(140)}<p class="titre-grille">GRILLÉ !</p></div>`
+    : '';
+  return `${moment}${entete}<div class="pile">${verdicts.join('')}${grillages.join('')}</div>
     ${bulle(verdicts.every((v) => v.includes('ok')) ? `${nom(sujet)}, agent d’élite. Ça fait peur.` : `${nom(sujet)}, l’espionnage, ce n’est peut-être pas pour toi.`)}
     <div class="pile bas">${estHote() ? boutonHote('suivant', dernier ? 'Voir le podium' : 'Joueur suivant') : '<p class="attente">L’hôte passe à la suite.</p>'}</div>`;
 }

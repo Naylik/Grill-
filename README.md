@@ -51,3 +51,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   2 culture + 2 fun), Le Parieur (un défi par joueur, jamais dans les 2 premiers jeux) et L'Imposteur (2 manches,
   retiré à 3 joueurs). Imposteur : en cas d'égalité au vote, l'imposteur survit. Les mises du Parieur restent
   secrètes jusqu'au résultat (rangées dans `prive/`, lisible par l'hôte seul).
+- 16/11/2026 · Direction artistique « Électrique » validée : fond nuit avec lueurs violettes et corail, cartes en verre
+  dépoli, boutons lumineux, polices Unbounded (titres) et Plus Jakarta Sans (texte). Mascotte : Chamal, un chamallow
+  (src/chamal.ts). Version « grillé » : corps clair, seul le dessus carbonisé et fumant (jamais de visage noir).
+  Accueil : cartes secrètes « TOP SECRET ». Slogan provisoire : « Mini-jeux, missions secrètes et amitiés en danger. »
