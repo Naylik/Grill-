@@ -181,7 +181,6 @@ action('annulerQuitter', () => {
 
 action('onglet', (el) => {
   S.onglet = el.dataset.valeur as typeof S.onglet;
-  if (S.onglet === 'partie') S.masque = false;
   if (S.onglet === 'missions' && S.secrets.mission2 && !S.secrets.nouvelleMissionVue) {
     void set(ref(db, `secrets/${S.code}/${S.uid}/nouvelleMissionVue`), true);
   }
@@ -320,10 +319,6 @@ document.addEventListener('pointerdown', (e) => reveler(e, true));
 ['pointerup', 'pointercancel', 'pointerleave'].forEach((t) => document.addEventListener(t, (e) => reveler(e, false)));
 document.addEventListener('contextmenu', (e) => {
   if ((e.target as HTMLElement).closest?.('[data-appui]')) e.preventDefault();
-});
-action('masquer', () => {
-  S.masque = !S.masque;
-  demanderAffichage();
 });
 
 window.addEventListener('hashchange', () => {

@@ -39,11 +39,10 @@ export function ecranChoixMission(numero: 1 | 2): string {
 }
 
 export function ongletMissions(): string {
-  if (S.masque) return `<section class="ecran centre masque"><button class="bouton jaune" data-action="masquer">Réafficher</button></section>`;
   const { mission1, mission2 } = S.secrets;
   const liste = [mission1, mission2].filter(Boolean) as MissionTiree[];
   return `<section class="ecran">
-    <div class="ligne-titre"><h2>Mes missions</h2><button class="bouton petit-bouton rose" data-action="masquer">Masquer vite</button></div>
+    <h2>Mes missions</h2>
     ${liste.length ? liste.map((m, i) => `<p class="intitule">Mission ${i + 1}</p>${carteMission(m, { secret: true })}`).join('') : '<p class="attente">Pas encore de mission. Elle arrive au début de la partie.</p>'}
     ${!mission2 ? '<p class="aide">Une deuxième mission t’attend à la mi-partie.</p>' : ''}
   </section>`;
