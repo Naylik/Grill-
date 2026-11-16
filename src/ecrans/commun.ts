@@ -1,6 +1,6 @@
 // Morceaux d'interface réutilisés par plusieurs écrans.
 import { esc } from '../outils';
-import { chamal } from '../chamal';
+import { mallow } from '../mallow';
 import { maintenant } from '../firebase';
 import type { Joueur } from '../types';
 
@@ -17,7 +17,7 @@ export function carteJoueur(j: Joueur, suffixe = '', classe = ''): string {
 }
 
 export function bulle(texte: string): string {
-  return `<div class="narrateur"><span class="tete">${chamal({ vue: 'tete', taille: 40 })}</span><p>${texte}</p></div>`;
+  return `<div class="narrateur"><span class="tete">${mallow({ vue: 'tete', taille: 40 })}</span><p>${texte}</p></div>`;
 }
 
 export function erreur(message: string | null): string {

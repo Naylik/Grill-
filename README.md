@@ -52,9 +52,17 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   retiré à 3 joueurs). Imposteur : en cas d'égalité au vote, l'imposteur survit. Les mises du Parieur restent
   secrètes jusqu'au résultat (rangées dans `prive/`, lisible par l'hôte seul).
 - 16/11/2026 · Direction artistique « Électrique » validée : fond nuit avec lueurs violettes et corail, cartes en verre
-  dépoli, boutons lumineux, polices Unbounded (titres) et Plus Jakarta Sans (texte). Mascotte : Chamal, un chamallow
-  (src/chamal.ts). Version « grillé » : corps clair, seul le dessus carbonisé et fumant (jamais de visage noir).
-  Accueil : cartes secrètes « TOP SECRET ». Pas de slogan (choix du fondateur) : le logo et Chamal suffisent.
+  dépoli, boutons lumineux, polices Unbounded (titres) et Plus Jakarta Sans (texte). Mascotte : Mallow, un chamallow
+  (src/mallow.ts). Version « grillé » : corps clair, seul le dessus carbonisé et fumant (jamais de visage noir).
+  Accueil : cartes secrètes « TOP SECRET ». Pas de slogan (choix du fondateur) : le logo et Mallow suffisent.
 - 16/11/2026 · Bug trouvé au premier test sur téléphone : impossible de défiler au doigt (écran des mises du Parieur).
   Cause : overflow-x et overscroll-behavior posés à la fois sur html et body. Corrigé (html seulement). L'affichage ne
   remplace plus tout l'écran à chaque changement : seules les parties modifiées sont mises à jour (ui.ts, harmoniser).
+- 16/11/2026 · La mascotte s'appelle Mallow (et non plus Chamal).
+- 16/11/2026 · Suite validée : saisons entre potes (sans durée pendant la phase de test, nom du groupe choisi par
+  l'hôte), partage (image du podium et lien d'invitation, puis vidéo « grillé »), 2 jeux d'action (Réflexe Mallow,
+  Le bon timing), sons activés par défaut. Ordre : partage, sons et animations, jeux d'action, groupe et saison,
+  contenus perso.
+- 16/11/2026 · Partage : bouton « Inviter des amis » dans le salon (menu de partage du téléphone, sinon lien copié) avec
+  un aperçu illustré pour WhatsApp (public/apercu.png) ; bouton « Partager le podium » à la fin, qui dessine une image
+  au format story (src/partage.ts). Le gagnant « règne sur la soirée » (formule valable pour tout le monde).

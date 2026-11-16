@@ -10,7 +10,7 @@ import { RAPPELS_MISSION } from '../narrateur';
 import { brouillons } from '../ui';
 import { attenteDes, bulle, chrono, pastille } from './commun';
 import { carteMission } from './missions';
-import { sequenceGrille } from '../chamal';
+import { sequenceGrille } from '../mallow';
 
 /** Mémoire locale des jeux sur ce téléphone (ex. « j'ai répondu oui »). */
 export const localJeu: Record<string, unknown> = {};
@@ -220,7 +220,8 @@ export function ecranFin(): string {
     <div class="podium">${podium}</div>
     ${bulle(`Bravo ${nom(vainqueur)}. Les autres : on se refait ça ?`)}
     ${details}
-    <div class="pile bas">${estHote() ? boutonHote('rejouer', 'Rejouer') : '<p class="attente">L’hôte peut relancer une partie.</p>'}
+    <div class="pile bas"><button class="bouton rose" data-action="partagerPodium">Partager le podium</button>
+      ${estHote() ? boutonHote('rejouer', 'Rejouer') : '<p class="attente">L’hôte peut relancer une partie.</p>'}
       <button class="bouton discret" data-action="quitter">Quitter</button></div>`;
 }
 

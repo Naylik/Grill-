@@ -31,12 +31,16 @@ export interface Etat {
   onglet: 'partie' | 'missions';
   masque: boolean;
   erreur: string | null;
+  /** Petit message temporaire en bas de l'écran (« Lien copié »). */
+  toast: string | null;
+  /** Image du podium affichée quand le téléphone ne sait pas partager directement. */
+  apercuImage: string | null;
 }
 
 export const S: Etat = {
   uid: '', code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
   revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, charge: false,
-  onglet: 'partie', masque: false, erreur: null,
+  onglet: 'partie', masque: false, erreur: null, toast: null, apercuImage: null,
 };
 
 export const estHote = (): boolean => !!S.infos && S.infos.hote === S.uid;

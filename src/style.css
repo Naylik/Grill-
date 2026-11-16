@@ -290,7 +290,7 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .socle { font-weight: 900; box-shadow: 0 0 30px -8px var(--c); }
 .pts.gagne { background: var(--vert); }
 
-/* Narrateur : Chamal parle */
+/* Narrateur : Mallow parle */
 .narrateur .tete { width: 48px; height: 48px; background: #ffffff14; border: 1px solid var(--bord); overflow: hidden; }
 .narrateur .tete svg { width: 40px; height: 44px; }
 .narrateur p { font-weight: 700; border-radius: 20px 20px 20px 6px; }
@@ -305,8 +305,8 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .sous-titre { font-weight: 700; margin-top: 8px; }
 .flotte { animation: flotte 3.2s ease-in-out infinite; }
 @keyframes flotte { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
-.chamal { display: block; overflow: visible; }
-.chamal .yeux { transform-box: fill-box; transform-origin: center; animation: cligne 4.2s infinite; }
+.mallow { display: block; overflow: visible; }
+.mallow .yeux { transform-box: fill-box; transform-origin: center; animation: cligne 4.2s infinite; }
 @keyframes cligne { 0%, 90%, 100% { transform: scaleY(1); } 93% { transform: scaleY(.08); } }
 
 /* Cartes secrètes */
@@ -351,3 +351,9 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .texte-defi { margin: 0; font-size: 17px; line-height: 1.35; font-weight: 700; }
 .mise-zone { position: sticky; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 3; display: flex; flex-direction: column; gap: 10px; padding: 12px; margin: 0 -8px; border-radius: 22px; background: #140F2ACC; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--bord); }
 .mise-zone .option { min-height: 50px; }
+
+/* Partage */
+.toast { position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 30; max-width: calc(100% - 32px); padding: 12px 18px; border-radius: 16px; background: #F4F1FF; color: #1A1033; font-weight: 800; box-shadow: 0 12px 30px -10px #000; animation: arrive .3s cubic-bezier(.3, 1.6, .5, 1); }
+.apercu-image { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom)); background: #0D0A1EEE; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.apercu-image img { max-height: 62vh; max-width: 100%; border-radius: 18px; box-shadow: 0 20px 50px -20px #000; }
+.apercu-image .bouton { width: min(100%, 360px); display: grid; place-items: center; text-decoration: none; }

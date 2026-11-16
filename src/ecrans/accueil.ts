@@ -1,7 +1,7 @@
 import { brouillons } from '../ui';
 import { esc } from '../outils';
 import { S } from '../etat';
-import { chamal, logo } from '../chamal';
+import { mallow, logo } from '../mallow';
 import { erreur } from './commun';
 
 /** Les cartes secrètes de l'accueil (élément fort choisi le 16/11). */
@@ -20,7 +20,7 @@ export function ecranAccueil(codeLien: string | null): string {
   return `<section class="ecran accueil">
     <div class="haut-accueil"><span class="pilule">SAISON 1</span><span class="pilule">3–6 JOUEURS</span></div>
     <div class="titre">
-      <div class="flotte">${chamal({ taille: 132 })}</div>
+      <div class="flotte">${mallow({ taille: 132 })}</div>
       ${logo()}
     </div>
     ${CARTES}

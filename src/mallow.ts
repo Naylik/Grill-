@@ -1,5 +1,5 @@
-// Chamal, la mascotte : un chamallow sur une pique, en 2D.
-// chamal() = normal (doré, regard malin) ; chamalCuit() = trop grillé : le corps reste clair,
+// Mallow, la mascotte : un chamallow sur une pique, en 2D.
+// mallow() = normal (doré, regard malin) ; mallowGrille() = trop grillé : le corps reste clair,
 // seul le dessus est carbonisé et fume (choix du 16/11 : jamais de « visage noir »).
 
 interface Options {
@@ -7,15 +7,19 @@ interface Options {
   /** 'entier' (avec la pique) ou 'tete' (recadré, pour les bulles du narrateur). */
   vue?: 'entier' | 'tete';
   trait?: string;
+  /** Couronne du « Roi de la soirée ». */
+  couronne?: boolean;
 }
 
 const TRAIT = '#24123A';
-const viewBox = (vue: Options['vue']) => (vue === 'tete' ? '32 30 136 150' : '0 0 200 250');
+const viewBox = (o: Options) => (o.vue === 'tete' ? (o.couronne ? '32 4 136 176' : '32 30 136 150') : o.couronne ? '0 -14 200 264' : '0 0 200 250');
+const COURONNE = (t: string) =>
+  `<path d="M64 34 L70 4 L86 20 L100 -8 L114 20 L130 4 L136 34 Z" fill="#FFD84A" stroke="${t}" stroke-width="4" stroke-linejoin="round"/><circle cx="100" cy="22" r="5" fill="#FF5A6E"/>`;
 
-export function chamal(o: Options = {}): string {
+export function mallow(o: Options = {}): string {
   const t = o.trait ?? TRAIT;
-  const etiquette = o.vue === 'tete' ? 'aria-hidden="true"' : 'role="img" aria-label="Chamal, la mascotte chamallow"';
-  return `<svg class="chamal" viewBox="${viewBox(o.vue)}" width="${o.taille ?? 160}" ${etiquette}>
+  const etiquette = o.vue === 'tete' ? 'aria-hidden="true"' : 'role="img" aria-label="Mallow, la mascotte chamallow"';
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="mallow" viewBox="${viewBox(o)}" width="${o.taille ?? 160}" ${etiquette}>
     ${o.vue === 'tete' ? '' : `<ellipse cx="100" cy="242" rx="42" ry="6" fill="#000" opacity=".22"/>
     <rect x="94" y="150" width="12" height="92" rx="6" fill="#E9C08C" stroke="${t}" stroke-width="4"/>`}
     <path d="M40 66 Q40 46 62 44 L138 44 Q160 46 160 66 L160 150 Q160 174 100 176 Q40 174 40 150 Z" fill="#FFF7F0" stroke="${t}" stroke-width="5" stroke-linejoin="round"/>
@@ -23,6 +27,7 @@ export function chamal(o: Options = {}): string {
     <path d="M40 64 Q40 38 100 38 Q160 38 160 64 L160 74 Q152 88 140 78 Q130 94 118 81 Q106 96 94 82 Q82 95 71 80 Q58 92 49 78 Q44 84 40 76 Z" fill="#E0873E" stroke="${t}" stroke-width="5" stroke-linejoin="round"/>
     <ellipse cx="100" cy="52" rx="50" ry="10" fill="#F7C58A"/>
     <path d="M66 50 Q84 44 104 46" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none" opacity=".75"/>
+    ${o.couronne ? COURONNE(t) : ''}
     <path d="M52 98 L52 140" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".8"/>
     <path d="M66 92 Q78 85 90 91" stroke="${t}" stroke-width="5" stroke-linecap="round" fill="none"/>
     <path d="M110 88 Q122 81 134 86" stroke="${t}" stroke-width="5" stroke-linecap="round" fill="none"/>
@@ -37,9 +42,9 @@ export function chamal(o: Options = {}): string {
 const spirale = (x: number, y: number, t: string) =>
   `<path d="M${x} ${y} m-2 0 a2 2 0 1 1 4 0 a4 4 0 1 1 -8 0 a6 6 0 1 1 12 0 a8 8 0 1 1 -16 0" stroke="${t}" stroke-width="3.2" fill="none" stroke-linecap="round"/>`;
 
-export function chamalCuit(o: Options = {}): string {
+export function mallowGrille(o: Options = {}): string {
   const t = o.trait ?? TRAIT;
-  return `<svg class="chamal" viewBox="0 0 200 250" width="${o.taille ?? 160}" role="img" aria-label="Chamal, le chamallow, trop grillé et fumant">
+  return `<svg xmlns="http://www.w3.org/2000/svg" class="mallow" viewBox="0 0 200 250" width="${o.taille ?? 160}" role="img" aria-label="Mallow, le chamallow, trop grillé et fumant">
     <g class="fumee" fill="#B9B3C7"><circle cx="76" cy="26" r="12"/><circle cx="104" cy="18" r="15"/><circle cx="130" cy="28" r="11"/></g>
     <ellipse cx="100" cy="242" rx="42" ry="6" fill="#000" opacity=".22"/>
     <rect x="94" y="150" width="12" height="92" rx="6" fill="#C9935F" stroke="${t}" stroke-width="4"/>
@@ -58,7 +63,7 @@ export function chamalCuit(o: Options = {}): string {
   </svg>`;
 }
 
-/** Les flammes qui montent pendant que Chamal grille. */
+/** Les flammes qui montent pendant que Mallow grille. */
 export function flammes(): string {
   return `<svg class="flammes" viewBox="0 0 200 120" width="190" aria-hidden="true">
     <path d="M40 120 C20 90 44 70 40 40 C62 62 70 88 66 120 Z" fill="#FF7A3D"/>
@@ -67,11 +72,11 @@ export function flammes(): string {
   </svg>`;
 }
 
-/** La séquence « grillé » : Chamal tremble, prend feu, puis apparaît trop grillé. */
+/** La séquence « grillé » : Mallow tremble, prend feu, puis apparaît trop grillé. */
 export function sequenceGrille(taille = 150): string {
   return `<div class="seq-grille" style="height:${Math.round(taille * 1.35)}px">
-    <div class="ok">${chamal({ taille })}</div>
-    <div class="cuit">${chamalCuit({ taille })}</div>
+    <div class="ok">${mallow({ taille })}</div>
+    <div class="cuit">${mallowGrille({ taille })}</div>
     <div class="flammes-zone">${flammes()}</div>
   </div>`;
 }

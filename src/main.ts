@@ -10,7 +10,9 @@ import { jeuParId } from './games';
 import { localJeu, vueJeu } from './ecrans/deroule';
 import { action, afficher, brouillons, installer, vibrer } from './ui';
 import { garderEcranAllume } from './veille';
-import { normaliserCode, nettoyerPrenom } from './outils';
+import { esc, normaliserCode, nettoyerPrenom } from './outils';
+import { copier, imagePodium, partager } from './partage';
+import { totalFinal } from './score';
 import { ErreurSalon, MIN_JOUEURS, changerReglages, creerSalon, quitterSalon, rejoindreSalon } from './salon';
 import { ecranAccueil } from './ecrans/accueil';
 import { ecranSalon, lienSalon } from './ecrans/salon';
@@ -61,9 +63,34 @@ function rendu(): void {
     rendu();
     return;
   }
-  afficher(S.deroule.phase === 'salon' ? ecranSalon(qrDuSalon(S.code)) : ecranPartie());
+  afficher((S.deroule.phase === 'salon' ? ecranSalon(qrDuSalon(S.code)) : ecranPartie()) + surcouches());
 }
 // Un écran qui plante ne doit jamais bloquer la partie : on garde l'écran précédent et on réessaie au prochain changement.
+/** Le petit message temporaire et l'aperçu de l'image à enregistrer. */
+function surcouches(): string {
+  const toast = S.toast ? `<div class="toast" role="status">${esc(S.toast)}</div>` : '';
+  const apercu = S.apercuImage
+    ? `<div class="apercu-image" role="dialog" aria-label="Image du podium">
+        <img src="${S.apercuImage}" alt="Le podium de la partie">
+        <p class="aide">Appuie longuement sur l’image pour l’enregistrer, ou utilise le bouton.</p>
+        <a class="bouton jaune" href="${S.apercuImage}" download="grille-podium.png">Enregistrer l’image</a>
+        <button class="bouton discret" data-action="fermerApercu">Fermer</button>
+      </div>`
+    : '';
+  return toast + apercu;
+}
+
+let minuterieToast: ReturnType<typeof setTimeout> | null = null;
+function montrerToast(texte: string): void {
+  S.toast = texte;
+  demanderAffichage();
+  if (minuterieToast) clearTimeout(minuterieToast);
+  minuterieToast = setTimeout(() => {
+    S.toast = null;
+    demanderAffichage();
+  }, 2600);
+}
+
 brancherAffichage(() => {
   try {
     rendu();
@@ -207,6 +234,53 @@ action('voter', async (el) => {
   const valeur = v === 'true' ? true : v === 'false' ? false : Number(v);
   await set(ref(db, `salons/${S.code}/votes/${el.dataset.sujet}/${S.uid}`), valeur);
   vibrer(30);
+});
+
+// ——— Partage ———
+
+action('inviter', async () => {
+  if (!S.code) return;
+  const url = lienSalon(S.code);
+  const texte = `${S.joueurs[S.uid]?.prenom ?? 'On'} t’invite à une partie de Grillé ! Code : ${S.code}`;
+  if (await partager({ titre: 'Grillé !', texte, url })) return;
+  montrerToast((await copier(`${texte} ${url}`)) ? 'Lien copié : colle-le dans ta conversation' : `Envoie ce lien : ${url}`);
+});
+
+action('partagerPodium', async (el) => {
+  if (!S.code) return;
+  (el as HTMLButtonElement).disabled = true;
+  try {
+    const classement = Object.entries(S.joueurs)
+      .map(([u, joueur]) => ({ joueur, points: totalFinal(S.scores[u]) }))
+      .sort((a, b) => b.points - a.points);
+    const date = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    // Un titre de chaque sorte, dans cet ordre, 3 au maximum.
+    const tous = S.deroule?.bilan?.titres ?? [];
+    const titres = ['Grillé', 'Sherlock', 'Agent secret', 'Casse-cou', 'Champion des mini-jeux']
+      .map((nom) => tous.find((t) => t.titre === nom))
+      .filter((t): t is NonNullable<typeof t> => !!t)
+      .slice(0, 3)
+      .map((t) => `${t.titre} : ${S.joueurs[t.uid]?.prenom ?? '?'}`)
+      .join(' · ');
+    const image = await imagePodium(classement, `Partie ${S.code} · ${date}`, titres);
+    const fichier = new File([image], 'grille-podium.png', { type: 'image/png' });
+    if (!(await partager({ titre: 'Grillé !', texte: 'Notre soirée Grillé ! 🔥', fichier }))) {
+      if (S.apercuImage) URL.revokeObjectURL(S.apercuImage);
+      S.apercuImage = URL.createObjectURL(image);
+      demanderAffichage();
+    }
+  } catch (e) {
+    console.error(e);
+    montrerToast('Impossible de créer l’image, réessaie.');
+  } finally {
+    (el as HTMLButtonElement).disabled = false;
+  }
+});
+
+action('fermerApercu', () => {
+  if (S.apercuImage) URL.revokeObjectURL(S.apercuImage);
+  S.apercuImage = null;
+  demanderAffichage();
 });
 
 // L'hôte fait avancer la partie ; chaque téléphone fait ses propres tâches.

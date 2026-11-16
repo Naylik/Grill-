@@ -25,6 +25,7 @@ export function ecranSalon(qr: string): string {
         <span class="petit">Scanne ou tape le code</span>
       </div>
     </div>
+    <button class="bouton cyan" data-action="inviter">Inviter des amis</button>
     <div class="pile">
       <span class="intitule">Durée</span>
       <div class="options trois">
