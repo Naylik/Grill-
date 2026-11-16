@@ -162,11 +162,20 @@ action('lancer', async () => {
 
 action('quitter', async () => {
   if (!S.code) return;
-  if (S.deroule?.phase !== 'salon' && !confirm('Quitter la partie ? Tu pourras revenir avec le même code.')) return;
+  S.confirmerQuitter = false;
   await quitterSalon(S.uid, S.code, S.infos, S.joueurs, S.deroule?.phase);
   quitterEcoute();
   garderEcranAllume(false);
   history.replaceState(null, '', location.pathname);
+  demanderAffichage();
+});
+
+action('demanderQuitter', () => {
+  S.confirmerQuitter = true;
+  demanderAffichage();
+});
+action('annulerQuitter', () => {
+  S.confirmerQuitter = false;
   demanderAffichage();
 });
 

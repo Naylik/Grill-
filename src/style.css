@@ -357,3 +357,9 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .apercu-image { position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: max(20px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom)); background: #0D0A1EEE; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .apercu-image img { max-height: 62vh; max-width: 100%; border-radius: 18px; box-shadow: 0 20px 50px -20px #000; }
 .apercu-image .bouton { width: min(100%, 360px); display: grid; place-items: center; text-decoration: none; }
+
+/* Quitter la partie */
+.quitter-mini { min-height: 34px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--bord); background: #ffffff0d; color: var(--texte-2); font-family: var(--corps); font-weight: 800; font-size: 13px; cursor: pointer; }
+.bandeau .qui .code-mini { margin-left: auto; }
+.confirmer { display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 18px; background: #FF5A6E1F; border: 1px solid #FF5A6E66; }
+.confirmer p { margin: 0; font-size: 14px; line-height: 1.4; }

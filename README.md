@@ -66,3 +66,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 16/11/2026 · Partage : bouton « Inviter des amis » dans le salon (menu de partage du téléphone, sinon lien copié) avec
   un aperçu illustré pour WhatsApp (public/apercu.png) ; bouton « Partager le podium » à la fin, qui dessine une image
   au format story (src/partage.ts). Le gagnant « règne sur la soirée » (formule valable pour tout le monde).
+- 16/11/2026 · Bouton « Quitter » en haut de l'écran pendant toute la partie (avec confirmation dans l'appli).
+  On revient à l'accueil ; on peut revenir plus tard avec le code et retrouver missions et points.

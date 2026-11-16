@@ -33,6 +33,8 @@ export interface Etat {
   erreur: string | null;
   /** Petit message temporaire en bas de l'écran (« Lien copié »). */
   toast: string | null;
+  /** Le joueur a appuyé sur « Quitter » : on lui demande de confirmer. */
+  confirmerQuitter: boolean;
   /** Image du podium affichée quand le téléphone ne sait pas partager directement. */
   apercuImage: string | null;
 }
@@ -40,7 +42,7 @@ export interface Etat {
 export const S: Etat = {
   uid: '', code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
   revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, charge: false,
-  onglet: 'partie', masque: false, erreur: null, toast: null, apercuImage: null,
+  onglet: 'partie', masque: false, erreur: null, toast: null, apercuImage: null, confirmerQuitter: false,
 };
 
 export const estHote = (): boolean => !!S.infos && S.infos.hote === S.uid;
@@ -123,7 +125,7 @@ export function quitterEcoute(): void {
   if (minuterieReprise) clearTimeout(minuterieReprise);
   Object.assign(S, {
     code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
-    revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, onglet: 'partie', masque: false,
+    revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, onglet: 'partie', masque: false, confirmerQuitter: false,
   });
   localStorage.removeItem('grille:salon');
 }

@@ -10,7 +10,12 @@ function bandeau(): string {
   const badge = S.secrets.mission2 && !S.secrets.nouvelleMissionVue ? '<span class="badge" aria-label="nouvelle mission"></span>' : '';
   return `<header class="bandeau">
     <div class="qui">${pastille(j, 30)}<span><strong>${esc(j.prenom)}</strong> <span style="color:${j.couleur}">${esc(j.nomCode)}</span></span>
-      <span class="code-mini">${S.code}</span></div>
+      <span class="code-mini">${S.code}</span>
+      <button class="quitter-mini" data-action="demanderQuitter" aria-label="Quitter la partie">Quitter</button></div>
+    ${S.confirmerQuitter ? `<div class="confirmer" role="alertdialog" aria-label="Quitter la partie ?">
+      <p>Quitter la partie ? Tu pourras revenir plus tard avec le code <strong>${S.code}</strong>, tes missions et tes points seront gardés.</p>
+      <div class="options deux"><button class="option" data-action="annulerQuitter">Rester</button><button class="option actif rose" data-action="quitter">Quitter</button></div>
+    </div>` : ''}
     <nav class="onglets">
       <button class="${S.onglet === 'partie' ? 'actif' : ''}" data-action="onglet" data-valeur="partie">Partie</button>
       <button class="${S.onglet === 'missions' ? 'actif' : ''}" data-action="onglet" data-valeur="missions">Mes missions${badge}</button>
