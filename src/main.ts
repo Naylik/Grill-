@@ -1,4 +1,5 @@
 import './style.css';
+import { registerSW } from 'virtual:pwa-register';
 import QRCode from 'qrcode';
 import { ref, runTransaction, set, update } from 'firebase/database';
 import { connexion, configManquante, db, maintenant } from './firebase';
@@ -53,7 +54,8 @@ function rendu(): void {
     return;
   }
   if (!S.charge || !S.infos || !S.deroule) {
-    afficher(`<section class="ecran centre"><p class="attente">Connexion au salon ${S.code}…</p></section>`);
+    afficher(`<section class="ecran centre"><p class="attente">Connexion au salon ${S.code}…</p>
+      <button class="bouton discret" data-action="abandonner">Revenir à l’accueil</button></section>`);
     return;
   }
   if (!S.joueurs[S.uid]) {
@@ -164,6 +166,14 @@ action('quitter', async () => {
   if (!S.code) return;
   S.confirmerQuitter = false;
   await quitterSalon(S.uid, S.code, S.infos, S.joueurs, S.deroule?.phase);
+  quitterEcoute();
+  garderEcranAllume(false);
+  history.replaceState(null, '', location.pathname);
+  demanderAffichage();
+});
+
+// Sortie de secours : revenir à l'accueil sans attendre le réseau.
+action('abandonner', () => {
   quitterEcoute();
   garderEcranAllume(false);
   history.replaceState(null, '', location.pathname);
@@ -352,3 +362,17 @@ if (!configManquante) {
       afficher(`<section class="ecran"><h1 class="logo">Grillé !</h1><p class="erreur">${S.erreur}</p></section>`);
     });
 }
+
+// Mises à jour : l'appli vérifie s'il existe une nouvelle version à chaque retour sur l'écran (et toutes les heures)
+// et se recharge toute seule pour l'installer. La partie reprend ensuite automatiquement (tout est dans Firebase).
+registerSW({
+  immediate: true,
+  onRegisteredSW(_url, enregistrement) {
+    if (!enregistrement) return;
+    const verifier = () => void enregistrement.update().catch(() => undefined);
+    setInterval(verifier, 60 * 60 * 1000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') verifier();
+    });
+  },
+});

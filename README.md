@@ -70,3 +70,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   On revient à l'accueil ; on peut revenir plus tard avec le code et retrouver missions et points.
 - 16/11/2026 · Bouton « Masquer vite » retiré de « Mes missions » (écart avec le cahier des charges, choix du fondateur) :
   la mission n'est lisible que pendant l'appui long, il suffit de lever le doigt pour la cacher.
+- 16/11/2026 · Mises à jour automatiques : l'appli installée gardait l'ancienne version en mémoire. Elle vérifie désormais
+  les nouvelles versions à chaque retour sur l'écran et se recharge toute seule. Bouton « Revenir à l'accueil » sur
+  l'écran de connexion au salon.
