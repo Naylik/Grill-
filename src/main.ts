@@ -63,7 +63,14 @@ function rendu(): void {
   }
   afficher(S.deroule.phase === 'salon' ? ecranSalon(qrDuSalon(S.code)) : ecranPartie());
 }
-brancherAffichage(rendu);
+// Un écran qui plante ne doit jamais bloquer la partie : on garde l'écran précédent et on réessaie au prochain changement.
+brancherAffichage(() => {
+  try {
+    rendu();
+  } catch (e) {
+    console.warn('affichage', e);
+  }
+});
 
 function prenomSaisi(): string | null {
   const prenom = nettoyerPrenom(brouillons.prenom ?? localStorage.getItem('grille:prenom') ?? '');
@@ -162,7 +169,7 @@ action('voterJeu', (el) => repondre(`choix-${S.deroule!.numeroJeu}`, { jeu: el.d
 action('jeu', async (el) => {
   const jeu = jeuParId(S.deroule?.jeuEnCours);
   const geste = jeu?.gestes?.[el.dataset.geste!];
-  if (!jeu || !geste || !S.jeu) return;
+  if (!jeu || !geste || !S.jeu || (S.jeu as { jeuId?: string }).jeuId !== jeu.id) return;
   const etape = (S.jeu as { etape: string }).etape;
   await geste(el, {
     repondre: (valeurs) => repondre(etape, valeurs),

@@ -93,6 +93,9 @@
         },
         "attente": {
           ".read": "auth != null"
+        },
+        "prive": {
+          ".read": "auth != null && root.child('salons/' + $code + '/infos/hote').val() === auth.uid"
         }
       }
     },

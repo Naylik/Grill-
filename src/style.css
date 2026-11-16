@@ -17,7 +17,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; min-height: 100%; background: var(--fond); color: var(--texte); font-family: var(--corps); font-weight: 700; }
+html, body { overflow-x: hidden; margin: 0; min-height: 100%; background: var(--fond); color: var(--texte); font-family: var(--corps); font-weight: 700; }
 body { overscroll-behavior: none; }
 #app { max-width: 480px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; }
 h1, h2, h3 { font-family: var(--titre); margin: 0; }
@@ -136,12 +136,12 @@ textarea:focus { outline: none; border-color: var(--cyan); }
 .rappel { border: 0; padding: 14px; border-radius: 20px; background: var(--fond-3); color: var(--jaune); font-family: var(--titre); font-size: 18px; cursor: pointer; }
 
 /* Choix du jeu */
-.roue-cadre { position: relative; width: min(78vw, 320px); aspect-ratio: 1; margin: 8px auto; }
-.roue { width: 100%; height: 100%; border-radius: 50%; border: 6px solid var(--texte); box-shadow: 0 8px 0 #0008; animation: tourne 4.5s cubic-bezier(.15, .7, .2, 1) both; position: relative; overflow: hidden; }
+.roue-cadre { contain: paint; padding: 18px 0 0; position: relative; width: min(78vw, 320px); margin: 8px auto; }
+.roue { width: 100%; aspect-ratio: 1; border-radius: 50%; border: 6px solid var(--texte); box-shadow: 0 8px 0 #0008; animation: tourne 4.5s cubic-bezier(.15, .7, .2, 1) both; position: relative; overflow: hidden; }
 .roue span { position: absolute; left: 50%; top: 0; height: 50%; transform-origin: 50% 100%; display: flex; justify-content: center; padding-top: 18px; }
 .roue b { writing-mode: vertical-rl; font-family: var(--titre); font-size: 14px; color: var(--fond); max-height: 100%; }
 @keyframes tourne { from { transform: rotate(0); } to { transform: rotate(var(--fin)); } }
-.pointeur { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-top: 30px solid var(--jaune); z-index: 2; filter: drop-shadow(0 3px 0 #0006); }
+.pointeur { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-top: 30px solid var(--jaune); z-index: 2; filter: drop-shadow(0 3px 0 #0006); }
 .revele-jeu { text-align: center; animation: apparait .4s both; }
 .revele-jeu h3 { font-size: 30px; }
 @keyframes apparait { from { opacity: 0; transform: scale(.7); } }
@@ -193,3 +193,22 @@ textarea:focus { outline: none; border-color: var(--cyan); }
 .chiffres b { color: var(--texte); font-size: 16px; }
 .titres { display: flex; flex-wrap: wrap; gap: 6px; }
 .titre-fun { padding: 5px 12px; border-radius: 999px; background: var(--violet); color: var(--fond); font-size: 13px; }
+
+/* Juste Prix, Parieur, Imposteur */
+input.nombre { letter-spacing: 2px; }
+input.nombre::placeholder { letter-spacing: 2px; }
+.boite.defi { border: 3px solid var(--vert); }
+.pts.perdu { background: var(--rose); color: var(--fond); }
+.bouton.choisi { outline: 4px solid var(--texte); outline-offset: 3px; }
+.gros-verdict { padding: 18px; border-radius: 24px; text-align: center; font-family: var(--titre); font-size: 26px; animation: apparait .4s cubic-bezier(.3, 1.6, .5, 1); }
+.gros-verdict.ok { background: var(--vert); color: var(--fond); }
+.gros-verdict.ko { background: var(--rose); color: var(--fond); }
+.gros-mot { font-family: var(--titre); font-size: 40px; text-align: center; }
+.ordre { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 8px; counter-reset: ordre; }
+.ordre li { counter-increment: ordre; padding: 8px 14px; border-radius: 999px; background: var(--fond-2); border: 3px solid var(--c); }
+.ordre li::before { content: counter(ordre) ". "; color: var(--texte-3); }
+.mots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mots div { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px; border-radius: 20px; background: var(--fond-2); }
+.mots strong { font-family: var(--titre); font-size: 22px; text-align: center; }
+.mots div:last-child strong { color: var(--violet); }
+.ligne-resultat.imposteur { outline: 3px solid var(--violet); }

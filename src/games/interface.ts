@@ -13,6 +13,8 @@ export interface ContexteHote {
   compteurs: Record<string, number>;
   /** Points de la partie avant ce jeu (utile au Parieur, qui mise de vrais points). */
   totaux: Record<string, number>;
+  /** Données que seul l'hôte peut lire (ex. qui est l'imposteur). Écrire via ecritures['prive/…']. */
+  prive: Record<string, unknown>;
   hasard: () => number;
 }
 

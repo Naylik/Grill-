@@ -1,0 +1,272 @@
+[
+ {
+  "id": "i01",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Fortnite",
+   "Apex Legends"
+  ]
+ },
+ {
+  "id": "i02",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Minecraft",
+   "Roblox"
+  ]
+ },
+ {
+  "id": "i03",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "EA Sports FC",
+   "eFootball"
+  ]
+ },
+ {
+  "id": "i04",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Mario Kart",
+   "Crash Team Racing"
+  ]
+ },
+ {
+  "id": "i05",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "GTA",
+   "Red Dead Redemption"
+  ]
+ },
+ {
+  "id": "i06",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Call of Duty",
+   "Battlefield"
+  ]
+ },
+ {
+  "id": "i07",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Pokémon",
+   "Digimon"
+  ]
+ },
+ {
+  "id": "i08",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "League of Legends",
+   "Valorant"
+  ]
+ },
+ {
+  "id": "i09",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "PSG",
+   "OM"
+  ]
+ },
+ {
+  "id": "i10",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Real Madrid",
+   "Barça"
+  ]
+ },
+ {
+  "id": "i11",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Mbappé",
+   "Haaland"
+  ]
+ },
+ {
+  "id": "i12",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Zidane",
+   "Platini"
+  ]
+ },
+ {
+  "id": "i13",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Ligue des champions",
+   "Coupe du monde"
+  ]
+ },
+ {
+  "id": "i14",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Ballon d’or",
+   "Soulier d’or"
+  ]
+ },
+ {
+  "id": "i15",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Messi",
+   "Cristiano Ronaldo"
+  ]
+ },
+ {
+  "id": "i16",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Griezmann",
+   "Giroud"
+  ]
+ },
+ {
+  "id": "i17",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Titanic",
+   "Avatar"
+  ]
+ },
+ {
+  "id": "i18",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Marvel",
+   "DC Comics"
+  ]
+ },
+ {
+  "id": "i19",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Harry Potter",
+   "Le Seigneur des anneaux"
+  ]
+ },
+ {
+  "id": "i20",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Star Wars",
+   "Star Trek"
+  ]
+ },
+ {
+  "id": "i21",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Barbie",
+   "Oppenheimer"
+  ]
+ },
+ {
+  "id": "i22",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Spider-Man",
+   "Batman"
+  ]
+ },
+ {
+  "id": "i23",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Fast & Furious",
+   "Mission impossible"
+  ]
+ },
+ {
+  "id": "i24",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Stranger Things",
+   "Dark"
+  ]
+ },
+ {
+  "id": "i25",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Squid Game",
+   "Alice in Borderland"
+  ]
+ },
+ {
+  "id": "i26",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "La Casa de Papel",
+   "Lupin"
+  ]
+ },
+ {
+  "id": "i27",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Friends",
+   "How I Met Your Mother"
+  ]
+ },
+ {
+  "id": "i28",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Game of Thrones",
+   "House of the Dragon"
+  ]
+ },
+ {
+  "id": "i29",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Breaking Bad",
+   "Narcos"
+  ]
+ },
+ {
+  "id": "i30",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Mercredi",
+   "La Famille Addams"
+  ]
+ }
+]

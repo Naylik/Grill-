@@ -72,7 +72,7 @@ export function vueJeu(): VueJeu<never> {
 
 export function ecranJeu(): string {
   const jeu = jeuParId(S.deroule!.jeuEnCours);
-  if (!jeu || !S.jeu) return `<p class="attente">Chargement du jeu…</p>`;
+  if (!jeu || !S.jeu || (S.jeu as { jeuId?: string }).jeuId !== jeu.id) return `<p class="attente">Chargement du jeu…</p>`;
   return `<div class="entete-jeu" style="--c:${jeu.couleur}"><span>Jeu ${S.deroule!.numeroJeu}/${S.infos!.duree}</span><strong>${esc(jeu.nom)}</strong></div>${jeu.ecran(vueJeu())}`;
 }
 

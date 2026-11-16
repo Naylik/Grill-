@@ -1,9 +1,12 @@
 // Liste des mini-jeux disponibles.
 import type { MiniJeu } from './interface';
 import { combien } from './combien';
+import { justePrix } from './justePrix';
+import { parieur } from './parieur';
+import { imposteur } from './imposteur';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const JEUX: MiniJeu<any>[] = [combien];
+export const JEUX: MiniJeu<any>[] = [combien, justePrix, parieur, imposteur];
 
 export const jeuParId = (id?: string) => JEUX.find((j) => j.id === id);
 
@@ -15,4 +18,16 @@ export function jeuxPossibles(numeroJeu: number, nbJoueurs: number, dejaJoues: s
   const moinsJoues = autorises.filter((j) => fois(j.id) === minimum);
   const sansRepetition = moinsJoues.filter((j) => j.id !== dejaJoues[dejaJoues.length - 1]);
   return sansRepetition.length ? sansRepetition : moinsJoues.length ? moinsJoues : autorises;
+}
+
+/** Mode vote : 2 jeux différents, en privilégiant les moins joués, jamais celui qu'on vient de jouer. */
+export function jeuxPourVote(numeroJeu: number, nbJoueurs: number, dejaJoues: string[], hasard = Math.random): MiniJeu[] {
+  const fois = (id: string) => dejaJoues.filter((x) => x === id).length;
+  const autorises = JEUX.filter((j) => j.autorise(numeroJeu, nbJoueurs));
+  const sansDernier = autorises.filter((j) => j.id !== dejaJoues[dejaJoues.length - 1]);
+  const liste = (sansDernier.length >= 2 ? sansDernier : autorises)
+    .map((j) => ({ j, tri: fois(j.id) + hasard() * 0.5 }))
+    .sort((a, b) => a.tri - b.tri)
+    .map((x) => x.j);
+  return liste.slice(0, 2);
 }

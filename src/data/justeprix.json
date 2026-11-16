@@ -1,0 +1,322 @@
+[
+ {
+  "id": "p01",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien mesure la tour Eiffel, antennes comprises ?",
+  "reponse": 330,
+  "unite": "m"
+ },
+ {
+  "id": "p02",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de pays compte l’Union européenne ?",
+  "reponse": 27,
+  "unite": "pays"
+ },
+ {
+  "id": "p03",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année a eu lieu la prise de la Bastille ?",
+  "reponse": 1789,
+  "unite": ""
+ },
+ {
+  "id": "p04",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Quelle est la longueur de la Seine ?",
+  "reponse": 777,
+  "unite": "km"
+ },
+ {
+  "id": "p05",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Quelle est l’altitude du mont Blanc (environ) ?",
+  "reponse": 4806,
+  "unite": "m"
+ },
+ {
+  "id": "p06",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien d’os compte le corps d’un adulte ?",
+  "reponse": 206,
+  "unite": "os"
+ },
+ {
+  "id": "p07",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Quelle distance sépare la Terre de la Lune (en moyenne) ?",
+  "reponse": 384400,
+  "unite": "km"
+ },
+ {
+  "id": "p08",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de départements compte la France (outre-mer compris) ?",
+  "reponse": 101,
+  "unite": "départements"
+ },
+ {
+  "id": "p09",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année le mur de Berlin est-il tombé ?",
+  "reponse": 1989,
+  "unite": ""
+ },
+ {
+  "id": "p10",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "À quelle température l’eau bout-elle, en degrés Fahrenheit ?",
+  "reponse": 212,
+  "unite": "°F"
+ },
+ {
+  "id": "p11",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien d’États compte les États-Unis ?",
+  "reponse": 50,
+  "unite": "États"
+ },
+ {
+  "id": "p12",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année l’homme a-t-il marché sur la Lune pour la première fois ?",
+  "reponse": 1969,
+  "unite": ""
+ },
+ {
+  "id": "p13",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "À quelle vitesse va la lumière ?",
+  "reponse": 299792,
+  "unite": "km/s"
+ },
+ {
+  "id": "p14",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de cases compte un échiquier ?",
+  "reponse": 64,
+  "unite": "cases"
+ },
+ {
+  "id": "p15",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de mètres fait un marathon ?",
+  "reponse": 42195,
+  "unite": "m"
+ },
+ {
+  "id": "p16",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de dents a un adulte, dents de sagesse comprises ?",
+  "reponse": 32,
+  "unite": "dents"
+ },
+ {
+  "id": "p17",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année a eu lieu la toute première Coupe du monde de foot ?",
+  "reponse": 1930,
+  "unite": ""
+ },
+ {
+  "id": "p18",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien mesure la statue de la Liberté, socle compris ?",
+  "reponse": 93,
+  "unite": "m"
+ },
+ {
+  "id": "p19",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de lettres compte l’alphabet grec ?",
+  "reponse": 24,
+  "unite": "lettres"
+ },
+ {
+  "id": "p20",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année a été inauguré le tunnel sous la Manche ?",
+  "reponse": 1994,
+  "unite": ""
+ },
+ {
+  "id": "p21",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien d’épisodes compte la série Friends ?",
+  "reponse": 236,
+  "unite": "épisodes"
+ },
+ {
+  "id": "p22",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de touches a un piano classique ?",
+  "reponse": 88,
+  "unite": "touches"
+ },
+ {
+  "id": "p23",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de buts Zidane a-t-il marqués en finale de la Coupe du monde 1998 ?",
+  "reponse": 2,
+  "unite": "buts"
+ },
+ {
+  "id": "p24",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année est sorti le premier iPhone ?",
+  "reponse": 2007,
+  "unite": ""
+ },
+ {
+  "id": "p25",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de Pokémon compte la toute première génération ?",
+  "reponse": 151,
+  "unite": "Pokémon"
+ },
+ {
+  "id": "p26",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de films compte la saga Harry Potter (sans Les Animaux fantastiques) ?",
+  "reponse": 8,
+  "unite": "films"
+ },
+ {
+  "id": "p27",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de points vaut la lettre Z au Scrabble en français ?",
+  "reponse": 10,
+  "unite": "points"
+ },
+ {
+  "id": "p28",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de buts Thierry Henry a-t-il marqués avec l’équipe de France ?",
+  "reponse": 51,
+  "unite": "buts"
+ },
+ {
+  "id": "p29",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de chiens compte le titre du célèbre Disney avec des dalmatiens ?",
+  "reponse": 101,
+  "unite": "chiens"
+ },
+ {
+  "id": "p30",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année est sortie la version complète de Minecraft ?",
+  "reponse": 2011,
+  "unite": ""
+ },
+ {
+  "id": "p31",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de saisons compte Game of Thrones ?",
+  "reponse": 8,
+  "unite": "saisons"
+ },
+ {
+  "id": "p32",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de cartes compte un jeu de tarot ?",
+  "reponse": 78,
+  "unite": "cartes"
+ },
+ {
+  "id": "p33",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de joueurs au départ d’une partie solo de Fortnite (Battle Royale) ?",
+  "reponse": 100,
+  "unite": "joueurs"
+ },
+ {
+  "id": "p34",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année est sorti le premier Super Mario Bros. ?",
+  "reponse": 1985,
+  "unite": ""
+ },
+ {
+  "id": "p35",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien d’épisodes compte la saison 1 de Squid Game ?",
+  "reponse": 9,
+  "unite": "épisodes"
+ },
+ {
+  "id": "p36",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de cœurs a une pieuvre ?",
+  "reponse": 3,
+  "unite": "cœurs"
+ },
+ {
+  "id": "p37",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de médailles d’or olympiques Usain Bolt a-t-il gagnées ?",
+  "reponse": 8,
+  "unite": "médailles"
+ },
+ {
+  "id": "p38",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de minutes dure le film Titanic ?",
+  "reponse": 194,
+  "unite": "min"
+ },
+ {
+  "id": "p39",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année la première PlayStation est-elle sortie en Europe ?",
+  "reponse": 1995,
+  "unite": ""
+ },
+ {
+  "id": "p40",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de cases compte le plateau du Monopoly ?",
+  "reponse": 40,
+  "unite": "cases"
+ }
+]

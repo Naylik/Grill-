@@ -4,7 +4,7 @@
 import { ref, remove, update } from 'firebase/database';
 import { db, maintenant } from './firebase';
 import { S, estHote } from './etat';
-import { JEUX, jeuParId, jeuxPossibles } from './games';
+import { JEUX, jeuParId, jeuxPossibles, jeuxPourVote } from './games';
 import type { Avancee, ContexteHote } from './games/interface';
 import { auHasard, melanger } from './outils';
 import { majoriteOui, missionTrouvee, pointsDeFin, scoreVide, titres, totalProvisoire, type ResultatMission, type ResultatPari } from './score';
@@ -31,6 +31,7 @@ export function contexte(): ContexteHote {
     reponses: S.reponses,
     compteurs: S.compteurs,
     totaux: Object.fromEntries(uids().map((u) => [u, totalProvisoire(S.scores[u])])),
+    prive: S.prive,
     hasard: Math.random,
   };
 }
@@ -59,8 +60,9 @@ function entrerChoixJeu(numeroJeu: number): Ecritures {
   const nb = uids().length;
   const possibles = jeuxPossibles(numeroJeu, nb, S.deroule?.jeuxJoues ?? []);
   const base = { 'deroule/phase': 'choixJeu', 'deroule/numeroJeu': numeroJeu, 'deroule/vanne': null, 'reponses': null, 'attente': null };
-  if (S.infos?.modeChoix === 'vote' && possibles.length >= 2) {
-    const propositions = melanger(possibles).slice(0, 2).map((j) => j.id);
+  const pourVote = jeuxPourVote(numeroJeu, nb, S.deroule?.jeuxJoues ?? []);
+  if (S.infos?.modeChoix === 'vote' && pourVote.length >= 2) {
+    const propositions = pourVote.map((j) => j.id);
     return { ...base, 'deroule/propositions': propositions, 'deroule/roue': null, 'deroule/finChrono': maintenant() + DUREE_VOTE_JEU };
   }
   const gagnant = auHasard(possibles).id;
@@ -85,14 +87,15 @@ function demarrerJeu(id: string): Ecritures {
   return {
     'deroule/phase': 'jeu', 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null,
     'reponses': null, 'attente': null,
-    ...appliquer(av),
+    ...appliquer(av, id),
   };
 }
 
 // ——— Mini-jeu en cours ———
 
-function appliquer(av: Avancee<unknown>): Ecritures {
-  const e: Ecritures = { jeu: av.etat, ...(av.ecritures ?? {}) };
+function appliquer(av: Avancee<unknown>, jeuId = S.deroule?.jeuEnCours): Ecritures {
+  // jeuId : permet aux téléphones de ne pas afficher un jeu avec l'état du précédent.
+  const e: Ecritures = { jeu: { ...(av.etat as object), jeuId }, ...(av.ecritures ?? {}) };
   if (!av.fin) return e;
   // Fin du jeu : on ajoute les points et on passe au classement provisoire.
   const d = S.deroule!;
@@ -206,7 +209,7 @@ function calculer(): Ecritures | null {
     }
     case 'jeu': {
       const jeu = jeuParId(d.jeuEnCours);
-      if (jeu && S.jeu) {
+      if (jeu && S.jeu && (S.jeu as { jeuId?: string }).jeuId === jeu.id) {
         const av = jeu.piloter(contexte(), S.jeu as never);
         if (av) e = appliquer(av);
       }
@@ -274,7 +277,7 @@ export async function commandeHote(valeur: string): Promise<void> {
     await remove(ref(db, `secrets/${S.code}`));
     e = {
       deroule: { phase: 'salon', numeroJeu: 0 }, jeu: null, scores: null, reponses: null, compteurs: null, tirage: null,
-      revelation: null, votes: null, paris: null, motsImposteur: null, attente: null,
+      revelation: null, votes: null, paris: null, motsImposteur: null, attente: null, prive: null,
     };
   } else if (valeur === 'forcer' && ['missions', 'miPartie', 'detective'].includes(d.phase)) {
     // L'hôte peut avancer sans attendre un joueur absent ou trop lent.
@@ -286,6 +289,7 @@ export async function commandeHote(valeur: string): Promise<void> {
 export async function commandeJeu(valeur: string): Promise<void> {
   if (!estHote() || !S.code || S.deroule?.phase !== 'jeu') return;
   const jeu = jeuParId(S.deroule.jeuEnCours);
+  if ((S.jeu as { jeuId?: string } | null)?.jeuId !== jeu?.id) return;
   const av = jeu?.commande?.(contexte(), S.jeu as never, valeur);
   if (av) await ecrire(appliquer(av));
 }

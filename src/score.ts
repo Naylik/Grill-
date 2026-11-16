@@ -115,3 +115,59 @@ export function missionTrouvee(votes: number[]): 0 | 1 | 2 {
   const un = justes.filter((v) => v === 1).length;
   return un >= justes.length - un ? 1 : 2;
 }
+
+// ——— Le Parieur : pari mutuel ———
+
+export interface Mise {
+  uid: string;
+  mise: number; // 1 à 3
+  cote: 'reussite' | 'echec';
+}
+
+/**
+ * Gains et pertes d'un tour du Parieur (vrais points).
+ * Les gagnants récupèrent leur mise et se partagent les mises des perdants au prorata de leur mise (arrondi),
+ * avec un gain plafonné au double de la mise ; le surplus est rendu aux perdants.
+ * Si tout le monde a parié du même côté, personne ne gagne ni ne perd.
+ * Le joueur défié gagne 1 pt par joueur qui a parié sur sa réussite (5 max) s'il réussit.
+ */
+export function pariMutuel(mises: Mise[], reussi: boolean, defie: string): Record<string, number> {
+  const res: Record<string, number> = { [defie]: 0 };
+  for (const m of mises) res[m.uid] = 0;
+  const cote = reussi ? 'reussite' : 'echec';
+  const gagnants = mises.filter((m) => m.cote === cote);
+  const perdants = mises.filter((m) => m.cote !== cote);
+  if (reussi) res[defie] = Math.min(5, mises.filter((m) => m.cote === 'reussite').length);
+  if (!gagnants.length || !perdants.length) return res;
+  const pot = perdants.reduce((t, m) => t + m.mise, 0);
+  const totalGagnants = gagnants.reduce((t, m) => t + m.mise, 0);
+  let distribue = 0;
+  for (const g of gagnants) {
+    const gain = Math.min(2 * g.mise, Math.round((pot * g.mise) / totalGagnants));
+    res[g.uid] = gain;
+    distribue += gain;
+  }
+  // Les perdants ne paient que ce qui a été distribué, au prorata de leur mise.
+  for (const p of perdants) res[p.uid] = -Math.round((distribue * p.mise) / pot);
+  return res;
+}
+
+/** Le Juste Prix : le ou les plus proches gagnent la manche. */
+export function plusProches(estimations: Record<string, number>, vrai: number): string[] {
+  const ecarts = Object.entries(estimations).map(([u, e]) => [u, Math.abs(e - vrai)] as const);
+  if (!ecarts.length) return [];
+  const min = Math.min(...ecarts.map(([, e]) => e));
+  return ecarts.filter(([, e]) => e === min).map(([u]) => u);
+}
+
+/** L'Imposteur : démasqué s'il a strictement le plus de votes. */
+export function resultatImposteur(votes: Record<string, string>, imposteur: string, uids: string[]): Record<string, number> {
+  const compte: Record<string, number> = {};
+  for (const cible of Object.values(votes)) compte[cible] = (compte[cible] ?? 0) + 1;
+  const max = Math.max(0, ...Object.values(compte));
+  const demasque = (compte[imposteur] ?? 0) === max && max > 0 && Object.values(compte).filter((n) => n === max).length === 1;
+  const pts: Record<string, number> = Object.fromEntries(uids.map((u) => [u, 0]));
+  if (!demasque) pts[imposteur] = 3;
+  else for (const [u, cible] of Object.entries(votes)) if (cible === imposteur && u !== imposteur) pts[u] = 1;
+  return pts;
+}

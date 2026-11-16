@@ -25,6 +25,7 @@ export interface Etat {
   reponses: Record<string, Reponse>;
   /** Paris détective de tous : seul l'hôte peut les lire. */
   paris: Record<string, Pari>;
+  prive: Record<string, unknown>;
   charge: boolean;
   // Propre à ce téléphone
   onglet: 'partie' | 'missions';
@@ -34,7 +35,7 @@ export interface Etat {
 
 export const S: Etat = {
   uid: '', code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
-  revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, charge: false,
+  revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, charge: false,
   onglet: 'partie', masque: false, erreur: null,
 };
 
@@ -118,7 +119,7 @@ export function quitterEcoute(): void {
   if (minuterieReprise) clearTimeout(minuterieReprise);
   Object.assign(S, {
     code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
-    revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, onglet: 'partie', masque: false,
+    revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, onglet: 'partie', masque: false,
   });
   localStorage.removeItem('grille:salon');
 }
@@ -137,12 +138,17 @@ function surveillerHote(): void {
         S.paris = s.val() ?? {};
         changement();
       }),
+      onValue(ref(db, `salons/${S.code}/prive`), (s) => {
+        S.prive = s.val() ?? {};
+        changement();
+      }),
     ];
   } else if (!estHote() && abonnementReponses) {
     abonnementReponses.forEach((f) => f());
     abonnementReponses = null;
     S.reponses = {};
     S.paris = {};
+    S.prive = {};
   }
   // Reprise de la main si l'hôte est parti.
   if (minuterieReprise) clearTimeout(minuterieReprise);

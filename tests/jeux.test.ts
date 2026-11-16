@@ -1,0 +1,85 @@
+import { describe, expect, it } from 'vitest';
+import { pariMutuel, plusProches, resultatImposteur } from '../src/score';
+import { lireNombre } from '../src/games/justePrix';
+import { JEUX, jeuxPourVote, jeuxPossibles } from '../src/games';
+import justeprix from '../src/data/justeprix.json';
+import defis from '../src/data/defis.json';
+import imposteur from '../src/data/imposteur.json';
+
+describe('Le Parieur (pari mutuel)', () => {
+  // Exemple du cahier des charges : 3 joueurs misent 3 sur la réussite de Manon, Kilyan mise 3 sur l'échec.
+  const mises = [
+    { uid: 'a', mise: 3, cote: 'reussite' as const },
+    { uid: 'b', mise: 3, cote: 'reussite' as const },
+    { uid: 'c', mise: 3, cote: 'reussite' as const },
+    { uid: 'kilyan', mise: 3, cote: 'echec' as const },
+  ];
+  it('Manon réussit : 1 pt chacun pour les gagnants, Manon gagne 3', () => {
+    expect(pariMutuel(mises, true, 'manon')).toEqual({ manon: 3, a: 1, b: 1, c: 1, kilyan: -3 });
+  });
+  it('Manon rate : Kilyan gagne 6 (plafond), 3 pts rendus aux perdants', () => {
+    expect(pariMutuel(mises, false, 'manon')).toEqual({ manon: 0, a: -2, b: -2, c: -2, kilyan: 6 });
+  });
+  it('tout le monde du même côté : personne ne gagne ni ne perd (le défié garde son bonus)', () => {
+    const r = pariMutuel([{ uid: 'a', mise: 2, cote: 'reussite' }, { uid: 'b', mise: 1, cote: 'reussite' }], true, 'm');
+    expect(r).toEqual({ m: 2, a: 0, b: 0 });
+  });
+  it('bonus du défié plafonné à 5', () => {
+    const six = Array.from({ length: 6 }, (_, i) => ({ uid: `j${i}`, mise: 1, cote: 'reussite' as const }));
+    expect(pariMutuel(six, true, 'm').m).toBe(5);
+  });
+});
+
+describe('Le Juste Prix', () => {
+  it('le plus proche gagne, ex aequo compris', () => {
+    expect(plusProches({ a: 300, b: 330, c: 360 }, 330)).toEqual(['b']);
+    expect(plusProches({ a: 320, b: 340 }, 330).sort()).toEqual(['a', 'b']);
+  });
+  it('lit les nombres tapés au téléphone', () => {
+    expect(lireNombre('42 195')).toBe(42195);
+    expect(lireNombre('3,5')).toBe(3.5);
+    expect(lireNombre('abc')).toBeNull();
+  });
+});
+
+describe("L'Imposteur", () => {
+  const uids = ['a', 'b', 'c', 'd'];
+  it('démasqué : 1 pt par bon vote', () => {
+    expect(resultatImposteur({ a: 'd', b: 'd', c: 'a', d: 'a' }, 'd', uids)).toEqual({ a: 0, b: 0, c: 0, d: 3 }); // égalité : il survit
+    expect(resultatImposteur({ a: 'd', b: 'd', c: 'd', d: 'a' }, 'd', uids)).toEqual({ a: 1, b: 1, c: 1, d: 0 });
+  });
+  it("survit (pas le plus voté, ou égalité) : 3 pts à l'imposteur", () => {
+    expect(resultatImposteur({ a: 'b', b: 'c', c: 'b', d: 'b' }, 'd', uids)).toEqual({ a: 0, b: 0, c: 0, d: 3 });
+  });
+});
+
+describe('règles de tirage des jeux', () => {
+  it('Le Parieur jamais dans les 2 premiers jeux, L’Imposteur jamais à 3', () => {
+    for (const n of [1, 2]) expect(jeuxPossibles(n, 5, []).map((j) => j.id)).not.toContain('parieur');
+    for (let n = 1; n <= 8; n++) {
+      expect(jeuxPossibles(n, 3, []).map((j) => j.id)).not.toContain('imposteur');
+      expect(jeuxPourVote(n, 3, []).map((j) => j.id)).not.toContain('imposteur');
+    }
+    expect(JEUX.find((j) => j.id === 'parieur')!.autorise(3, 3)).toBe(true);
+  });
+  it('le vote propose 2 jeux différents, sans le dernier joué', () => {
+    for (let i = 0; i < 50; i++) {
+      const v = jeuxPourVote(4, 5, ['combien', 'justeprix', 'imposteur']).map((j) => j.id);
+      expect(v).toHaveLength(2);
+      expect(new Set(v).size).toBe(2);
+      expect(v).not.toContain('imposteur');
+    }
+  });
+});
+
+describe('banques', () => {
+  it('40 questions de Juste Prix (moitié culture, moitié fun), 30 défis, 30 paires', () => {
+    expect(justeprix).toHaveLength(40);
+    expect(justeprix.filter((q) => q.categorie === 'culture')).toHaveLength(20);
+    expect(justeprix.every((q) => typeof q.reponse === 'number')).toBe(true);
+    expect(defis).toHaveLength(30);
+    expect(imposteur).toHaveLength(30);
+    expect(new Set(imposteur.map((p) => p.theme))).toEqual(new Set(['jeux vidéo', 'foot', 'cinéma', 'séries']));
+    for (const d of defis) expect(d.texte.toLowerCase()).not.toMatch(/\b(bois|boire|verre|shot|alcool)\b/);
+  });
+});

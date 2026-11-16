@@ -47,3 +47,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Le « oui » est compté sans dire qui l'a donné : même l'hôte ne sait pas qui a répondu oui.
 - 16/11/2026 · L'hôte peut « Continuer sans attendre » (joueur absent au choix des missions ou au pari) et
   « Passer ce joueur » à la révélation si son téléphone ne répond pas.
+- 16/11/2026 · Les 4 mini-jeux de la V1 sont en place : Combien ont dit oui ? (3 questions), Le Juste Prix (4 manches,
+  2 culture + 2 fun), Le Parieur (un défi par joueur, jamais dans les 2 premiers jeux) et L'Imposteur (2 manches,
+  retiré à 3 joueurs). Imposteur : en cas d'égalité au vote, l'imposteur survit. Les mises du Parieur restent
+  secrètes jusqu'au résultat (rangées dans `prive/`, lisible par l'hôte seul).

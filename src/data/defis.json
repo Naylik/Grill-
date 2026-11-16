@@ -1,0 +1,182 @@
+[
+ {
+  "id": "d01",
+  "niveau": "soft",
+  "texte": "Cite 5 joueurs du PSG (actuels ou anciens).",
+  "duree": 15
+ },
+ {
+  "id": "d02",
+  "niveau": "soft",
+  "texte": "Cite 6 films Disney ou Pixar.",
+  "duree": 15
+ },
+ {
+  "id": "d03",
+  "niveau": "soft",
+  "texte": "Récite l’alphabet à l’envers de Z jusqu’à P.",
+  "duree": 15
+ },
+ {
+  "id": "d04",
+  "niveau": "soft",
+  "texte": "Cite 5 Pokémon de type feu.",
+  "duree": 20
+ },
+ {
+  "id": "d05",
+  "niveau": "soft",
+  "texte": "Fais deviner « une tour Eiffel » en mimant, sans parler.",
+  "duree": 20
+ },
+ {
+  "id": "d06",
+  "niveau": "soft",
+  "texte": "Dis « les chaussettes de l’archiduchesse sont-elles sèches » 3 fois sans te tromper.",
+  "duree": 15
+ },
+ {
+  "id": "d07",
+  "niveau": "soft",
+  "texte": "Cite 8 capitales européennes.",
+  "duree": 20
+ },
+ {
+  "id": "d08",
+  "niveau": "soft",
+  "texte": "Chante le refrain d’un générique de dessin animé sans te tromper dans les paroles.",
+  "duree": 20
+ },
+ {
+  "id": "d09",
+  "niveau": "soft",
+  "texte": "Garde ton sérieux pendant que le groupe essaie de te faire rire.",
+  "duree": 20
+ },
+ {
+  "id": "d10",
+  "niveau": "soft",
+  "texte": "Cite 5 séries Netflix.",
+  "duree": 15
+ },
+ {
+  "id": "d11",
+  "niveau": "epice",
+  "texte": "Fais 3 compliments sincères à la personne à ta gauche sans rire.",
+  "duree": 20
+ },
+ {
+  "id": "d12",
+  "niveau": "soft",
+  "texte": "Cite le prénom des parents de chaque joueur autour de la table (au moins un parent par joueur).",
+  "duree": 20
+ },
+ {
+  "id": "d13",
+  "niveau": "soft",
+  "texte": "Imite 3 personnes célèbres : le groupe doit toutes les reconnaître.",
+  "duree": 30
+ },
+ {
+  "id": "d14",
+  "niveau": "soft",
+  "texte": "Cite 6 jeux vidéo sortis sur Nintendo Switch.",
+  "duree": 20
+ },
+ {
+  "id": "d15",
+  "niveau": "soft",
+  "texte": "Raconte ta journée en 20 secondes sans utiliser la lettre « a ».",
+  "duree": 20
+ },
+ {
+  "id": "d16",
+  "niveau": "soft",
+  "texte": "Cite 5 joueurs de l’équipe de France championne du monde 2018.",
+  "duree": 15
+ },
+ {
+  "id": "d17",
+  "niveau": "epice",
+  "texte": "Fais une déclaration d’amour à ton téléphone, avec émotion, sans rire.",
+  "duree": 20
+ },
+ {
+  "id": "d18",
+  "niveau": "soft",
+  "texte": "Compte de 20 à 0 à voix haute en sautant les multiples de 3.",
+  "duree": 20
+ },
+ {
+  "id": "d19",
+  "niveau": "soft",
+  "texte": "Cite 7 marques de voitures en 10 secondes.",
+  "duree": 10
+ },
+ {
+  "id": "d20",
+  "niveau": "hot",
+  "texte": "Cite le prénom de 3 ex de personnes autour de la table.",
+  "duree": 20
+ },
+ {
+  "id": "d21",
+  "niveau": "soft",
+  "texte": "Récite les 12 mois de l’année à l’envers, sans te tromper.",
+  "duree": 15
+ },
+ {
+  "id": "d22",
+  "niveau": "soft",
+  "texte": "Cite 5 rappeurs français dont le nom commence par une voyelle.",
+  "duree": 20
+ },
+ {
+  "id": "d23",
+  "niveau": "soft",
+  "texte": "Fais un discours de 20 secondes pour convaincre que l’ananas a sa place sur la pizza.",
+  "duree": 20
+ },
+ {
+  "id": "d24",
+  "niveau": "soft",
+  "texte": "Imite le cri de 5 animaux différents : le groupe doit les reconnaître.",
+  "duree": 20
+ },
+ {
+  "id": "d25",
+  "niveau": "soft",
+  "texte": "Cite un film pour chaque lettre de C, I, N, E, M, A.",
+  "duree": 30
+ },
+ {
+  "id": "d26",
+  "niveau": "soft",
+  "texte": "Fais rire au moins une personne de la table en moins de 20 secondes.",
+  "duree": 20
+ },
+ {
+  "id": "d27",
+  "niveau": "soft",
+  "texte": "Cite 5 personnages de Friends ou de The Office.",
+  "duree": 15
+ },
+ {
+  "id": "d28",
+  "niveau": "soft",
+  "texte": "Donne la date d’anniversaire de 2 joueurs de la table (jour et mois).",
+  "duree": 15
+ },
+ {
+  "id": "d29",
+  "niveau": "soft",
+  "texte": "Dis 10 mots qui riment avec « soirée ».",
+  "duree": 20
+ },
+ {
+  "id": "d30",
+  "niveau": "hot",
+  "texte": "Raconte ton pire râteau en 20 secondes, sans t’arrêter.",
+  "duree": 20
+ }
+]
