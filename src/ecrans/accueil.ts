@@ -22,7 +22,6 @@ export function ecranAccueil(codeLien: string | null): string {
     <div class="titre">
       <div class="flotte">${chamal({ taille: 132 })}</div>
       ${logo()}
-      <p class="sous-titre">Mini-jeux, missions secrètes<br>et amitiés en danger.</p>
     </div>
     ${CARTES}
     <div class="pile bas">
