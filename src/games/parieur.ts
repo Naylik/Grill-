@@ -87,7 +87,7 @@ export const parieur: MiniJeu<Etat> = {
     const defi = e.defis[e.tour];
     const entete = `<p class="petit">Défi ${e.tour + 1}/${e.ordre.length}</p>
       <h2 class="question">${moiDefie ? 'À toi' : nomDefie}${moiDefie ? ' ! Ton défi' : ' doit…'}</h2>
-      <div class="boite defi"><p class="texte-mission">${esc(defi.texte)}</p><span class="petit">${defi.duree} secondes</span></div>`;
+      <div class="boite defi"><p class="texte-defi">${esc(defi.texte)}</p><span class="petit">${defi.duree} secondes</span></div>`;
     const attente = (u: string) => v.ontRepondu.includes(u) || (u === v.uid && v.maReponse?.etape === e.etape);
 
     if (e.phase === 'mises') {
@@ -97,14 +97,14 @@ export const parieur: MiniJeu<Etat> = {
       const mise = v.local[`${e.etape}:mise`] as number | undefined;
       const choix = deja
         ? `<p class="attente">Mise enregistrée : ${v.maReponse!.mise} pt${Number(v.maReponse!.mise) > 1 ? 's' : ''} sur ${v.maReponse!.cote === 'reussite' ? 'la réussite' : 'l’échec'}.</p>`
-        : `<p class="intitule">Tu paries sur…</p>
+        : `<div class="mise-zone">
           <div class="options deux">
-            <button class="option ${cote === 'reussite' ? 'actif vert' : ''}" data-action="jeu" data-geste="cote" data-valeur="reussite">Réussite</button>
-            <button class="option ${cote === 'echec' ? 'actif rose' : ''}" data-action="jeu" data-geste="cote" data-valeur="echec">Échec</button>
+            <button class="option ${cote === 'reussite' ? 'actif vert' : ''}" data-action="jeu" data-geste="cote" data-valeur="reussite">Il ou elle réussit</button>
+            <button class="option ${cote === 'echec' ? 'actif rose' : ''}" data-action="jeu" data-geste="cote" data-valeur="echec">Il ou elle rate</button>
           </div>
-          <p class="intitule">Combien de tes points ?</p>
           <div class="options trois">${[1, 2, 3].map((n) => `<button class="option ${mise === n ? 'actif jaune' : ''}" data-action="jeu" data-geste="mise" data-valeur="${n}">${n} pt${n > 1 ? 's' : ''}</button>`).join('')}</div>
-          <button class="bouton jaune" data-action="jeu" data-geste="miser" ${cote && mise ? '' : 'disabled'}>Miser</button>`;
+          <button class="bouton jaune" data-action="jeu" data-geste="miser" ${cote && mise ? '' : 'disabled'}>${cote && mise ? `Miser ${mise} pt${mise > 1 ? 's' : ''}` : 'Choisis ton camp et ta mise'}</button>
+          </div>`;
       return `${chrono(e.fin)}${entete}${choix}${attenteDes(autres, v.joueurs, attente)}`;
     }
     if (e.phase === 'defi') {

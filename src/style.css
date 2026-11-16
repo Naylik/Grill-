@@ -19,8 +19,11 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { overflow-x: hidden; margin: 0; min-height: 100%; background: var(--fond); color: var(--texte); font-family: var(--corps); font-weight: 700; }
-body { overscroll-behavior: none; }
+html, body { margin: 0; min-height: 100%; background: var(--fond); color: var(--texte); font-family: var(--corps); font-weight: 700; }
+/* Le débordement horizontal et le « tirer pour recharger » se règlent sur html uniquement :
+   mis aussi sur body, ils bloquaient le défilement au doigt sur téléphone (bug du 16/11). */
+html { overflow-x: hidden; overscroll-behavior-y: none; }
+body { overflow-x: clip; }
 #app { max-width: 480px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; }
 h1, h2, h3 { font-family: var(--titre); margin: 0; }
 h2 { font-size: 28px; }
@@ -343,3 +346,8 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 @keyframes tampon { from { opacity: 0; transform: scale(3) rotate(-10deg); } to { opacity: 1; transform: scale(1) rotate(-4deg); } }
 @keyframes secoue { 0%, 100% { transform: translate(0, 0); } 20% { transform: translate(-6px, 3px); } 40% { transform: translate(5px, -4px); } 60% { transform: translate(-4px, 2px); } 80% { transform: translate(3px, -2px); } }
 @media (prefers-reduced-motion: reduce) { .seq-grille .ok, .seq-grille .flammes-zone { display: none; } }
+
+/* Le Parieur : l'écran des mises tient sans défiler, le bouton reste visible en bas */
+.texte-defi { margin: 0; font-size: 17px; line-height: 1.35; font-weight: 700; }
+.mise-zone { position: sticky; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 3; display: flex; flex-direction: column; gap: 10px; padding: 12px; margin: 0 -8px; border-radius: 22px; background: #140F2ACC; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--bord); }
+.mise-zone .option { min-height: 50px; }

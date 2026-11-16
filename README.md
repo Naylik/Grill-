@@ -55,3 +55,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   dépoli, boutons lumineux, polices Unbounded (titres) et Plus Jakarta Sans (texte). Mascotte : Chamal, un chamallow
   (src/chamal.ts). Version « grillé » : corps clair, seul le dessus carbonisé et fumant (jamais de visage noir).
   Accueil : cartes secrètes « TOP SECRET ». Pas de slogan (choix du fondateur) : le logo et Chamal suffisent.
+- 16/11/2026 · Bug trouvé au premier test sur téléphone : impossible de défiler au doigt (écran des mises du Parieur).
+  Cause : overflow-x et overscroll-behavior posés à la fois sur html et body. Corrigé (html seulement). L'affichage ne
+  remplace plus tout l'écran à chaque changement : seules les parties modifiées sont mises à jour (ui.ts, harmoniser).
