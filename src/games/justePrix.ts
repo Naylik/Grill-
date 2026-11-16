@@ -34,6 +34,11 @@ export const justePrix: MiniJeu<Etat> = {
   id: 'justeprix',
   nom: 'Le Juste Prix',
   accroche: 'Estime en secret. Le plus proche gagne la manche.',
+  explication: {
+    comment: 'Une question de culture ou une question fun (« Combien mesure la tour Eiffel ? »). Chacun tape son estimation en secret, puis on découvre la bonne réponse et celles des autres.',
+    gagner: 'Le plus proche gagne la manche. Celui qui gagne le plus de manches (sur 4) gagne le jeu.',
+  },
+  icone: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/>',
   couleur: '#FFD23F',
   autorise: () => true,
 

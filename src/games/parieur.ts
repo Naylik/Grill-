@@ -27,6 +27,12 @@ export const parieur: MiniJeu<Etat> = {
   id: 'parieur',
   nom: 'Le Parieur',
   accroche: 'Chacun est défié une fois. Mise tes vrais points sur sa réussite… ou son échec.',
+  explication: {
+    comment: 'Chaque joueur reçoit un défi à relever à voix haute (« Cite 5 joueurs du PSG en 15 secondes »). Avant, les autres misent en secret 1 à 3 de leurs vrais points sur sa réussite ou son échec. Puis le groupe vote : défi réussi ou raté ?',
+    gagner: 'Les gagnants se partagent les mises des perdants. Le joueur défié gagne 1 point par personne qui a parié sur lui, s’il réussit.',
+    note: 'Jamais dans les 2 premiers jeux, pour que tout le monde ait des points à miser.',
+  },
+  icone: '<rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="8.5" cy="8.5" r="1.8" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/>',
   couleur: '#5BE37D',
   autorise: (numeroJeu) => numeroJeu > 2,
 

@@ -73,3 +73,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 16/11/2026 · Mises à jour automatiques : l'appli installée gardait l'ancienne version en mémoire. Elle vérifie désormais
   les nouvelles versions à chaque retour sur l'écran et se recharge toute seule. Bouton « Revenir à l'accueil » sur
   l'écran de connexion au salon.
+- 16/11/2026 · Accueil : bouton « Liste des jeux » (principe, barème en bref, règles de chaque mini-jeu). Chaque jeu
+  porte son explication et son icône (champs explication et icone de l'interface MiniJeu).

@@ -75,6 +75,10 @@ export interface MiniJeu<E extends EtatDeBase = EtatDeBase> {
   id: string;
   nom: string;
   accroche: string; // la règle en une phrase
+  /** Pour l'écran « Liste des jeux » de l'accueil. */
+  explication: { comment: string; gagner: string; note?: string };
+  /** Icône (contenu d'un SVG 24 × 24). */
+  icone: string;
   couleur: string;
   /** Le jeu peut-il être tiré pour ce numéro de jeu et ce nombre de joueurs ? */
   autorise(numeroJeu: number, nbJoueurs: number): boolean;

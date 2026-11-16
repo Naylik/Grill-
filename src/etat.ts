@@ -34,6 +34,8 @@ export interface Etat {
   toast: string | null;
   /** Le joueur a appuyé sur « Quitter » : on lui demande de confirmer. */
   confirmerQuitter: boolean;
+  /** Sur l'accueil : l'accueil lui-même ou la liste des jeux. */
+  vueAccueil: 'accueil' | 'jeux';
   /** Image du podium affichée quand le téléphone ne sait pas partager directement. */
   apercuImage: string | null;
 }
@@ -41,7 +43,7 @@ export interface Etat {
 export const S: Etat = {
   uid: '', code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
   revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, charge: false,
-  onglet: 'partie', erreur: null, toast: null, apercuImage: null, confirmerQuitter: false,
+  onglet: 'partie', erreur: null, toast: null, apercuImage: null, confirmerQuitter: false, vueAccueil: 'accueil',
 };
 
 export const estHote = (): boolean => !!S.infos && S.infos.hote === S.uid;

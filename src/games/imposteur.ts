@@ -54,6 +54,12 @@ export const imposteur: MiniJeu<Etat> = {
   id: 'imposteur',
   nom: 'L’Imposteur',
   accroche: 'Un seul joueur n’a pas le même mot. Donnez des indices, puis démasquez-le.',
+  explication: {
+    comment: 'Chacun lit son mot en secret (jeux vidéo, foot, cinéma, séries). Un joueur a un mot différent, et il ne sait pas qu’il est l’imposteur. À tour de rôle, chacun donne un indice à voix haute, puis tout le monde vote en secret.',
+    gagner: 'Si l’imposteur s’en sort, il gagne 3 points. S’il est démasqué, chaque joueur qui a voté contre lui gagne 1 point. 2 manches.',
+    note: 'À partir de 4 joueurs.',
+  },
+  icone: '<path d="M3 9c3-3 15-3 18 0-1 6-4 9-9 9S4 15 3 9z" fill="currentColor"/><ellipse cx="8.5" cy="11" rx="2" ry="1.4" fill="#0D0A1E"/><ellipse cx="15.5" cy="11" rx="2" ry="1.4" fill="#0D0A1E"/>',
   couleur: '#B18CFF',
   autorise: (_n, nbJoueurs) => nbJoueurs >= 4,
 

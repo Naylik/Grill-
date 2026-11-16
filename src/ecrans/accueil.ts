@@ -24,6 +24,10 @@ export function ecranAccueil(codeLien: string | null): string {
       ${logo()}
     </div>
     ${CARTES}
+    <button class="bouton-liste" data-action="vueAccueil" data-valeur="jeux">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+      Liste des jeux
+    </button>
     <div class="pile bas">
       <label class="champ">
         <span>Ton prénom</span>

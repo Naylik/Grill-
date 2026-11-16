@@ -16,6 +16,7 @@ import { copier, imagePodium, partager } from './partage';
 import { totalFinal } from './score';
 import { ErreurSalon, MIN_JOUEURS, changerReglages, creerSalon, quitterSalon, rejoindreSalon } from './salon';
 import { ecranAccueil } from './ecrans/accueil';
+import { ecranListeJeux } from './ecrans/jeux';
 import { ecranSalon, lienSalon } from './ecrans/salon';
 import { ecranPartie } from './ecrans/partie';
 import type { Duree, ModeChoix } from './types';
@@ -50,7 +51,7 @@ function rendu(): void {
     return;
   }
   if (!S.code) {
-    afficher(ecranAccueil(codeDuLien()));
+    afficher(S.vueAccueil === 'jeux' ? ecranListeJeux() : ecranAccueil(codeDuLien()));
     return;
   }
   if (!S.charge || !S.infos || !S.deroule) {
@@ -173,6 +174,12 @@ action('quitter', async () => {
 });
 
 // Sortie de secours : revenir à l'accueil sans attendre le réseau.
+action('vueAccueil', (el) => {
+  S.vueAccueil = el.dataset.valeur === 'jeux' ? 'jeux' : 'accueil';
+  scrollTo(0, 0);
+  demanderAffichage();
+});
+
 action('abandonner', () => {
   quitterEcoute();
   garderEcranAllume(false);

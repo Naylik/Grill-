@@ -27,6 +27,11 @@ export const combien: MiniJeu<Etat> = {
   id: 'combien',
   nom: 'Combien ont dit oui ?',
   accroche: 'Réponds en secret, puis devine combien ont dit oui. Seul le total est révélé.',
+  explication: {
+    comment: 'Une question gênante s’affiche (« As-tu déjà stalké un ex ? »). Chacun répond oui ou non en secret, puis devine combien de joueurs ont dit oui. Seul le total est révélé : personne ne sait qui a répondu quoi.',
+    gagner: '3 points si tu trouves le chiffre exact, 1 point à un près. 3 questions par partie.',
+  },
+  icone: '<path d="M12 3a9 9 0 1 0 9 9h-9z" fill="currentColor"/><path d="M15 2.5A9 9 0 0 1 21.5 9H15z" fill="currentColor" opacity=".5"/>',
   couleur: '#FF4F8B',
   autorise: () => true,
 
