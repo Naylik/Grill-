@@ -1,0 +1,117 @@
+// Barème de la partie (section « Score et classement » du cahier des charges). Fonctions pures, testées.
+import type { Difficulte, Score } from './types';
+
+/** Points de place : 1er 5, 2e 3, 3e 2, au-delà 1. Les ex aequo reçoivent les mêmes points. */
+export const POINTS_PLACE = [5, 3, 2];
+export const POINTS_MISSION: Record<Difficulte, number> = { facile: 6, difficile: 10 };
+export const VOL_DETECTIVE: Record<Difficulte, number> = { facile: 4, difficile: 6 };
+export const PARI_RATE = -2;
+
+/**
+ * Transforme le score interne d'un mini-jeu en places (1 = premier) puis en points de place.
+ * plusGrandGagne = false pour les jeux où le plus petit score gagne (ex. écart au juste prix).
+ */
+export function places(internes: Record<string, number>, plusGrandGagne = true): Record<string, number> {
+  const tri = Object.entries(internes).sort((a, b) => (plusGrandGagne ? b[1] - a[1] : a[1] - b[1]));
+  const res: Record<string, number> = {};
+  tri.forEach(([uid, v], i) => {
+    const precedent = tri[i - 1];
+    res[uid] = precedent && precedent[1] === v ? res[precedent[0]] : i + 1;
+  });
+  return res;
+}
+
+export function pointsDePlace(internes: Record<string, number>, plusGrandGagne = true): Record<string, number> {
+  const p = places(internes, plusGrandGagne);
+  return Object.fromEntries(Object.entries(p).map(([uid, place]) => [uid, POINTS_PLACE[place - 1] ?? 1]));
+}
+
+/** Vote de validation : réussi si plus de la moitié des votants dit oui. Égalité = raté. */
+export function majoriteOui(votes: boolean[]): boolean {
+  const oui = votes.filter(Boolean).length;
+  return oui * 2 > votes.length;
+}
+
+export const scoreVide = (): Score => ({ jeux: 0, parieur: 0, missions: 0, detective: 0 });
+
+/** Classement provisoire : sans les points de mission (révélés à la fin seulement). */
+export const totalProvisoire = (s?: Score): number => (s ? s.jeux + s.parieur : 0);
+export const totalFinal = (s?: Score): number => (s ? s.jeux + s.parieur + s.missions + s.detective : 0);
+
+/** Combien ont dit oui ? : 3 pts si chiffre exact, 1 pt à un près. */
+export function pointsCombien(estimation: number, vrai: number): number {
+  const ecart = Math.abs(estimation - vrai);
+  return ecart === 0 ? 3 : ecart === 1 ? 1 : 0;
+}
+
+export interface ResultatMission {
+  difficulte: Difficulte;
+  reussie: boolean;
+}
+export interface ResultatPari {
+  de: string; // le détective
+  cible: string;
+  /** Mission trouvée (selon le vote du groupe), ou null si raté. */
+  trouvee: Difficulte | null;
+}
+
+/** Points de mission et de détective pour tout le monde, à partir des votes de la révélation. */
+export function pointsDeFin(missions: Record<string, ResultatMission[]>, paris: ResultatPari[]) {
+  const missionsPts: Record<string, number> = {};
+  const detective: Record<string, number> = {};
+  for (const [uid, liste] of Object.entries(missions)) {
+    missionsPts[uid] = liste.reduce((t, m) => t + (m.reussie ? POINTS_MISSION[m.difficulte] : 0), 0);
+    detective[uid] ??= 0;
+  }
+  for (const p of paris) {
+    detective[p.de] ??= 0;
+    detective[p.cible] ??= 0;
+    if (p.trouvee) {
+      const vol = VOL_DETECTIVE[p.trouvee];
+      detective[p.de] += vol;
+      detective[p.cible] -= vol; // le joueur grillé garde sa mission si elle est validée : il perd seulement le vol
+    } else {
+      detective[p.de] += PARI_RATE;
+    }
+  }
+  return { missions: missionsPts, detective };
+}
+
+export interface Titre {
+  uid: string;
+  titre: string;
+  pourquoi: string;
+}
+
+/** Titres fun de l'écran final. */
+export function titres(
+  scores: Record<string, Score>,
+  missions: Record<string, ResultatMission[]>,
+  paris: ResultatPari[],
+): Titre[] {
+  const res: Titre[] = [];
+  for (const [uid, liste] of Object.entries(missions)) {
+    if (liste.length >= 2 && liste.every((m) => m.reussie)) res.push({ uid, titre: 'Agent secret', pourquoi: '2 missions réussies' });
+    if (liste.length >= 2 && liste.every((m) => m.difficulte === 'difficile')) res.push({ uid, titre: 'Casse-cou', pourquoi: '2 missions difficiles choisies' });
+  }
+  for (const p of paris) {
+    if (p.trouvee) {
+      res.push({ uid: p.de, titre: 'Sherlock', pourquoi: 'pari détective juste' });
+      res.push({ uid: p.cible, titre: 'Grillé', pourquoi: 'mission devinée' });
+    }
+  }
+  const meilleurJeux = Math.max(...Object.values(scores).map((s) => s.jeux));
+  for (const [uid, s] of Object.entries(scores)) {
+    if (s.jeux === meilleurJeux && meilleurJeux > 0) res.push({ uid, titre: 'Champion des mini-jeux', pourquoi: `${s.jeux} pts de place` });
+  }
+  // Pas de doublon (deux paris justes contre la même personne → un seul « Grillé »).
+  return res.filter((t, i) => res.findIndex((u) => u.uid === t.uid && u.titre === t.titre) === i);
+}
+
+/** Résultat d'un pari détective selon le vote du groupe : 1 ou 2 = mission trouvée, 0 = raté. */
+export function missionTrouvee(votes: number[]): 0 | 1 | 2 {
+  const justes = votes.filter((v) => v === 1 || v === 2);
+  if (justes.length * 2 <= votes.length) return 0;
+  const un = justes.filter((v) => v === 1).length;
+  return un >= justes.length - un ? 1 : 2;
+}

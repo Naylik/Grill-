@@ -2,7 +2,8 @@
 import { ref, onValue, type Unsubscribe } from 'firebase/database';
 import { db } from './firebase';
 import { DELAI_REPRISE_HOTE, quiDoitReprendre, reprendreLaMain, signalerPresence } from './salon';
-import type { Deroule, Infos, Joueur, Score, Secrets } from './types';
+import type { Deroule, Infos, Joueur, Pari, Score, Secrets } from './types';
+import type { Reponse } from './games/interface';
 
 export interface Etat {
   uid: string;
@@ -13,12 +14,17 @@ export interface Etat {
   jeu: Record<string, unknown> | null;
   scores: Record<string, Score>;
   compteurs: Record<string, number>;
-  revelation: Record<string, unknown>;
+  revelation: Record<string, { missions?: { texte: string; difficulte: 'facile' | 'difficile'; type: string }[] }>;
   votes: Record<string, Record<string, unknown>>;
+  attente: { etape: string; uids: string[] } | null;
+  maReponse: Reponse | null;
+  monPari: Pari | null;
   secrets: Secrets;
   monMot: string | null; // L'Imposteur
   /** Réponses de tous les joueurs : seul l'hôte a le droit de les lire. */
-  reponses: Record<string, Record<string, unknown>>;
+  reponses: Record<string, Reponse>;
+  /** Paris détective de tous : seul l'hôte peut les lire. */
+  paris: Record<string, Pari>;
   charge: boolean;
   // Propre à ce téléphone
   onglet: 'partie' | 'missions';
@@ -28,7 +34,7 @@ export interface Etat {
 
 export const S: Etat = {
   uid: '', code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
-  revelation: {}, votes: {}, secrets: {}, monMot: null, reponses: {}, charge: false,
+  revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, charge: false,
   onglet: 'partie', masque: false, erreur: null,
 };
 
@@ -60,8 +66,11 @@ function changement(): void {
   surChangement.forEach((f) => f());
 }
 
+/** Données déjà reçues au moins une fois (évite d'agir sur un état pas encore chargé). */
+export const charges = new Set<string>();
+
 let abonnements: Unsubscribe[] = [];
-let abonnementReponses: Unsubscribe | null = null;
+let abonnementReponses: Unsubscribe[] | null = null;
 let minuterieReprise: ReturnType<typeof setTimeout> | null = null;
 
 export function ecouterSalon(code: string): void {
@@ -75,6 +84,7 @@ export function ecouterSalon(code: string): void {
         ref(db, chemin),
         (s) => {
           S[cle] = (s.val() ?? vide) as Etat[K];
+          charges.add(cle);
           if (cle === 'deroule') S.charge = true;
           if (cle === 'infos' || cle === 'joueurs') surveillerHote();
           changement();
@@ -93,18 +103,22 @@ export function ecouterSalon(code: string): void {
   ecoute(`${base}/votes`, 'votes', {});
   ecoute(`secrets/${code}/${S.uid}`, 'secrets', {});
   ecoute(`${base}/motsImposteur/${S.uid}`, 'monMot', null);
+  ecoute(`${base}/attente`, 'attente', null);
+  ecoute(`${base}/reponses/${S.uid}`, 'maReponse', null);
+  ecoute(`${base}/paris/${S.uid}`, 'monPari', null);
   abonnements.push(signalerPresence(S.uid, code));
 }
 
 export function quitterEcoute(): void {
   abonnements.forEach((f) => f());
   abonnements = [];
-  abonnementReponses?.();
+  charges.clear();
+  abonnementReponses?.forEach((f) => f());
   abonnementReponses = null;
   if (minuterieReprise) clearTimeout(minuterieReprise);
   Object.assign(S, {
     code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
-    revelation: {}, votes: {}, secrets: {}, monMot: null, reponses: {}, onglet: 'partie', masque: false,
+    revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, onglet: 'partie', masque: false,
   });
   localStorage.removeItem('grille:salon');
 }
@@ -114,14 +128,21 @@ function surveillerHote(): void {
   if (!S.code || !S.infos) return;
   // Seul l'hôte écoute les réponses (les règles Firebase l'interdisent aux autres).
   if (estHote() && !abonnementReponses) {
-    abonnementReponses = onValue(ref(db, `salons/${S.code}/reponses`), (s) => {
-      S.reponses = s.val() ?? {};
-      changement();
-    });
+    abonnementReponses = [
+      onValue(ref(db, `salons/${S.code}/reponses`), (s) => {
+        S.reponses = s.val() ?? {};
+        changement();
+      }),
+      onValue(ref(db, `salons/${S.code}/paris`), (s) => {
+        S.paris = s.val() ?? {};
+        changement();
+      }),
+    ];
   } else if (!estHote() && abonnementReponses) {
-    abonnementReponses();
+    abonnementReponses.forEach((f) => f());
     abonnementReponses = null;
     S.reponses = {};
+    S.paris = {};
   }
   // Reprise de la main si l'hôte est parti.
   if (minuterieReprise) clearTimeout(minuterieReprise);

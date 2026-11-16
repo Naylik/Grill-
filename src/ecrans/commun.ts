@@ -23,3 +23,15 @@ export function bulle(texte: string): string {
 export function erreur(message: string | null): string {
   return message ? `<p class="erreur" role="alert">${esc(message)}</p>` : '';
 }
+
+/** Chrono qui se met à jour tout seul (voir main.ts). */
+export function chrono(fin?: number): string {
+  return fin ? `<div class="chrono" data-fin="${fin}" aria-live="off"><span></span></div>` : '';
+}
+
+export function attenteDes(uids: string[], joueurs: Record<string, Joueur>, ontRepondu: (uid: string) => boolean): string {
+  return `<div class="qui-a-repondu">${uids
+    .map((u) => joueurs[u])
+    .map((j, i) => `<span class="mini ${ontRepondu(uids[i]) ? 'ok' : ''}" style="--c:${j.couleur}" title="${esc(j.prenom)}">${esc(j.prenom.slice(0, 1))}</span>`)
+    .join('')}</div>`;
+}

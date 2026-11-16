@@ -90,6 +90,9 @@
           "$uid": {
             ".read": "auth != null && auth.uid === $uid"
           }
+        },
+        "attente": {
+          ".read": "auth != null"
         }
       }
     },

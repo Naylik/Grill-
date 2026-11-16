@@ -42,3 +42,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 16/11/2026 · Missions vraiment secrètes : chaque téléphone tire ses propres missions ; même l'hôte ne peut pas les lire
   (vérifié par `tests/regles.test.ts`). Le téléphone de l'hôte connaît en revanche l'imposteur et les mises du Parieur
   (sans les afficher) : l'offre gratuite n'a pas de serveur pour faire ces calculs à sa place.
+- 16/11/2026 · Le déroulé complet tourne (missions, manches, classement + vanne, mi-partie, pari détective, révélation,
+  podium et titres) avec un seul mini-jeu pour l'instant : « Combien ont dit oui ? » (3 questions par partie de ce jeu).
+  Le « oui » est compté sans dire qui l'a donné : même l'hôte ne sait pas qui a répondu oui.
+- 16/11/2026 · L'hôte peut « Continuer sans attendre » (joueur absent au choix des missions ou au pari) et
+  « Passer ce joueur » à la révélation si son téléphone ne répond pas.

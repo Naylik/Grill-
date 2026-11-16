@@ -1,9 +1,14 @@
 import './style.css';
 import QRCode from 'qrcode';
-import { ref, update } from 'firebase/database';
-import { connexion, configManquante, db } from './firebase';
-import { S, brancherAffichage, demanderAffichage, ecouterSalon, estHote, quitterEcoute } from './etat';
-import { action, afficher, brouillons, installer } from './ui';
+import { ref, runTransaction, set, update } from 'firebase/database';
+import { connexion, configManquante, db, maintenant } from './firebase';
+import { S, brancherAffichage, demanderAffichage, ecouterSalon, estHote, quandCaChange, quitterEcoute } from './etat';
+import { commandeHote, commandeJeu, piloter } from './hote';
+import { effetsJoueur, repondre } from './effets';
+import { choisirMission } from './missions';
+import { jeuParId } from './games';
+import { localJeu, vueJeu } from './ecrans/deroule';
+import { action, afficher, brouillons, installer, vibrer } from './ui';
 import { garderEcranAllume } from './veille';
 import { normaliserCode, nettoyerPrenom } from './outils';
 import { ErreurSalon, MIN_JOUEURS, changerReglages, creerSalon, quitterSalon, rejoindreSalon } from './salon';
@@ -134,7 +139,97 @@ action('quitter', async () => {
 action('onglet', (el) => {
   S.onglet = el.dataset.valeur as typeof S.onglet;
   if (S.onglet === 'partie') S.masque = false;
+  if (S.onglet === 'missions' && S.secrets.mission2 && !S.secrets.nouvelleMissionVue) {
+    void set(ref(db, `secrets/${S.code}/${S.uid}/nouvelleMissionVue`), true);
+  }
+  scrollTo(0, 0);
   demanderAffichage();
+});
+
+// ——— Pendant la partie ———
+
+action('choisirMission', async (el) => {
+  const numero = Number(el.dataset.numero) as 1 | 2;
+  (el as HTMLButtonElement).disabled = true;
+  if (await choisirMission(S.code!, S.uid, S.joueurs, S.secrets, numero, Number(el.dataset.index))) {
+    vibrer(80);
+    await repondre(`mission${numero}`);
+  }
+});
+
+action('voterJeu', (el) => repondre(`choix-${S.deroule!.numeroJeu}`, { jeu: el.dataset.valeur }));
+
+action('jeu', async (el) => {
+  const jeu = jeuParId(S.deroule?.jeuEnCours);
+  const geste = jeu?.gestes?.[el.dataset.geste!];
+  if (!jeu || !geste || !S.jeu) return;
+  const etape = (S.jeu as { etape: string }).etape;
+  await geste(el, {
+    repondre: (valeurs) => repondre(etape, valeurs),
+    incrementer: async (compteur) => {
+      await runTransaction(ref(db, `salons/${S.code}/compteurs/${compteur}`), (n: number | null) => (n ?? 0) + 1);
+    },
+    local: localJeu,
+    rafraichir: demanderAffichage,
+  }, vueJeu());
+});
+
+action('hote', (el) => commandeHote(el.dataset.valeur!));
+action('hote-jeu', (el) => commandeJeu(el.dataset.valeur!));
+
+action('choisirCible', (el) => {
+  brouillons.cible = el.dataset.valeur!;
+  demanderAffichage();
+});
+action('parier', async () => {
+  const texte = (brouillons.pari ?? '').trim();
+  if (!brouillons.cible || texte.length < 3) {
+    alert('Écris ce que tu crois être sa mission.');
+    return;
+  }
+  await set(ref(db, `salons/${S.code}/paris/${S.uid}`), { cible: brouillons.cible, texte: texte.slice(0, 160) });
+  await repondre('detective');
+});
+action('pasDePari', async () => {
+  await set(ref(db, `salons/${S.code}/paris/${S.uid}`), { passe: true });
+  await repondre('detective');
+});
+
+action('voter', async (el) => {
+  const v = el.dataset.valeur!;
+  const valeur = v === 'true' ? true : v === 'false' ? false : Number(v);
+  await set(ref(db, `salons/${S.code}/votes/${el.dataset.sujet}/${S.uid}`), valeur);
+  vibrer(30);
+});
+
+// L'hôte fait avancer la partie ; chaque téléphone fait ses propres tâches.
+quandCaChange(() => {
+  effetsJoueur();
+  void piloter();
+});
+setInterval(() => void piloter(), 500);
+
+// Chronos : mis à jour sans redessiner l'écran.
+setInterval(() => {
+  document.querySelectorAll<HTMLElement>('.chrono[data-fin]').forEach((el) => {
+    const reste = Math.max(0, Number(el.dataset.fin) - maintenant());
+    const s = Math.ceil(reste / 1000);
+    const span = el.querySelector('span')!;
+    if (span.textContent !== `${s}`) span.textContent = `${s}`;
+    el.classList.toggle('urgent', s <= 5);
+  });
+}, 250);
+
+// Appui long pour lire une mission secrète.
+const reveler = (e: Event, oui: boolean) => {
+  const el = (e.target as HTMLElement).closest?.('[data-appui]');
+  if (el) el.classList.toggle('revele', oui);
+  else if (!oui) document.querySelectorAll('[data-appui].revele').forEach((x) => x.classList.remove('revele'));
+};
+document.addEventListener('pointerdown', (e) => reveler(e, true));
+['pointerup', 'pointercancel', 'pointerleave'].forEach((t) => document.addEventListener(t, (e) => reveler(e, false)));
+document.addEventListener('contextmenu', (e) => {
+  if ((e.target as HTMLElement).closest?.('[data-appui]')) e.preventDefault();
 });
 action('masquer', () => {
   S.masque = !S.masque;

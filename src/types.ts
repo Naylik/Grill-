@@ -37,18 +37,34 @@ export interface Deroule {
   numeroJeu: number; // 0 avant le premier jeu, puis 1, 2, …
   jeuxJoues?: string[];
   jeuEnCours?: string; // id du mini-jeu
-  propositions?: string[]; // mode vote : les 2 jeux proposés
-  roue?: { gagnant: string; lanceLe: number }; // mode roue
+  propositions?: string[]; // mode vote : les jeux proposés
+  roue?: { gagnant: string; options: string[]; lanceLe: number }; // mode roue
   vanne?: string; // vanne du narrateur affichée au classement
+  dernierJeu?: { id: string; points: Record<string, number>; sorte: 'place' | 'reels'; resume?: string };
   finChrono?: number; // horodatage serveur (ms)
   revelation?: EtatRevelation;
+  bilan?: Bilan;
 }
 
 export interface EtatRevelation {
   ordre: string[]; // uids dans l'ordre de passage
   index: number;
   etape: 'recit' | 'vote' | 'detective' | 'resultat';
-  finChrono?: number;
+  fin?: number;
+  paris?: { de: string; texte: string }[]; // suppositions visant le joueur en cours
+}
+
+/** Pari détective, écrit en secret (lisible par son auteur et l'hôte seulement). */
+export interface Pari {
+  cible?: string;
+  texte?: string;
+  passe?: boolean;
+}
+
+export interface Bilan {
+  missions: Record<string, { difficulte: Difficulte; reussie: boolean; texte: string }[]>;
+  paris: { de: string; cible: string; texte: string; trouvee: Difficulte | null }[];
+  titres: { uid: string; titre: string; pourquoi: string }[];
 }
 
 export interface Mission {

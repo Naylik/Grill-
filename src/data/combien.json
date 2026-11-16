@@ -1,0 +1,202 @@
+[
+ {
+  "id": "c01",
+  "niveau": "soft",
+  "texte": "As-tu déjà fait semblant d’être malade pour échapper à une soirée ?"
+ },
+ {
+  "id": "c02",
+  "niveau": "epice",
+  "texte": "As-tu déjà stalké un ou une ex sur les réseaux ces 30 derniers jours ?"
+ },
+ {
+  "id": "c03",
+  "niveau": "soft",
+  "texte": "As-tu déjà menti sur ton âge ?"
+ },
+ {
+  "id": "c04",
+  "niveau": "epice",
+  "texte": "As-tu déjà envoyé un message à la mauvaise personne… et regretté aussitôt ?"
+ },
+ {
+  "id": "c05",
+  "niveau": "soft",
+  "texte": "As-tu déjà pleuré devant un dessin animé ?"
+ },
+ {
+  "id": "c06",
+  "niveau": "epice",
+  "texte": "As-tu déjà eu un crush sur quelqu’un autour de cette table ?"
+ },
+ {
+  "id": "c07",
+  "niveau": "soft",
+  "texte": "As-tu déjà fouillé le téléphone de quelqu’un ?"
+ },
+ {
+  "id": "c08",
+  "niveau": "epice",
+  "texte": "As-tu déjà ghosté quelqu’un après un date ?"
+ },
+ {
+  "id": "c09",
+  "niveau": "soft",
+  "texte": "As-tu déjà mangé quelque chose tombé par terre en vérifiant que personne ne regardait ?"
+ },
+ {
+  "id": "c10",
+  "niveau": "epice",
+  "texte": "As-tu déjà dit « je t’aime » sans le penser ?"
+ },
+ {
+  "id": "c11",
+  "niveau": "soft",
+  "texte": "As-tu déjà fait semblant de connaître une chanson en mimant les paroles ?"
+ },
+ {
+  "id": "c12",
+  "niveau": "hot",
+  "texte": "As-tu déjà embrassé quelqu’un dont tu as oublié le prénom ?"
+ },
+ {
+  "id": "c13",
+  "niveau": "soft",
+  "texte": "As-tu déjà regifté un cadeau ?"
+ },
+ {
+  "id": "c14",
+  "niveau": "epice",
+  "texte": "As-tu déjà lu les messages de quelqu’un par-dessus son épaule ?"
+ },
+ {
+  "id": "c15",
+  "niveau": "soft",
+  "texte": "As-tu déjà dit du mal de quelqu’un présent ce soir ?"
+ },
+ {
+  "id": "c16",
+  "niveau": "epice",
+  "texte": "As-tu déjà menti dans ton profil sur une appli de rencontre ?"
+ },
+ {
+  "id": "c17",
+  "niveau": "soft",
+  "texte": "As-tu déjà fait un selfie aux toilettes ?"
+ },
+ {
+  "id": "c18",
+  "niveau": "hot",
+  "texte": "As-tu déjà envoyé une photo que tu n’aimerais pas voir sur un écran géant ?"
+ },
+ {
+  "id": "c19",
+  "niveau": "soft",
+  "texte": "As-tu déjà eu peur du noir après 18 ans ?"
+ },
+ {
+  "id": "c20",
+  "niveau": "epice",
+  "texte": "As-tu déjà été jaloux ou jalouse du couple d’un ami ?"
+ },
+ {
+  "id": "c21",
+  "niveau": "soft",
+  "texte": "As-tu déjà été viré d’un groupe WhatsApp ?"
+ },
+ {
+  "id": "c22",
+  "niveau": "epice",
+  "texte": "As-tu déjà liké une vieille photo par erreur en stalkant quelqu’un ?"
+ },
+ {
+  "id": "c23",
+  "niveau": "soft",
+  "texte": "As-tu déjà inventé une excuse bidon pour ne pas rendre un service ?"
+ },
+ {
+  "id": "c24",
+  "niveau": "hot",
+  "texte": "As-tu déjà eu un rêve chelou avec quelqu’un de cette table ?"
+ },
+ {
+  "id": "c25",
+  "niveau": "soft",
+  "texte": "As-tu déjà parlé tout seul dans la rue, sans écouteurs ?"
+ },
+ {
+  "id": "c26",
+  "niveau": "epice",
+  "texte": "As-tu déjà dragué quelqu’un juste pour rendre une autre personne jalouse ?"
+ },
+ {
+  "id": "c27",
+  "niveau": "soft",
+  "texte": "As-tu déjà fait semblant d’être au téléphone pour éviter quelqu’un ?"
+ },
+ {
+  "id": "c28",
+  "niveau": "epice",
+  "texte": "As-tu déjà recontacté un ex à 2 h du matin ?"
+ },
+ {
+  "id": "c29",
+  "niveau": "soft",
+  "texte": "As-tu déjà triché à un jeu de société… ce soir compris ?"
+ },
+ {
+  "id": "c30",
+  "niveau": "epice",
+  "texte": "As-tu déjà été le ou la « plan B » de quelqu’un, et tu le savais ?"
+ },
+ {
+  "id": "c31",
+  "niveau": "soft",
+  "texte": "As-tu déjà oublié l’anniversaire d’une personne présente ce soir ?"
+ },
+ {
+  "id": "c32",
+  "niveau": "hot",
+  "texte": "As-tu déjà fait un date avec deux personnes différentes le même jour ?"
+ },
+ {
+  "id": "c33",
+  "niveau": "soft",
+  "texte": "As-tu déjà chanté sous la douche une chanson dont tu as honte ?"
+ },
+ {
+  "id": "c34",
+  "niveau": "epice",
+  "texte": "As-tu déjà menti à quelqu’un de cette table pour éviter une soirée ?"
+ },
+ {
+  "id": "c35",
+  "niveau": "soft",
+  "texte": "As-tu déjà payé pour un jeu mobile ?"
+ },
+ {
+  "id": "c36",
+  "niveau": "epice",
+  "texte": "As-tu déjà regardé le profil d’un ou une ex de ton ou ta partenaire ?"
+ },
+ {
+  "id": "c37",
+  "niveau": "soft",
+  "texte": "As-tu déjà dormi plus de 14 heures d’affilée ?"
+ },
+ {
+  "id": "c38",
+  "niveau": "hot",
+  "texte": "As-tu déjà fait quelque chose dans un lieu public que tu ne raconterais pas à tes parents ?"
+ },
+ {
+  "id": "c39",
+  "niveau": "soft",
+  "texte": "As-tu déjà gardé un secret qu’on t’avait confié… pendant moins de 24 heures ?"
+ },
+ {
+  "id": "c40",
+  "niveau": "epice",
+  "texte": "As-tu déjà dit « je suis en route » alors que tu étais encore sous la douche ?"
+ }
+]
