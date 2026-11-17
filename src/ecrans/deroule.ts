@@ -4,7 +4,7 @@ import { maintenant } from '../firebase';
 import { jeuParId } from '../games';
 import type { VueJeu } from '../games/interface';
 import { esc, auHasard } from '../outils';
-import { majoriteOui, missionTrouvee, scoreVide, totalFinal, totalProvisoire } from '../score';
+import { majoriteOui, missionTrouvee, places, scoreVide, totalFinal, totalProvisoire } from '../score';
 import { DUREE_RECIT } from '../hote';
 import { RAPPELS_MISSION } from '../narrateur';
 import { brouillons } from '../ui';
@@ -86,10 +86,15 @@ export function ecranClassement(): string {
   if (rappel.numero !== d.numeroJeu) rappel = { numero: d.numeroJeu, texte: auHasard(RAPPELS_MISSION) };
   const liste = uids().sort((a, b) => totalProvisoire(S.scores[b]) - totalProvisoire(S.scores[a]));
   const jeu = jeuParId(d.dernierJeu?.id);
+  // Place de chacun au jeu qui vient de se terminer (au Parieur : selon les points gagnés),
+  // pour pouvoir juger les missions du type « termine 2e » ou « finis dernier ».
+  const placesJeu = d.dernierJeu?.points ? places(d.dernierJeu.points) : {};
   const lignes = liste.map((u, i) => {
     const gagne = d.dernierJeu?.points?.[u] ?? 0;
+    const p = placesJeu[u];
+    const place = p ? `<span class="place-jeu">${p === 1 ? '1er' : `${p}e`} au jeu</span>` : '';
     return `<div class="ligne-classement ${u === S.uid ? 'moi' : ''}">
-      <span class="rang">${i + 1}</span>${pastille(S.joueurs[u], 30)}<strong>${nom(u)}</strong>
+      <span class="rang">${i + 1}</span>${pastille(S.joueurs[u], 30)}<strong>${nom(u)}${place}</strong>
       <span class="gain">${gagne > 0 ? `+${gagne}` : gagne < 0 ? gagne : ''}</span><span class="total">${totalProvisoire(S.scores[u])}</span></div>`;
   }).join('');
   const suivant = d.numeroJeu >= total ? 'Passer au pari détective' : d.numeroJeu === total / 2 ? 'Mi-partie : nouvelles missions' : `Jeu suivant (${d.numeroJeu + 1}/${total})`;

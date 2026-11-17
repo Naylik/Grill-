@@ -86,3 +86,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 17/11/2026 · Missions relues par le fondateur (tableau) : 7 supprimées, 8 réécrites, 24 nouvelles gardées → 77 missions
   (vie réelle 23 faciles / 16 difficiles, mini-jeux 17 faciles / 21 difficiles). Objectif : environ 120 pour la phase
   de test. En attente : ligne 99 du tableau (« Réponds en dernier à chaque question d'un mini-jeu », à reformuler).
+- 17/11/2026 · Relecture des missions (suite) : v36 et j18 supprimées, v32 et j13 réécrites (vote secret invérifiable),
+  v21 et v30 passées en Épicé, j42 ajoutée (« Sois le premier à répondre… ») → 76 missions. Pas de règle de tirage
+  pendant la phase de test : toutes les missions peuvent sortir. Le classement provisoire affiche la place de chacun
+  au dernier jeu (au Parieur : selon les points gagnés) pour pouvoir juger les missions de classement.

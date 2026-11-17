@@ -392,3 +392,7 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .mallow-podium strong { color: var(--jaune); }
 .danse { animation: danse .5s ease-in-out infinite alternate; transform-origin: 50% 100%; }
 @keyframes danse { from { transform: rotate(-8deg) translateY(0); } to { transform: rotate(8deg) translateY(-8px); } }
+
+/* Place au dernier jeu, sous le prénom (classement provisoire) */
+.ligne-classement strong { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.place-jeu { font-family: var(--corps); font-size: 12px; font-weight: 700; color: var(--texte-3); }

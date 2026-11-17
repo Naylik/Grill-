@@ -144,14 +144,6 @@
   "texte": "Fais faire un pouce en l’air à {cible} sans le lui demander."
  },
  {
-  "id": "v36",
-  "type": "vie",
-  "difficulte": "facile",
-  "niveau": "soft",
-  "categorie": "Comportement",
-  "texte": "Garde les bras croisés pendant tout un mini-jeu, sans que personne ne te demande pourquoi."
- },
- {
   "id": "v37",
   "type": "vie",
   "difficulte": "facile",
@@ -211,7 +203,7 @@
   "id": "v21",
   "type": "vie",
   "difficulte": "difficile",
-  "niveau": "hot",
+  "niveau": "epice",
   "categorie": "Faire avouer",
   "texte": "Fais avouer à {cible} le message le plus gênant qu’il ou elle a envoyé à la mauvaise personne."
  },
@@ -267,7 +259,7 @@
   "id": "v30",
   "type": "vie",
   "difficulte": "difficile",
-  "niveau": "hot",
+  "niveau": "epice",
   "categorie": "Faire avouer",
   "texte": "Fais avouer à {cible} un secret qu’il ou elle n’a jamais raconté à personne autour de la table."
  },
@@ -285,7 +277,7 @@
   "difficulte": "difficile",
   "niveau": "soft",
   "categorie": "Manipulation",
-  "texte": "Convaincs {cible} que vous avez la même mission et que vous devez vous aider."
+  "texte": "Convaincs {cible} que ta mission l’avantage, et que vous devez vous aider."
  },
  {
   "id": "v41",
@@ -389,7 +381,7 @@
   "difficulte": "facile",
   "niveau": "soft",
   "categorie": "Manipulation",
-  "texte": "Dans un jeu où l’on vote, fais voter {cible} comme toi."
+  "texte": "Fais en sorte que {cible} t’avoue pour qui il ou elle a voté."
  },
  {
   "id": "j14",
@@ -448,6 +440,14 @@
   "texte": "Termine 3e d’un mini-jeu."
  },
  {
+  "id": "j42",
+  "type": "jeu",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Comportement",
+  "texte": "Sois le premier à répondre à chaque question d’un mini-jeu."
+ },
+ {
   "id": "j06",
   "type": "jeu",
   "difficulte": "difficile",
@@ -470,14 +470,6 @@
   "niveau": "soft",
   "categorie": "Classement",
   "texte": "Finis dernier ou avant-dernier à tous les mini-jeux d’une manche, sans te faire griller."
- },
- {
-  "id": "j18",
-  "type": "jeu",
-  "difficulte": "difficile",
-  "niveau": "epice",
-  "categorie": "Sabotage",
-  "texte": "Fais voter le groupe contre {cible} dans un jeu où l’on vote."
  },
  {
   "id": "j19",
