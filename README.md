@@ -79,3 +79,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   dans le bandeau) : roue, ding à chaque réponse, tic des 5 dernières secondes, pschhh + musique « grillé »,
   arpège de mission réussie, jingle du podium. Animations : confettis (podium, mission réussie), Mallow couronné qui
   danse au podium, vibration quand quelqu'un se fait griller. Déclenchés une seule fois par moment (effets.ts).
+- 17/11/2026 · Tableau de relecture des missions (Claude Sheets) : https://claude.ai/artifact/FeDVbTmg11JXWhvpGTmbm1
+  Colonnes : N°, Mission, Mon avis (J'aime / À modifier / À supprimer / Nouvelle), Ma version, Type, Difficulté, Niveau,
+  Catégorie, Commentaire. Quand le fondateur le demande, relire le tableau et reporter les changements dans
+  src/data/missions.json (garder 2 types × 2 difficultés équilibrés, {cible} pour la personne visée).
