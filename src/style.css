@@ -379,3 +379,16 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .fiche-jeu p { margin: 0; font-size: 14.5px; line-height: 1.45; color: var(--texte-2); }
 .fiche-gagner strong { color: var(--texte); }
 .fiche-note { font-size: 13px !important; color: var(--jaune) !important; }
+
+/* Son et animations */
+.son-mini { width: 38px; height: 34px; display: grid; place-items: center; border-radius: 99px; border: 1px solid var(--bord); background: #ffffff0d; color: var(--texte-2); cursor: pointer; flex-shrink: 0; }
+.son-mini[aria-pressed="false"] { color: var(--rose); border-color: #FF5A6E66; }
+.bandeau .qui { gap: 8px; }
+.haut-accueil { align-items: center; }
+.haut-accueil .son-mini { width: 44px; height: 38px; }
+.confettis { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
+.mallow-podium { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.mallow-podium p { margin: 0; color: var(--texte-2); font-weight: 700; }
+.mallow-podium strong { color: var(--jaune); }
+.danse { animation: danse .5s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+@keyframes danse { from { transform: rotate(-8deg) translateY(0); } to { transform: rotate(8deg) translateY(-8px); } }

@@ -5,7 +5,8 @@ import { ref, runTransaction, set, update } from 'firebase/database';
 import { connexion, configManquante, db, maintenant } from './firebase';
 import { S, brancherAffichage, demanderAffichage, ecouterSalon, estHote, quandCaChange, quitterEcoute } from './etat';
 import { commandeHote, commandeJeu, piloter } from './hote';
-import { effetsJoueur, repondre } from './effets';
+import { effetsJoueur, momentsForts, repondre } from './effets';
+import { basculerSon, debloquer, sons } from './son';
 import { choisirMission } from './missions';
 import { jeuParId } from './games';
 import { localJeu, vueJeu } from './ecrans/deroule';
@@ -187,6 +188,11 @@ action('abandonner', () => {
   demanderAffichage();
 });
 
+action('son', () => {
+  if (basculerSon()) sons.ding();
+  demanderAffichage();
+});
+
 action('demanderQuitter', () => {
   S.confirmerQuitter = true;
   demanderAffichage();
@@ -212,11 +218,15 @@ action('choisirMission', async (el) => {
   (el as HTMLButtonElement).disabled = true;
   if (await choisirMission(S.code!, S.uid, S.joueurs, S.secrets, numero, Number(el.dataset.index))) {
     vibrer(80);
+    sons.ding();
     await repondre(`mission${numero}`);
   }
 });
 
-action('voterJeu', (el) => repondre(`choix-${S.deroule!.numeroJeu}`, { jeu: el.dataset.valeur }));
+action('voterJeu', (el) => {
+  sons.ding();
+  return repondre(`choix-${S.deroule!.numeroJeu}`, { jeu: el.dataset.valeur });
+});
 
 action('jeu', async (el) => {
   const jeu = jeuParId(S.deroule?.jeuEnCours);
@@ -224,7 +234,10 @@ action('jeu', async (el) => {
   if (!jeu || !geste || !S.jeu || (S.jeu as { jeuId?: string }).jeuId !== jeu.id) return;
   const etape = (S.jeu as { etape: string }).etape;
   await geste(el, {
-    repondre: (valeurs) => repondre(etape, valeurs),
+    repondre: (valeurs) => {
+      sons.ding();
+      return repondre(etape, valeurs);
+    },
     incrementer: async (compteur) => {
       await runTransaction(ref(db, `salons/${S.code}/compteurs/${compteur}`), (n: number | null) => (n ?? 0) + 1);
     },
@@ -247,6 +260,7 @@ action('parier', async () => {
     return;
   }
   await set(ref(db, `salons/${S.code}/paris/${S.uid}`), { cible: brouillons.cible, texte: texte.slice(0, 160) });
+  sons.ding();
   await repondre('detective');
 });
 action('pasDePari', async () => {
@@ -258,6 +272,7 @@ action('voter', async (el) => {
   const v = el.dataset.valeur!;
   const valeur = v === 'true' ? true : v === 'false' ? false : Number(v);
   await set(ref(db, `salons/${S.code}/votes/${el.dataset.sujet}/${S.uid}`), valeur);
+  sons.ding();
   vibrer(30);
 });
 
@@ -311,15 +326,21 @@ action('fermerApercu', () => {
 // L'hôte fait avancer la partie ; chaque téléphone fait ses propres tâches.
 quandCaChange(() => {
   effetsJoueur();
+  momentsForts();
   void piloter();
 });
 setInterval(() => void piloter(), 500);
 
-// Chronos : mis à jour sans redessiner l'écran.
+// Chronos : mis à jour sans redessiner l'écran. Un tic sonore pendant les 5 dernières secondes.
+const ticsJoues = new Map<string, number>();
 setInterval(() => {
   document.querySelectorAll<HTMLElement>('.chrono[data-fin]').forEach((el) => {
     const reste = Math.max(0, Number(el.dataset.fin) - maintenant());
     const s = Math.ceil(reste / 1000);
+    if (s >= 1 && s <= 5 && ticsJoues.get(el.dataset.fin!) !== s) {
+      ticsJoues.set(el.dataset.fin!, s);
+      sons.tic(s === 1);
+    }
     const span = el.querySelector('span')!;
     if (span.textContent !== `${s}`) span.textContent = `${s}`;
     el.classList.toggle('urgent', s <= 5);
@@ -333,6 +354,8 @@ const reveler = (e: Event, oui: boolean) => {
   else if (!oui) document.querySelectorAll('[data-appui].revele').forEach((x) => x.classList.remove('revele'));
 };
 document.addEventListener('pointerdown', (e) => reveler(e, true));
+// Les téléphones n'autorisent le son qu'après un appui : on le débloque dès le premier.
+document.addEventListener('pointerdown', () => void debloquer(), { once: true });
 ['pointerup', 'pointercancel', 'pointerleave'].forEach((t) => document.addEventListener(t, (e) => reveler(e, false)));
 document.addEventListener('contextmenu', (e) => {
   if ((e.target as HTMLElement).closest?.('[data-appui]')) e.preventDefault();

@@ -10,7 +10,7 @@ import { RAPPELS_MISSION } from '../narrateur';
 import { brouillons } from '../ui';
 import { attenteDes, bulle, chrono, pastille } from './commun';
 import { carteMission } from './missions';
-import { sequenceGrille } from '../mallow';
+import { mallow, sequenceGrille } from '../mallow';
 
 /** Mémoire locale des jeux sur ce téléphone (ex. « j'ai répondu oui »). */
 export const localJeu: Record<string, unknown> = {};
@@ -217,6 +217,7 @@ export function ecranFin(): string {
   }).join('');
   const vainqueur = liste[0];
   return `<h2 class="centre-texte">Podium</h2>
+    <div class="mallow-podium"><div class="danse">${mallow({ taille: 96, couronne: true })}</div><p><strong>${nom(vainqueur)}</strong> règne sur la soirée</p></div>
     <div class="podium">${podium}</div>
     ${bulle(`Bravo ${nom(vainqueur)}. Les autres : on se refait ça ?`)}
     ${details}

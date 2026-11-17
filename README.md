@@ -75,3 +75,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   l'écran de connexion au salon.
 - 16/11/2026 · Accueil : bouton « Liste des jeux » (principe, barème en bref, règles de chaque mini-jeu). Chaque jeu
   porte son explication et son icône (champs explication et icone de l'interface MiniJeu).
+- 17/11/2026 · Sons (src/son.ts, fabriqués par le navigateur, activés par défaut, bouton pour couper sur l'accueil et
+  dans le bandeau) : roue, ding à chaque réponse, tic des 5 dernières secondes, pschhh + musique « grillé »,
+  arpège de mission réussie, jingle du podium. Animations : confettis (podium, mission réussie), Mallow couronné qui
+  danse au podium, vibration quand quelqu'un se fait griller. Déclenchés une seule fois par moment (effets.ts).

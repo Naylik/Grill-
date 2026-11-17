@@ -2,7 +2,8 @@ import { brouillons } from '../ui';
 import { esc } from '../outils';
 import { S } from '../etat';
 import { mallow, logo } from '../mallow';
-import { erreur } from './commun';
+import { boutonSon, erreur } from './commun';
+import { sonActif } from '../son';
 
 /** Les cartes secrètes de l'accueil (élément fort choisi le 16/11). */
 const CARTES = `<div class="cartes-secretes" aria-label="2 missions secrètes t’attendent">
@@ -18,7 +19,7 @@ export function ecranAccueil(codeLien: string | null): string {
   const prenom = esc(brouillons.prenom ?? localStorage.getItem('grille:prenom') ?? '');
   const code = esc(brouillons.code ?? codeLien ?? '');
   return `<section class="ecran accueil">
-    <div class="haut-accueil"><span class="pilule">SAISON 1</span><span class="pilule">3–6 JOUEURS</span></div>
+    <div class="haut-accueil"><span class="pilule">3–6 JOUEURS</span>${boutonSon(sonActif())}</div>
     <div class="titre">
       <div class="flotte">${mallow({ taille: 132 })}</div>
       ${logo()}

@@ -5,6 +5,10 @@ import { db } from './firebase';
 import { S, charges } from './etat';
 import { preparerPropositions } from './missions';
 import { vibrer } from './ui';
+import { maintenant } from './firebase';
+import { majoriteOui, missionTrouvee } from './score';
+import { sons } from './son';
+import { confettis } from './confettis';
 
 export function repondre(etape: string, valeurs: Record<string, unknown> = {}): Promise<void> {
   return set(ref(db, `salons/${S.code}/reponses/${S.uid}`), { ...valeurs, etape });
@@ -46,5 +50,55 @@ export function effetsJoueur(): void {
   if (d.phase === 'revelation' && charges.has('revelation') && !S.revelation[S.uid]?.missions && secrets.mission1) {
     const missions = [secrets.mission1, secrets.mission2].filter(Boolean).map((m) => ({ texte: m!.texte, difficulte: m!.difficulte, type: m!.type }));
     une('rev', () => set(ref(db, `salons/${code}/revelation/${S.uid}`), { missions }));
+  }
+}
+
+// ——— Moments forts : sons et animations, joués une seule fois par moment ———
+const joues = new Set<string>();
+function moment(cle: string, f: () => void): void {
+  if (joues.has(cle)) return;
+  joues.add(cle);
+  f();
+}
+
+export function momentsForts(): void {
+  const d = S.deroule;
+  if (!S.code || !d) return;
+  if (d.phase === 'salon') {
+    joues.clear();
+    return;
+  }
+  // La roue : seulement si on la voit tourner depuis le début.
+  if (d.phase === 'choixJeu' && d.roue && maintenant() - d.roue.lanceLe < 1500) {
+    moment(`roue-${d.numeroJeu}-${d.roue.lanceLe}`, () => sons.roue());
+  }
+  // Révélation : quelqu'un s'est fait griller, ou une mission est réussie.
+  const r = d.revelation;
+  if (d.phase === 'revelation' && r?.etape === 'resultat') {
+    const sujet = r.ordre[r.index];
+    const grille = (r.paris ?? []).some((p) => missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number)) > 0);
+    const nbMissions = S.revelation[sujet]?.missions?.length ?? 0;
+    const reussie = Array.from({ length: nbMissions }, (_, i) =>
+      majoriteOui(Object.values(S.votes[`m${i + 1}-${sujet}`] ?? {}).map((v) => v === true)),
+    ).some(Boolean);
+    if (grille) {
+      moment(`grille-${r.index}`, () => {
+        sons.grille();
+        setTimeout(() => vibrer([120, 60, 220]), 1450);
+      });
+    } else if (reussie) {
+      moment(`reussi-${r.index}`, () => {
+        sons.reussi();
+        confettis(70);
+      });
+    }
+  }
+  // Podium.
+  if (d.phase === 'fin') {
+    moment('fin', () => {
+      sons.podium();
+      confettis(160);
+      setTimeout(() => confettis(90), 900);
+    });
   }
 }

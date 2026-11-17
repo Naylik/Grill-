@@ -1,7 +1,8 @@
 // Écran pendant la partie : bandeau du joueur + onglets « Partie » et « Mes missions ».
 import { S, moi } from '../etat';
 import { esc } from '../outils';
-import { pastille } from './commun';
+import { boutonSon, pastille } from './commun';
+import { sonActif } from '../son';
 import { ecranChoixMission, ongletMissions } from './missions';
 import { ecranChoixJeu, ecranClassement, ecranDetective, ecranFin, ecranJeu, ecranRevelation } from './deroule';
 
@@ -11,6 +12,7 @@ function bandeau(): string {
   return `<header class="bandeau">
     <div class="qui">${pastille(j, 30)}<span><strong>${esc(j.prenom)}</strong> <span style="color:${j.couleur}">${esc(j.nomCode)}</span></span>
       <span class="code-mini">${S.code}</span>
+      ${boutonSon(sonActif())}
       <button class="quitter-mini" data-action="demanderQuitter" aria-label="Quitter la partie">Quitter</button></div>
     ${S.confirmerQuitter ? `<div class="confirmer" role="alertdialog" aria-label="Quitter la partie ?">
       <p>Quitter la partie ? Tu pourras revenir plus tard avec le code <strong>${S.code}</strong>, tes missions et tes points seront gardés.</p>
