@@ -80,14 +80,6 @@
   "texte": "Appelle {cible} « mon cœur » au moins deux fois, sans jamais expliquer pourquoi."
  },
  {
-  "id": "v11",
-  "type": "vie",
-  "difficulte": "facile",
-  "niveau": "soft",
-  "categorie": "Faire faire un geste",
-  "texte": "Fais en sorte que {cible} te tape dans la main pour fêter quelque chose."
- },
- {
   "id": "v12",
   "type": "vie",
   "difficulte": "facile",
@@ -101,7 +93,7 @@
   "difficulte": "facile",
   "niveau": "epice",
   "categorie": "Faire avouer",
-  "texte": "Fais raconter à {cible} son pire date."
+  "texte": "Fais avouer à {cible} sa pire honte de soirée."
  },
  {
   "id": "v14",
@@ -122,18 +114,74 @@
  {
   "id": "v16",
   "type": "vie",
-  "difficulte": "difficile",
+  "difficulte": "facile",
   "niveau": "soft",
   "categorie": "Faire faire un geste",
-  "texte": "Obtiens un high five de chaque joueur avant la fin de la manche."
+  "texte": "Obtiens un check de chaque joueur avant la fin de la partie."
  },
  {
-  "id": "v17",
+  "id": "v33",
   "type": "vie",
-  "difficulte": "difficile",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Faire dire",
+  "texte": "Dis un mensonge énorme, et fais dire « je te crois » à {cible}."
+ },
+ {
+  "id": "v34",
+  "type": "vie",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Mauvaise foi",
+  "texte": "Accuse {cible} d’avoir une mission contre toi, jusqu’à ce qu’il ou elle te jure que non."
+ },
+ {
+  "id": "v35",
+  "type": "vie",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Faire faire un geste",
+  "texte": "Fais faire un pouce en l’air à {cible} sans le lui demander."
+ },
+ {
+  "id": "v36",
+  "type": "vie",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Comportement",
+  "texte": "Garde les bras croisés pendant tout un mini-jeu, sans que personne ne te demande pourquoi."
+ },
+ {
+  "id": "v37",
+  "type": "vie",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Faire faire un geste",
+  "texte": "Fais bâiller {cible} (le bâillement, ça se transmet…)."
+ },
+ {
+  "id": "v38",
+  "type": "vie",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Comportement",
+  "texte": "Fais un salut militaire chaque fois que l’hôte lance un jeu, sans jamais expliquer pourquoi."
+ },
+ {
+  "id": "v39",
+  "type": "vie",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Bluff",
+  "texte": "Fais croire à {cible} que tu l’as croisé(e) quelque part cette semaine."
+ },
+ {
+  "id": "v40",
+  "type": "vie",
+  "difficulte": "facile",
   "niveau": "epice",
-  "categorie": "Faire avouer",
-  "texte": "Fais avouer à {cible} son pire râteau."
+  "categorie": "Drague pour rire",
+  "texte": "Fais en sorte que {cible} te fasse un clin d’œil."
  },
  {
   "id": "v18",
@@ -141,7 +189,7 @@
   "difficulte": "difficile",
   "niveau": "epice",
   "categorie": "Drague pour rire",
-  "texte": "Fais semblant d’être jaloux ou jalouse de {cible} pendant un mini-jeu, sans que personne ne comprenne que c’est une mission."
+  "texte": "Reproche à {cible} de t’ignorer ce soir, jusqu’à ce qu’il ou elle s’excuse."
  },
  {
   "id": "v19",
@@ -188,24 +236,8 @@
   "type": "vie",
   "difficulte": "difficile",
   "niveau": "soft",
-  "categorie": "Comportement",
-  "texte": "Convaincs le groupe que tu as un talent caché (inventé) et fais-le tester par quelqu’un."
- },
- {
-  "id": "v25",
-  "type": "vie",
-  "difficulte": "difficile",
-  "niveau": "hot",
-  "categorie": "Faire avouer",
-  "texte": "Fais dire à {cible} qui il ou elle embrasserait autour de la table si c’était la fin du monde."
- },
- {
-  "id": "v26",
-  "type": "vie",
-  "difficulte": "difficile",
-  "niveau": "epice",
-  "categorie": "Drague pour rire",
-  "texte": "Fais une déclaration d’amour théâtrale à {cible} et obtiens une réponse sur le même ton."
+  "categorie": "Bluff",
+  "texte": "Fais croire au groupe que tu as rencontré une personne célèbre."
  },
  {
   "id": "v27",
@@ -221,7 +253,7 @@
   "difficulte": "difficile",
   "niveau": "soft",
   "categorie": "Faire dire",
-  "texte": "Fais dire à {cible} une phrase en anglais avec un accent exagéré."
+  "texte": "Fais parler {cible} avec l’accent marseillais pendant au moins une phrase."
  },
  {
   "id": "v29",
@@ -240,6 +272,46 @@
   "texte": "Fais avouer à {cible} un secret qu’il ou elle n’a jamais raconté à personne autour de la table."
  },
  {
+  "id": "v31",
+  "type": "vie",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Bluff",
+  "texte": "Confie en secret une fausse mission à {cible}, et fais en sorte qu’il ou elle parie dessus au pari détective."
+ },
+ {
+  "id": "v32",
+  "type": "vie",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Manipulation",
+  "texte": "Convaincs {cible} que vous avez la même mission et que vous devez vous aider."
+ },
+ {
+  "id": "v41",
+  "type": "vie",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Faire faire un geste",
+  "texte": "Fais lever la main à toute la table en même temps."
+ },
+ {
+  "id": "v42",
+  "type": "vie",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Bluff",
+  "texte": "Invente une fausse règle du jeu et fais-la appliquer par au moins deux joueurs."
+ },
+ {
+  "id": "v43",
+  "type": "vie",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Comportement",
+  "texte": "Chuchote pendant tout un mini-jeu, sans que personne ne comprenne pourquoi."
+ },
+ {
   "id": "j01",
   "type": "jeu",
   "difficulte": "facile",
@@ -248,20 +320,12 @@
   "texte": "Termine 2e d’un mini-jeu, pas 1er."
  },
  {
-  "id": "j02",
-  "type": "jeu",
-  "difficulte": "facile",
-  "niveau": "soft",
-  "categorie": "Bluff",
-  "texte": "Pendant un mini-jeu, fais croire à tout le monde que tu as trouvé la réponse alors que non."
- },
- {
   "id": "j03",
   "type": "jeu",
   "difficulte": "facile",
   "niveau": "soft",
   "categorie": "Mauvaise foi",
-  "texte": "Accuse {cible} de tricher au moins une fois après un mini-jeu."
+  "texte": "Accuse {cible} de tricher, et obtiens qu’il ou elle se justifie."
  },
  {
   "id": "j04",
@@ -270,22 +334,6 @@
   "niveau": "soft",
   "categorie": "Manipulation",
   "texte": "Pendant un mini-jeu, demande conseil à {cible}, puis fais exactement l’inverse."
- },
- {
-  "id": "j05",
-  "type": "jeu",
-  "difficulte": "facile",
-  "niveau": "soft",
-  "categorie": "Taquinerie",
-  "texte": "Félicite {cible} de façon exagérée après un mini-jeu, même s’il ou elle a perdu."
- },
- {
-  "id": "j06",
-  "type": "jeu",
-  "difficulte": "facile",
-  "niveau": "soft",
-  "categorie": "Classement",
-  "texte": "Annonce à voix haute que tu vas gagner le prochain mini-jeu, puis finis dans la première moitié du classement."
  },
  {
   "id": "j07",
@@ -360,6 +408,54 @@
   "texte": "Après un mini-jeu, dépose une réclamation officielle auprès de l’hôte pour contester le résultat."
  },
  {
+  "id": "j32",
+  "type": "jeu",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Mauvaise foi",
+  "texte": "Défends la pire réponse d’un mini-jeu comme si c’était une évidence, jusqu’à ce que quelqu’un dise « bon, peut-être »."
+ },
+ {
+  "id": "j33",
+  "type": "jeu",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Ambiance",
+  "texte": "Pendant un mini-jeu, cache ton écran de façon très exagérée, jusqu’à ce que quelqu’un se moque de toi."
+ },
+ {
+  "id": "j34",
+  "type": "jeu",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Classement",
+  "texte": "Prédis à voix haute le gagnant d’un mini-jeu avant qu’il commence, et vois juste."
+ },
+ {
+  "id": "j35",
+  "type": "jeu",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Ambiance",
+  "texte": "Fais rire toute la table pendant un mini-jeu."
+ },
+ {
+  "id": "j36",
+  "type": "jeu",
+  "difficulte": "facile",
+  "niveau": "soft",
+  "categorie": "Classement",
+  "texte": "Termine 3e d’un mini-jeu."
+ },
+ {
+  "id": "j06",
+  "type": "jeu",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Classement",
+  "texte": "Annonce à voix haute que tu vas gagner le prochain mini-jeu… et gagne-le."
+ },
+ {
   "id": "j16",
   "type": "jeu",
   "difficulte": "difficile",
@@ -416,14 +512,6 @@
   "texte": "Convaincs {cible} de faire équipe avec toi pour un mini-jeu, puis trahis-le ou la."
  },
  {
-  "id": "j23",
-  "type": "jeu",
-  "difficulte": "difficile",
-  "niveau": "soft",
-  "categorie": "Classement",
-  "texte": "Termine une manche en tête du classement provisoire."
- },
- {
   "id": "j24",
   "type": "jeu",
   "difficulte": "difficile",
@@ -478,5 +566,53 @@
   "niveau": "soft",
   "categorie": "Ambiance",
   "texte": "Joue un mini-jeu entier en parlant avec un accent, sans t’arrêter."
+ },
+ {
+  "id": "j31",
+  "type": "jeu",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Manipulation",
+  "texte": "Pendant un même mini-jeu, donne un conseil à {cible} et le conseil inverse à un autre joueur."
+ },
+ {
+  "id": "j37",
+  "type": "jeu",
+  "difficulte": "difficile",
+  "niveau": "epice",
+  "categorie": "Manipulation",
+  "texte": "Fais se disputer deux joueurs sur un résultat de mini-jeu, sans participer toi-même à la dispute."
+ },
+ {
+  "id": "j38",
+  "type": "jeu",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Bluff",
+  "texte": "Gagne un mini-jeu en faisant croire pendant tout le jeu que tu es complètement largué."
+ },
+ {
+  "id": "j39",
+  "type": "jeu",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Classement",
+  "texte": "Termine à la même place à deux mini-jeux différents (mais pas 1er)."
+ },
+ {
+  "id": "j40",
+  "type": "jeu",
+  "difficulte": "difficile",
+  "niveau": "epice",
+  "categorie": "Trahison",
+  "texte": "Fais-toi remercier par {cible} pour un conseil qui l’a en réalité fait perdre."
+ },
+ {
+  "id": "j41",
+  "type": "jeu",
+  "difficulte": "difficile",
+  "niveau": "soft",
+  "categorie": "Classement",
+  "texte": "Réponds en dernier à toutes les questions d’un mini-jeu, et finis quand même dans les 2 premiers."
  }
 ]

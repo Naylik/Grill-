@@ -83,3 +83,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Colonnes : N°, Mission, Mon avis (J'aime / À modifier / À supprimer / Nouvelle), Ma version, Type, Difficulté, Niveau,
   Catégorie, Commentaire. Quand le fondateur le demande, relire le tableau et reporter les changements dans
   src/data/missions.json (garder 2 types × 2 difficultés équilibrés, {cible} pour la personne visée).
+- 17/11/2026 · Missions relues par le fondateur (tableau) : 7 supprimées, 8 réécrites, 24 nouvelles gardées → 77 missions
+  (vie réelle 23 faciles / 16 difficiles, mini-jeux 17 faciles / 21 difficiles). Objectif : environ 120 pour la phase
+  de test. En attente : ligne 99 du tableau (« Réponds en dernier à chaque question d'un mini-jeu », à reformuler).

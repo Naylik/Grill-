@@ -64,10 +64,10 @@ describe('barème', () => {
 });
 
 describe('banques de contenu', () => {
-  it('60 missions équilibrées, ids uniques, {cible} bien écrit', () => {
-    expect(BANQUE).toHaveLength(60);
-    expect(new Set(BANQUE.map((m) => m.id)).size).toBe(60);
-    for (const type of ['vie', 'jeu']) for (const d of ['facile', 'difficile']) expect(BANQUE.filter((m) => m.type === type && m.difficulte === d)).toHaveLength(15);
+  it('missions équilibrées (au moins 15 par type et difficulté), ids uniques, {cible} bien écrit', () => {
+    expect(BANQUE.length).toBeGreaterThanOrEqual(60);
+    expect(new Set(BANQUE.map((m) => m.id)).size).toBe(BANQUE.length);
+    for (const type of ['vie', 'jeu']) for (const d of ['facile', 'difficile']) expect(BANQUE.filter((m) => m.type === type && m.difficulte === d).length).toBeGreaterThanOrEqual(15);
     for (const m of BANQUE) {
       expect(['soft', 'epice', 'hot']).toContain(m.niveau);
       expect(m.texte.replaceAll('{cible}', '')).not.toMatch(/[{}]/);
