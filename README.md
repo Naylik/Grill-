@@ -215,3 +215,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Parieur borné entre −6 et +8 sur le jeu (avant : jusqu'à ±15 à 6 joueurs). Validé dans le document : 14 missions
   longues ajoutées (H), 8 dans le style de Kilyan (N), ses 5 missions (K),
   16 faciles retirées.
+- 18/11/2026 · « Termine 2e au classement final » devenait impossible (ses propres points le faisaient passer 1er) :
+  elle se juge sur le classement affiché à la fin du dernier jeu, avant les points des grosses missions. 3 missions de
+  Kilyan (message privé, sortir de la pièce, raconter sa semaine) passent en « difficile » (un seul coup).
