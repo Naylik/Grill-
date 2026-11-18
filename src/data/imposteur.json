@@ -268,5 +268,275 @@
    "Mercredi",
    "La Famille Addams"
   ]
+ },
+ {
+  "id": "i31",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Clash Royale",
+   "Brawl Stars"
+  ]
+ },
+ {
+  "id": "i32",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Among Us",
+   "Fall Guys"
+  ]
+ },
+ {
+  "id": "i33",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Zelda",
+   "Skyrim"
+  ]
+ },
+ {
+  "id": "i34",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Les Sims",
+   "Animal Crossing"
+  ]
+ },
+ {
+  "id": "i35",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Tetris",
+   "Candy Crush"
+  ]
+ },
+ {
+  "id": "i36",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Street Fighter",
+   "Tekken"
+  ]
+ },
+ {
+  "id": "i37",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "PlayStation",
+   "Xbox"
+  ]
+ },
+ {
+  "id": "i38",
+  "niveau": "soft",
+  "theme": "jeux vidéo",
+  "mots": [
+   "Sonic",
+   "Crash Bandicoot"
+  ]
+ },
+ {
+  "id": "i39",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Neymar",
+   "Vinícius Jr"
+  ]
+ },
+ {
+  "id": "i40",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Benzema",
+   "Lewandowski"
+  ]
+ },
+ {
+  "id": "i41",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Liverpool",
+   "Manchester United"
+  ]
+ },
+ {
+  "id": "i42",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Penalty",
+   "Coup franc"
+  ]
+ },
+ {
+  "id": "i43",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Lyon",
+   "Saint-Étienne"
+  ]
+ },
+ {
+  "id": "i44",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Ancelotti",
+   "Guardiola"
+  ]
+ },
+ {
+  "id": "i45",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Euro",
+   "Copa América"
+  ]
+ },
+ {
+  "id": "i46",
+  "niveau": "soft",
+  "theme": "foot",
+  "mots": [
+   "Kanté",
+   "Pogba"
+  ]
+ },
+ {
+  "id": "i47",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Le Roi lion",
+   "Le Livre de la jungle"
+  ]
+ },
+ {
+  "id": "i48",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Shrek",
+   "L’Âge de glace"
+  ]
+ },
+ {
+  "id": "i49",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Jurassic Park",
+   "King Kong"
+  ]
+ },
+ {
+  "id": "i50",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Intouchables",
+   "Bienvenue chez les Ch’tis"
+  ]
+ },
+ {
+  "id": "i51",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Matrix",
+   "Inception"
+  ]
+ },
+ {
+  "id": "i52",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Toy Story",
+   "Cars"
+  ]
+ },
+ {
+  "id": "i53",
+  "niveau": "soft",
+  "theme": "cinéma",
+  "mots": [
+   "Rocky",
+   "Creed"
+  ]
+ },
+ {
+  "id": "i54",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "The Office",
+   "Brooklyn Nine-Nine"
+  ]
+ },
+ {
+  "id": "i55",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Peaky Blinders",
+   "Vikings"
+  ]
+ },
+ {
+  "id": "i56",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Les Simpson",
+   "Les Griffin"
+  ]
+ },
+ {
+  "id": "i57",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "One Piece",
+   "Naruto"
+  ]
+ },
+ {
+  "id": "i58",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "The Walking Dead",
+   "The Last of Us"
+  ]
+ },
+ {
+  "id": "i59",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Grey’s Anatomy",
+   "Dr House"
+  ]
+ },
+ {
+  "id": "i60",
+  "niveau": "soft",
+  "theme": "séries",
+  "mots": [
+   "Emily in Paris",
+   "Gossip Girl"
+  ]
  }
 ]

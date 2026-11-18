@@ -74,8 +74,8 @@ describe('banques de contenu', () => {
       expect(m.texte.toLowerCase()).not.toMatch(/\b(bois|boire|verre|shot|alcool)\b/);
     }
   });
-  it('40 questions et 50 vannes', () => {
-    expect(combien).toHaveLength(40);
+  it('assez de questions pour le format Longue, et 50 vannes', () => {
+    expect(combien.filter((q) => q.niveau !== 'hot').length).toBeGreaterThanOrEqual(70);
     expect(vannes.dernier.length + vannes.premier.length + vannes.general.length).toBe(50);
   });
 });

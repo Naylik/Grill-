@@ -198,5 +198,205 @@
   "id": "c40",
   "niveau": "epice",
   "texte": "As-tu déjà dit « je suis en route » alors que tu étais encore sous la douche ?"
+ },
+ {
+  "id": "c41",
+  "niveau": "soft",
+  "texte": "As-tu déjà fait semblant de rire à une blague que tu n’avais pas comprise ?"
+ },
+ {
+  "id": "c42",
+  "niveau": "soft",
+  "texte": "As-tu déjà dit que tu avais vu un film alors que ce n’était pas vrai ?"
+ },
+ {
+  "id": "c43",
+  "niveau": "epice",
+  "texte": "As-tu déjà regardé la story de quelqu’un en cachette (compte secondaire, mode avion…) ?"
+ },
+ {
+  "id": "c44",
+  "niveau": "soft",
+  "texte": "As-tu déjà dit « j’arrive dans 5 minutes » alors que tu étais à plus de 20 minutes ?"
+ },
+ {
+  "id": "c45",
+  "niveau": "soft",
+  "texte": "As-tu déjà oublié le prénom de quelqu’un en pleine conversation avec lui ?"
+ },
+ {
+  "id": "c46",
+  "niveau": "epice",
+  "texte": "As-tu déjà supprimé un message avant que l’autre ait eu le temps de le lire ?"
+ },
+ {
+  "id": "c47",
+  "niveau": "epice",
+  "texte": "As-tu déjà fait une capture d’écran d’une conversation pour l’envoyer à quelqu’un d’autre ?"
+ },
+ {
+  "id": "c48",
+  "niveau": "epice",
+  "texte": "As-tu déjà eu un crush sur un prof ?"
+ },
+ {
+  "id": "c49",
+  "niveau": "soft",
+  "texte": "As-tu déjà dormi en cours ou au travail ?"
+ },
+ {
+  "id": "c50",
+  "niveau": "soft",
+  "texte": "As-tu déjà menti sur ta taille ?"
+ },
+ {
+  "id": "c51",
+  "niveau": "soft",
+  "texte": "As-tu déjà envoyé un vocal de plus de 3 minutes ?"
+ },
+ {
+  "id": "c52",
+  "niveau": "soft",
+  "texte": "As-tu déjà écouté une conversation qui ne te regardait pas, en faisant semblant de rien ?"
+ },
+ {
+  "id": "c53",
+  "niveau": "soft",
+  "texte": "As-tu déjà eu un fou rire au pire moment possible ?"
+ },
+ {
+  "id": "c54",
+  "niveau": "epice",
+  "texte": "As-tu déjà eu un compte secret sur un réseau social ?"
+ },
+ {
+  "id": "c55",
+  "niveau": "soft",
+  "texte": "As-tu déjà mangé le dernier morceau en sachant très bien que quelqu’un le voulait ?"
+ },
+ {
+  "id": "c56",
+  "niveau": "soft",
+  "texte": "As-tu déjà laissé un message en « vu » plus d’une journée exprès ?"
+ },
+ {
+  "id": "c57",
+  "niveau": "epice",
+  "texte": "As-tu déjà été jaloux ou jalouse de la réussite d’un ami ?"
+ },
+ {
+  "id": "c58",
+  "niveau": "soft",
+  "texte": "As-tu déjà parlé à un animal comme à un humain pendant plus de 5 minutes ?"
+ },
+ {
+  "id": "c59",
+  "niveau": "soft",
+  "texte": "As-tu déjà tapé ton propre nom sur Google ?"
+ },
+ {
+  "id": "c60",
+  "niveau": "soft",
+  "texte": "As-tu déjà dit que tu étais occupé alors que tu étais dans ton lit ?"
+ },
+ {
+  "id": "c61",
+  "niveau": "epice",
+  "texte": "As-tu déjà gardé un vêtement ou un objet d’un ou une ex ?"
+ },
+ {
+  "id": "c62",
+  "niveau": "epice",
+  "texte": "As-tu déjà écrit un long message à quelqu’un… puis tout effacé sans l’envoyer ?"
+ },
+ {
+  "id": "c63",
+  "niveau": "soft",
+  "texte": "As-tu déjà inventé un rendez-vous pour quitter une soirée plus tôt ?"
+ },
+ {
+  "id": "c64",
+  "niveau": "epice",
+  "texte": "As-tu déjà fait semblant d’aimer un cadeau d’une personne présente ce soir ?"
+ },
+ {
+  "id": "c65",
+  "niveau": "soft",
+  "texte": "As-tu déjà pleuré devant une pub ?"
+ },
+ {
+  "id": "c66",
+  "niveau": "epice",
+  "texte": "As-tu déjà dragué quelqu’un sans le faire exprès (tu pensais juste être sympa) ?"
+ },
+ {
+  "id": "c67",
+  "niveau": "soft",
+  "texte": "As-tu déjà regardé une série entière en un seul week-end ?"
+ },
+ {
+  "id": "c68",
+  "niveau": "soft",
+  "texte": "As-tu déjà oublié de couper ton micro ou ta caméra en visio ?"
+ },
+ {
+  "id": "c69",
+  "niveau": "epice",
+  "texte": "As-tu déjà fait un date en priant pour qu’il se termine vite ?"
+ },
+ {
+  "id": "c70",
+  "niveau": "epice",
+  "texte": "As-tu déjà posté une photo uniquement pour qu’une personne précise la voie ?"
+ },
+ {
+  "id": "c71",
+  "niveau": "soft",
+  "texte": "As-tu déjà discuté avec quelqu’un pendant 10 minutes sans savoir qui c’était ?"
+ },
+ {
+  "id": "c72",
+  "niveau": "soft",
+  "texte": "As-tu déjà copié les devoirs ou le travail de quelqu’un autour de cette table ?"
+ },
+ {
+  "id": "c73",
+  "niveau": "epice",
+  "texte": "As-tu déjà menti dans ce jeu, ce soir ?"
+ },
+ {
+  "id": "c74",
+  "niveau": "soft",
+  "texte": "As-tu déjà éteint ton réveil sans t’en souvenir le matin ?"
+ },
+ {
+  "id": "c75",
+  "niveau": "epice",
+  "texte": "As-tu déjà été amoureux ou amoureuse de deux personnes en même temps ?"
+ },
+ {
+  "id": "c76",
+  "niveau": "soft",
+  "texte": "As-tu déjà dit « on se fait ça bientôt » sans jamais le faire ?"
+ },
+ {
+  "id": "c77",
+  "niveau": "epice",
+  "texte": "As-tu déjà laissé quelqu’un d’autre se faire accuser d’une bêtise que tu avais faite ?"
+ },
+ {
+  "id": "c78",
+  "niveau": "soft",
+  "texte": "As-tu déjà répété une conversation importante devant le miroir ?"
+ },
+ {
+  "id": "c79",
+  "niveau": "epice",
+  "texte": "As-tu déjà relu une vieille conversation avec un ou une ex ?"
+ },
+ {
+  "id": "c80",
+  "niveau": "soft",
+  "texte": "As-tu déjà fait demi-tour dans la rue pour éviter quelqu’un ?"
  }
 ]

@@ -178,5 +178,107 @@
   "niveau": "hot",
   "texte": "Raconte ton pire râteau en 20 secondes, sans t’arrêter.",
   "duree": 20
+ },
+ {
+  "id": "d31",
+  "niveau": "soft",
+  "texte": "Cite 6 pays d’Afrique.",
+  "duree": 15
+ },
+ {
+  "id": "d32",
+  "niveau": "soft",
+  "texte": "Cite 5 chanteuses françaises.",
+  "duree": 15
+ },
+ {
+  "id": "d35",
+  "niveau": "soft",
+  "texte": "Cite 6 personnages Disney qui sont des animaux.",
+  "duree": 15
+ },
+ {
+  "id": "d36",
+  "niveau": "soft",
+  "texte": "Récite les jours de la semaine à l’envers, deux fois de suite, sans te tromper.",
+  "duree": 15
+ },
+ {
+  "id": "d37",
+  "niveau": "soft",
+  "texte": "Cite 6 marques de vêtements de sport.",
+  "duree": 15
+ },
+ {
+  "id": "d39",
+  "niveau": "soft",
+  "texte": "Cite 5 films avec un chiffre dans le titre.",
+  "duree": 20
+ },
+ {
+  "id": "d40",
+  "niveau": "soft",
+  "texte": "Trouve 5 mots qui commencent par « pro ».",
+  "duree": 15
+ },
+ {
+  "id": "d41",
+  "niveau": "soft",
+  "texte": "Fais deviner un métier en mimant, sans parler.",
+  "duree": 20
+ },
+ {
+  "id": "d42",
+  "niveau": "soft",
+  "texte": "Cite 6 fruits exotiques.",
+  "duree": 15
+ },
+ {
+  "id": "d43",
+  "niveau": "soft",
+  "texte": "Raconte le film Titanic en 15 secondes.",
+  "duree": 15
+ },
+ {
+  "id": "d44",
+  "niveau": "soft",
+  "texte": "Cite 5 joueurs de NBA.",
+  "duree": 15
+ },
+ {
+  "id": "d45",
+  "niveau": "soft",
+  "texte": "Tiens-toi sur une jambe en récitant la table de 7, de 7×1 à 7×7, sans te tromper.",
+  "duree": 20
+ },
+ {
+  "id": "d46",
+  "niveau": "epice",
+  "texte": "Cite le plat préféré de 2 joueurs de la table (ils confirment).",
+  "duree": 15
+ },
+ {
+  "id": "d47",
+  "niveau": "soft",
+  "texte": "Cite 5 émissions de télé-réalité.",
+  "duree": 15
+ },
+ {
+  "id": "d48",
+  "niveau": "soft",
+  "texte": "Chante un refrain connu en remplaçant toutes les voyelles par « i ».",
+  "duree": 15
+ },
+ {
+  "id": "d49",
+  "niveau": "epice",
+  "texte": "Imite un joueur de la table : les autres doivent deviner qui c’est.",
+  "duree": 20
+ },
+ {
+  "id": "d50",
+  "niveau": "soft",
+  "texte": "Cite 8 mots qui finissent par « -tion » en 15 secondes.",
+  "duree": 15
  }
 ]

@@ -141,3 +141,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 18/11/2026 · Jeux de réflexes raccourcis (trop répétitifs et épuisants) : Réflexe Mallow 3 / 4 / 5 manches,
   Le bon timing 2 / 3 / 4 (Courte / Normale / Longue). Colis piégé se joue en 2 tours : élimination jusqu'au dernier
   survivant, écran de fin de tour, puis tout le monde repart en vie ; le classement additionne les places des 2 tours.
+- 18/11/2026 · Réserves doublées après relecture du tableau par Kilyan (5 contenus retirés) : Combien ont dit oui ?
+  80 questions, Juste Prix 78 (dont 38 culture et 40 fun), Imposteur 60 paires, défis du Parieur 47.

@@ -73,12 +73,14 @@ describe('règles de tirage des jeux', () => {
 });
 
 describe('banques', () => {
-  it('40 questions de Juste Prix (moitié culture, moitié fun), 30 défis, 30 paires', () => {
-    expect(justeprix).toHaveLength(40);
-    expect(justeprix.filter((q) => q.categorie === 'culture')).toHaveLength(20);
+  it('assez de contenu pour le format Longue : Juste Prix (culture et fun), défis, paires', () => {
+    // 8 manches en format Longue (moitié culture, moitié fun) : il en faut largement plus.
+    expect(justeprix.length).toBeGreaterThanOrEqual(70);
+    expect(justeprix.filter((q) => q.categorie === 'culture').length).toBeGreaterThanOrEqual(30);
+    expect(justeprix.filter((q) => q.categorie === 'fun').length).toBeGreaterThanOrEqual(30);
     expect(justeprix.every((q) => typeof q.reponse === 'number')).toBe(true);
-    expect(defis).toHaveLength(30);
-    expect(imposteur).toHaveLength(30);
+    expect(defis.length).toBeGreaterThanOrEqual(30);
+    expect(imposteur.length).toBeGreaterThanOrEqual(30);
     expect(new Set(imposteur.map((p) => p.theme))).toEqual(new Set(['jeux vidéo', 'foot', 'cinéma', 'séries']));
     for (const d of defis) expect(d.texte.toLowerCase()).not.toMatch(/\b(bois|boire|verre|shot|alcool)\b/);
   });

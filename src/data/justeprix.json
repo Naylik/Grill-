@@ -318,5 +318,309 @@
   "texte": "Combien de cases compte le plateau du Monopoly ?",
   "reponse": 40,
   "unite": "cases"
+ },
+ {
+  "id": "p41",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de joueurs une équipe de rugby à XV a-t-elle sur le terrain ?",
+  "reponse": 15,
+  "unite": "joueurs"
+ },
+ {
+  "id": "p42",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année la tour Eiffel a-t-elle été inaugurée ?",
+  "reponse": 1889,
+  "unite": ""
+ },
+ {
+  "id": "p43",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien mesure le tour de la Terre à l’équateur (environ) ?",
+  "reponse": 40075,
+  "unite": "km"
+ },
+ {
+  "id": "p44",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Quelle est l’altitude de l’Everest (environ) ?",
+  "reponse": 8849,
+  "unite": "m"
+ },
+ {
+  "id": "p45",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année Christophe Colomb a-t-il atteint l’Amérique ?",
+  "reponse": 1492,
+  "unite": ""
+ },
+ {
+  "id": "p46",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année a eu lieu la Révolution russe ?",
+  "reponse": 1917,
+  "unite": ""
+ },
+ {
+  "id": "p47",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de planètes compte le système solaire ?",
+  "reponse": 8,
+  "unite": "planètes"
+ },
+ {
+  "id": "p48",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de secondes y a-t-il dans une heure ?",
+  "reponse": 3600,
+  "unite": "secondes"
+ },
+ {
+  "id": "p49",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de régions compte la France métropolitaine ?",
+  "reponse": 13,
+  "unite": "régions"
+ },
+ {
+  "id": "p50",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année les pièces et billets en euros sont-ils arrivés dans nos poches ?",
+  "reponse": 2002,
+  "unite": ""
+ },
+ {
+  "id": "p51",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de chromosomes possède un être humain ?",
+  "reponse": 46,
+  "unite": "chromosomes"
+ },
+ {
+  "id": "p52",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année Napoléon a-t-il été sacré empereur ?",
+  "reponse": 1804,
+  "unite": ""
+ },
+ {
+  "id": "p53",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année la Seconde Guerre mondiale s’est-elle terminée ?",
+  "reponse": 1945,
+  "unite": ""
+ },
+ {
+  "id": "p54",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Quelle est la profondeur de la fosse des Mariannes, le point le plus profond des océans (environ) ?",
+  "reponse": 11000,
+  "unite": "m"
+ },
+ {
+  "id": "p55",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de jours compte une année bissextile ?",
+  "reponse": 366,
+  "unite": "jours"
+ },
+ {
+  "id": "p56",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année Louis XIV est-il mort ?",
+  "reponse": 1715,
+  "unite": ""
+ },
+ {
+  "id": "p57",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "En quelle année le Titanic a-t-il coulé ?",
+  "reponse": 1912,
+  "unite": ""
+ },
+ {
+  "id": "p58",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Avec combien de pays la France métropolitaine a-t-elle une frontière terrestre ?",
+  "reponse": 8,
+  "unite": "pays"
+ },
+ {
+  "id": "p59",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien de lunes a la planète Mars ?",
+  "reponse": 2,
+  "unite": "lunes"
+ },
+ {
+  "id": "p60",
+  "categorie": "culture",
+  "niveau": "soft",
+  "texte": "Combien d’habitants compte la France (environ, en millions) ?",
+  "reponse": 68,
+  "unite": "millions"
+ },
+ {
+  "id": "p61",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de pattes a une araignée ?",
+  "reponse": 8,
+  "unite": "pattes"
+ },
+ {
+  "id": "p62",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année Facebook a-t-il été créé ?",
+  "reponse": 2004,
+  "unite": ""
+ },
+ {
+  "id": "p63",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de cordes a une guitare classique ?",
+  "reponse": 6,
+  "unite": "cordes"
+ },
+ {
+  "id": "p64",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année la Nintendo Switch est-elle sortie ?",
+  "reponse": 2017,
+  "unite": ""
+ },
+ {
+  "id": "p65",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de nains accompagnent Blanche-Neige ?",
+  "reponse": 7,
+  "unite": "nains"
+ },
+ {
+  "id": "p66",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de joueurs au maximum dans une partie d’Among Us ?",
+  "reponse": 15,
+  "unite": "joueurs"
+ },
+ {
+  "id": "p67",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de petits carrés de couleur y a-t-il en tout sur un Rubik’s Cube classique ?",
+  "reponse": 54,
+  "unite": "carrés"
+ },
+ {
+  "id": "p68",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année est sorti le premier film Toy Story ?",
+  "reponse": 1995,
+  "unite": ""
+ },
+ {
+  "id": "p69",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de cases compte une grille de Puissance 4 ?",
+  "reponse": 42,
+  "unite": "cases"
+ },
+ {
+  "id": "p70",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Avec combien de pièces chaque joueur commence-t-il une partie d’échecs ?",
+  "reponse": 16,
+  "unite": "pièces"
+ },
+ {
+  "id": "p72",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année YouTube a-t-il été créé ?",
+  "reponse": 2005,
+  "unite": ""
+ },
+ {
+  "id": "p73",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de bras a une pieuvre ?",
+  "reponse": 8,
+  "unite": "bras"
+ },
+ {
+  "id": "p74",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de tomes compte la saga Harry Potter (les romans) ?",
+  "reponse": 7,
+  "unite": "tomes"
+ },
+ {
+  "id": "p75",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année le premier épisode des Simpson a-t-il été diffusé aux États-Unis ?",
+  "reponse": 1989,
+  "unite": ""
+ },
+ {
+  "id": "p76",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de points vaut un essai au rugby ?",
+  "reponse": 5,
+  "unite": "points"
+ },
+ {
+  "id": "p78",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de touches noires a un piano classique ?",
+  "reponse": 36,
+  "unite": "touches"
+ },
+ {
+  "id": "p79",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "En quelle année Instagram a-t-il été lancé ?",
+  "reponse": 2010,
+  "unite": ""
+ },
+ {
+  "id": "p80",
+  "categorie": "fun",
+  "niveau": "soft",
+  "texte": "Combien de fantômes poursuivent Pac-Man ?",
+  "reponse": 4,
+  "unite": "fantômes"
  }
 ]
