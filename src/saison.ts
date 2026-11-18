@@ -18,6 +18,8 @@ export interface Saison {
   membres?: Record<string, MembreSaison>;
   rancunes?: Record<string, Record<string, boolean>>;
   parties?: Record<string, boolean>;
+  /** Mémoire du groupe : identifiants des missions et contenus déjà joués dans la saison. */
+  memoire?: Record<string, boolean>;
 }
 
 /** Paliers de cuisson (missions réussies) : Cru, Tiède, Doré, Caramel, Flambé. */

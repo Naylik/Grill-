@@ -32,7 +32,10 @@ const etapeDe = (e: Pick<Etat, 'numeroJeu' | 'manche'>, phase: string) => `impos
 
 /** Prépare une manche : tire la paire et l'imposteur, distribue les mots en secret. */
 function nouvelleManche(ctx: ContexteHote, base: Omit<Etat, 'etape' | 'phase' | 'theme' | 'ordre'>) {
-  const paire = auHasard(paires.filter((p) => !base.pairesJouees.includes(p.id)), ctx.hasard);
+  // Jamais deux fois la même paire dans le jeu, et d'abord celles que le groupe n'a jamais jouées.
+  const libres = paires.filter((p) => !(base.pairesJouees ?? []).includes(p.id));
+  const fraiches = libres.filter((p) => !ctx.dejaVus?.[p.id]);
+  const paire = auHasard(fraiches.length ? fraiches : libres, ctx.hasard);
   const [groupe, autre] = melanger(paire.mots, ctx.hasard);
   const candidats = ctx.uids.filter((u) => !base.dejaImposteurs.includes(u));
   const imposteur = auHasard(candidats.length ? candidats : ctx.uids, ctx.hasard);
@@ -44,7 +47,7 @@ function nouvelleManche(ctx: ContexteHote, base: Omit<Etat, 'etape' | 'phase' | 
     phase: 'indices',
     theme: paire.theme,
     ordre: melanger(ctx.uids, ctx.hasard),
-    pairesJouees: [...base.pairesJouees, paire.id],
+    pairesJouees: [...(base.pairesJouees ?? []), paire.id],
     dejaImposteurs: [...base.dejaImposteurs, imposteur],
     fin: ctx.maintenant + DUREE_INDICES,
   };
@@ -63,6 +66,7 @@ export const imposteur: MiniJeu<Etat> = {
   icone: '<path d="M3 9c3-3 15-3 18 0-1 6-4 9-9 9S4 15 3 9z" fill="currentColor"/><ellipse cx="8.5" cy="11" rx="2" ry="1.4" fill="#0D0A1E"/><ellipse cx="15.5" cy="11" rx="2" ry="1.4" fill="#0D0A1E"/>',
   couleur: '#B18CFF',
   tours: (duree) => `${selonFormat(duree, NB_MANCHES)} manches`,
+  contenus: (e) => e.pairesJouees ?? [],
   autorise: (_n, nbJoueurs) => nbJoueurs >= 4,
 
   demarrer(ctx) {

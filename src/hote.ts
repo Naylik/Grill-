@@ -4,7 +4,7 @@
 import { ref, remove, update } from 'firebase/database';
 import { majSaison } from './saison';
 import { db, maintenant } from './firebase';
-import { S, estHote } from './etat';
+import { S, cheminMemoire, estHote, memoireDuGroupe } from './etat';
 import { JEUX, jeuParId, jeuxPossibles, jeuxPourVote } from './games';
 import type { Avancee, ContexteHote } from './games/interface';
 import { auHasard, melanger } from './outils';
@@ -31,6 +31,7 @@ export function contexte(): ContexteHote {
     maintenant: maintenant(),
     numeroJeu: S.deroule?.numeroJeu ?? 0,
     duree: S.infos?.duree ?? 4,
+    dejaVus: memoireDuGroupe(),
     reponses: S.reponses,
     compteurs: S.compteurs,
     totaux: Object.fromEntries(uids().map((u) => [u, totalProvisoire(S.scores[u])])),
@@ -109,6 +110,8 @@ function appliquer(av: Avancee<unknown>, jeuId = S.deroule?.jeuEnCours): Ecritur
   // jeuId : permet aux téléphones de ne pas afficher un jeu avec l'état du précédent.
   const e: Ecritures = { jeu: { ...(av.etat as object), jeuId }, ...(av.ecritures ?? {}) };
   if (!av.fin) return e;
+  // Mémoire du groupe : ce jeu a utilisé ces contenus, ils ne reviendront pas aux parties suivantes.
+  memoriser(jeuParId(jeuId)?.contenus?.(av.etat as never) ?? []);
   // Fin du jeu : on ajoute les points et on passe au classement provisoire.
   const d = S.deroule!;
   const scores: Record<string, Score> = {};
@@ -370,11 +373,20 @@ export async function commandeHote(valeur: string): Promise<void> {
   if (e) await ecrire(e);
 }
 
+/** Ajoute des contenus joués à la mémoire du groupe (sans attendre : une erreur ne bloque pas la partie). */
+function memoriser(ids: string[]): void {
+  const chemin = cheminMemoire();
+  if (!chemin || !ids.length) return;
+  void update(ref(db, chemin), Object.fromEntries(ids.map((id) => [id, true]))).catch((err) => console.warn('mémoire', err));
+}
+
 /** Fin de partie : on ajoute la soirée à la saison (points, missions réussies, rancunes). */
 async function enregistrerSaison(fin: Ecritures): Promise<void> {
   const id = S.infos?.saison;
   const bilan = fin['deroule/bilan'] as Bilan | undefined;
   const scores = fin.scores as Record<string, Score> | undefined;
+  // Les missions jouées ce soir (révélées à tous) rejoignent la mémoire du groupe.
+  memoriser(uids().flatMap((u) => missionsDe(u).map((m) => m.id).filter((x): x is string => !!x)));
   if (!id || !bilan || !scores) return;
   const maj = majSaison({
     saison: S.saison,

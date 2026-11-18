@@ -2,7 +2,7 @@
 // d'autre ne les voit. Les doublons sont évités grâce à une « réservation » par empreinte (tirage/prises).
 import { get, ref, runTransaction, set, update } from 'firebase/database';
 import { db } from './firebase';
-import { empreinte, melanger } from './outils';
+import { empreinte, fraisDabord, melanger } from './outils';
 import banque from './data/missions.json';
 import type { Joueur, Mission, MissionTiree, Niveau, Secrets, TypeMission } from './types';
 
@@ -54,14 +54,16 @@ async function etatTirage(code: string, uid: string, joueurs: Record<string, Jou
 }
 
 /** Tire et enregistre (en secret) les 2 propositions du joueur, si ce n'est pas déjà fait. */
-export async function preparerPropositions(code: string, uid: string, joueurs: Record<string, Joueur>, secrets: Secrets, numero: 1 | 2): Promise<void> {
+export async function preparerPropositions(code: string, uid: string, joueurs: Record<string, Joueur>, secrets: Secrets, numero: 1 | 2, dejaJouees: Record<string, boolean> = {}): Promise<void> {
   const cle = numero === 1 ? 'propositions1' : 'propositions2';
   if (secrets[cle]?.length) return;
   const { prises, cibles } = await etatTirage(code, uid, joueurs);
   // La 2e mission est d'un autre type que la 1re.
   const type: TypeMission = numero === 2 ? (secrets.mission1?.type === 'vie' ? 'jeu' : 'vie') : Math.random() < 0.5 ? 'vie' : 'jeu';
   const exclues = [...(secrets.propositions1 ?? []).map((m) => m.id)];
-  const propositions = choisirPropositions({ type, niveau: 'epice', prises, exclues, cibles });
+  // Mémoire du groupe : pas de mission déjà jouée par ce groupe… tant qu'il en reste assez de nouvelles.
+  let propositions = choisirPropositions({ type, niveau: 'epice', prises, exclues: [...exclues, ...Object.keys(dejaJouees)], cibles });
+  if (propositions.length < 2) propositions = choisirPropositions({ type, niveau: 'epice', prises, exclues, cibles });
   await set(ref(db, `${cheminSecrets(code, uid)}/${cle}`), propositions);
 }
 
@@ -69,9 +71,9 @@ export async function preparerPropositions(code: string, uid: string, joueurs: R
  * Vengeance (saisons) : une mission qui vise la personne choisie, réservée comme les autres, qui vaut ×2.
  * On prend une mission avec {cible} (le joueur doit agir sur sa cible), du type et de la difficulté du hasard.
  */
-export async function prendreMissionVengeance(code: string, uid: string, joueurs: Record<string, Joueur>, cible: string): Promise<MissionTiree | null> {
+export async function prendreMissionVengeance(code: string, uid: string, joueurs: Record<string, Joueur>, cible: string, dejaJouees: Record<string, boolean> = {}): Promise<MissionTiree | null> {
   const { prises } = await etatTirage(code, uid, joueurs);
-  const candidates = melanger(BANQUE.filter((m) => m.texte.includes('{cible}') && NIVEAUX_AUTORISES.epice.includes(m.niveau) && !prises.has(m.id)));
+  const candidates = fraisDabord(BANQUE.filter((m) => m.texte.includes('{cible}') && NIVEAUX_AUTORISES.epice.includes(m.niveau) && !prises.has(m.id)), dejaJouees);
   for (const m of candidates) {
     try {
       await set(ref(db, `salons/${code}/tirage/prises/${await empreinte(`${code}:${m.id}`)}`), true);

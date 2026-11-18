@@ -16,7 +16,7 @@ export interface Etat {
   jeu: Record<string, unknown> | null;
   scores: Record<string, Score>;
   compteurs: Record<string, number>;
-  revelation: Record<string, { missions?: { texte: string; difficulte: 'facile' | 'difficile'; type: string; vengeance?: boolean }[] }>;
+  revelation: Record<string, { missions?: { id?: string; texte: string; difficulte: 'facile' | 'difficile'; type: string; vengeance?: boolean }[] }>;
   votes: Record<string, Record<string, unknown>>;
   attente: { etape: string; uids: string[] } | null;
   maReponse: Reponse | null;
@@ -58,6 +58,17 @@ export const S: Etat = {
   revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, accusations: {}, saison: null, offreVengeance: null, annonceVengeance: null, charge: false,
   onglet: 'partie', erreur: null, toast: null, apercuImage: null, confirmerQuitter: false, vueAccueil: 'accueil', accuser: false, menuSaison: false,
 };
+
+/**
+ * Mémoire du groupe : missions, questions, paires et défis déjà joués.
+ * Dans la saison si l'hôte en a choisi une (elle dure d'une soirée à l'autre), sinon dans le salon (parties enchaînées).
+ */
+export const memoireDuGroupe = (): Record<string, boolean> =>
+  (S.infos?.saison ? S.saison?.memoire : S.infos?.memoire) ?? {};
+
+/** Chemin où l'hôte écrit la mémoire du groupe. */
+export const cheminMemoire = (): string | null =>
+  S.infos?.saison ? `saisons/${S.infos.saison}/memoire` : S.code ? `salons/${S.code}/infos/memoire` : null;
 
 export const estHote = (): boolean => !!S.infos && S.infos.hote === S.uid;
 export const moi = (): Joueur | undefined => S.joueurs[S.uid];

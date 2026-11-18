@@ -2,7 +2,7 @@
 // tirer ses missions, dire « je suis prêt », publier ses missions à la révélation, vibrer à la mi-partie.
 import { ref, set } from 'firebase/database';
 import { db } from './firebase';
-import { S, charges } from './etat';
+import { S, charges, memoireDuGroupe } from './etat';
 import { preparerPropositions } from './missions';
 import { vibrer } from './ui';
 import { maintenant } from './firebase';
@@ -45,17 +45,17 @@ export function effetsJoueur(): void {
   if (d.phase === 'missions') {
     // Pas de propositions tant que le joueur tiré au sort n'a pas répondu à l'offre de vengeance.
     const attendVengeance = charges.has('offreVengeance') ? !!S.offreVengeance && !secrets.vengeanceChoix : true;
-    if (!secrets.mission1 && !secrets.propositions1?.length && !attendVengeance) une('p1', () => preparerPropositions(code, S.uid, S.joueurs, secrets, 1));
+    if (!secrets.mission1 && !secrets.propositions1?.length && !attendVengeance) une('p1', () => preparerPropositions(code, S.uid, S.joueurs, secrets, 1, memoireDuGroupe()));
     if (secrets.mission1 && S.maReponse?.etape !== 'mission1') une('r1', () => repondre('mission1'));
   }
   if (d.phase === 'miPartie') {
-    if (!secrets.mission2 && !secrets.propositions2?.length) une('p2', () => preparerPropositions(code, S.uid, S.joueurs, secrets, 2));
+    if (!secrets.mission2 && !secrets.propositions2?.length) une('p2', () => preparerPropositions(code, S.uid, S.joueurs, secrets, 2, memoireDuGroupe()));
     if (secrets.mission2 && S.maReponse?.etape !== 'mission2') une('r2', () => repondre('mission2'));
   }
   if (d.phase === 'detective' && S.monPari && S.maReponse?.etape !== 'detective') une('rd', () => repondre('detective'));
   // À la révélation, chacun publie ses propres missions (personne d'autre ne peut les lire avant).
   if (d.phase === 'revelation' && charges.has('revelation') && !S.revelation[S.uid]?.missions && secrets.mission1) {
-    const missions = [secrets.mission1, secrets.mission2].filter(Boolean).map((m) => ({ texte: m!.texte, difficulte: m!.difficulte, type: m!.type, ...(m!.vengeance ? { vengeance: true } : {}) }));
+    const missions = [secrets.mission1, secrets.mission2].filter(Boolean).map((m) => ({ id: m!.id, texte: m!.texte, difficulte: m!.difficulte, type: m!.type, ...(m!.vengeance ? { vengeance: true } : {}) }));
     une('rev', () => set(ref(db, `salons/${code}/revelation/${S.uid}`), { missions }));
   }
 }

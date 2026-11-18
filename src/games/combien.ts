@@ -1,7 +1,7 @@
 // « Combien ont dit oui ? » : une question gênante, chacun répond oui ou non anonymement,
 // puis devine combien ont dit oui. Seul le total est révélé. 3 pts si exact, 1 pt à un près.
 import questions from '../data/combien.json';
-import { melanger } from '../outils';
+import { fraisDabord } from '../outils';
 import { esc } from '../outils';
 import { pointsCombien, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
@@ -15,6 +15,7 @@ interface Etat extends EtatDeBase {
   numeroJeu: number;
   index: number;
   questions: string[];
+  ids?: string[]; // identifiants des questions (mémoire du groupe)
   totalOui?: number;
   estimations?: Record<string, number>;
   gagnes?: Record<string, number>; // points de cette question
@@ -34,12 +35,14 @@ export const combien: MiniJeu<Etat> = {
   icone: '<path d="M12 3a9 9 0 1 0 9 9h-9z" fill="currentColor"/><path d="M15 2.5A9 9 0 0 1 21.5 9H15z" fill="currentColor" opacity=".5"/>',
   couleur: '#FF4F8B',
   tours: (duree) => `${selonFormat(duree, NB_QUESTIONS)} questions`,
+  contenus: (e) => e.ids ?? [],
   autorise: () => true,
 
   demarrer(ctx) {
-    const choix = melanger(questions.filter((q) => q.niveau !== 'hot'), ctx.hasard).slice(0, selonFormat(ctx.duree, NB_QUESTIONS)).map((q) => q.texte);
+    const tirees = fraisDabord(questions.filter((q) => q.niveau !== 'hot'), ctx.dejaVus, ctx.hasard).slice(0, selonFormat(ctx.duree, NB_QUESTIONS));
+    const choix = tirees.map((q) => q.texte);
     return {
-      etat: { etape: etapeDe(ctx.numeroJeu, 0), numeroJeu: ctx.numeroJeu, phase: 'question', index: 0, questions: choix, fin: ctx.maintenant + DUREE_QUESTION, cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])) },
+      etat: { etape: etapeDe(ctx.numeroJeu, 0), numeroJeu: ctx.numeroJeu, phase: 'question', index: 0, questions: choix, ids: tirees.map((q) => q.id), fin: ctx.maintenant + DUREE_QUESTION, cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])) },
       ecritures: { [`compteurs/${etapeDe(ctx.numeroJeu, 0)}`]: 0 },
     };
   },

@@ -13,6 +13,11 @@ export function normaliserCode(saisie: string): string {
   return saisie.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
 }
 
+/** Mémoire du groupe : les contenus jamais joués d'abord (mélangés), puis les déjà joués s'il en faut encore. */
+export function fraisDabord<T extends { id: string }>(liste: readonly T[], dejaVus: Record<string, boolean> | undefined, hasard: () => number = Math.random): T[] {
+  return [...melanger(liste.filter((x) => !dejaVus?.[x.id]), hasard), ...melanger(liste.filter((x) => dejaVus?.[x.id]), hasard)];
+}
+
 export function melanger<T>(liste: readonly T[], hasard: () => number = Math.random): T[] {
   const copie = [...liste];
   for (let i = copie.length - 1; i > 0; i--) {

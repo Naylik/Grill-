@@ -5,7 +5,7 @@ import { ref, runTransaction, set, update } from 'firebase/database';
 import { accusationEnCours } from './accusations';
 import { accusationPossible } from './ecrans/accusation';
 import { connexion, configManquante, db, maintenant } from './firebase';
-import { S, brancherAffichage, demanderAffichage, ecouterSalon, estHote, quandCaChange, quitterEcoute } from './etat';
+import { S, brancherAffichage, demanderAffichage, ecouterSalon, estHote, memoireDuGroupe, quandCaChange, quitterEcoute } from './etat';
 import { commandeHote, commandeJeu, piloter } from './hote';
 import { effetsJoueur, momentsForts, repondre } from './effets';
 import { basculerSon, debloquer, sons } from './son';
@@ -306,7 +306,7 @@ action('vengeance', async (el) => {
     await set(ref(db, `secrets/${S.code}/${S.uid}/vengeanceChoix`), 'non');
     return;
   }
-  const mission = await prendreMissionVengeance(S.code, S.uid, S.joueurs, choix);
+  const mission = await prendreMissionVengeance(S.code, S.uid, S.joueurs, choix, memoireDuGroupe());
   if (!mission) {
     await set(ref(db, `secrets/${S.code}/${S.uid}/vengeanceChoix`), 'non');
     montrerToast('Pas de mission de vengeance disponible, désolé !');

@@ -143,3 +143,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   survivant, écran de fin de tour, puis tout le monde repart en vie ; le classement additionne les places des 2 tours.
 - 18/11/2026 · Réserves doublées après relecture du tableau par Kilyan (5 contenus retirés) : Combien ont dit oui ?
   80 questions, Juste Prix 78 (dont 38 culture et 40 fun), Imposteur 60 paires, défis du Parieur 47.
+- 18/11/2026 · Mémoire du groupe : les missions, questions (Combien, Juste Prix), paires de l'Imposteur et défis du
+  Parieur déjà joués ne reviennent pas tant qu'il en reste de nouveaux (`fraisDabord` dans `outils.ts`, `contenus()` de
+  chaque jeu). Gardée dans la saison si l'hôte en a choisi une (`saisons/{id}/memoire`, d'une soirée à l'autre), sinon
+  dans le salon (`infos/memoire`, parties enchaînées avec « Rejouer »). Les missions sont mémorisées en fin de partie,
+  une fois révélées. Pas de nouvelles règles Firebase.

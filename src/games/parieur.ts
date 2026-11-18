@@ -1,7 +1,7 @@
 // « Le Parieur » : chacun est défié une fois. Les autres misent 1 à 3 vrais points en secret sur sa réussite
 // ou son échec, puis le groupe valide le défi par vote. Pari mutuel (voir score.ts). Jamais dans les 2 premiers jeux.
 import defis from '../data/defis.json';
-import { esc, melanger } from '../outils';
+import { esc, fraisDabord, melanger } from '../outils';
 import { majoriteOui, pariMutuel, type Mise } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
@@ -14,7 +14,7 @@ interface Etat extends EtatDeBase {
   numeroJeu: number;
   ordre: string[];
   tour: number;
-  defis: { texte: string; duree: number }[];
+  defis: { id?: string; texte: string; duree: number }[];
   reussi?: boolean;
   gains?: Record<string, number>; // gains de ce tour
   mises?: Mise[]; // révélées au résultat
@@ -34,11 +34,12 @@ export const parieur: MiniJeu<Etat> = {
   },
   icone: '<rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="8.5" cy="8.5" r="1.8" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/>',
   couleur: '#5BE37D',
+  contenus: (e) => (e.defis ?? []).map((d) => d.id).filter((id): id is string => !!id),
   autorise: (numeroJeu) => numeroJeu > 2,
 
   demarrer(ctx) {
     const ordre = melanger(ctx.uids, ctx.hasard);
-    const choix = melanger(defis.filter((d) => d.niveau !== 'hot'), ctx.hasard).slice(0, ordre.length).map(({ texte, duree }) => ({ texte, duree }));
+    const choix = fraisDabord(defis.filter((d) => d.niveau !== 'hot'), ctx.dejaVus, ctx.hasard).slice(0, ordre.length).map(({ id, texte, duree }) => ({ id, texte, duree }));
     const base = { numeroJeu: ctx.numeroJeu, tour: 0 };
     return {
       etat: { ...base, etape: etapeDe(base, 'mises'), phase: 'mises', ordre, defis: choix, fin: ctx.maintenant + DUREE_MISES, cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])) },

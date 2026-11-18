@@ -26,6 +26,8 @@ export interface Infos {
   /** Saison choisie par l'hôte (facultatif). */
   saison?: string;
   nomSaison?: string;
+  /** Mémoire du groupe sans saison : contenus déjà joués dans ce salon (survit à « Rejouer »). */
+  memoire?: Record<string, boolean>;
 }
 
 export interface Joueur {

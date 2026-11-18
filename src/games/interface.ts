@@ -10,6 +10,8 @@ export interface ContexteHote {
   numeroJeu: number;
   /** Format choisi dans le salon (4, 6 ou 8 jeux) : il fixe aussi le nombre de tours de chaque jeu. */
   duree?: number;
+  /** Mémoire du groupe : identifiants des contenus déjà joués (questions, paires, défis), à éviter. */
+  dejaVus?: Record<string, boolean>;
   /** Réponses des joueurs (lisibles par l'hôte seulement), clé = uid. */
   reponses: Record<string, Reponse | undefined>;
   compteurs: Record<string, number>;
@@ -94,6 +96,8 @@ export interface MiniJeu<E extends EtatDeBase = EtatDeBase> {
   regles?(vue: { uids: string[]; duree: number }): string;
   /** Nombre de tours selon le format, en clair (« 6 questions »), affiché avec les règles. */
   tours?(duree: number): string;
+  /** Identifiants des contenus joués (mémoire du groupe : ils ne reviendront pas aux parties suivantes). */
+  contenus?(etat: E): string[];
   /** Actions des boutons du jeu (data-action="jeu" data-geste="…"). */
   gestes?: Record<string, (el: HTMLElement, outils: OutilsJoueur, vue: VueJeu<E>) => Promise<void> | void>;
 }
