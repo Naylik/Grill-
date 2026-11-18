@@ -213,5 +213,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   ×8/6 en long (une mission longue ≈ gagner la moitié des jeux). Au début, on choisit entre une longue et une plus
   courte. Vol GRILLÉ ! : 3 / 5 / 8. Vengeance ×1,5 (×2 rendait une mission longue plus forte que 4 victoires).
   Parieur borné entre −6 et +8 sur le jeu (avant : jusqu'à ±15 à 6 joueurs). Validé dans le document : 14 missions
-  longues ajoutées (H), 8 dans le style de Kilyan (N), ses 5 missions (K, la photo « montrée à tous à la fin »),
+  longues ajoutées (H), 8 dans le style de Kilyan (N), ses 5 missions (K),
   16 faciles retirées.
