@@ -660,3 +660,63 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .jeton-fusee { position: absolute; left: 50%; top: 45%; width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFF3B0, #FFD84A 50%, #C99A12); border: 2px solid #8A6A08; animation: jeton-fusee 1s cubic-bezier(.2, .8, .3, 1) both; }
 @keyframes jeton-fusee { from { transform: translate(0, 0) scale(.4); opacity: 1; } to { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; } }
 .question.petite { font-size: 17px; }
+
+/* ——— Dessin téléphone arabe : l'atelier papier ——— */
+.atelier-papier { display: grid; gap: 12px; }
+.entete-atelier { display: flex; align-items: center; gap: 12px; }
+.consigne-atelier { display: grid; gap: 2px; min-width: 0; }
+.consigne-atelier span { font-family: var(--titre); font-size: 11px; font-weight: 800; letter-spacing: .1em; color: var(--jaune); }
+.consigne-atelier strong { font-family: var(--titre); font-size: 19px; line-height: 1.15; text-wrap: balance; }
+.sablier { flex: none; width: 34px; --p: 1; }
+.sablier svg { display: block; width: 100%; overflow: visible; animation: tourne-sablier 6s ease-in-out infinite; }
+.sablier .sable-haut { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(var(--p)); }
+.sablier .sable-bas { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(calc(1 - var(--p))); }
+.sablier .filet { stroke-dasharray: 2 3; animation: filet .4s linear infinite; }
+@keyframes filet { to { stroke-dashoffset: -5; } }
+@keyframes tourne-sablier { 0%, 92% { rotate: 0deg; } 96% { rotate: 8deg; } 100% { rotate: 0deg; } }
+/* La feuille : papier un peu texturé, posé de travers, tenu par deux bouts de scotch. */
+.feuille { position: relative; padding: 10px; border-radius: 6px; transform: rotate(-1.2deg);
+  background: repeating-linear-gradient(0deg, #00000004 0 2px, transparent 2px 5px), radial-gradient(120% 90% at 30% 20%, #FFFFFF, #F6F0E2); box-shadow: 0 2px 0 #E2D9C4, 0 18px 40px -16px #000c; }
+.feuille .toile-dessin, .feuille .toile-voir { border-radius: 2px; box-shadow: none; background: #FFFDF6; }
+.feuille.arrive { animation: feuille-arrive .55s cubic-bezier(.2, 1.2, .4, 1) both; }
+@keyframes feuille-arrive { from { transform: translateX(110%) rotate(12deg); opacity: 0; } to { transform: rotate(-1.2deg); opacity: 1; } }
+.scotch { position: absolute; top: -10px; width: 70px; height: 22px; background: #FFFFFF99; border: 1px solid #ffffffaa; box-shadow: 0 1px 3px #0002; z-index: 2; }
+.scotch.g { left: 14px; transform: rotate(-8deg); }
+.scotch.d { right: 14px; transform: rotate(7deg); }
+.feuille.note { background: repeating-linear-gradient(180deg, transparent 0 33px, #3B8BFF33 33px 35px), #FFFDF6; padding: 18px 16px 12px 40px; }
+.feuille.note::before { content: ''; position: absolute; top: 0; bottom: 0; left: 28px; width: 2px; background: #FF5A6E66; }
+.ecriture { width: 100%; border: 0; background: transparent; resize: none; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; font-size: 22px; line-height: 35px; color: #24123A; outline: none; }
+.ecriture::placeholder { color: #24123A55; }
+/* La trousse : 12 feutres. */
+.trousse { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; padding: 10px; border-radius: 18px; background: linear-gradient(180deg, #2B2050, #1A1438); border: 1px solid var(--bord); }
+.feutre { position: relative; height: 54px; border: 0; background: none; cursor: pointer; display: grid; place-items: end center; }
+.feutre i { width: 22px; height: 46px; border-radius: 11px 11px 5px 5px; background: linear-gradient(90deg, #ffffff40, transparent 40%), var(--k); border: 2px solid #0D0A1E; position: relative; transition: transform .15s; }
+.feutre i::after { content: ''; position: absolute; left: 3px; right: 3px; bottom: -2px; height: 14px; border-radius: 0 0 4px 4px; background: #0D0A1E55; }
+.feutre.actif i { transform: translateY(-10px) rotate(-8deg); box-shadow: 0 0 0 3px #fff, 0 8px 18px -6px var(--k); }
+.reglages-atelier { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; align-items: center; }
+.etiquette-devinette { transform: rotate(.8deg); background: #FFFDF6; color: #24123A; border-color: #E2D9C4; }
+.etiquette-devinette::placeholder { color: #24123A66; }
+/* La feuille qui s'envole vers le joueur suivant. */
+.feuille-envolee { position: relative; height: 150px; display: grid; place-items: center; }
+.feuille-envolee i { width: 110px; height: 110px; border-radius: 4px; background: #FFFDF6; box-shadow: 0 12px 30px -10px #000c; animation: envol 1.4s cubic-bezier(.5, 0, .3, 1) .1s forwards; }
+@keyframes envol { 0% { transform: rotate(-2deg); } 30% { transform: translateY(8px) rotate(-6deg) scale(.95); } 100% { transform: translate(260px, -140px) rotate(28deg) scale(.4); opacity: 0; } }
+/* L'album : chaque chaîne défile comme une conversation. */
+.album { display: grid; gap: 14px; }
+.bulle-album { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 10px; align-items: start; }
+.bulle-album.nouveau { animation: arrive .5s cubic-bezier(.3, 1.5, .5, 1); }
+.avatar-album { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: 17px; box-shadow: 0 0 0 3px #0D0A1E, 0 0 0 5px color-mix(in srgb, var(--c) 50%, transparent); }
+.avatar-album.jeu { --c: #8C84B0; }
+.contenu-album { display: grid; gap: 6px; padding: 10px 12px 12px; border-radius: 4px 20px 20px 20px; background: #ffffff0d; border: 1px solid var(--bord); min-width: 0; }
+.bulle-album.ecrit .contenu-album { border-color: #FFD84A66; }
+.qui-album { font-family: var(--titre); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--texte-2); }
+.texte-album { margin: 0; font-family: var(--titre); font-weight: 800; font-size: 19px; line-height: 1.2; }
+.cadre-album { padding: 8px; border-radius: 4px; background: #F6F0E2; transform: rotate(-.8deg); box-shadow: 0 10px 24px -12px #000c; }
+.cadre-album .toile-voir { border-radius: 2px; box-shadow: none; }
+.vote-drole { justify-self: start; padding: 6px 12px; border-radius: 99px; border: 2px solid var(--bord); background: none; color: var(--texte-2); font-family: var(--titre); font-weight: 700; font-size: 12px; cursor: pointer; }
+.vote-drole.actif { border-color: var(--jaune); color: var(--jaune); background: #FFD84A1f; }
+/* Réactions en direct. */
+.reactions { display: flex; justify-content: center; gap: 10px; }
+.reaction { width: 54px; height: 54px; border-radius: 50%; border: 1px solid var(--bord); background: #ffffff0d; font-size: 26px; cursor: pointer; transition: transform .1s; }
+.reaction:active { transform: scale(1.25); }
+.reaction-volante { position: fixed; bottom: 90px; z-index: 40; font-size: 38px; pointer-events: none; animation: envol-reaction 2.1s cubic-bezier(.2, .7, .4, 1) forwards; }
+@keyframes envol-reaction { 0% { transform: translateY(0) scale(.5); opacity: 0; } 15% { opacity: 1; transform: translateY(-40px) scale(1.2); } 100% { transform: translate(var(--derive), -60vh) scale(1); opacity: 0; } }

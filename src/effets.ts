@@ -10,6 +10,9 @@ import { majoriteOui, missionTrouvee } from './score';
 import { sons } from './son';
 import { confettis } from './confettis';
 import { accusationEnCours } from './accusations';
+import { envolerReaction } from './dessin';
+import { REACTIONS } from './games/telephone';
+const reactionsVues = new Map<string, number>();
 import { VERSION, verifierVersion } from './version';
 
 export function repondre(etape: string, valeurs: Record<string, unknown> = {}): Promise<void> {
@@ -108,6 +111,15 @@ export function momentsForts(): void {
       if (q.perdus?.includes(S.uid)) moment(`qd-${q.etape}`, () => { sons.rate(); vibrer([200, 80, 300]); });
       else if (q.statut?.[S.uid] === 'enJeu') moment(`qd-${q.etape}`, () => sons.reussi());
     }
+  }
+  // Dessin téléphone arabe : les réactions (😂 🔥 💀 👏) s'envolent chez tout le monde quand quelqu'un réagit.
+  for (const [cle, n] of Object.entries(S.compteurs ?? {})) {
+    if (!cle.startsWith('reac-')) continue;
+    const avant = reactionsVues.get(cle);
+    reactionsVues.set(cle, n);
+    if (avant === undefined || n <= avant) continue;
+    const emoji = REACTIONS[Number(cle.split('-').pop())] ?? '😂';
+    for (let i = 0; i < Math.min(5, n - avant); i++) setTimeout(() => envolerReaction(emoji), i * 120);
   }
   // Dessin téléphone arabe : un petit son à chaque étape dévoilée.
   if (d.phase === 'jeu' && d.jeuEnCours === 'telephone' && S.jeu) {

@@ -6,12 +6,14 @@ import phrases from '../data/dessins.json';
 import { esc, fraisDabord, melanger } from '../outils';
 import { majoriteOui, pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
-import { COULEURS, GOMME, outil, toileAVoir, traitsDe, type Trait } from '../dessin';
+import { brouillons } from '../ui';
+import { COULEURS, GOMME, outil, sablier, toileAVoir, traitsDe, type Trait } from '../dessin';
 import { etapeTerminee, reponsesDe, selonFormat, type EtatDeBase, type MiniJeu } from './interface';
 import { classementBarres, hud } from './arene';
 
 const NB_ETAPES: [number, number, number] = [3, 4, 5]; // Courte, Normale, Longue (jamais plus que de joueurs)
 const DUREE_PHRASE = 40_000;
+export const REACTIONS = ['😂', '🔥', '💀', '👏'];
 const DUREE_DESSIN = 60_000;
 const DUREE_DEVINETTE = 35_000;
 const DUREE_VOTE = 45_000;
@@ -173,6 +175,17 @@ export const telephone: MiniJeu<Etat> = {
         <p class="aide">3 pts au dessin le plus drôle, 1 pt par chaîne qui a gardé le sens.</p>`;
     }
 
+    const avatar = (u: string) => `<span class="avatar-album" style="--c:${v.joueurs[u]?.couleur ?? '#888'}">${esc((v.joueurs[u]?.prenom ?? '?').slice(0, 1))}</span>`;
+    // À qui part ma feuille : le joueur suivant dans l'ordre (sauf à la dernière étape : elle rejoint l'album).
+    const suivant = () => {
+      const p = e.ordre.indexOf(v.uid);
+      const dernier = e.phase === 'etape' && e.etapeN + 1 >= e.total;
+      return dernier ? '' : nom(e.ordre[(p + 1) % n]);
+    };
+    const envolee = (titre: string) => `<div class="feuille-envolee" aria-hidden="true"><i></i></div>
+      <h2 class="question centre-texte">${titre}</h2>
+      <p class="attente">${suivant() ? `Ta feuille part chez <strong>${suivant()}</strong>…` : 'Ta feuille rejoint l’album…'}</p>`;
+
     if (e.phase === 'revue') {
       const c = e.revue ?? 0;
       const chaine = e.chaines[c] ?? [];
@@ -181,24 +194,29 @@ export const telephone: MiniJeu<Etat> = {
       const choix = (v.local[`${e.etape}-choix`] as { favori?: string; sens?: boolean } | undefined) ?? {};
       const devoile = Math.max(0, (e.affiches ?? 1) - 1); // maillons visibles (sans la phrase de départ)
       const complet = toutDevoile(e);
-      const maillons = chaine.slice(0, devoile).map((m, s) => {
-        const cle = `${c}-${s}`;
-        const peutVoter = complet && m.dessin && m.auteur !== v.uid && !envoye;
-        return `<div class="maillon ${s === devoile - 1 && !complet ? 'nouveau' : ''}"><span class="auteur-maillon">${nom(m.auteur)} ${m.dessin ? 'a dessiné' : 'a deviné'}</span>
-          ${m.dessin ? toileAVoir(`tel-${e.numeroJeu}-${cle}`, m.dessin, '', true) : `<p class="devinette-maillon">« ${esc(m.texte ?? '')} »</p>`}
-          ${peutVoter ? `<button class="option ${choix.favori === cle ? 'actif jaune' : ''}" data-action="jeu" data-geste="favori" data-valeur="${cle}">Le plus drôle</button>` : ''}</div>`;
-      }).join('');
+      const depart = e.phrases[c];
+      const album = `<div class="album">
+        <div class="bulle-album ecrit">${depart?.auteur ? avatar(depart.auteur) : '<span class="avatar-album jeu">?</span>'}
+          <div class="contenu-album"><span class="qui-album">${depart?.auteur ? `${nom(depart.auteur)} a écrit` : 'Phrase du jeu'}</span><p class="texte-album">« ${esc(depart?.texte ?? '')} »</p></div></div>
+        ${chaine.slice(0, devoile).map((m, s) => {
+          const cle = `${c}-${s}`;
+          const peutVoter = complet && m.dessin && m.auteur !== v.uid && !envoye;
+          return `<div class="bulle-album ${m.dessin ? 'dessine' : 'devine'} ${s === devoile - 1 && !complet ? 'nouveau' : ''}">${avatar(m.auteur)}
+            <div class="contenu-album"><span class="qui-album">${nom(m.auteur)} ${m.dessin ? 'a dessiné' : 'a deviné'}</span>
+            ${m.dessin ? `<div class="cadre-album">${toileAVoir(`tel-${e.numeroJeu}-${cle}`, m.dessin, '', true)}</div>` : `<p class="texte-album">« ${esc(m.texte ?? '')} »</p>`}
+            ${peutVoter ? `<button class="vote-drole ${choix.favori === cle ? 'actif' : ''}" data-action="jeu" data-geste="favori" data-valeur="${cle}">${choix.favori === cle ? '★ Le plus drôle' : '☆ Le plus drôle'}</button>` : ''}</div></div>`;
+        }).join('')}
+      </div>`;
+      const reactions = `<div class="reactions" aria-label="Réagir">${REACTIONS.map((r, i) => `<button class="reaction" data-action="jeu" data-geste="reagir" data-valeur="${i}" aria-label="Réagir ${r}">${r}</button>`).join('')}</div>`;
       if (!complet) {
         return `${hud('DESSIN TÉLÉPHONE ARABE', c, n, true)}
-          <p class="petit centre-texte">Chaîne ${c + 1}/${n} · étape ${devoile}/${chaine.length}</p>
-          <div class="maillon depart"><span class="auteur-maillon">${e.phrases[c]?.auteur ? `${nom(e.phrases[c].auteur!)} a écrit` : 'Au départ'}</span><p class="devinette-maillon">« ${esc(e.phrases[c]?.texte ?? '')} »</p></div>
-          ${maillons}
-          <div class="pile bas">${v.estHote ? '<button class="bouton jaune" data-action="hote-jeu" data-valeur="suivant">Suivant</button>' : '<p class="attente">L’hôte dévoile la suite…</p>'}</div>`;
+          <p class="petit centre-texte">L’ALBUM · CHAÎNE ${c + 1}/${n}</p>
+          ${album}${reactions}
+          <div class="pile bas">${v.estHote ? '<button class="bouton jaune" data-action="hote-jeu" data-valeur="suivant">Suivant</button>' : '<p class="attente">L’hôte tourne la page…</p>'}</div>`;
       }
       return `${hud('DESSIN TÉLÉPHONE ARABE', c, n, true)}${chrono(e.fin)}
-        <p class="petit centre-texte">Chaîne ${c + 1}/${n} · à vous de voter</p>
-        <div class="maillon depart"><span class="auteur-maillon">${e.phrases[c]?.auteur ? `${nom(e.phrases[c].auteur!)} a écrit` : 'Au départ'}</span><p class="devinette-maillon">« ${esc(e.phrases[c]?.texte ?? '')} »</p></div>
-        ${maillons}
+        <p class="petit centre-texte">L’ALBUM · CHAÎNE ${c + 1}/${n} · À VOUS DE VOTER</p>
+        ${album}${reactions}
         ${envoye
           ? '<p class="attente">Vote envoyé. On attend les autres…</p>'
           : `<p class="aide gauche">Le sens est resté jusqu’au bout ?</p>
@@ -212,12 +230,16 @@ export const telephone: MiniJeu<Etat> = {
     if (e.phase === 'phrase') {
       const fait = v.maReponse?.etape === e.etape || v.local[e.etape] !== undefined;
       const attente = attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && fait));
-      const tete = `${hud('DESSIN TÉLÉPHONE ARABE', 0, e.total + 1, true)}${chrono(e.fin)}`;
-      if (fait) return `${tete}<h2 class="question centre-texte">Phrase envoyée !</h2><p class="attente">Quelqu’un d’autre va devoir la dessiner…</p>${attente}`;
+      const tete = hud('DESSIN TÉLÉPHONE ARABE', 0, e.total + 1, true);
+      if (fait) return `${tete}${envolee('Phrase envoyée !')}${attente}`;
       return `${tete}
-        <h2 class="question">Écris une phrase à faire dessiner</h2>
-        <p class="aide gauche">Drôle, absurde, sur quelqu’un de la table… Un autre joueur devra la dessiner. Sans phrase, le jeu en choisit une.</p>
-        <input class="champ-texte" name="phrase-${e.etape}" maxlength="80" placeholder="Kilyan qui fait du ski sur une pizza" autocomplete="off">
+        <div class="atelier-papier">
+          <div class="entete-atelier">${sablier(e.fin, DUREE_PHRASE)}<div class="consigne-atelier"><span>À TOI D’ÉCRIRE</span><strong>Une phrase à faire dessiner</strong></div></div>
+          <div class="feuille note arrive"><i class="scotch g"></i><i class="scotch d"></i>
+            <textarea class="ecriture" name="phrase-${e.etape}" maxlength="80" rows="3" placeholder="Kilyan qui fait du ski sur une pizza">${esc(brouillons[`phrase-${e.etape}`] ?? '')}</textarea>
+          </div>
+          <p class="aide">Drôle, absurde, sur quelqu’un de la table… Sans phrase, le jeu en choisit une.</p>
+        </div>
         <button class="bouton discret" data-action="jeu" data-geste="idee">Une idée au hasard</button>
         <button class="bouton jaune" data-action="jeu" data-geste="envoyerPhrase" data-envoi-auto="${e.fin}">Valider ma phrase</button>
         ${attente}`;
@@ -226,18 +248,18 @@ export const telephone: MiniJeu<Etat> = {
     // Une étape : dessiner, ou deviner.
     const moi = consigne(e, v.uid);
     const fait = v.maReponse?.etape === e.etape || v.local[e.etape] !== undefined;
-    const tete = `${hud('DESSIN TÉLÉPHONE ARABE', e.etapeN, e.total, true)}${chrono(e.fin)}`;
+    const tete = hud('DESSIN TÉLÉPHONE ARABE', e.etapeN, e.total, true);
     const attente = attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && fait));
-    if (fait) return `${tete}<h2 class="question centre-texte">C’est envoyé !</h2><p class="attente">On attend les autres artistes…</p>${attente}`;
+    if (fait) return `${tete}${envolee(estDessin(e.etapeN) ? 'Dessin envoyé !' : 'Réponse envoyée !')}${attente}`;
     if (estDessin(e.etapeN)) {
       const cle = e.etape;
       return `${tete}
-        <p class="aide gauche">Dessine, sans écrire de mots :</p>
-        <h2 class="question">« ${esc(moi.texte ?? '')} »</h2>
-        <div class="atelier">
-          <canvas class="toile-dessin" width="600" height="600" data-dessiner="${cle}" aria-label="Zone de dessin"></canvas>
-          <div class="barre-outils">
-            <div class="couleurs">${COULEURS.map((c) => `<button class="couleur ${outil.couleur === c ? 'actif' : ''}" style="--k:${c}" data-action="outil" data-couleur="${c}" aria-label="Couleur"></button>`).join('')}</div>
+        <div class="atelier-papier">
+          <div class="entete-atelier">${sablier(e.fin, DUREE_DESSIN)}<div class="consigne-atelier"><span>À DESSINER · SANS ÉCRIRE</span><strong>« ${esc(moi.texte ?? '')} »</strong></div></div>
+          <div class="feuille arrive"><i class="scotch g"></i><i class="scotch d"></i>
+            <canvas class="toile-dessin" width="600" height="600" data-dessiner="${cle}" aria-label="Zone de dessin"></canvas></div>
+          <div class="trousse">${COULEURS.map((c) => `<button class="feutre ${outil.couleur === c ? 'actif' : ''}" style="--k:${c}" data-action="outil" data-couleur="${c}" aria-label="Feutre"><i></i></button>`).join('')}</div>
+          <div class="reglages-atelier">
             <div class="epaisseurs">${[1, 2, 3].map((w) => `<button class="epaisseur ${outil.epaisseur === w ? 'actif' : ''}" style="--t:${6 + w * 5}px" data-action="outil" data-epaisseur="${w}" aria-label="${['Fin', 'Moyen', 'Gros'][w - 1]}"><i></i></button>`).join('')}</div>
             <div class="actions-dessin">
               <button class="outil-dessin ${outil.couleur === GOMME ? 'actif' : ''}" data-action="outil" data-couleur="${GOMME}">Gomme</button>
@@ -250,22 +272,30 @@ export const telephone: MiniJeu<Etat> = {
         ${attente}`;
     }
     return `${tete}
-      <p class="aide gauche">Qu’est-ce que c’est ? Écris ce que tu vois :</p>
-      ${toileAVoir(`tel-${e.numeroJeu}-${moi.c}-${e.etapeN - 1}`, moi.dessin, 'grande')}
-      <input class="champ-texte" name="devinette-${e.etape}" maxlength="80" placeholder="Un chat qui fait du ski…" autocomplete="off" data-entree="jeu">
+      <div class="atelier-papier">
+        <div class="entete-atelier">${sablier(e.fin, DUREE_DEVINETTE)}<div class="consigne-atelier"><span>À DEVINER</span><strong>Qu’est-ce que c’est ?</strong></div></div>
+        <div class="feuille arrive"><i class="scotch g"></i><i class="scotch d"></i>${toileAVoir(`tel-${e.numeroJeu}-${moi.c}-${e.etapeN - 1}`, moi.dessin)}</div>
+        <input class="champ-texte etiquette-devinette" name="devinette-${e.etape}" maxlength="80" placeholder="Un chat qui fait du ski…" autocomplete="off" value="${esc(brouillons[`devinette-${e.etape}`] ?? '')}">
+      </div>
       <button class="bouton jaune" data-action="jeu" data-geste="envoyerTexte" data-envoi-auto="${e.fin}">Valider</button>
       ${attente}`;
   },
 
   gestes: {
+    // Réaction en direct : un compteur partagé ; chaque téléphone fait s'envoler l'emoji quand il augmente.
+    async reagir(el, o, v) {
+      await o.incrementer(`reac-${v.etat.etape}-${el.dataset.valeur}`);
+    },
     idee(_el, _o, v) {
-      const champ = document.querySelector<HTMLInputElement>(`input[name="phrase-${v.etat.etape}"]`);
-      if (champ) champ.value = phrases[Math.floor(Math.random() * phrases.length)].texte;
+      const champ = document.querySelector<HTMLTextAreaElement>(`textarea[name="phrase-${v.etat.etape}"]`);
+      const idee = phrases[Math.floor(Math.random() * phrases.length)].texte;
+      brouillons[`phrase-${v.etat.etape}`] = idee;
+      if (champ) champ.value = idee;
     },
     async envoyerPhrase(_el, o, v) {
       const e = v.etat;
       if (e.phase !== 'phrase' || o.local[e.etape] !== undefined) return;
-      const texte = (document.querySelector<HTMLInputElement>(`input[name="phrase-${e.etape}"]`)?.value ?? '').trim().slice(0, 80);
+      const texte = (document.querySelector<HTMLTextAreaElement>(`textarea[name="phrase-${e.etape}"]`)?.value ?? '').trim().slice(0, 80);
       o.local[e.etape] = true;
       o.rafraichir();
       await o.repondre({ texte });

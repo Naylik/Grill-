@@ -169,3 +169,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   personne ne retombe sur sa phrase. À la révélation, chaque dessin se redessine trait par trait en accéléré
   (1,5 à 4 s). Seules les phrases du jeu vont dans la mémoire du groupe. Le saboteur est gardé pour plus tard
   (intéressant surtout à 5-6 joueurs).
+- 18/11/2026 · Dessin téléphone arabe, refonte visuelle « atelier papier » : feuille texturée scotchée qui arrive en
+  glissant, feuille de cahier pour écrire la phrase, trousse de 12 feutres, sablier qui se vide ; quand on envoie, la
+  feuille s'envole « chez Kilyan ». Révélation façon album : chaque chaîne défile comme une conversation (avatar à la
+  couleur du joueur, bulles, dessins encadrés rejoués trait par trait), réactions 😂 🔥 💀 👏 qui s'envolent chez tout
+  le monde (compteurs partagés). Les textes tapés sont gardés si l'écran se met à jour.
