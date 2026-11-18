@@ -195,3 +195,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   compare et garde le « film » du chemin parcouru). Pluriels ignorés ; mots presque pareils : le duo conteste et le
   groupe vote (pas de vote = accepté). Sabotage : une fois par partie, une équipe impose un mot interdit à une autre
   pour la manche suivante ; s'il est prononcé, la manche est ratée.
+- 18/11/2026 · Correctif d'affichage : la grille du Champ de mines (classe `champ`) écrasait le style des champs
+  « Ton prénom » et « Code » de l'accueil (étiquette et case côte à côte). Renommée `champ-mines`.

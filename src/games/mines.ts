@@ -136,7 +136,7 @@ export const champDeMines: MiniJeu<Etat> = {
     const tete = hud('CHAMP DE MINES', Math.floor(e.tour / Math.max(1, e.ordre.length)), Math.max(1, Math.round(e.totalTours / Math.max(1, e.ordre.length))), e.phase !== 'bilan');
     const score = (u: string) => (e.banque[u] ?? 0) + (e.bonus[u] ?? 0);
 
-    const grille = (cliquable: boolean, geste: string, choisie?: number) => `<div class="champ">${Array.from({ length: NB_CASES }, (_, i) => {
+    const grille = (cliquable: boolean, geste: string, choisie?: number) => `<div class="champ-mines">${Array.from({ length: NB_CASES }, (_, i) => {
       const o = e.ouvertes[i];
       const marque = maMine === i && !o ? `<span class="ma-mine">${BOMBE}</span>` : '';
       if (o === 'sur') return `<div class="case-champ sure">${GEMME}</div>`;
