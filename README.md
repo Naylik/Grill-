@@ -148,3 +148,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   chaque jeu). Gardée dans la saison si l'hôte en a choisi une (`saisons/{id}/memoire`, d'une soirée à l'autre), sinon
   dans le salon (`infos/memoire`, parties enchaînées avec « Rejouer »). Les missions sont mémorisées en fin de partie,
   une fois révélées. Pas de nouvelles règles Firebase.
+- 18/11/2026 · Nouveau jeu « Quitte ou Double » (fusion avec le Quiz express du cahier des charges,
+  `src/games/quitteOuDouble.ts`, questions dans `src/data/quiz.json`) : questions à 4 choix, du facile au très difficile
+  (5 / 6 / 7 selon le format). Bonne réponse : la cagnotte passe à 1 puis double ; erreur : tout perdu. Après chaque
+  bonne réponse, choix secret : encaisser ou doubler (sans réponse : on encaisse). La bonne réponse reste chez l'hôte
+  (`prive/quitte`) jusqu'au résultat. 40 questions (10 par niveau), avec la mémoire du groupe.

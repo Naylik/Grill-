@@ -1,0 +1,482 @@
+[
+ {
+  "id": "q01",
+  "niveau": 1,
+  "texte": "Combien de joueurs une équipe de foot a-t-elle sur le terrain ?",
+  "choix": [
+   "9",
+   "10",
+   "11",
+   "12"
+  ],
+  "bonne": 2
+ },
+ {
+  "id": "q02",
+  "niveau": 1,
+  "texte": "Qui est le frère de Mario ?",
+  "choix": [
+   "Luigi",
+   "Wario",
+   "Toad",
+   "Yoshi"
+  ],
+  "bonne": 0
+ },
+ {
+  "id": "q03",
+  "niveau": 1,
+  "texte": "Quelle planète est surnommée la planète rouge ?",
+  "choix": [
+   "Vénus",
+   "Mars",
+   "Jupiter",
+   "Mercure"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q04",
+  "niveau": 1,
+  "texte": "Dans quel pays se trouve la tour de Pise ?",
+  "choix": [
+   "Espagne",
+   "Italie",
+   "Grèce",
+   "Portugal"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q05",
+  "niveau": 1,
+  "texte": "Combien de côtés a un hexagone ?",
+  "choix": [
+   "5",
+   "6",
+   "7",
+   "8"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q06",
+  "niveau": 1,
+  "texte": "Quelle appli a pour logo un fantôme sur fond jaune ?",
+  "choix": [
+   "Snapchat",
+   "TikTok",
+   "Instagram",
+   "BeReal"
+  ],
+  "bonne": 0
+ },
+ {
+  "id": "q07",
+  "niveau": 1,
+  "texte": "Qui a écrit Les Misérables ?",
+  "choix": [
+   "Victor Hugo",
+   "Émile Zola",
+   "Molière",
+   "Honoré de Balzac"
+  ],
+  "bonne": 0
+ },
+ {
+  "id": "q08",
+  "niveau": 1,
+  "texte": "Dans quel club Kylian Mbappé a-t-il commencé sa carrière pro ?",
+  "choix": [
+   "PSG",
+   "Monaco",
+   "Lyon",
+   "Lille"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q09",
+  "niveau": 1,
+  "texte": "Quel est le plus grand océan du monde ?",
+  "choix": [
+   "Atlantique",
+   "Indien",
+   "Pacifique",
+   "Arctique"
+  ],
+  "bonne": 2
+ },
+ {
+  "id": "q10",
+  "niveau": 1,
+  "texte": "Combien de minutes dure une mi-temps au foot ?",
+  "choix": [
+   "40",
+   "45",
+   "50",
+   "60"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q11",
+  "niveau": 2,
+  "texte": "Quelle est la capitale de l’Australie ?",
+  "choix": [
+   "Sydney",
+   "Canberra",
+   "Melbourne",
+   "Perth"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q12",
+  "niveau": 2,
+  "texte": "En quelle année la France a-t-elle gagné sa première Coupe du monde de foot ?",
+  "choix": [
+   "1984",
+   "1998",
+   "2002",
+   "2006"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q13",
+  "niveau": 2,
+  "texte": "Quel est le symbole chimique de l’or ?",
+  "choix": [
+   "Or",
+   "Ag",
+   "Au",
+   "Go"
+  ],
+  "bonne": 2
+ },
+ {
+  "id": "q14",
+  "niveau": 2,
+  "texte": "De quel pays vient le manga Dragon Ball ?",
+  "choix": [
+   "Chine",
+   "Corée du Sud",
+   "Japon",
+   "Thaïlande"
+  ],
+  "bonne": 2
+ },
+ {
+  "id": "q15",
+  "niveau": 2,
+  "texte": "Combien de joueurs une équipe de volley a-t-elle sur le terrain ?",
+  "choix": [
+   "5",
+   "6",
+   "7",
+   "8"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q16",
+  "niveau": 2,
+  "texte": "Qui a peint La Joconde ?",
+  "choix": [
+   "Michel-Ange",
+   "Léonard de Vinci",
+   "Raphaël",
+   "Botticelli"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q17",
+  "niveau": 2,
+  "texte": "Dans quelle maison de Poudlard est Harry Potter ?",
+  "choix": [
+   "Serdaigle",
+   "Poufsouffle",
+   "Gryffondor",
+   "Serpentard"
+  ],
+  "bonne": 2
+ },
+ {
+  "id": "q18",
+  "niveau": 2,
+  "texte": "Quel jeu vidéo se passe dans la ville de Los Santos ?",
+  "choix": [
+   "GTA V",
+   "Watch Dogs",
+   "Mafia",
+   "Saints Row"
+  ],
+  "bonne": 0
+ },
+ {
+  "id": "q19",
+  "niveau": 2,
+  "texte": "Quelle est la monnaie du Royaume-Uni ?",
+  "choix": [
+   "L’euro",
+   "Le dollar",
+   "La livre sterling",
+   "Le franc"
+  ],
+  "bonne": 2
+ },
+ {
+  "id": "q20",
+  "niveau": 2,
+  "texte": "Quel animal est Nemo dans Le Monde de Nemo ?",
+  "choix": [
+   "Un poisson-clown",
+   "Un poisson-chirurgien",
+   "Une tortue",
+   "Un hippocampe"
+  ],
+  "bonne": 0
+ },
+ {
+  "id": "q21",
+  "niveau": 3,
+  "texte": "Quel pays a remporté l’Euro 2016 ?",
+  "choix": [
+   "France",
+   "Portugal",
+   "Allemagne",
+   "Espagne"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q22",
+  "niveau": 3,
+  "texte": "En quelle année est sorti le premier film Avatar ?",
+  "choix": [
+   "2007",
+   "2009",
+   "2011",
+   "2013"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q23",
+  "niveau": 3,
+  "texte": "Quelle est la planète la plus proche du Soleil ?",
+  "choix": [
+   "Vénus",
+   "Mercure",
+   "Mars",
+   "La Terre"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q24",
+  "niveau": 3,
+  "texte": "Quel acteur joue Jack dans Titanic ?",
+  "choix": [
+   "Brad Pitt",
+   "Leonardo DiCaprio",
+   "Matt Damon",
+   "Johnny Depp"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q25",
+  "niveau": 3,
+  "texte": "Quelle est la capitale du Canada ?",
+  "choix": [
+   "Toronto",
+   "Montréal",
+   "Ottawa",
+   "Vancouver"
+  ],
+  "bonne": 2
+ },
+ {
+  "id": "q26",
+  "niveau": 3,
+  "texte": "Quel joueur a remporté le plus de Ballons d’or ?",
+  "choix": [
+   "Cristiano Ronaldo",
+   "Lionel Messi",
+   "Michel Platini",
+   "Johan Cruyff"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q27",
+  "niveau": 3,
+  "texte": "Quel est le plus petit pays du monde ?",
+  "choix": [
+   "Monaco",
+   "Le Vatican",
+   "Saint-Marin",
+   "Le Liechtenstein"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q28",
+  "niveau": 3,
+  "texte": "En quelle année la première PlayStation est-elle sortie au Japon ?",
+  "choix": [
+   "1992",
+   "1994",
+   "1996",
+   "1998"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q29",
+  "niveau": 3,
+  "texte": "Quel gaz les plantes rejettent-elles grâce à la photosynthèse ?",
+  "choix": [
+   "L’azote",
+   "L’oxygène",
+   "L’hydrogène",
+   "Le gaz carbonique"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q30",
+  "niveau": 3,
+  "texte": "Combien de cordes a un violon ?",
+  "choix": [
+   "3",
+   "4",
+   "5",
+   "6"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q31",
+  "niveau": 4,
+  "texte": "Quelle est la capitale de la Nouvelle-Zélande ?",
+  "choix": [
+   "Auckland",
+   "Wellington",
+   "Christchurch",
+   "Queenstown"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q32",
+  "niveau": 4,
+  "texte": "Quel élément chimique a pour symbole Fe ?",
+  "choix": [
+   "Le fluor",
+   "Le fer",
+   "Le francium",
+   "Le fermium"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q33",
+  "niveau": 4,
+  "texte": "En quelle année a eu lieu la bataille de Marignan ?",
+  "choix": [
+   "1415",
+   "1515",
+   "1615",
+   "1715"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q34",
+  "niveau": 4,
+  "texte": "Qui a réalisé le film Pulp Fiction ?",
+  "choix": [
+   "Martin Scorsese",
+   "Quentin Tarantino",
+   "Steven Spielberg",
+   "David Fincher"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q35",
+  "niveau": 4,
+  "texte": "Quel pays compte le plus d’habitants ?",
+  "choix": [
+   "La Chine",
+   "L’Inde",
+   "Les États-Unis",
+   "L’Indonésie"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q36",
+  "niveau": 4,
+  "texte": "Quel est l’os le plus long du corps humain ?",
+  "choix": [
+   "Le tibia",
+   "Le fémur",
+   "L’humérus",
+   "Le péroné"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q37",
+  "niveau": 4,
+  "texte": "Comment s’appelle le vaisseau de Han Solo dans Star Wars ?",
+  "choix": [
+   "Le Faucon Millenium",
+   "L’Étoile noire",
+   "Le X-Wing",
+   "L’Enterprise"
+  ],
+  "bonne": 0
+ },
+ {
+  "id": "q38",
+  "niveau": 4,
+  "texte": "Dans quelle ville se trouve le musée du Prado ?",
+  "choix": [
+   "Barcelone",
+   "Madrid",
+   "Lisbonne",
+   "Séville"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q39",
+  "niveau": 4,
+  "texte": "Quelle est la vitesse du son dans l’air (environ) ?",
+  "choix": [
+   "34 m/s",
+   "340 m/s",
+   "3 400 m/s",
+   "34 000 m/s"
+  ],
+  "bonne": 1
+ },
+ {
+  "id": "q40",
+  "niveau": 4,
+  "texte": "Quel est le plus long fleuve de France ?",
+  "choix": [
+   "La Seine",
+   "Le Rhône",
+   "La Loire",
+   "La Garonne"
+  ],
+  "bonne": 2
+ }
+]

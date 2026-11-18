@@ -7,9 +7,10 @@ import { imposteur } from './imposteur';
 import { reflexe } from './reflexe';
 import { timing } from './timing';
 import { patate } from './patate';
+import { quitteOuDouble } from './quitteOuDouble';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const JEUX: MiniJeu<any>[] = [combien, justePrix, parieur, imposteur, reflexe, timing, patate];
+export const JEUX: MiniJeu<any>[] = [combien, justePrix, parieur, imposteur, reflexe, timing, patate, quitteOuDouble];
 
 export const jeuParId = (id?: string) => JEUX.find((j) => j.id === id);
 

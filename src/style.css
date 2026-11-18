@@ -612,3 +612,14 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .regles-jeu { display: grid; gap: 12px; }
 .accroche-jeu { margin: 0; font-family: var(--titre); font-weight: 800; font-size: 20px; line-height: 1.2; text-wrap: balance; }
 .tours-jeu { justify-self: start; padding: 5px 12px; border-radius: 99px; background: #ffffff10; border: 1px solid var(--bord); font-family: var(--titre); font-weight: 800; font-size: 12px; letter-spacing: .04em; color: var(--jaune); }
+
+/* ——— Quitte ou Double ——— */
+.choix-quiz-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.choix-quiz { min-height: 64px; padding: 8px 10px; flex-direction: row; justify-content: flex-start; gap: 10px; text-align: left; font-family: var(--corps); font-weight: 700; font-size: 15px; line-height: 1.2; }
+.choix-quiz b { flex: none; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: #ffffff14; font-family: var(--titre); font-size: 13px; }
+.choix-quiz { position: relative; }
+.choix-quiz small { position: absolute; right: 8px; bottom: 4px; font-size: 10px; color: var(--texte-2); }
+.choix-qd .bouton { font-size: 19px; padding-inline: 6px; }
+.choix-quiz.bonne { border-color: var(--vert); background: #5CF2C226; color: var(--texte); }
+.choix-quiz.bonne b { background: var(--vert); color: var(--fond); }
+.choix-quiz.fausse { border-color: var(--rose); background: #FF5A6E1F; opacity: .85; }
