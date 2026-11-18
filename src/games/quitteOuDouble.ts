@@ -8,6 +8,8 @@ import { pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu } from './interface';
 import { classementBarres, hud } from './arene';
+import { fuseeHtml } from '../fusee';
+import { sons } from '../son';
 
 const NB_QUESTIONS: [number, number, number] = [5, 6, 7]; // Courte, Normale, Longue
 const DUREE_QUESTION = 15_000;
@@ -34,6 +36,8 @@ interface Etat extends EtatDeBase {
   statut: Record<string, Statut>;
   bonne?: number; // révélée au résultat seulement
   reponses?: Record<string, number>; // révélées au résultat
+  avant?: Record<string, number>; // cagnottes avant cette question (pour l'animation)
+  perdus?: string[]; // ceux qui ont tout perdu à cette question
 }
 
 const etapeDe = (n: number, i: number, quoi: string) => `quitte-${n}-${i}-${quoi}`;
@@ -105,7 +109,8 @@ export const quitteOuDouble: MiniJeu<Etat> = {
           statut[u] = 'perdu';
         }
       }
-      return { etat: { ...etat, phase: 'resultat', bonne, reponses, cagnotte, statut, fin: now + DUREE_RESULTAT } };
+      const perdus = joueurs.filter((u) => statut[u] === 'perdu');
+      return { etat: { ...etat, phase: 'resultat', bonne, reponses, cagnotte, statut, avant: { ...etat.cagnotte }, perdus, fin: now + DUREE_RESULTAT } };
     }
     if (etat.phase === 'resultat' && now >= (etat.fin ?? 0)) {
       const dernier = etat.index + 1 >= etat.questions.length;
@@ -177,8 +182,15 @@ export const quitteOuDouble: MiniJeu<Etat> = {
         const qui = Object.keys(reponses).filter((u) => reponses[u] === i);
         return `<div class="option choix-quiz resultat ${i === e.bonne ? 'bonne' : qui.length ? 'fausse' : ''}"><b>${'ABCD'[i]}</b>${esc(c)}<small>${qui.map(nom).join(', ')}</small></div>`;
       }).join('');
-      return `${tete}
-        <h2 class="question">${esc(q.texte)}</h2>
+      // Ma fusée : elle grimpe si j'ai bon, elle crashe si je viens de tout perdre.
+      const avant = e.avant?.[v.uid] ?? 0;
+      const fusee = e.perdus?.includes(v.uid)
+        ? fuseeHtml(`${e.etape}-crash`, { depart: avant, cible: avant, crash: true })
+        : moiStatut === 'enJeu'
+          ? fuseeHtml(`${e.etape}-monte`, { depart: avant, cible: maCagnotte })
+          : '';
+      return `${tete}${fusee}
+        <h2 class="question petite">${esc(q.texte)}</h2>
         <div class="choix-quiz-grille">${choix}</div>
         <div class="joueurs-arene">${lignesJoueurs()}</div>`;
     }
@@ -192,8 +204,9 @@ export const quitteOuDouble: MiniJeu<Etat> = {
         <p class="aide">Encaisser ou doubler ? Prochaine question : ${NOMS_NIVEAUX[prochaine?.niveau ?? 4]}.</p>
         ${attenteDes(joueurs, v.joueurs, (u) => v.ontRepondu.includes(u))}${chrono(e.fin)}`;
     }
+    const monChoix = v.local[e.etape] as string | undefined;
     return `${tete}${chrono(e.fin)}
-      <h2 class="question centre-texte">Ta cagnotte : ${maCagnotte} pt${maCagnotte > 1 ? 's' : ''}</h2>
+      ${fuseeHtml(`${e.etape}-${monChoix === 'encaisser' ? 'encaisse' : 'choix'}`, { depart: maCagnotte, cible: maCagnotte, encaisse: monChoix === 'encaisser' })}
       <p class="aide">Prochaine question : <strong>${NOMS_NIVEAUX[prochaine?.niveau ?? 4]}</strong>. Doubler, c’est viser ${maCagnotte * 2} pts… ou tout perdre.</p>
       ${decide
         ? '<p class="attente">Choix enregistré, en secret.</p>'
@@ -215,6 +228,7 @@ export const quitteOuDouble: MiniJeu<Etat> = {
       const e = v.etat;
       if (e.phase !== 'choix' || (e.statut[v.uid] ?? 'enJeu') !== 'enJeu' || o.local[e.etape] !== undefined) return;
       o.local[e.etape] = el.dataset.valeur;
+      if (el.dataset.valeur === 'encaisser') sons.reussi();
       o.rafraichir();
       await o.repondre({ decision: el.dataset.valeur });
     },

@@ -160,3 +160,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Révélation : l'hôte dévoile chaque chaîne étape par étape (« Suivant », petit son), puis chacun vote pour le dessin le
   plus drôle et dit si le sens est resté. Points internes : 3 au dessin le plus drôle, 1 par chaîne qui garde le sens.
   Dessins en traits légers (points 0-999, 3 000 points max). Bouton GRILLÉ ! caché pendant qu'on dessine. 3 joueurs min.
+- 18/11/2026 · Quitte ou Double : animation « fusée » (choisie parmi 3 pistes, `src/fusee.ts`) façon jeu à multiplicateur,
+  avec des points et jamais d'argent. Courbe qui grimpe avec la cagnotte (×1, ×2, ×4…) et vire du vert au rouge avec
+  le risque. Au résultat : elle monte (bonne réponse, petit arpège) ou « CRASH ! » (courbe qui s'effondre, écran qui
+  tremble, vibration). Au choix secret : la fusée en grand ; encaisser = « +X PTS » et pluie de jetons.

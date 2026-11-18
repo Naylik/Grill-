@@ -18,6 +18,7 @@ import { action, afficher, brouillons, installer, vibrer } from './ui';
 import { garderEcranAllume } from './veille';
 import { installerGlisser } from './glisser';
 import { annuler, brancherHeure, effacer, installerDessin, outil, peindreLesToiles } from './dessin';
+import { animerFusees } from './fusee';
 import { mettreAJour, retenirEnregistrement } from './version';
 import { esc, normaliserCode, nettoyerPrenom } from './outils';
 import { copier, imagePodium, partager } from './partage';
@@ -534,6 +535,7 @@ function horloge(): void {
     b.classList.toggle('pas-encore', t < Number(b.dataset.depart));
   });
   peindreLesToiles();
+  animerFusees();
   requestAnimationFrame(horloge);
 }
 requestAnimationFrame(horloge);

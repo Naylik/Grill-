@@ -101,6 +101,14 @@ export function momentsForts(): void {
       });
     }
   }
+  // Quitte ou Double : ma fusée grimpe (bonne réponse) ou crashe (tout perdu).
+  if (d.phase === 'jeu' && d.jeuEnCours === 'quitte' && S.jeu) {
+    const q = S.jeu as { phase?: string; etape?: string; perdus?: string[]; statut?: Record<string, string> };
+    if (q.phase === 'resultat') {
+      if (q.perdus?.includes(S.uid)) moment(`qd-${q.etape}`, () => { sons.rate(); vibrer([200, 80, 300]); });
+      else if (q.statut?.[S.uid] === 'enJeu') moment(`qd-${q.etape}`, () => sons.reussi());
+    }
+  }
   // Dessin téléphone arabe : un petit son à chaque étape dévoilée.
   if (d.phase === 'jeu' && d.jeuEnCours === 'telephone' && S.jeu) {
     const t = S.jeu as { phase?: string; revue?: number; affiches?: number };

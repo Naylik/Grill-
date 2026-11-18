@@ -644,3 +644,19 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .maillon.nouveau { animation: arrive .45s cubic-bezier(.3, 1.5, .5, 1); border-color: var(--cyan); }
 .auteur-maillon { font-family: var(--titre); font-size: 12px; font-weight: 800; letter-spacing: .05em; color: var(--texte-2); text-transform: uppercase; }
 .devinette-maillon { margin: 0; font-family: var(--titre); font-weight: 800; font-size: 20px; line-height: 1.2; }
+
+/* Quitte ou Double : la fusée */
+.fusee { position: relative; border-radius: 22px; background: radial-gradient(120% 90% at 50% 100%, #2A1F55, #120E2A 70%); border: 1px solid var(--bord); overflow: hidden; }
+.fusee canvas { display: block; width: 100%; height: auto; aspect-ratio: 600 / 330; max-width: 100%; }
+.fusee.crash { animation: secoue-fusee .45s linear; border-color: #FF5A6E88; }
+@keyframes secoue-fusee { 15% { transform: translate(-8px, 5px); } 35% { transform: translate(7px, -5px); } 55% { transform: translate(-5px, 3px); } 75% { transform: translate(3px, -2px); } }
+.fusee.crash::after { content: ''; position: absolute; inset: 0; background: #FF5A6E; animation: flash-fusee .5s ease-out forwards; pointer-events: none; }
+.fusee.encaisse::after { content: ''; position: absolute; inset: 0; background: #5CF2C2; animation: flash-fusee .5s ease-out forwards; pointer-events: none; }
+@keyframes flash-fusee { from { opacity: .6; } to { opacity: 0; } }
+.bandeau-fusee { position: absolute; left: 50%; bottom: 14%; padding: 6px 14px; border-radius: 12px; background: #0D0A1EE6; border: 3px solid currentColor; font-family: var(--titre); font-weight: 900; font-size: 22px; white-space: nowrap; animation: bandeau-fusee .6s cubic-bezier(.2, 1.5, .4, 1) both; }
+.bandeau-fusee.crash { color: var(--rose); }
+.bandeau-fusee.gagne { color: var(--vert); }
+@keyframes bandeau-fusee { from { opacity: 0; transform: translateX(-50%) scale(.3) rotate(-10deg); } to { opacity: 1; transform: translateX(-50%) rotate(-4deg); } }
+.jeton-fusee { position: absolute; left: 50%; top: 45%; width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFF3B0, #FFD84A 50%, #C99A12); border: 2px solid #8A6A08; animation: jeton-fusee 1s cubic-bezier(.2, .8, .3, 1) both; }
+@keyframes jeton-fusee { from { transform: translate(0, 0) scale(.4); opacity: 1; } to { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; } }
+.question.petite { font-size: 17px; }
