@@ -63,7 +63,7 @@ export interface Deroule {
 
 export interface EtatFlash {
   numero: number; // numéro du jeu
-  etape: 'collecte' | 'vote' | 'resultat';
+  etape: 'grillage' | 'collecte' | 'vote' | 'resultat'; // grillage : dernière chance d'appuyer sur GRILLÉ !
   fin?: number;
   porteurs?: string[];
   resultats?: Record<string, boolean>;

@@ -9,6 +9,9 @@ describe('bouton GRILLÉ !', () => {
   it('une accusation par manche, pas avant le 1er jeu, pas pendant une autre accusation', () => {
     expect(peutAccuser('a', ctx, {}, 3)).toBe(true);
     expect(peutAccuser('a', { ...ctx, numeroJeu: 0, phase: 'missions' }, {}, 3)).toBe(false);
+    // Après un jeu : seulement pendant la « dernière chance », pas pendant le vote des missions flash.
+    expect(peutAccuser('a', { ...ctx, phase: 'flash', phaseJeu: 'grillage' }, {}, 3)).toBe(true);
+    expect(peutAccuser('a', { ...ctx, phase: 'flash', phaseJeu: 'vote' }, {}, 3)).toBe(false);
     expect(peutAccuser('a', { ...ctx, phase: 'detective' }, {}, 3)).toBe(false);
     const deja: Accusations = { 2: { a: { ...base, statut: 'close', verdict: 'rate' } } };
     expect(peutAccuser('a', ctx, deja, 3)).toBe(false); // déjà accusé à cette manche

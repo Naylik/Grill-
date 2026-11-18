@@ -9,7 +9,7 @@ import { JEUX, jeuParId, jeuxPossibles, jeuxPourVote } from './games';
 import type { Avancee, ContexteHote } from './games/interface';
 import { auHasard, melanger } from './outils';
 import { majoriteOui, missionTrouvee, pointsDeFin, scoreVide, titres, totalFinal, totalProvisoire, VOL_DETECTIVE, type ResultatMission, type ResultatPari } from './score';
-import { accusationsADoubler, liste as listeAccusations, mancheAction, missionsGrillees, PENALITE_ACCUSATION, PENALITE_MENSONGE, piloterAccusations } from './accusations';
+import { accusationEnCours, accusationsADoubler, liste as listeAccusations, mancheAction, missionsGrillees, PENALITE_ACCUSATION, PENALITE_MENSONGE, piloterAccusations } from './accusations';
 import { vanneDuClassement } from './narrateur';
 import type { Bilan, Deroule, EtatFlash, EtatRevelation, Score } from './types';
 import { flashReussie, nbPorteurs, POINTS_FLASH } from './flash';
@@ -18,6 +18,7 @@ const DUREE_ROUE = 5_500;
 const DUREE_VOTE_JEU = 20_000;
 export const DUREE_RECIT = 15_000;
 const DUREE_VOTE = 45_000;
+const DUREE_GRILLAGE = 25_000; // « Dernière chance » : le temps d'appuyer sur GRILLÉ ! avant la révélation
 const DUREE_COLLECTE_FLASH = 6_000; // le temps que les porteurs révèlent leur mission flash
 const DUREE_VOTE_FLASH = 30_000;
 const DUREE_RESULTAT_FLASH = 5_000;
@@ -58,6 +59,7 @@ function etapeAttendue(d: Deroule): string | null {
     case 'detective': return 'detective';
     case 'choixJeu': return d.propositions ? `choix-${d.numeroJeu}` : null;
     case 'regles': return `pret-${d.numeroJeu}`;
+    case 'flash': return d.flash?.etape === 'grillage' ? `grille-${d.flash.numero}` : null;
     case 'jeu': return (S.jeu as { etape?: string } | null)?.etape ?? null;
     default: return null;
   }
@@ -138,7 +140,7 @@ function appliquer(av: Avancee<unknown>, jeuId = S.deroule?.jeuEnCours): Ecritur
     scores,
     // Avant le classement : les missions flash de ce jeu sont révélées et votées.
     'deroule/phase': 'flash',
-    'deroule/flash': { numero: d.numeroJeu, etape: 'collecte', fin: maintenant() + DUREE_COLLECTE_FLASH },
+    'deroule/flash': { numero: d.numeroJeu, etape: 'grillage', fin: maintenant() + DUREE_GRILLAGE },
     'deroule/jeuxJoues': [...(d.jeuxJoues ?? []), d.jeuEnCours],
     'deroule/dernierJeu': { id: d.jeuEnCours, points: Object.fromEntries(uids().map((u) => [u, scores[u].detail![d.numeroJeu]])), sorte: av.fin.sorte, ...(av.fin.resume ? { resume: av.fin.resume } : {}) },
     'deroule/vanne': vanneDuClassement(classement),
@@ -158,6 +160,12 @@ const votantsFlash = (porteur: string) => connectes().filter((v) => v !== porteu
 function etapeFlash(f: EtatFlash): Ecritures | null {
   const now = maintenant();
   const n = f.numero;
+  if (f.etape === 'grillage') {
+    // Fini quand tout le monde a dit « rien à signaler » (ou le temps), et qu'aucune accusation n'est en cours.
+    const fini = tousPrets(`grille-${n}`) || now >= (f.fin ?? 0);
+    if (!fini || accusationEnCours(S.accusations)) return null;
+    return { 'deroule/flash': { numero: n, etape: 'collecte', fin: now + DUREE_COLLECTE_FLASH } };
+  }
   if (f.etape === 'collecte') {
     const revelees = flashRevelees(n);
     const attendus = S.deroule?.flashTirage?.numero === n ? S.deroule.flashTirage.nb : 0;
@@ -319,7 +327,7 @@ function calculer(): Ecritures | null {
   const now = maintenant();
   // Bouton GRILLÉ ! : l'accusation en cours avance quelle que soit l'étape de la partie.
   if (d.phase !== 'salon' && d.phase !== 'fin') {
-    const pause = mancheAction({ phase: d.phase, numeroJeu: d.numeroJeu, jeuEnCours: d.jeuEnCours, phaseJeu: (S.jeu as { phase?: string } | null)?.phase });
+    const pause = mancheAction({ phase: d.phase, numeroJeu: d.numeroJeu, jeuEnCours: d.jeuEnCours, phaseJeu: d.phase === 'flash' ? d.flash?.etape : (S.jeu as { phase?: string } | null)?.phase });
     const acc = piloterAccusations({ accs: S.accusations, votes: S.votes, connectes: connectes(), maintenant: now, scores: S.scores, pause });
     if (acc) return acc;
   }
@@ -421,7 +429,7 @@ export async function commandeHote(valeur: string): Promise<void> {
     };
   } else if (valeur === 'forcer' && d.phase === 'flash') {
     // L'hôte peut passer les missions flash (un porteur absent, un vote qui traîne).
-    e = d.flash?.etape === 'vote' ? { 'deroule/flash/fin': maintenant() - 1 } : { 'deroule/phase': 'classement' };
+    e = d.flash?.etape === 'vote' || d.flash?.etape === 'grillage' ? { 'deroule/flash/fin': maintenant() - 1 } : { 'deroule/phase': 'classement' };
   } else if (valeur === 'forcer' && d.phase === 'regles' && d.jeuEnCours) {
     e = demarrerJeu(d.jeuEnCours);
   } else if (valeur === 'forcer' && ['missions', 'miPartie', 'detective'].includes(d.phase)) {

@@ -2,7 +2,7 @@
 import { S, estHote } from '../etat';
 import { esc } from '../outils';
 import { POINTS_FLASH } from '../flash';
-import { chrono, pastille } from './commun';
+import { attenteDes, chrono, pastille } from './commun';
 
 const nom = (u: string) => esc(S.joueurs[u]?.prenom ?? '?');
 
@@ -10,7 +10,8 @@ const nom = (u: string) => esc(S.joueurs[u]?.prenom ?? '?');
 export function maFlashEnCours(): { numero: number; texte: string } | null {
   const d = S.deroule;
   const t = d?.flashTirage;
-  if (!d || !t || t.numero !== d.numeroJeu || !['regles', 'jeu'].includes(d.phase)) return null;
+  const dernierChance = d?.phase === 'flash' && d.flash?.etape === 'grillage';
+  if (!d || !t || t.numero !== d.numeroJeu || !(['regles', 'jeu'].includes(d.phase) || dernierChance)) return null;
   const m = S.secrets.flash?.[`j${t.numero}`];
   return m ? { numero: t.numero, texte: m.texte } : null;
 }
@@ -30,6 +31,21 @@ export function blocFlash(): string {
 export function ecranFlash(): string {
   const f = S.deroule?.flash;
   const forcer = estHote() ? '<button class="bouton discret" data-action="hote" data-valeur="forcer">Continuer sans attendre</button>' : '';
+  if (f?.etape === 'grillage') {
+    const etape = `grille-${f.numero}`;
+    const passe = S.maReponse?.etape === etape;
+    const ont = S.attente?.etape === etape ? S.attente.uids ?? [] : [];
+    const uids = Object.entries(S.joueurs).sort((a, b) => a[1].rejointLe - b[1].rejointLe).map(([u]) => u);
+    return `<h2 class="titre-flash">Dernière chance !</h2>
+      ${chrono(f.fin)}
+      <p class="consigne-tele">Quelqu’un avait peut-être une mission flash pendant ce jeu… ou fait sa grosse mission en douce.</p>
+      <p class="aide">Appuie sur <strong>GRILLÉ !</strong> en bas à droite pour l’accuser. Vu juste : tu lui voles des points. Raté : −2 pts.</p>
+      <div class="pile bas">
+        ${passe ? '<p class="attente">Rien à signaler. On attend les autres…</p>' : '<button class="bouton discret" data-action="passerGrillage">Rien à signaler</button>'}
+        ${attenteDes(uids, S.joueurs, (u) => ont.includes(u) || (u === S.uid && passe))}
+        ${forcer}
+      </div>`;
+  }
   if (!f || f.etape === 'collecte') {
     return `<h2 class="titre-flash">⚡ Missions flash</h2>
       <p class="attente">Qui avait une mission flash pendant ce jeu ?…</p>

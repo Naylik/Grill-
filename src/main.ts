@@ -251,6 +251,12 @@ action('outil', (el) => {
   demanderAffichage();
 });
 
+action('passerGrillage', async () => {
+  const f = S.deroule?.flash;
+  if (S.deroule?.phase !== 'flash' || f?.etape !== 'grillage') return;
+  vibrer(30);
+  await repondre(`grille-${f.numero}`);
+});
 action('pret', async (el) => {
   if (S.deroule?.phase !== 'regles') return;
   (el as HTMLButtonElement).disabled = true;

@@ -16,7 +16,7 @@ const nom = (u: string) => esc(S.joueurs[u]?.prenom ?? '?');
 
 export function contexteAccusation() {
   const d = S.deroule!;
-  return { phase: d.phase, numeroJeu: d.numeroJeu, jeuEnCours: d.jeuEnCours, phaseJeu: (S.jeu as { phase?: string } | null)?.phase };
+  return { phase: d.phase, numeroJeu: d.numeroJeu, jeuEnCours: d.jeuEnCours, phaseJeu: d.phase === 'flash' ? d.flash?.etape : (S.jeu as { phase?: string } | null)?.phase };
 }
 
 export const accusationPossible = (): boolean =>

@@ -218,3 +218,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 18/11/2026 · « Termine 2e au classement final » devenait impossible (ses propres points le faisaient passer 1er) :
   elle se juge sur le classement affiché à la fin du dernier jeu, avant les points des grosses missions. 3 missions de
   Kilyan (message privé, sortir de la pièce, raconter sa semaine) passent en « difficile » (un seul coup).
+- 18/11/2026 · « Dernière chance ! » après chaque jeu (25 s) : un écran rappelle à tout le monde qu'on peut appuyer
+  sur GRILLÉ ! (mission flash du jeu qui vient de finir, ou grosse mission) avant la révélation des missions flash.
+  « Rien à signaler » pour passer ; on attend la fin d'une accusation en cours. Mission flash grillée : vol de 2 pts.
