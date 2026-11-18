@@ -139,6 +139,10 @@ export const sons = {
     bruit(0, 1.1, 900, 80, 0.8);
     note(70, 0, 0.6, 'sawtooth', 0.25);
   },
+  /** Roue des territoires : un cran qui claque contre le curseur. */
+  cran(): void {
+    note(1700 + Math.random() * 300, 0, 0.035, 'square', 0.05);
+  },
   /** La Patate : tic-tac de la mèche. */
   meche(): void {
     note(2200, 0, 0.03, 'square', 0.035);

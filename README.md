@@ -179,3 +179,9 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   l'hôte seul, `prive/mines`), puis chacun son tour ouvre des colis : le k-ième colis sûr du tour rapporte k pts ;
   on encaisse ou on continue. Sauter sur une mine fait perdre le tour et rapporte au poseur au moins 3 pts.
   Bluff à voix haute encouragé. 2 / 2 / 3 tours chacun selon le format. 3 joueurs min.
+- 18/11/2026 · Nouveau jeu « Roue des territoires » (`src/games/territoires.ts`, roue dans `src/roue.ts`), style
+  « roue de la fortune » néon choisi sur maquette : une part par joueur ; à chaque manche, action secrète Agrandir
+  (+1 part, 1 pt dans la cagnotte), Voler (gratuit ; si la cible s'est protégée, le voleur lui donne 1 pt) ou Protéger
+  (par défaut). Révélation avec badges carte par carte et parts qui changent de taille, puis la roue tourne : 32 crans,
+  curseur qui claque avec un « tic », ralentissement ; l'hôte tire le gagnant avant (selon les parts) et la rotation
+  suit l'heure du serveur, identique sur tous les téléphones. 3 / 4 / 5 manches selon le format. 3 joueurs min.

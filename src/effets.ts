@@ -112,6 +112,11 @@ export function momentsForts(): void {
       else if (q.statut?.[S.uid] === 'enJeu') moment(`qd-${q.etape}`, () => sons.reussi());
     }
   }
+  // Roue des territoires : la roue s'arrête sur le gagnant.
+  if (d.phase === 'jeu' && d.jeuEnCours === 'territoires' && S.jeu) {
+    const t = S.jeu as { phase?: string; manche?: number; spin?: { gagnant: string } };
+    if (t.phase === 'gain') moment(`roue-gain-${d.numeroJeu}-${t.manche}`, () => { if (t.spin?.gagnant === S.uid) { sons.reussi(); confettis(60); vibrer([80, 40, 160]); } else sons.ding(); });
+  }
   // Dessin téléphone arabe : les réactions (😂 🔥 💀 👏) s'envolent chez tout le monde quand quelqu'un réagit.
   for (const [cle, n] of Object.entries(S.compteurs ?? {})) {
     if (!cle.startsWith('reac-')) continue;

@@ -19,6 +19,7 @@ import { garderEcranAllume } from './veille';
 import { installerGlisser } from './glisser';
 import { annuler, brancherHeure, effacer, installerDessin, outil, peindreLesToiles } from './dessin';
 import { animerFusees } from './fusee';
+import { animerRoues, brancherRoue } from './roue';
 import { mettreAJour, retenirEnregistrement } from './version';
 import { esc, normaliserCode, nettoyerPrenom } from './outils';
 import { copier, imagePodium, partager } from './partage';
@@ -35,6 +36,7 @@ installer(app);
 installerGlisser();
 installerDessin();
 brancherHeure(() => maintenant() - Date.now());
+brancherRoue(maintenant, () => sons.cran());
 
 /** Code présent dans le lien (QR code) : https://…/#ABCD */
 const codeDuLien = (): string | null => normaliserCode(location.hash.slice(1)) || null;
@@ -536,6 +538,7 @@ function horloge(): void {
   });
   peindreLesToiles();
   animerFusees();
+  animerRoues();
   requestAnimationFrame(horloge);
 }
 requestAnimationFrame(horloge);
