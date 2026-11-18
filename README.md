@@ -90,3 +90,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   v21 et v30 passées en Épicé, j42 ajoutée (« Sois le premier à répondre… ») → 76 missions. Pas de règle de tirage
   pendant la phase de test : toutes les missions peuvent sortir. Le classement provisoire affiche la place de chacun
   au dernier jeu (au Parieur : selon les points gagnés) pour pouvoir juger les missions de classement.
+- 18/11/2026 · Cap du fondateur : pas de nouvelle mécanique pour l'instant (missions flash, pouvoirs, traître… mis de côté).
+  Le cœur du jeu = des missions secrètes vraiment drôles + des mini-jeux vraiment cool à jouer. Priorités : enrichir
+  les missions et ajouter / améliorer les mini-jeux.
