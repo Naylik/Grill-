@@ -10,7 +10,7 @@ import { roueHtml, tirerArret } from '../roue';
 import { etapeTerminee, reponsesDe, selonFormat, type EtatDeBase, type MiniJeu } from './interface';
 import { classementBarres, hud } from './arene';
 
-const NB_MANCHES: [number, number, number] = [3, 4, 5]; // Courte, Normale, Longue
+const NB_MANCHES: [number, number, number] = [4, 6, 8]; // Courte, Normale, Longue
 const PARTS_DEPART = 3;
 const POINTS_DEPART = 5;
 const POT_DEPART = 6;

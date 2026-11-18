@@ -184,4 +184,4 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   (+1 part, 1 pt dans la cagnotte), Voler (gratuit ; si la cible s'est protégée, le voleur lui donne 1 pt) ou Protéger
   (par défaut). Révélation avec badges carte par carte et parts qui changent de taille, puis la roue tourne : 32 crans,
   curseur qui claque avec un « tic », ralentissement ; l'hôte tire le gagnant avant (selon les parts) et la rotation
-  suit l'heure du serveur, identique sur tous les téléphones. 3 / 4 / 5 manches selon le format. 3 joueurs min.
+  suit l'heure du serveur, identique sur tous les téléphones. 4 / 6 / 8 manches selon le format. 3 joueurs min.
