@@ -6,12 +6,13 @@ import { sonActif } from '../son';
 import { ecranChoixMission, ongletMissions } from './missions';
 import { coucheGrille } from './accusation';
 import { fenetreVengeance } from './missions';
+import { ecranFlash, fenetreFlash, maFlashEnCours } from './flash';
 import { ecranRegles } from './deroule';
 import { ecranChoixJeu, ecranClassement, ecranDetective, ecranFin, ecranJeu, ecranRevelation } from './deroule';
 
 function bandeau(): string {
   const j = moi()!;
-  const badge = S.secrets.mission2 && !S.secrets.nouvelleMissionVue ? '<span class="badge" aria-label="nouvelle mission"></span>' : '';
+  const badge = maFlashEnCours() ? '<span class="badge" aria-label="mission flash en cours"></span>' : '';
   return `<header class="bandeau">
     <div class="qui">${pastille(j, 30)}<span><strong>${esc(j.prenom)}</strong> <span style="color:${j.couleur}">${esc(j.nomCode)}</span></span>
       <span class="code-mini">${S.code}</span>
@@ -35,6 +36,7 @@ function contenuPartie(): string {
     case 'choixJeu': return ecranChoixJeu();
     case 'regles': return ecranRegles();
     case 'jeu': return ecranJeu();
+    case 'flash': return ecranFlash();
     case 'classement': return ecranClassement();
     case 'detective': return ecranDetective();
     case 'revelation': return ecranRevelation();
@@ -45,5 +47,5 @@ function contenuPartie(): string {
 
 export function ecranPartie(): string {
   const contenu = S.onglet === 'missions' ? ongletMissions() : `<section class="ecran phase-${S.deroule!.phase}">${contenuPartie()}</section>`;
-  return bandeau() + contenu + (fenetreVengeance() || coucheGrille());
+  return bandeau() + contenu + (fenetreVengeance() || fenetreFlash() || coucheGrille());
 }

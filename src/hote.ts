@@ -11,12 +11,16 @@ import { auHasard, melanger } from './outils';
 import { majoriteOui, missionTrouvee, pointsDeFin, scoreVide, titres, totalFinal, totalProvisoire, VOL_DETECTIVE, type ResultatMission, type ResultatPari } from './score';
 import { accusationsADoubler, liste as listeAccusations, mancheAction, missionsGrillees, PENALITE_ACCUSATION, PENALITE_MENSONGE, piloterAccusations } from './accusations';
 import { vanneDuClassement } from './narrateur';
-import type { Bilan, Deroule, EtatRevelation, Score } from './types';
+import type { Bilan, Deroule, EtatFlash, EtatRevelation, Score } from './types';
+import { flashReussie, nbPorteurs, POINTS_FLASH } from './flash';
 
 const DUREE_ROUE = 5_500;
 const DUREE_VOTE_JEU = 20_000;
 export const DUREE_RECIT = 15_000;
 const DUREE_VOTE = 45_000;
+const DUREE_COLLECTE_FLASH = 6_000; // le temps que les porteurs révèlent leur mission flash
+const DUREE_VOTE_FLASH = 30_000;
+const DUREE_RESULTAT_FLASH = 5_000;
 
 type Ecritures = Record<string, unknown>;
 
@@ -97,8 +101,11 @@ function entrerRegles(id: string): Ecritures {
 function demarrerJeu(id: string): Ecritures {
   const jeu = jeuParId(id)!;
   const av = jeu.demarrer(contexte());
+  const numero = S.deroule?.numeroJeu ?? 0;
   return {
     'deroule/phase': 'jeu', 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null,
+    // Missions flash : l'hôte publie seulement une graine ; chaque téléphone en déduit s'il est porteur, et laquelle.
+    'deroule/flashTirage': { numero, graine: 1 + Math.floor(Math.random() * 2_000_000_000), nb: nbPorteurs(uids().length) }, 'deroule/flash': null,
     'reponses': null, 'attente': null,
     ...appliquer(av, id),
   };
@@ -129,12 +136,53 @@ function appliquer(av: Avancee<unknown>, jeuId = S.deroule?.jeuEnCours): Ecritur
   return {
     ...e,
     scores,
-    'deroule/phase': 'classement',
+    // Avant le classement : les missions flash de ce jeu sont révélées et votées.
+    'deroule/phase': 'flash',
+    'deroule/flash': { numero: d.numeroJeu, etape: 'collecte', fin: maintenant() + DUREE_COLLECTE_FLASH },
     'deroule/jeuxJoues': [...(d.jeuxJoues ?? []), d.jeuEnCours],
     'deroule/dernierJeu': { id: d.jeuEnCours, points: Object.fromEntries(uids().map((u) => [u, scores[u].detail![d.numeroJeu]])), sorte: av.fin.sorte, ...(av.fin.resume ? { resume: av.fin.resume } : {}) },
     'deroule/vanne': vanneDuClassement(classement),
     'attente': null,
   };
+}
+
+// ——— Missions flash (après chaque jeu) ———
+
+const cleFlash = (n: number) => `j${n}`;
+/** Porteurs qui ont révélé leur mission flash pour ce jeu. */
+const flashRevelees = (n: number) => uids().filter((u) => S.revelation[u]?.flash?.[cleFlash(n)]);
+/** Mission flash grillée en direct (bouton GRILLÉ !) : ratée, sans vote. */
+const flashGrillee = (u: string, n: number) => !!missionsGrillees(S.accusations, u)[100 + n];
+const votantsFlash = (porteur: string) => connectes().filter((v) => v !== porteur);
+
+function etapeFlash(f: EtatFlash): Ecritures | null {
+  const now = maintenant();
+  const n = f.numero;
+  if (f.etape === 'collecte') {
+    const revelees = flashRevelees(n);
+    const attendus = S.deroule?.flashTirage?.numero === n ? S.deroule.flashTirage.nb : 0;
+    if (revelees.length < attendus && now < (f.fin ?? 0)) return null;
+    if (!revelees.length) return { 'deroule/phase': 'classement', 'deroule/flash': null };
+    return { 'deroule/flash': { numero: n, etape: 'vote', fin: now + DUREE_VOTE_FLASH, porteurs: revelees } };
+  }
+  if (f.etape === 'vote') {
+    const porteurs = f.porteurs ?? [];
+    const aVoter = porteurs.filter((u) => !flashGrillee(u, n));
+    const fini = aVoter.every((u) => votantsFlash(u).every((v) => S.votes[`f${n}-${u}`]?.[v] !== undefined));
+    if (!fini && now < (f.fin ?? 0)) return null;
+    const resultats: Record<string, boolean> = {};
+    const e: Ecritures = {};
+    for (const u of porteurs) {
+      const votes = Object.entries(S.votes[`f${n}-${u}`] ?? {}).filter(([v]) => v !== u).map(([, x]) => x === true);
+      resultats[u] = flashReussie(votes, flashGrillee(u, n));
+      if (resultats[u]) e[`scores/${u}/flash`] = (S.scores[u]?.flash ?? 0) + POINTS_FLASH;
+    }
+    // Mémoire du groupe : ces missions flash ne reviendront pas aux prochaines parties.
+    memoriser(porteurs.map((u) => S.revelation[u]?.flash?.[cleFlash(n)]?.id).filter((x): x is string => !!x));
+    return { ...e, 'deroule/flash': { ...f, etape: 'resultat', resultats, fin: now + DUREE_RESULTAT_FLASH } };
+  }
+  if (f.etape === 'resultat' && now >= (f.fin ?? 0)) return { 'deroule/phase': 'classement' };
+  return null;
 }
 
 // ——— Révélation ———
@@ -251,6 +299,10 @@ function bilanFinal(): Ecritures {
   for (const m of bilan.mensonges) ajouter(m.cible, m.de);
   for (const a of listeAccusations(S.accusations)) if (a.statut === 'grille' || a.verdict === 'grille') ajouter(a.cible, a.de);
   bilan.grilleurs = grilleurs;
+  // Missions flash : le roi de l'éclair (au moins 2 réussies).
+  const flashs = uids().map((u) => ({ u, n: Math.round((scores[u].flash ?? 0) / POINTS_FLASH) }));
+  const maxFlash = Math.max(0, ...flashs.map((x) => x.n));
+  if (maxFlash >= 2) for (const x of flashs) if (x.n === maxFlash) enPlus.push({ uid: x.u, titre: 'Éclair', pourquoi: `${x.n} missions flash réussies` });
   for (const [u, liste] of Object.entries(missions)) {
     if (liste.some((m) => m.vengeance && m.reussie)) enPlus.push({ uid: u, titre: 'Vengeur', pourquoi: 'mission de vengeance réussie' });
   }
@@ -295,6 +347,10 @@ function calculer(): Ecritures | null {
       }
       break;
     }
+    case 'flash':
+      if (d.flash) e = etapeFlash(d.flash);
+      else e = { 'deroule/phase': 'classement' };
+      break;
     case 'detective':
       if (tousPrets('detective')) e = entrerRevelation();
       break;
@@ -338,9 +394,8 @@ export async function commandeHote(valeur: string): Promise<void> {
   const d = S.deroule;
   let e: Ecritures | null = null;
   if (valeur === 'suivant' && d.phase === 'classement') {
-    const moitie = S.infos.duree / 2;
+    // Une seule grosse mission par soirée : plus de 2e mission à la mi-partie.
     if (d.numeroJeu >= S.infos.duree) e = { 'deroule/phase': 'detective', reponses: null, attente: null };
-    else if (d.numeroJeu === moitie) e = { 'deroule/phase': 'miPartie', reponses: null, attente: null };
     else e = entrerChoixJeu(d.numeroJeu + 1);
   } else if (d.phase === 'revelation' && d.revelation) {
     const r = d.revelation;
@@ -364,6 +419,9 @@ export async function commandeHote(valeur: string): Promise<void> {
       deroule: { phase: 'salon', numeroJeu: 0 }, jeu: null, scores: null, reponses: null, compteurs: null, tirage: null,
       revelation: null, votes: null, paris: null, motsImposteur: null, attente: null, prive: null, accusations: null, vengeance: null,
     };
+  } else if (valeur === 'forcer' && d.phase === 'flash') {
+    // L'hôte peut passer les missions flash (un porteur absent, un vote qui traîne).
+    e = d.flash?.etape === 'vote' ? { 'deroule/flash/fin': maintenant() - 1 } : { 'deroule/phase': 'classement' };
   } else if (valeur === 'forcer' && d.phase === 'regles' && d.jeuEnCours) {
     e = demarrerJeu(d.jeuEnCours);
   } else if (valeur === 'forcer' && ['missions', 'miPartie', 'detective'].includes(d.phase)) {

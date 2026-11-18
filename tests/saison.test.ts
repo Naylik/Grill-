@@ -40,6 +40,6 @@ describe('saisons', () => {
 
   it('une mission de vengeance réussie vaut le double', () => {
     const r = pointsDeFin({ a: [{ difficulte: 'facile', reussie: true, vengeance: true }, { difficulte: 'difficile', reussie: true }] }, []);
-    expect(r.missions.a).toBe(12 + 10);
+    expect(r.missions.a).toBe(16 + 12); // facile 8 ×2 + difficile 12
   });
 });

@@ -837,3 +837,15 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 @keyframes crie-tele { 0% { opacity: 0; transform: scale(.3) rotate(-8deg); } 40% { opacity: 1; transform: scale(1.15); } 100% { opacity: 1; transform: none; } }
 @keyframes retourne-tele { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
 @keyframes tele-ok { from { transform: scale(.5); opacity: 0; } }
+
+/* Missions flash : jaune électrique, un éclair. */
+.titre-flash { text-align: center; color: var(--jaune); text-shadow: 0 0 18px #FFD84A88; }
+.proces-titre.eclair { color: var(--jaune); text-shadow: 0 0 20px #FFD84A; animation: tele-ok .5s cubic-bezier(.2,1.6,.4,1); }
+.tag.eclair { background: #FFD84A; color: #1A1438; font-weight: 800; }
+.mission.flash { border-color: #FFD84A; box-shadow: 0 0 22px #FFD84A44, inset 0 0 0 1px #FFD84A55; }
+.carte-flash { display: grid; gap: 10px; padding: 14px; border-radius: 18px; background: #ffffff08; border: 1px solid #FFD84A66; }
+.carte-flash.ok { border-color: #5CF2C2; box-shadow: 0 0 22px #5CF2C244; }
+.carte-flash.rate { border-color: #FF5A6E88; opacity: .9; }
+.verdict-flash { margin: 0; text-align: center; font-family: var(--titre); font-weight: 900; letter-spacing: .04em; animation: tele-ok .5s cubic-bezier(.2,1.6,.4,1); }
+.verdict-flash.ok { color: #5CF2C2; text-shadow: 0 0 14px #5CF2C2; }
+.verdict-flash.rate { color: #FF7A8A; }

@@ -22,7 +22,7 @@ export function ecranListeJeux(): string {
       </div>
     </div>
     <div class="boite resume-regles">
-      <p><strong>Missions :</strong> 2 par joueur (une au début, une à mi-partie), facile (6 pts) ou difficile (10 pts) au choix.</p>
+      <p><strong>Grosse mission :</strong> une par joueur pour toute la soirée, facile (8 pts) ou difficile (12 pts) au choix. <strong>Missions flash :</strong> à chaque jeu, 1 ou 2 joueurs reçoivent en secret une petite mission liée au jeu (+3 pts), révélée et votée juste après.</p>
       <p><strong>Mini-jeux :</strong> 1er 5 pts, 2e 3 pts, 3e 2 pts, les autres 1 pt.</p>
       <p><strong>Pari détective :</strong> avant la révélation, devine la mission d’un joueur. Juste : tu lui voles 4 ou 6 pts. Raté : −2 pts.</p>
     </div>

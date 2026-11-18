@@ -16,7 +16,7 @@ export interface Etat {
   jeu: Record<string, unknown> | null;
   scores: Record<string, Score>;
   compteurs: Record<string, number>;
-  revelation: Record<string, { missions?: { id?: string; texte: string; difficulte: 'facile' | 'difficile'; type: string; vengeance?: boolean }[] }>;
+  revelation: Record<string, { missions?: { id?: string; texte: string; difficulte: 'facile' | 'difficile'; type: string; vengeance?: boolean }[]; flash?: Record<string, { id: string; jeu: string; texte: string }> }>;
   votes: Record<string, Record<string, unknown>>;
   attente: { etape: string; uids: string[] } | null;
   maReponse: Reponse | null;

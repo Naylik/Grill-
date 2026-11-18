@@ -12,8 +12,9 @@ export type Phase =
   | 'choixJeu' // roue ou vote
   | 'regles' // règles du jeu tiré : chacun appuie sur « Je suis prêt »
   | 'jeu' // un mini-jeu en cours
+  | 'flash' // après chaque jeu : les missions flash sont révélées et votées
   | 'classement' // classement provisoire entre deux jeux
-  | 'miPartie' // choix de la 2e mission
+  | 'miPartie' // ancienne 2e mission (plus utilisée : une seule grosse mission par soirée)
   | 'detective'
   | 'revelation'
   | 'fin';
@@ -53,6 +54,18 @@ export interface Deroule {
   finChrono?: number; // horodatage serveur (ms)
   revelation?: EtatRevelation;
   bilan?: Bilan;
+  /** Missions flash : graine publiée au début de chaque jeu (chaque téléphone en déduit s'il est porteur). */
+  flashTirage?: { numero: number; graine: number; nb: number };
+  /** Missions flash : révélation et vote après le jeu. */
+  flash?: EtatFlash;
+}
+
+export interface EtatFlash {
+  numero: number; // numéro du jeu
+  etape: 'collecte' | 'vote' | 'resultat';
+  fin?: number;
+  porteurs?: string[];
+  resultats?: Record<string, boolean>;
 }
 
 export interface EtatRevelation {
@@ -108,6 +121,8 @@ export interface Secrets {
   propositions2?: MissionTiree[];
   mission2?: MissionTiree;
   nouvelleMissionVue?: boolean;
+  /** Missions flash reçues, par jeu (clé « j{numeroJeu} »). */
+  flash?: Record<string, { id: string; jeu: string; texte: string; cible?: string }>;
   /** Réponse à l'offre de vengeance : uid de la cible, ou « non ». */
   vengeanceChoix?: string;
 }
@@ -120,5 +135,7 @@ export interface Score {
   detective: number;
   /** Points du bouton GRILLÉ ! (vols, accusations ratées, mensonges démasqués). */
   grille?: number;
+  /** Points des missions flash (publics dès le vote, juste après chaque jeu). */
+  flash?: number;
   detail?: Record<string, number>; // points par jeu (clé : numéro du jeu)
 }

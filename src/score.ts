@@ -3,7 +3,7 @@ import type { Difficulte, Score } from './types';
 
 /** Points de place : 1er 5, 2e 3, 3e 2, au-delà 1. Les ex aequo reçoivent les mêmes points. */
 export const POINTS_PLACE = [5, 3, 2];
-export const POINTS_MISSION: Record<Difficulte, number> = { facile: 6, difficile: 10 };
+export const POINTS_MISSION: Record<Difficulte, number> = { facile: 8, difficile: 12 };
 export const VOL_DETECTIVE: Record<Difficulte, number> = { facile: 4, difficile: 6 };
 export const PARI_RATE = -2;
 
@@ -37,7 +37,7 @@ export const scoreVide = (): Score => ({ jeux: 0, parieur: 0, missions: 0, detec
 /** Classement provisoire : sans les points de mission (révélés à la fin seulement). */
 // Les points du bouton GRILLÉ ! sont publics dès le verdict : ils comptent tout de suite.
 // (Un score peut être incomplet : un joueur accusé avant le 1er jeu n'a que « grille ».)
-export const totalProvisoire = (s?: Partial<Score>): number => (s ? (s.jeux ?? 0) + (s.parieur ?? 0) + (s.grille ?? 0) : 0);
+export const totalProvisoire = (s?: Partial<Score>): number => (s ? (s.jeux ?? 0) + (s.parieur ?? 0) + (s.grille ?? 0) + (s.flash ?? 0) : 0);
 export const totalFinal = (s?: Partial<Score>): number => (s ? totalProvisoire(s) + (s.missions ?? 0) + (s.detective ?? 0) : 0);
 
 /** Combien ont dit oui ? : 3 pts si chiffre exact, 1 pt à un près. */
@@ -97,8 +97,7 @@ export function titres(
 ): Titre[] {
   const res: Titre[] = [];
   for (const [uid, liste] of Object.entries(missions)) {
-    if (liste.length >= 2 && liste.every((m) => m.reussie)) res.push({ uid, titre: 'Agent secret', pourquoi: '2 missions réussies' });
-    if (liste.length >= 2 && liste.every((m) => m.difficulte === 'difficile')) res.push({ uid, titre: 'Casse-cou', pourquoi: '2 missions difficiles choisies' });
+    if (liste.some((m) => m.reussie && m.difficulte === 'difficile')) res.push({ uid, titre: 'Agent secret', pourquoi: 'grosse mission difficile réussie' });
   }
   for (const p of paris) {
     if (p.trouvee) {

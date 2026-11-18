@@ -1,0 +1,452 @@
+[
+  {
+    "id": "f-combien-01",
+    "jeu": "combien",
+    "texte": "Fais rire toute la table au moment où un total s’affiche."
+  },
+  {
+    "id": "f-combien-02",
+    "jeu": "combien",
+    "texte": "Fais en sorte que tout le monde dise oui à une question."
+  },
+  {
+    "id": "f-combien-03",
+    "jeu": "combien",
+    "texte": "Avant un total, annonce à voix haute le chiffre exact, et vois juste."
+  },
+  {
+    "id": "f-combien-04",
+    "jeu": "combien",
+    "texte": "Réagis à chaque nouvelle question par « oh non, pas celle-là »."
+  },
+  {
+    "id": "f-combien-05",
+    "jeu": "combien",
+    "texte": "Raconte une anecdote liée à une question, et fais dire à quelqu’un « je te crois pas »."
+  },
+  {
+    "id": "f-justeprix-01",
+    "jeu": "justeprix",
+    "texte": "Annonce à voix haute une fausse estimation : au moins un joueur doit taper un nombre proche."
+  },
+  {
+    "id": "f-justeprix-02",
+    "jeu": "justeprix",
+    "texte": "Sois le plus loin de la bonne réponse à une question, après avoir juré être sûr de toi."
+  },
+  {
+    "id": "f-justeprix-03",
+    "jeu": "justeprix",
+    "texte": "Lance un débat sur une des questions et obtiens l’avis de chaque joueur."
+  },
+  {
+    "id": "f-justeprix-04",
+    "jeu": "justeprix",
+    "texte": "Fais taper à {cible} un nombre proche du tien (à 10 % près), sans qu’aucun de vous deux ne gagne la manche."
+  },
+  {
+    "id": "f-justeprix-05",
+    "jeu": "justeprix",
+    "texte": "Annonce ton estimation avec une unité absurde (« 3 girafes ») avant de la taper."
+  },
+  {
+    "id": "f-justeprix-06",
+    "jeu": "justeprix",
+    "texte": "Tape exactement le même nombre à deux questions différentes."
+  },
+  {
+    "id": "f-justeprix-07",
+    "jeu": "justeprix",
+    "texte": "Gagne une manche avec un nombre rond (qui finit par 0)."
+  },
+  {
+    "id": "f-justeprix-08",
+    "jeu": "justeprix",
+    "texte": "Commente chaque révélation comme un présentateur télé."
+  },
+  {
+    "id": "f-parieur-01",
+    "jeu": "parieur",
+    "texte": "Convaincs 2 joueurs de miser sur l’échec du même défi."
+  },
+  {
+    "id": "f-parieur-02",
+    "jeu": "parieur",
+    "texte": "Mise 3 points sur chaque défi."
+  },
+  {
+    "id": "f-parieur-03",
+    "jeu": "parieur",
+    "texte": "À ton défi, fais en sorte que tout le monde parie contre toi."
+  },
+  {
+    "id": "f-parieur-04",
+    "jeu": "parieur",
+    "texte": "Pendant le défi de {cible}, souffle-lui une mauvaise réponse à voix haute."
+  },
+  {
+    "id": "f-parieur-05",
+    "jeu": "parieur",
+    "texte": "Réussis ton défi avec une voix de commentateur sportif."
+  },
+  {
+    "id": "f-parieur-06",
+    "jeu": "parieur",
+    "texte": "Fais rater son défi à {cible} en le ou la faisant rire."
+  },
+  {
+    "id": "f-parieur-07",
+    "jeu": "parieur",
+    "texte": "Mise sur la réussite de chaque défi et gagne au moins 3 points."
+  },
+  {
+    "id": "f-parieur-08",
+    "jeu": "parieur",
+    "texte": "Fais crier « tricheur ! » à quelqu’un pendant ton défi."
+  },
+  {
+    "id": "f-imposteur-01",
+    "jeu": "imposteur",
+    "texte": "Donne un indice volontairement bizarre, et ne sois pas désigné imposteur."
+  },
+  {
+    "id": "f-imposteur-02",
+    "jeu": "imposteur",
+    "texte": "Glisse une référence foot ou cinéma dans ton indice alors que le mot n’a rien à voir."
+  },
+  {
+    "id": "f-imposteur-03",
+    "jeu": "imposteur",
+    "texte": "Fais en sorte que tous les autres joueurs votent contre {cible}."
+  },
+  {
+    "id": "f-imposteur-04",
+    "jeu": "imposteur",
+    "texte": "Donne ton indice en chuchotant."
+  },
+  {
+    "id": "f-imposteur-05",
+    "jeu": "imposteur",
+    "texte": "Donne un indice d’un seul mot de plus de 10 lettres."
+  },
+  {
+    "id": "f-imposteur-06",
+    "jeu": "imposteur",
+    "texte": "Donne ton indice avant tout le monde, sans qu’on te le demande."
+  },
+  {
+    "id": "f-reflexe-01",
+    "jeu": "reflexe",
+    "texte": "Fais au moins un faux départ, et finis quand même dans les 3 premiers du jeu."
+  },
+  {
+    "id": "f-reflexe-02",
+    "jeu": "reflexe",
+    "texte": "Fais peur à {cible} pendant une manche, sans le ou la toucher."
+  },
+  {
+    "id": "f-reflexe-03",
+    "jeu": "reflexe",
+    "texte": "Critique le jeu et fais en sorte que quelqu’un défende l’hôte."
+  },
+  {
+    "id": "f-reflexe-04",
+    "jeu": "reflexe",
+    "texte": "Crie « FEU ! » au moment où Mallow prend feu, à chaque manche."
+  },
+  {
+    "id": "f-reflexe-05",
+    "jeu": "reflexe",
+    "texte": "Finis devant {cible} à toutes les manches."
+  },
+  {
+    "id": "f-reflexe-06",
+    "jeu": "reflexe",
+    "texte": "Fais faire un faux départ à {cible}, sans le ou la toucher."
+  },
+  {
+    "id": "f-reflexe-07",
+    "jeu": "reflexe",
+    "texte": "Joue en tenant ton téléphone au-dessus de ta tête."
+  },
+  {
+    "id": "f-timing-01",
+    "jeu": "timing",
+    "texte": "Compte à voix haute pendant une manche, en accélérant exprès."
+  },
+  {
+    "id": "f-timing-02",
+    "jeu": "timing",
+    "texte": "Appuie sur STOP les yeux fermés à chaque manche."
+  },
+  {
+    "id": "f-timing-03",
+    "jeu": "timing",
+    "texte": "Finis devant {cible}."
+  },
+  {
+    "id": "f-timing-04",
+    "jeu": "timing",
+    "texte": "Fais en sorte que {cible} ait plus d’1 seconde d’écart à une manche."
+  },
+  {
+    "id": "f-timing-05",
+    "jeu": "timing",
+    "texte": "Fais en sorte que quelqu’un dise « c’est pas le moment »."
+  },
+  {
+    "id": "f-timing-06",
+    "jeu": "timing",
+    "texte": "Arrête le chrono à moins de 0,2 seconde du temps demandé à une manche."
+  },
+  {
+    "id": "f-timing-07",
+    "jeu": "timing",
+    "texte": "Fredonne une chanson pendant chaque chrono."
+  },
+  {
+    "id": "f-timing-08",
+    "jeu": "timing",
+    "texte": "Dépasse exprès de plus de 2 secondes à une manche, puis gagne la suivante."
+  },
+  {
+    "id": "f-timing-09",
+    "jeu": "timing",
+    "texte": "Fais dire à {cible} « tais-toi, je compte ! »."
+  },
+  {
+    "id": "f-patate-01",
+    "jeu": "patate",
+    "texte": "Envoie le colis à {cible} au moins 3 fois."
+  },
+  {
+    "id": "f-patate-02",
+    "jeu": "patate",
+    "texte": "Fais exploser le colis dans les mains de {cible}."
+  },
+  {
+    "id": "f-patate-03",
+    "jeu": "patate",
+    "texte": "Dis un mot qui ne respecte pas la consigne sans que personne ne le remarque."
+  },
+  {
+    "id": "f-patate-04",
+    "jeu": "patate",
+    "texte": "Ne saute jamais, en gardant le colis au moins 3 secondes à chaque fois."
+  },
+  {
+    "id": "f-patate-05",
+    "jeu": "patate",
+    "texte": "Renvoie le colis à {cible} pendant tout le jeu, tant qu’il ou elle est encore en jeu."
+  },
+  {
+    "id": "f-patate-06",
+    "jeu": "patate",
+    "texte": "Dis tous tes mots avec un accent."
+  },
+  {
+    "id": "f-patate-07",
+    "jeu": "patate",
+    "texte": "Dis à chaque fois un mot d’au moins 3 syllabes."
+  },
+  {
+    "id": "f-patate-08",
+    "jeu": "patate",
+    "texte": "Crie « BOUM ! » chaque fois que le colis arrive chez quelqu’un d’autre."
+  },
+  {
+    "id": "f-patate-09",
+    "jeu": "patate",
+    "texte": "Fais rire le joueur qui tient le colis pour le faire paniquer."
+  },
+  {
+    "id": "f-patate-10",
+    "jeu": "patate",
+    "texte": "Sois le dernier survivant du colis."
+  },
+  {
+    "id": "f-quitte-01",
+    "jeu": "quitte",
+    "texte": "Encaisse exactement à 4 points."
+  },
+  {
+    "id": "f-quitte-02",
+    "jeu": "quitte",
+    "texte": "Fais dire à {cible} « bon, je double »."
+  },
+  {
+    "id": "f-quitte-03",
+    "jeu": "quitte",
+    "texte": "Atteins 8 points ou plus, encaissés ou perdus."
+  },
+  {
+    "id": "f-quitte-04",
+    "jeu": "quitte",
+    "texte": "Encaisse le plus gros montant du jeu."
+  },
+  {
+    "id": "f-quitte-05",
+    "jeu": "quitte",
+    "texte": "Obtiens une poignée de main franche (demandée, jamais forcée)."
+  },
+  {
+    "id": "f-quitte-06",
+    "jeu": "quitte",
+    "texte": "Conseille à {cible} de doubler, et qu’il ou elle perde tout juste après."
+  },
+  {
+    "id": "f-telephone-01",
+    "jeu": "telephone",
+    "texte": "Cache un petit cœur dans chacun de tes dessins."
+  },
+  {
+    "id": "f-telephone-02",
+    "jeu": "telephone",
+    "texte": "Dessine Mallow dans un de tes dessins."
+  },
+  {
+    "id": "f-telephone-03",
+    "jeu": "telephone",
+    "texte": "Glisse le prénom d’un joueur dans une de tes réponses."
+  },
+  {
+    "id": "f-telephone-04",
+    "jeu": "telephone",
+    "texte": "Fais tous tes dessins d’une seule couleur."
+  },
+  {
+    "id": "f-telephone-05",
+    "jeu": "telephone",
+    "texte": "Fais rire tout le monde avec ton dessin."
+  },
+  {
+    "id": "f-telephone-06",
+    "jeu": "telephone",
+    "texte": "Dessine avec une partie de ton corps « fun » sans te faire griller."
+  },
+  {
+    "id": "f-telephone-07",
+    "jeu": "telephone",
+    "texte": "Signe chacun de tes dessins de tes initiales."
+  },
+  {
+    "id": "f-telephone-08",
+    "jeu": "telephone",
+    "texte": "Dessine uniquement avec le trait le plus épais."
+  },
+  {
+    "id": "f-mines-01",
+    "jeu": "mines",
+    "texte": "Fais sauter {cible} sur ta mine."
+  },
+  {
+    "id": "f-mines-02",
+    "jeu": "mines",
+    "texte": "Ouvre au moins 4 colis d’affilée sans sauter."
+  },
+  {
+    "id": "f-mines-03",
+    "jeu": "mines",
+    "texte": "Encaisse à chaque tour dès le premier colis sûr."
+  },
+  {
+    "id": "f-mines-04",
+    "jeu": "mines",
+    "texte": "Sois celui qui encaisse le plus en un seul tour."
+  },
+  {
+    "id": "f-mines-05",
+    "jeu": "mines",
+    "texte": "Lance un chant collectif pendant le jeu."
+  },
+  {
+    "id": "f-mines-06",
+    "jeu": "mines",
+    "texte": "Annonce « je sens que ça va sauter » avant chaque colis que tu ouvres."
+  },
+  {
+    "id": "f-mines-07",
+    "jeu": "mines",
+    "texte": "Ne saute sur aucune mine de tout le jeu."
+  },
+  {
+    "id": "f-territoires-01",
+    "jeu": "territoires",
+    "texte": "Ne choisis jamais Voler, et gagne au moins une cagnotte."
+  },
+  {
+    "id": "f-territoires-02",
+    "jeu": "territoires",
+    "texte": "Convaincs {cible} de se protéger à une manche où personne ne le ou la vole."
+  },
+  {
+    "id": "f-territoires-03",
+    "jeu": "territoires",
+    "texte": "Répète 3 fois « ah mais c’est comme le casino en fait » sans te faire griller."
+  },
+  {
+    "id": "f-territoires-04",
+    "jeu": "territoires",
+    "texte": "Ne te protège jamais, et finis quand même avec la plus grosse part."
+  },
+  {
+    "id": "f-territoires-05",
+    "jeu": "territoires",
+    "texte": "Propose à voix haute un pacte à {cible} (« on ne se vole pas »), puis vole-le ou la."
+  },
+  {
+    "id": "f-territoires-06",
+    "jeu": "territoires",
+    "texte": "Choisis Agrandir à chaque manche."
+  },
+  {
+    "id": "f-territoires-07",
+    "jeu": "territoires",
+    "texte": "Crie le nom de ta couleur pendant que la roue tourne, à chaque manche."
+  },
+  {
+    "id": "f-territoires-08",
+    "jeu": "territoires",
+    "texte": "Gagne une cagnotte avec la plus petite part de la roue."
+  },
+  {
+    "id": "f-territoires-09",
+    "jeu": "territoires",
+    "texte": "Pousse un autre joueur à voler {cible}, et qu’il le fasse."
+  },
+  {
+    "id": "f-telepathie-01",
+    "jeu": "telepathie",
+    "texte": "Fais rater une manche à l’équipe adverse avec ton sabotage."
+  },
+  {
+    "id": "f-telepathie-02",
+    "jeu": "telepathie",
+    "texte": "Crie ton mot avec un accent à chaque manche."
+  },
+  {
+    "id": "f-telepathie-03",
+    "jeu": "telepathie",
+    "texte": "Fais le décompte à voix haute dans une langue étrangère."
+  },
+  {
+    "id": "f-telepathie-04",
+    "jeu": "telepathie",
+    "texte": "Change de place avec ton coéquipier sans aucune raison."
+  },
+  {
+    "id": "f-telepathie-05",
+    "jeu": "telepathie",
+    "texte": "Connectez-vous en 3 manches ou moins."
+  },
+  {
+    "id": "f-telepathie-06",
+    "jeu": "telepathie",
+    "texte": "Crie à chaque manche un mot qui commence par la même lettre."
+  },
+  {
+    "id": "f-telepathie-07",
+    "jeu": "telepathie",
+    "texte": "Fais rire l’autre duo pendant son décompte."
+  }
+]

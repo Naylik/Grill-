@@ -7,6 +7,8 @@ import { VOL_DETECTIVE } from '../score';
 import { accusationEnCours, mancheAction, missionsGrillees, peutAccuser, PENALITE_ACCUSATION, PENALITE_MENSONGE, type AccusationListee } from '../accusations';
 import type { MissionTiree } from '../types';
 import { carteMission } from './missions';
+import { maFlashEnCours } from './flash';
+import { VOL_FLASH } from '../flash';
 import { chrono, pastille } from './commun';
 
 const uids = () => Object.entries(S.joueurs).sort((a, b) => a[1].rejointLe - b[1].rejointLe).map(([u]) => u);
@@ -29,10 +31,16 @@ export function boutonGrille(): string {
 /** Mes missions encore actives (pas grillées en direct). */
 export function missionsActives(): { numero: number; mission: MissionTiree }[] {
   const grillees = missionsGrillees(S.accusations, S.uid);
-  return ([[1, S.secrets.mission1], [2, S.secrets.mission2]] as const)
+  const res = ([[1, S.secrets.mission1], [2, S.secrets.mission2]] as const)
     .filter(([n, m]) => m && !grillees[n])
-    .map(([n, m]) => ({ numero: n, mission: m! }));
+    .map(([n, m]) => ({ numero: n as number, mission: m! }));
+  // Ma mission flash du jeu en cours (numéro 100 + jeu, pour le bouton GRILLÉ !).
+  const flash = maFlashEnCours();
+  if (flash && !grillees[100 + flash.numero]) res.push({ numero: 100 + flash.numero, mission: { id: 'flash', type: 'jeu', difficulte: 'facile', texte: flash.texte } });
+  return res;
 }
+
+const intituleMission = (numero: number) => (numero >= 100 ? '⚡ Mission flash' : numero === 1 ? 'Grosse mission' : `Mission ${numero}`);
 
 function fenetreAccuser(): string {
   if (!S.accuser) return '';
@@ -48,7 +56,7 @@ function fenetreAccuser(): string {
     <div class="options deux">${autres.map((u) => `<button class="option ${cible === u ? 'actif rose' : ''}" data-action="choisirAccuse" data-valeur="${u}">${nom(u)}</button>`).join('')}</div>
     <label class="champ"><span>Sa mission, à ton avis</span>
       <textarea name="accusation" rows="3" maxlength="160" placeholder="Il essaie de me faire dire « franchement »…">${esc(brouillons.accusation ?? '')}</textarea></label>
-    <p class="aide gauche"><strong>Vu juste</strong> : tu lui voles 4 ou 6 pts et sa mission est ratée. <strong>Raté</strong> : −${PENALITE_ACCUSATION} pts. Une accusation par manche.</p>
+    <p class="aide gauche"><strong>Vu juste</strong> : tu lui voles des points (${VOL_FLASH} pour une mission flash, 4 ou 6 pour sa grosse mission) et sa mission est ratée. <strong>Raté</strong> : −${PENALITE_ACCUSATION} pts. Une accusation par manche.</p>
     <div class="options deux"><button class="option" data-action="fermerAccuser">Annuler</button><button class="option actif rose" data-action="accuser" ${cible ? '' : 'disabled'}>Accuser !</button></div>
   </div></div>`;
 }
@@ -64,12 +72,11 @@ function fenetreProces(): string {
   const moiAccuse = a.cible === S.uid;
 
   if (a.statut === 'grille') {
-    const vol = a.mission ? VOL_DETECTIVE[a.mission.difficulte] : 0;
+    const vol = a.mission ? (a.mission.numero >= 100 ? VOL_FLASH : VOL_DETECTIVE[a.mission.difficulte]) : 0;
     return `<div class="proces grille" role="alert"><div class="proces-carte">
       <div class="moment-grille">${sequenceGrille(130)}<p class="titre-grille">GRILLÉ !</p></div>
       <p class="proces-verdict"><strong>${nom(a.de)}</strong> a grillé <strong>${nom(a.cible)}</strong> : +${vol} pts pour ${nom(a.de)}, −${vol} pts pour ${nom(a.cible)}.</p>
-      ${a.mission ? `<p class="aide">Sa mission ${a.mission.numero} est ratée : « ${esc(a.mission.texte)} »</p>` : ''}
-      ${moiAccuse ? '<p class="aide">Ta prochaine mission arrive à la mi-partie.</p>' : ''}
+      ${a.mission ? `<p class="aide">${a.mission.numero >= 100 ? 'Sa mission flash' : 'Sa grosse mission'} est ratée : « ${esc(a.mission.texte)} »</p>` : ''}
     </div></div>`;
   }
   if (a.statut === 'rate') {
@@ -105,7 +112,7 @@ function fenetreProces(): string {
       ${enTete(a)}
       ${actives.length
         ? `<p class="aide gauche">Compare avec tes missions, en cachant ton écran. Si c’est l’une d’elles, sois honnête :</p>
-           ${actives.map(({ numero, mission }) => `<p class="intitule">Mission ${numero}</p>${carteMission(mission, { secret: true, bouton: `<button class="bouton rose" data-action="repondreAccusation" data-valeur="eu" data-numero="${numero}">Il m’a eu</button>` })}`).join('')}`
+           ${actives.map(({ numero, mission }) => `<p class="intitule">${intituleMission(numero)}</p>${carteMission(mission, { secret: true, bouton: `<button class="bouton rose" data-action="repondreAccusation" data-valeur="eu" data-numero="${numero}">Il m’a eu</button>` })}`).join('')}`
         : '<p class="aide gauche">Tu n’as pas de mission en cours : forcément, c’est raté !</p>'}
       <button class="bouton vert" data-action="repondreAccusation" data-valeur="rate">Raté, ce n’est pas ça</button>
       <p class="aide">Si tu réponds « Raté » alors que c’est juste, ça se verra à la fin : −${PENALITE_MENSONGE} pts.</p>

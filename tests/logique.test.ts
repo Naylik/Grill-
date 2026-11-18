@@ -53,13 +53,13 @@ describe('barème', () => {
       { a: [{ difficulte: 'facile', reussie: true }, { difficulte: 'difficile', reussie: true }], b: [{ difficulte: 'difficile', reussie: false }], c: [] },
       [{ de: 'b', cible: 'a', trouvee: 'difficile' }, { de: 'c', cible: 'b', trouvee: null }],
     );
-    expect(r.missions).toEqual({ a: 16, b: 0, c: 0 });
+    expect(r.missions).toEqual({ a: 20, b: 0, c: 0 }); // facile 8 + difficile 12
     expect(r.detective).toEqual({ a: -6, b: 6, c: -2 });
   });
   it('titres fun', () => {
     const scores = { a: { ...scoreVide(), jeux: 10 }, b: { ...scoreVide(), jeux: 4 } };
     const t = titres(scores, { a: [{ difficulte: 'difficile', reussie: true }, { difficulte: 'difficile', reussie: true }], b: [] }, [{ de: 'b', cible: 'a', trouvee: 'difficile' }]);
-    expect(t.map((x) => `${x.uid}:${x.titre}`).sort()).toEqual(['a:Agent secret', 'a:Casse-cou', 'a:Champion des mini-jeux', 'a:Grillé', 'b:Sherlock'].sort());
+    expect(t.map((x) => `${x.uid}:${x.titre}`).sort()).toEqual(['a:Agent secret', 'a:Champion des mini-jeux', 'a:Grillé', 'b:Sherlock'].sort());
   });
 });
 

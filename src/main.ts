@@ -11,6 +11,7 @@ import { effetsJoueur, momentsForts, repondre } from './effets';
 import { basculerSon, debloquer, sons } from './son';
 import { choisirMission, prendreMissionVengeance } from './missions';
 import { vengeancesVues } from './ecrans/missions';
+import { flashVues } from './ecrans/flash';
 import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from './saison';
 import { jeuParId } from './games';
 import { localJeu, vueJeu } from './ecrans/deroule';
@@ -340,6 +341,10 @@ action('majAppli', (el) => {
   void mettreAJour();
 });
 
+action('vuFlash', (el) => {
+  flashVues.add(el.dataset.valeur!);
+  demanderAffichage();
+});
 action('vuVengeance', (el) => {
   vengeancesVues.add(el.dataset.valeur!);
   demanderAffichage();
@@ -437,7 +442,8 @@ action('repondreAccusation', async (el) => {
   const chemin = `salons/${S.code}/accusations/${a.numeroJeu}/${a.de}`;
   if (el.dataset.valeur === 'eu') {
     const numero = Number(el.dataset.numero);
-    const m = numero === 1 ? S.secrets.mission1 : S.secrets.mission2;
+    const flash = numero >= 100 ? S.secrets.flash?.[`j${numero - 100}`] : undefined;
+    const m = numero === 1 ? S.secrets.mission1 : numero === 2 ? S.secrets.mission2 : flash ? { texte: flash.texte, difficulte: 'facile' as const } : undefined;
     if (!m) return;
     // Seul cas où une mission quitte le téléphone avant la fin : l'accusé avoue.
     await update(ref(db, chemin), { mission: { numero, texte: m.texte, difficulte: m.difficulte }, reponse: 'eu' });

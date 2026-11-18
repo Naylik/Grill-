@@ -197,3 +197,11 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   pour la manche suivante ; s'il est prononcé, la manche est ratée.
 - 18/11/2026 · Correctif d'affichage : la grille du Champ de mines (classe `champ`) écrasait le style des champs
   « Ton prénom » et « Code » de l'accueil (étiquette et case côte à côte). Renommée `champ-mines`.
+- 18/11/2026 · Nouveau système de missions, validé par Kilyan dans le document « Missions à valider » :
+  une seule grosse mission pour toute la soirée (plus de 2e mission à la mi-partie), facile 8 pts / difficile 12 pts
+  (vengeance ×2). 12 grosses missions ajoutées, 7 retirées (doublons ou impossibles), 6 réécrites. Missions flash :
+  à chaque jeu, 1 joueur (2 à partir de 5) reçoit en secret une mission liée à CE jeu (90 missions, 5 à 10 par jeu,
+  toutes repérables par les autres). L'hôte publie seulement une graine ; chaque téléphone en déduit s'il est porteur
+  et laquelle (jamais la même pour deux porteurs, jamais son coéquipier comme cible). Après le jeu : révélation,
+  vote du groupe, +3 pts si réussie. Grillée avant avec GRILLÉ ! = ratée et l'accuseur vole 2 pts. Titre « Éclair ».
+  Aucune règle Firebase à republier pour ce changement.

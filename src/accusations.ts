@@ -7,6 +7,7 @@
 //    ça se voit à la révélation finale : il perd 3 points et l'accuseur récupère son dû.
 // Données : salons/{code}/accusations/{numeroJeu}/{uid de l'accuseur}. Seul l'hôte tranche (statut, points).
 import { majoriteOui, VOL_DETECTIVE } from './score';
+import { VOL_FLASH } from './flash';
 import type { Difficulte, Phase, Score } from './types';
 
 export const DELAI_REPONSE = 45_000; // l'accusé ne répond pas : accusation annulée
@@ -15,10 +16,10 @@ export const DUREE_VERDICT = 7_000; // le temps d'afficher « GRILLÉ ! » ou «
 export const PENALITE_ACCUSATION = 2;
 export const PENALITE_MENSONGE = 3;
 /** Jeux d'action : le bouton disparaît pendant les manches (on tape vite, on ne doit pas accuser par erreur). */
-const JEUX_ACTION: Record<string, string[]> = { reflexe: ['attente'], timing: ['chrono'], patate: ['jeu'], telephone: ['etape'], mines: ['pose', 'tour'], territoires: ['roue'] };
+const JEUX_ACTION: Record<string, string[]> = { reflexe: ['attente'], timing: ['chrono'], patate: ['jeu'], telephone: ['etape'], mines: ['pose', 'tour'], territoires: ['roue'], telepathie: ['decompte', 'mot'] };
 
 export interface MissionDevoilee {
-  numero: number; // 1 ou 2
+  numero: number; // 1 = la grosse mission ; 100 + numéro du jeu = une mission flash
   texte: string;
   difficulte: Difficulte;
 }
@@ -136,7 +137,7 @@ export function piloterAccusations(opts: {
   // Personne pour voter (ou personne n'a voté) : l'aveu de l'accusé suffit.
   const confirme = votes.length === 0 || majoriteOui(votes.map((v) => v === true));
   if (!confirme || !a.mission) return rate();
-  const vol = VOL_DETECTIVE[a.mission.difficulte];
+  const vol = a.mission.numero >= 100 ? VOL_FLASH : VOL_DETECTIVE[a.mission.difficulte];
   return {
     [`${chemin}/statut`]: 'grille',
     [`${chemin}/fin`]: now + DUREE_VERDICT,

@@ -4,6 +4,8 @@ import { esc } from '../outils';
 import { POINTS_MISSION } from '../score';
 import type { MissionTiree } from '../types';
 import { attenteDes, bulle } from './commun';
+import { maFlashEnCours } from './flash';
+import { POINTS_FLASH } from '../flash';
 
 const ETIQUETTE_TYPE = { vie: 'Vie réelle', jeu: 'Dans les mini-jeux' } as const;
 
@@ -17,7 +19,7 @@ export function carteMission(m: MissionTiree, opts: { secret?: boolean; bouton?:
   </article>`;
 }
 
-/** Écran de choix (début de partie et mi-partie). */
+
 /** Quelqu'un a juré de se venger de moi ce soir : je suis prévenu, sans savoir comment. */
 export function alerteVengeance(): string {
   const a = S.annonceVengeance;
@@ -63,7 +65,7 @@ function ecranChoixMissionNormal(numero: 1 | 2): string {
   const uids = Object.keys(S.joueurs);
   const prets = S.attente?.etape === `mission${numero}` ? S.attente.uids ?? [] : [];
   const forcer = estHote() ? `<button class="bouton discret" data-action="hote" data-valeur="forcer">Continuer sans attendre</button>` : '';
-  const titre = numero === 1 ? 'Ta mission secrète' : 'Nouvelle mission !';
+  const titre = numero === 1 ? 'Ta grosse mission' : 'Nouvelle mission !';
   if (choisie) {
     return `<h2>${titre}</h2>
       ${bulle('Mission acceptée. Maintenant, sois naturel. Enfin, essaie.')}
@@ -73,17 +75,19 @@ function ecranChoixMissionNormal(numero: 1 | 2): string {
   }
   if (!propositions?.length) return `<h2>${titre}</h2><p class="attente">Tirage de tes missions…</p>`;
   return `<h2>${titre}</h2>
-    <p class="aide gauche">Garde-en une, en secret. Cache ton écran ! Les deux sont ${numero === 2 ? `de type « ${ETIQUETTE_TYPE[propositions[0].type]} »` : 'du même type'}.</p>
+    <p class="aide gauche">Garde-en une, en secret : elle dure toute la soirée. Cache ton écran ! Pendant les jeux, tu recevras peut-être aussi des missions flash.</p>
     ${propositions.map((m, i) => carteMission(m, { bouton: `<button class="bouton ${m.difficulte === 'facile' ? 'cyan' : 'rose'}" data-action="choisirMission" data-numero="${numero}" data-index="${i}">Je prends celle-ci</button>` })).join('')}`;
 }
 
 export function ongletMissions(): string {
   const { mission1, mission2 } = S.secrets;
   const liste = [mission1, mission2].filter(Boolean) as MissionTiree[];
+  const flash = maFlashEnCours();
   return `<section class="ecran">
     <h2>Mes missions</h2>
     ${alerteVengeance()}
-    ${liste.length ? liste.map((m, i) => `<p class="intitule">Mission ${i + 1}</p>${carteMission(m, { secret: true })}`).join('') : '<p class="attente">Pas encore de mission. Elle arrive au début de la partie.</p>'}
-    ${!mission2 ? '<p class="aide">Une deuxième mission t’attend à la mi-partie.</p>' : ''}
+    ${flash ? `<p class="intitule">⚡ Mission flash (ce jeu)</p><article class="mission flash"><div class="tags"><span class="tag eclair">Flash · +${POINTS_FLASH} pts</span></div><p class="texte-secret" data-appui>${esc(flash.texte)}</p><p class="aide">Appuie longtemps pour lire</p></article>` : ''}
+    ${liste.length ? liste.map((m, i) => `<p class="intitule">${i === 0 ? 'Grosse mission (toute la soirée)' : 'Mission 2'}</p>${carteMission(m, { secret: true })}`).join('') : '<p class="attente">Pas encore de mission. Elle arrive au début de la partie.</p>'}
+    ${flash ? '' : '<p class="aide">Pendant les jeux, tu peux recevoir une mission flash : ton téléphone vibre.</p>'}
   </section>`;
 }

@@ -4,6 +4,7 @@ import { ref, set } from 'firebase/database';
 import { db } from './firebase';
 import { S, charges, memoireDuGroupe } from './etat';
 import { preparerPropositions } from './missions';
+import { porteursFlash, tirerFlash } from './flash';
 import { vibrer } from './ui';
 import { maintenant } from './firebase';
 import { majoriteOui, missionTrouvee } from './score';
@@ -39,7 +40,6 @@ export function effetsJoueur(): void {
   const { secrets } = S;
 
   if (phasePrecedente !== d.phase) {
-    if (d.phase === 'miPartie' && phasePrecedente) vibrer([250, 120, 250]);
     if (d.phase === 'missions' && phasePrecedente) vibrer(150);
     phasePrecedente = d.phase;
   }
@@ -51,15 +51,32 @@ export function effetsJoueur(): void {
     if (!secrets.mission1 && !secrets.propositions1?.length && !attendVengeance) une('p1', () => preparerPropositions(code, S.uid, S.joueurs, secrets, 1, memoireDuGroupe()));
     if (secrets.mission1 && S.maReponse?.etape !== 'mission1') une('r1', () => repondre('mission1'));
   }
-  if (d.phase === 'miPartie') {
-    if (!secrets.mission2 && !secrets.propositions2?.length) une('p2', () => preparerPropositions(code, S.uid, S.joueurs, secrets, 2, memoireDuGroupe()));
-    if (secrets.mission2 && S.maReponse?.etape !== 'mission2') une('r2', () => repondre('mission2'));
+  // Mission flash : au début du jeu, je regarde si je suis tiré au sort, et je tire ma mission (en secret).
+  const t = d.flashTirage;
+  const jeuPret = (S.jeu as { jeuId?: string } | null)?.jeuId === d.jeuEnCours;
+  if (d.phase === 'jeu' && t && t.numero === d.numeroJeu && d.jeuEnCours && jeuPret && !secrets.flash?.[`j${t.numero}`]) {
+    const tous = Object.entries(S.joueurs).sort((a, b) => a[1].rejointLe - b[1].rejointLe).map(([u]) => u);
+    const rang = porteursFlash(t.graine, tous, t.nb).indexOf(S.uid);
+    if (rang >= 0) {
+      // Jamais mon coéquipier comme cible (jeux d'équipe).
+      const equipes = ((S.jeu as { equipes?: string[][] }).equipes ?? []).filter(Boolean);
+      const partenaires = equipes.find((e) => e.includes(S.uid)) ?? [];
+      const cibles = tous.filter((u) => u !== S.uid && !partenaires.includes(u)).map((u) => ({ uid: u, prenom: S.joueurs[u].prenom }));
+      const m = tirerFlash({ jeu: d.jeuEnCours, graine: t.graine, rang, dejaVus: memoireDuGroupe(), cibles });
+      if (m) une(`flash-${t.numero}`, () => set(ref(db, `secrets/${code}/${S.uid}/flash/j${t.numero}`), JSON.parse(JSON.stringify(m))));
+    }
+  }
+  // Après le jeu : je révèle ma mission flash à tout le monde (le groupe vote).
+  const f = d.flash;
+  const maFlash = f ? secrets.flash?.[`j${f.numero}`] : undefined;
+  if (d.phase === 'flash' && f && maFlash && charges.has('revelation') && !S.revelation[S.uid]?.flash?.[`j${f.numero}`]) {
+    une(`flash-rev-${f.numero}`, () => set(ref(db, `salons/${code}/revelation/${S.uid}/flash/j${f.numero}`), { id: maFlash.id, jeu: maFlash.jeu, texte: maFlash.texte }));
   }
   if (d.phase === 'detective' && S.monPari && S.maReponse?.etape !== 'detective') une('rd', () => repondre('detective'));
   // À la révélation, chacun publie ses propres missions (personne d'autre ne peut les lire avant).
   if (d.phase === 'revelation' && charges.has('revelation') && !S.revelation[S.uid]?.missions && secrets.mission1) {
     const missions = [secrets.mission1, secrets.mission2].filter(Boolean).map((m) => ({ id: m!.id, texte: m!.texte, difficulte: m!.difficulte, type: m!.type, ...(m!.vengeance ? { vengeance: true } : {}) }));
-    une('rev', () => set(ref(db, `salons/${code}/revelation/${S.uid}`), { missions }));
+    une('rev', () => set(ref(db, `salons/${code}/revelation/${S.uid}/missions`), missions));
   }
 }
 
@@ -139,6 +156,9 @@ export function momentsForts(): void {
       setTimeout(() => { sons.reussi(); if (moi) { confettis(80); vibrer([80, 40, 160]); } }, t.phase === 'revele' ? 900 : 0);
     });
   }
+  // Mission flash : je viens d'en recevoir une (vibration discrète), puis le verdict du groupe.
+  if (d.phase === 'jeu' && d.flashTirage && S.secrets.flash?.[`j${d.flashTirage.numero}`]) moment(`flash-recue-${d.flashTirage.numero}`, () => { vibrer([60, 60, 60, 60, 160]); sons.ding(); });
+  if (d.phase === 'flash' && d.flash?.etape === 'resultat') moment(`flash-res-${d.flash.numero}`, () => { if (d.flash?.resultats?.[S.uid]) { sons.reussi(); confettis(50); } else if (d.flash?.resultats && S.uid in d.flash.resultats) sons.rate(); else sons.ding(); });
   // Champ de mines : gemme (ding) ou KABOOM.
   if (d.phase === 'jeu' && d.jeuEnCours === 'mines' && S.jeu) {
     const m = S.jeu as { phase?: string; tour?: number; sures?: number; dernier?: { joueur: string } };
