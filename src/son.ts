@@ -26,14 +26,18 @@ export function basculerSon(): boolean {
 }
 
 /** Vidéo « Grillé ! » : pendant l'enregistrement, les sons partent aussi dans la vidéo (même son coupé). */
-let sortieVideo: MediaStreamAudioDestinationNode | null = null;
+let sortieVideo: GainNode | null = null;
 
 export function ouvrirSortieVideo(): MediaStream | null {
   try {
     ctx ??= new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     if (ctx.state === 'suspended') void ctx.resume();
-    sortieVideo = ctx.createMediaStreamDestination();
-    return sortieVideo.stream;
+    const dest = ctx.createMediaStreamDestination();
+    // Dans la vidéo, les bruitages restent discrets (moitié moins forts).
+    sortieVideo = ctx.createGain();
+    sortieVideo.gain.value = 0.45;
+    sortieVideo.connect(dest);
+    return dest.stream;
   } catch {
     return null;
   }

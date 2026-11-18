@@ -226,3 +226,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   classement et à la fin, pour chaque accusation réussie). Fabriquées sur le téléphone : toile dessinée image par image
   et filmée (MediaRecorder) avec les bruitages de l'appli (pschhh, ding, mèche, boum, tampon), mp4 de préférence,
   puis « Partager » (WhatsApp, Instagram…) ou téléchargement. Pas de serveur, pas de vraie photo.
+- 18/11/2026 · Vidéos plus lentes et plus sobres (retour de Kilyan) : récap ≈ 32 s (4,5 s par mission révélée),
+  moment GRILLÉ ! ≈ 12 s ; un seul bruitage par mission (tampon) et l'explosion du GRILLÉ !, moitié moins forts.

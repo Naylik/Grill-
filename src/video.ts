@@ -1,7 +1,7 @@
 // Vidéos « Grillé ! » à partager (format story 9:16) : fabriquées sur le téléphone, sans serveur.
 // Une toile est dessinée image par image, filmée (MediaRecorder) avec les bruitages de l'appli, puis partagée.
-//  - A · Récap de la soirée (≈ 22 s) : logo, podium, grosses missions révélées, titres, fin.
-//  - B · Moment GRILLÉ ! (≈ 8 s) : l'accusation, Mallow qui prend feu, la mission démasquée.
+//  - A · Récap de la soirée (≈ 35 s) : logo, podium, grosses missions révélées, titres, fin.
+//  - B · Moment GRILLÉ ! (≈ 12 s) : l'accusation, Mallow qui prend feu, la mission démasquée.
 import { mallow, mallowGrille } from './mallow';
 import { fermerSortieVideo, ouvrirSortieVideo, sons } from './son';
 
@@ -38,6 +38,7 @@ function pop(t: number, debut: number): number {
   const c = 1.70158 * 1.6;
   return p === 0 ? 0 : 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2);
 }
+const DM = 4.5; // durée d'une mission révélée dans le récap
 const montee = (t: number, debut: number) => 1 - Math.pow(1 - borne((t - debut) / 0.6), 3);
 
 function image(svg: string): Promise<HTMLImageElement> {
@@ -174,33 +175,32 @@ async function videoRecap(d: DonneesRecap): Promise<Video> {
   const flambe = await image(mallow({ taille: 200, cuisson: 4 }));
   const missions = d.missions.slice(0, 3);
   const titres = d.titres.slice(0, 3);
-  const tM = 7; // début des missions
-  const tT = tM + 3 * missions.length; // début des titres
-  const tF = tT + (titres.length ? 3.2 : 0); // fin
-  const duree = tF + 2.8;
+  // Rythme lent : chaque scène reste assez longtemps pour être lue.
+  const tM = 9.5; // début des missions (logo 4 s, podium 5,5 s)
+  const tT = tM + DM * missions.length; // début des titres
+  const tF = tT + (titres.length ? 5 : 0); // fin
+  const duree = tF + 3.5;
   const ordre = [1, 0, 2]; // 2e, 1er, 3e
-  const sonsRecap: [number, () => void][] = [[0.1, () => sons.pschhh()], [3.2, () => sons.ding()], [3.5, () => sons.ding()], [4.0, () => sons.podium()]];
-  missions.forEach((m, i) => sonsRecap.push([tM + i * 3 + 1.5, m.reussie ? () => sons.reussi() : () => sons.grille()]));
-  titres.forEach((_, i) => sonsRecap.push([tT + 0.3 + i * 0.45, () => sons.ding()]));
-  sonsRecap.push([tF + 0.2, () => sons.pschhh()]);
+  // Peu de bruitages : seulement le tampon de chaque mission.
+  const sonsRecap: [number, () => void][] = missions.map((m, i) => [tM + i * DM + 2, m.reussie ? () => sons.ding() : () => sons.rate()]);
   return {
     duree,
     sons: sonsRecap,
     dessiner(c, t) {
       fond(c);
       // Logo et date.
-      let a = opaciteScene(t, 0, 3);
+      let a = opaciteScene(t, 0, 4);
       dessinerAvec(c, a, pop(t, 0.1), L / 2, H * 0.44, () => texte(c, 'GRILLÉ !', L / 2, H * 0.44, { taille: 62, couleur: '#FFD84A', lueur: '#FF7A3D' }));
       dessinerAvec(c, a * montee(t, 0.6), 1, L / 2, H * 0.53, () => texte(c, d.sousTitre, L / 2, H * 0.53, { taille: 17, police: 'corps', couleur: '#BDB3E6' }));
       // Podium.
-      a = opaciteScene(t, 3, 4);
+      a = opaciteScene(t, 4, 5.5);
       if (a > 0) {
         texte(c, 'LE PODIUM', L / 2, H * 0.27, { taille: 17, police: 'corps', couleur: '#BDB3E6' });
         const base = H * 0.74;
         ordre.forEach((rang, k) => {
           const p = d.podium[rang];
           if (!p) return;
-          const debut = 3 + [0.3, 0.9, 0][k];
+          const debut = 4 + [0.6, 1.4, 0][k];
           const m = montee(t, debut);
           if (m <= 0) return;
           c.save();
@@ -222,25 +222,25 @@ async function videoRecap(d: DonneesRecap): Promise<Video> {
       }
       // Grosses missions.
       missions.forEach((m, i) => {
-        const debut = tM + i * 3;
-        const am = opaciteScene(t, debut, 3);
+        const debut = tM + i * DM;
+        const am = opaciteScene(t, debut, DM);
         if (am <= 0) return;
         c.save();
         c.globalAlpha = am;
         texte(c, 'LES MISSIONS SECRÈTES', L / 2, H * 0.33, { taille: 17, police: 'corps', couleur: '#BDB3E6' });
         c.translate(0, (1 - montee(t, debut + 0.2)) * 100);
         const { haut } = carteMission(c, H * 0.5, `${m.joueur.prenom} devait…`, m.texte);
-        tampon(c, t, debut + 1.5, L / 2 + 120 * K, haut, m.reussie ? 'RÉUSSIE' : 'RATÉE', m.reussie ? '#5CF2C2' : '#FF5A6E');
+        tampon(c, t, debut + 2, L / 2 + 120 * K, haut, m.reussie ? 'RÉUSSIE' : 'RATÉE', m.reussie ? '#5CF2C2' : '#FF5A6E');
         c.restore();
       });
       // Titres.
-      a = opaciteScene(t, tT, 3.2);
+      a = opaciteScene(t, tT, 5);
       if (a > 0) {
         c.save();
         c.globalAlpha = a;
         texte(c, 'LES TITRES', L / 2, H * 0.33, { taille: 17, police: 'corps', couleur: '#BDB3E6' });
         titres.forEach((ti, i) => {
-          const m = montee(t, tT + 0.3 + i * 0.45);
+          const m = montee(t, tT + 0.4 + i * 0.8);
           if (m <= 0) return;
           c.save();
           c.globalAlpha = a * m;
@@ -268,7 +268,7 @@ async function videoRecap(d: DonneesRecap): Promise<Video> {
         c.restore();
       }
       // Fin.
-      a = opaciteScene(t, tF, 2.8);
+      a = opaciteScene(t, tF, 3.5);
       dessinerAvec(c, a, pop(t, tF), L / 2, H * 0.36, () => c.drawImage(flambe, L / 2 - 75 * K, H * 0.36 - 94 * K, 150 * K, 188 * K));
       dessinerAvec(c, a, pop(t, tF + 0.3), L / 2, H * 0.58, () => texte(c, 'Qui sera grillé la prochaine fois ?', L / 2, H * 0.58, { taille: 36, couleur: '#FFD84A', lueur: '#FFD84A88', largeur: 360 }));
       dessinerAvec(c, a * montee(t, tF + 0.7), 1, L / 2, H * 0.68, () => texte(c, 'Grillé ! · le jeu de soirée à missions secrètes', L / 2, H * 0.68, { taille: 15, police: 'corps', couleur: '#BDB3E6' }));
@@ -280,12 +280,12 @@ async function videoMoment(d: DonneesMoment): Promise<Video> {
   const normal = await image(mallow({ taille: 200, cuisson: 1 }));
   const grille = await image(mallowGrille({ taille: 200 }));
   return {
-    duree: 8.2,
-    sons: [[0.2, () => sons.accusation()], [0.8, () => sons.meche()], [1.6, () => sons.meche()], [2.2, () => sons.boum()], [2.7, () => sons.grille()], [5.9, () => sons.ding()]],
+    duree: 11.5,
+    sons: [[3.2, () => sons.boum()]], // un seul bruitage : l'explosion au moment du GRILLÉ !
     dessiner(c, t) {
       fond(c);
       // L'accusation (l'écran tremble).
-      let a = opaciteScene(t, 0, 2.2);
+      let a = opaciteScene(t, 0, 3.2);
       if (a > 0) {
         c.save();
         c.globalAlpha = a;
@@ -293,12 +293,12 @@ async function videoMoment(d: DonneesMoment): Promise<Video> {
         texte(c, 'EN DIRECT DE LA SOIRÉE', L / 2, H * 0.38, { taille: 17, police: 'corps', couleur: '#BDB3E6' });
         texte(c, `${d.accuseur.prenom} accuse ${d.accuse.prenom}…`, L / 2, H * 0.46, { taille: 26, largeur: 380 });
         c.restore();
-        dessinerAvec(c, a * montee(t, 0.5), 1, L / 2, H * 0.56, () => texte(c, `« ${d.proposition} »`, L / 2, H * 0.56, { taille: 17, police: 'corps', couleur: '#BDB3E6', largeur: 360 }));
+        dessinerAvec(c, a * montee(t, 0.8), 1, L / 2, H * 0.56, () => texte(c, `« ${d.proposition} »`, L / 2, H * 0.56, { taille: 17, police: 'corps', couleur: '#BDB3E6', largeur: 360 }));
       }
       // GRILLÉ ! : flash blanc, Mallow prend feu.
-      a = opaciteScene(t, 2.2, 2.8);
+      a = opaciteScene(t, 3.2, 3.3);
       if (a > 0) {
-        const p = t - 2.2;
+        const p = t - 3.2;
         c.save();
         c.globalAlpha = a;
         const img = p < 0.9 ? normal : grille;
@@ -322,7 +322,7 @@ async function videoMoment(d: DonneesMoment): Promise<Video> {
           c.globalAlpha = a;
         }
         c.restore();
-        dessinerAvec(c, a, pop(t, 2.7), L / 2, H * 0.72, () => texte(c, 'GRILLÉ !', L / 2, H * 0.72, { taille: 64, couleur: '#FF5A6E', lueur: '#FF5A6E' }));
+        dessinerAvec(c, a, pop(t, 3.7), L / 2, H * 0.72, () => texte(c, 'GRILLÉ !', L / 2, H * 0.72, { taille: 64, couleur: '#FF5A6E', lueur: '#FF5A6E' }));
         const blanc = 1 - borne(p / 0.5);
         if (blanc > 0) {
           c.fillStyle = `rgba(255,255,255,${0.9 * blanc})`;
@@ -330,15 +330,15 @@ async function videoMoment(d: DonneesMoment): Promise<Video> {
         }
       }
       // La mission démasquée.
-      a = opaciteScene(t, 5, 3.2);
+      a = opaciteScene(t, 6.5, 5);
       if (a > 0) {
         c.save();
         c.globalAlpha = a;
         texte(c, `${d.accuseur.prenom} a grillé ${d.accuse.prenom}`, L / 2, H * 0.3, { taille: 24, largeur: 380 });
-        c.translate(0, (1 - montee(t, 5.2)) * 100);
+        c.translate(0, (1 - montee(t, 6.8)) * 100);
         carteMission(c, H * 0.48, 'Sa mission secrète', d.mission);
         c.restore();
-        dessinerAvec(c, a, pop(t, 5.9), L / 2, H * 0.66, () => texte(c, `+${d.vol} pts volés`, L / 2, H * 0.66, { taille: 30, couleur: '#FFD84A', lueur: '#FFD84A88' }));
+        dessinerAvec(c, a, pop(t, 8), L / 2, H * 0.66, () => texte(c, `+${d.vol} pts volés`, L / 2, H * 0.66, { taille: 30, couleur: '#FFD84A', lueur: '#FFD84A88' }));
       }
     },
   };
