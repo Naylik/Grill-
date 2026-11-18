@@ -38,8 +38,8 @@ describe('saisons', () => {
     expect(classementSaison({ ...s, membres: { x: { prenom: 'X', couleur: '', points: 5, missions: 0, parties: 1 }, y: { prenom: 'Y', couleur: '', points: 9, missions: 0, parties: 1 } } }).map(([u]) => u)).toEqual(['y', 'x']);
   });
 
-  it('une mission de vengeance réussie vaut le double', () => {
+  it('une mission de vengeance réussie vaut ×1,5', () => {
     const r = pointsDeFin({ a: [{ difficulte: 'facile', reussie: true, vengeance: true }, { difficulte: 'difficile', reussie: true }] }, []);
-    expect(r.missions.a).toBe(16 + 12); // facile 8 ×2 + difficile 12
+    expect(r.missions.a).toBe(9 + 10); // facile 6 ×1,5 + difficile 10
   });
 });

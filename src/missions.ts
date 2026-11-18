@@ -9,7 +9,7 @@ import type { Joueur, Mission, MissionTiree, Niveau, Secrets, TypeMission } from
 export const BANQUE = banque as Mission[];
 const NIVEAUX_AUTORISES: Record<Niveau, Niveau[]> = { soft: ['soft'], epice: ['soft', 'epice'], hot: ['soft', 'epice', 'hot'] };
 
-/** Partie pure (testée) : choisit une mission facile et une difficile parmi celles encore libres. */
+/** Partie pure (testée) : choisit une mission longue durée et une plus courte parmi celles encore libres. */
 export function choisirPropositions(opts: {
   type: TypeMission;
   niveau: Niveau;
@@ -20,10 +20,12 @@ export function choisirPropositions(opts: {
 }): MissionTiree[] {
   const hasard = opts.hasard ?? Math.random;
   const ok = (m: Mission) =>
-    m.type === opts.type && NIVEAUX_AUTORISES[opts.niveau].includes(m.niveau) && !opts.prises.has(m.id) && !opts.exclues.includes(m.id);
+    // Une seule grosse mission par soirée : le type (vie / jeu) ne compte plus.
+    NIVEAUX_AUTORISES[opts.niveau].includes(m.niveau) && !opts.prises.has(m.id) && !opts.exclues.includes(m.id);
   const ciblesLibres = melanger(opts.cibles.filter((c) => c.fois < 2), hasard).sort((a, b) => a.fois - b.fois);
   const res: MissionTiree[] = [];
-  for (const difficulte of ['facile', 'difficile'] as const) {
+  // Toujours une mission longue durée, et une plus courte (facile ou difficile) au choix.
+  for (const difficulte of ['longue', hasard() < 0.5 ? 'facile' : 'difficile'] as const) {
     const candidates = melanger(BANQUE.filter((m) => ok(m) && m.difficulte === difficulte), hasard);
     // Une mission avec {cible} n'est possible que s'il reste quelqu'un à viser (2 fois max par personne).
     const m = candidates.find((c) => !c.texte.includes('{cible}') || ciblesLibres.length > 0);
@@ -68,7 +70,7 @@ export async function preparerPropositions(code: string, uid: string, joueurs: R
 }
 
 /**
- * Vengeance (saisons) : une mission qui vise la personne choisie, réservée comme les autres, qui vaut ×2.
+ * Vengeance (saisons) : une mission qui vise la personne choisie, réservée comme les autres, qui vaut ×1,5.
  * On prend une mission avec {cible} (le joueur doit agir sur sa cible), du type et de la difficulté du hasard.
  */
 export async function prendreMissionVengeance(code: string, uid: string, joueurs: Record<string, Joueur>, cible: string, dejaJouees: Record<string, boolean> = {}): Promise<MissionTiree | null> {

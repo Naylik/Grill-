@@ -1,7 +1,7 @@
 // Saisons : un groupe d'amis cumule ses points de partie en partie (nom choisi par l'hôte, sans durée).
 // - Cuisson : le Mallow de chacun dore selon son nombre de missions réussies dans la saison.
 // - Rancune : on retient qui a découvert ta mission à la dernière partie. À la partie suivante, UNE seule personne
-//   (tirée au hasard parmi celles qui ont été grillées) peut se venger : sa 1re mission vise son « grilleur » et vaut ×2.
+//   (tirée au hasard parmi celles qui ont été grillées) peut se venger : sa 1re mission vise son « grilleur » et vaut ×1,5.
 // Données : saisons/{id} = { infos, membres/{uid}, rancunes/{uid}/{grilleur}, parties/{partieId} }.
 import type { Joueur } from './types';
 

@@ -40,8 +40,8 @@ describe('bouton GRILLÉ !', () => {
     expect(piloter(enVote, 6000, { 'g-2-a': { c: true } })).toBeNull(); // d n'a pas encore voté
     const e = piloter(enVote, 7000, { 'g-2-a': { c: true, d: true } })!;
     expect(e['accusations/2/a/statut']).toBe('grille');
-    expect(e['scores/a/grille']).toBe(6);
-    expect(e['scores/b/grille']).toBe(-6);
+    expect(e['scores/a/grille']).toBe(5); // mission difficile : vol de 5
+    expect(e['scores/b/grille']).toBe(-5);
     // Le groupe n'est pas convaincu : raté pour l'accuseur.
     expect(piloter(enVote, 7000, { 'g-2-a': { c: false, d: false } })!['accusations/2/a/statut']).toBe('rate');
   });

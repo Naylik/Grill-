@@ -16,68 +16,12 @@
     "texte": "Fais en sorte que {cible} te checke sans que tu le demandes."
   },
   {
-    "id": "v04",
-    "type": "vie",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Taquinerie",
-    "texte": "Fais un compliment exagéré à {cible} sur son style, et qu’il ou elle te remercie."
-  },
-  {
     "id": "v05",
     "type": "vie",
     "difficulte": "facile",
     "niveau": "soft",
     "categorie": "Faire dire",
     "texte": "Fais dire le mot « banane » à {cible}."
-  },
-  {
-    "id": "v07",
-    "type": "vie",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Faire rire",
-    "texte": "Fais rire {cible} avec l’imitation d’une personne célèbre."
-  },
-  {
-    "id": "v08",
-    "type": "vie",
-    "difficulte": "facile",
-    "niveau": "epice",
-    "categorie": "Faire avouer",
-    "texte": "Fais dire à {cible} le prénom de son crush du collège."
-  },
-  {
-    "id": "v09",
-    "type": "vie",
-    "difficulte": "facile",
-    "niveau": "epice",
-    "categorie": "Faire dire",
-    "texte": "Fais en sorte que {cible} te demande « pourquoi tu me regardes comme ça ? »."
-  },
-  {
-    "id": "v10",
-    "type": "vie",
-    "difficulte": "facile",
-    "niveau": "epice",
-    "categorie": "Taquinerie",
-    "texte": "Appelle {cible} « mon cœur » au moins deux fois, sans jamais expliquer pourquoi."
-  },
-  {
-    "id": "v13",
-    "type": "vie",
-    "difficulte": "facile",
-    "niveau": "epice",
-    "categorie": "Faire avouer",
-    "texte": "Fais avouer à {cible} sa pire honte de soirée."
-  },
-  {
-    "id": "v14",
-    "type": "vie",
-    "difficulte": "facile",
-    "niveau": "epice",
-    "categorie": "Drague pour rire",
-    "texte": "Fais un clin d’œil appuyé à {cible} et obtiens une réaction : rire, gêne ou clin d’œil en retour."
   },
   {
     "id": "v15",
@@ -264,36 +208,12 @@
     "texte": "Chuchote pendant tout un jeu de questions, sans que personne ne comprenne pourquoi."
   },
   {
-    "id": "j01",
-    "type": "jeu",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Classement",
-    "texte": "Termine 2e d’un mini-jeu, pas 1er."
-  },
-  {
-    "id": "j03",
-    "type": "jeu",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Mauvaise foi",
-    "texte": "Accuse {cible} de tricher, et obtiens qu’il ou elle se justifie."
-  },
-  {
     "id": "j04",
     "type": "jeu",
     "difficulte": "facile",
     "niveau": "soft",
     "categorie": "Manipulation",
     "texte": "Pendant un mini-jeu, demande conseil à {cible}, puis fais exactement l’inverse."
-  },
-  {
-    "id": "j07",
-    "type": "jeu",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Manipulation",
-    "texte": "Fais en sorte que {cible} te demande de l’aide pendant un mini-jeu."
   },
   {
     "id": "j08",
@@ -312,52 +232,12 @@
     "texte": "Commente un mini-jeu comme un match de foot pendant au moins 30 secondes."
   },
   {
-    "id": "j10",
-    "type": "jeu",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Classement",
-    "texte": "Finis dernier d’un mini-jeu en faisant croire que tu as tout donné."
-  },
-  {
-    "id": "j11",
-    "type": "jeu",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Classement",
-    "texte": "Gagne un mini-jeu."
-  },
-  {
     "id": "j12",
     "type": "jeu",
     "difficulte": "facile",
     "niveau": "epice",
     "categorie": "Manipulation",
     "texte": "Fais changer {cible} d’avis sur sa réponse pendant un mini-jeu."
-  },
-  {
-    "id": "j13",
-    "type": "jeu",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Manipulation",
-    "texte": "Fais en sorte que {cible} t’avoue pour qui il ou elle a voté."
-  },
-  {
-    "id": "j14",
-    "type": "jeu",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Défi",
-    "texte": "Avant un mini-jeu, parie à voix haute avec {cible} que tu vas le ou la battre, et bats-le ou la."
-  },
-  {
-    "id": "j15",
-    "type": "jeu",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Mauvaise foi",
-    "texte": "Après un mini-jeu, dépose une réclamation officielle auprès de l’hôte pour contester le résultat."
   },
   {
     "id": "j32",
@@ -390,14 +270,6 @@
     "niveau": "soft",
     "categorie": "Ambiance",
     "texte": "Fais rire toute la table pendant un mini-jeu."
-  },
-  {
-    "id": "j36",
-    "type": "jeu",
-    "difficulte": "facile",
-    "niveau": "soft",
-    "categorie": "Classement",
-    "texte": "Termine 3e d’un mini-jeu."
   },
   {
     "id": "j42",
@@ -554,7 +426,7 @@
   {
     "id": "g01",
     "type": "vie",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Faire dire",
     "texte": "Fais dire « t’as raison » à {cible} à 3 moments différents de la soirée."
@@ -562,7 +434,7 @@
   {
     "id": "g02",
     "type": "vie",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Faire dire",
     "texte": "Place les mots « croquette », « parapluie » et « dinosaure » dans la conversation avant la fin."
@@ -570,7 +442,7 @@
   {
     "id": "g05",
     "type": "jeu",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Classement",
     "texte": "Termine 2e à au moins 3 mini-jeux."
@@ -578,7 +450,7 @@
   {
     "id": "g06",
     "type": "jeu",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Sabotage",
     "texte": "Fais finir {cible} dernier ou dernière à au moins 3 mini-jeux."
@@ -586,7 +458,7 @@
   {
     "id": "g09",
     "type": "vie",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Faire dire",
     "texte": "Invente une phrase fétiche et fais-la répéter par 2 autres joueurs avant la fin."
@@ -594,7 +466,7 @@
   {
     "id": "g10",
     "type": "vie",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Bluff",
     "texte": "Lance une fausse règle « officielle » (ex : on applaudit chaque bonne réponse) et fais-la suivre par 3 joueurs pendant tout un jeu."
@@ -602,7 +474,7 @@
   {
     "id": "g11",
     "type": "jeu",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Détective",
     "texte": "Grille au moins une mission avec le bouton GRILLÉ ! (accusation confirmée)."
@@ -610,7 +482,7 @@
   {
     "id": "g13",
     "type": "vie",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Débat",
     "texte": "Lance un débat absurde (« les pâtes, c’est un légume ») et fais gagner ton camp par un vote à main levée."
@@ -618,7 +490,7 @@
   {
     "id": "g15",
     "type": "vie",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Faire dire",
     "texte": "Fais dire à {cible}, à voix haute, « on fait équipe, toi et moi »."
@@ -626,7 +498,7 @@
   {
     "id": "g16",
     "type": "vie",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Faire rire",
     "texte": "Fais rire toute la table à 3 moments différents."
@@ -634,7 +506,7 @@
   {
     "id": "g17",
     "type": "jeu",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Manipulation",
     "texte": "Fais accuser un autre joueur à tort : quelqu’un doit appuyer sur GRILLÉ ! contre lui ou elle et se tromper."
@@ -642,9 +514,225 @@
   {
     "id": "g18",
     "type": "vie",
-    "difficulte": "difficile",
+    "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Faire dire",
     "texte": "Fais dire « je te jure » à {cible} à 3 moments différents."
+  },
+  {
+    "id": "h01",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Ne dis jamais « oui » à voix haute de toute la soirée. Dis-le une seule fois et la mission est ratée."
+  },
+  {
+    "id": "h02",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Ne prononce jamais le prénom de {cible} de toute la soirée, même quand il ou elle te parle."
+  },
+  {
+    "id": "h03",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Sois d’accord avec tout ce que dit {cible}, toute la soirée, sans exception et sans te faire griller."
+  },
+  {
+    "id": "h04",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Réponds à chaque question de {cible} par une autre question, toute la soirée."
+  },
+  {
+    "id": "h05",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Imite discrètement les gestes de {cible} à 5 moments différents de la soirée, sans qu’il ou elle te démasque."
+  },
+  {
+    "id": "h06",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Change de place autour de la table 3 fois dans la soirée, avec une excuse différente à chaque fois."
+  },
+  {
+    "id": "h07",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Parle de {cible} à la 3e personne (« il », « elle ») chaque fois qu’il ou elle est là, pendant toute la soirée."
+  },
+  {
+    "id": "h09",
+    "type": "jeu",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais finir {cible} dernier ou dernière à au moins la moitié des jeux de la soirée."
+  },
+  {
+    "id": "h13",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais en sorte que 3 joueurs différents te disent « bien joué » au cours de la soirée."
+  },
+  {
+    "id": "h14",
+    "type": "jeu",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais se disputer gentiment 2 joueurs sur un résultat, à 2 jeux différents, sans jamais participer à la dispute."
+  },
+  {
+    "id": "h15",
+    "type": "jeu",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Grille 2 missions avec le bouton GRILLÉ ! dans la soirée, sans jamais te faire griller toi-même."
+  },
+  {
+    "id": "h17",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais rire {cible} à chaque jeu de la soirée, au moins une fois par jeu."
+  },
+  {
+    "id": "h18",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais en sorte qu’à la fin de la soirée, toute la table appelle {cible} par un surnom que tu as inventé."
+  },
+  {
+    "id": "h19",
+    "type": "jeu",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Termine 2e au classement final, ni 1er ni 3e."
+  },
+  {
+    "id": "n02",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Envoie un SMS à {cible} pendant la partie et obtiens une réponse, sans que les autres le remarquent."
+  },
+  {
+    "id": "n03",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais en sorte que {cible} se lève pour aller te chercher quelque chose, 2 fois dans la soirée, sans le lui demander directement."
+  },
+  {
+    "id": "n04",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais changer {cible} de place à table, sans le lui demander directement."
+  },
+  {
+    "id": "n05",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais lever toute la table en même temps, au moins une fois dans la soirée."
+  },
+  {
+    "id": "n06",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Ramène un objet bizarre de la cuisine sur la table et garde-le jusqu’à la fin, sans jamais expliquer pourquoi."
+  },
+  {
+    "id": "n08",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Garde la même position (bras croisés, menton dans la main…) pendant 3 jeux entiers, sans qu’on te demande pourquoi."
+  },
+  {
+    "id": "n10",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais un selfie de groupe où tout le monde sourit, sans dire que c’est pour une mission."
+  },
+  {
+    "id": "n11",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais raconter à {cible} comment il ou elle a rencontré un des joueurs de la table, en entier."
+  },
+  {
+    "id": "k01",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais en sorte que {cible} raconte ce qu’il ou elle a fait cette semaine."
+  },
+  {
+    "id": "k02",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Envoie un message privé à une personne autour de la table et fais-la rire avec ce message."
+  },
+  {
+    "id": "k03",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Sors discrètement de l’appli et prends une photo de chaque participant sans te faire voir, puis montre-les à tout le monde à la fin."
+  },
+  {
+    "id": "k04",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Change d’habit 3 fois dans la soirée, pour n’importe quelle raison."
+  },
+  {
+    "id": "k05",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "À un moment, sors de la pièce sans explication (ni pour les toilettes, ni pour la salle de bain)."
   }
 ]

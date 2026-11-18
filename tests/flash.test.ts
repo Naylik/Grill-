@@ -62,3 +62,19 @@ describe('missions flash', () => {
     for (const id of ['g01', 'g02', 'g05', 'g06', 'g09', 'g10', 'g11', 'g13', 'g15', 'g16', 'g17', 'g18']) expect(ids.has(id), id).toBe(true);
   });
 });
+
+import { borneParieur, pointsGrosse } from '../src/score';
+describe('équilibre du barème', () => {
+  it('grosse mission selon le format : une longue ≈ gagner la moitié des jeux', () => {
+    expect(pointsGrosse('longue', 6)).toBe(15);
+    expect(pointsGrosse('longue', 4)).toBe(10);
+    expect(pointsGrosse('longue', 8)).toBe(20);
+    expect(pointsGrosse('facile', 4)).toBe(4);
+    expect(pointsGrosse('longue', 6, true)).toBe(23);
+  });
+  it('le Parieur ne peut pas décider seul de la soirée', () => {
+    expect(borneParieur(15)).toBe(8);
+    expect(borneParieur(-12)).toBe(-6);
+    expect(borneParieur(3)).toBe(3);
+  });
+});

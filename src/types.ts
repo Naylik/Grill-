@@ -3,7 +3,8 @@
 export type Duree = 4 | 6 | 8;
 export type ModeChoix = 'roue' | 'vote';
 export type Niveau = 'soft' | 'epice' | 'hot';
-export type Difficulte = 'facile' | 'difficile';
+/** facile : un seul coup simple ; difficile : un coup difficile ; longue : toute la soirée ou plusieurs fois. */
+export type Difficulte = 'facile' | 'difficile' | 'longue';
 export type TypeMission = 'vie' | 'jeu';
 
 export type Phase =
@@ -110,7 +111,7 @@ export interface MissionTiree {
   difficulte: Difficulte;
   texte: string; // {cible} déjà remplacé
   cible?: string; // uid
-  /** Mission de vengeance (saisons) : vaut le double. */
+  /** Mission de vengeance (saisons) : vaut ×1,5. */
   vengeance?: boolean;
 }
 

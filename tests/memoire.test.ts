@@ -36,11 +36,11 @@ describe('mémoire du groupe', () => {
   });
 
   it('les missions déjà jouées ne sont plus proposées', () => {
-    const jouees = BANQUE.filter((m) => m.type === 'vie' && m.difficulte === 'facile').slice(1).map((m) => m.id);
-    const restante = BANQUE.find((m) => m.type === 'vie' && m.difficulte === 'facile')!;
+    const jouees = BANQUE.filter((m) => m.difficulte === 'longue').slice(1).map((m) => m.id);
+    const restante = BANQUE.find((m) => m.difficulte === 'longue')!;
     for (let i = 0; i < 10; i++) {
       const p = choisirPropositions({ type: 'vie', niveau: 'epice', prises: new Set(), exclues: jouees, cibles: [{ uid: 'b', prenom: 'B', fois: 0 }] });
-      expect(p.find((m) => m.difficulte === 'facile')?.id).toBe(restante.id);
+      expect(p.find((m) => m.difficulte === 'longue')?.id).toBe(restante.id);
     }
   });
 });

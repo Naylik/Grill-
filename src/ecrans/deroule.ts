@@ -244,7 +244,7 @@ export function ecranRevelation(): string {
   const verdicts = missions.map((m, i) => {
     if (grillees[i + 1]) return `<div class="verdict grille"><strong>Mission ${i + 1} : grillée en direct</strong><span>0 pt</span></div>`;
     const ok = majoriteOui(Object.values(S.votes[`m${i + 1}-${sujet}`] ?? {}).map((v) => v === true));
-    const pts = pointsMission({ difficulte: m.difficulte, reussie: true, vengeance: m.vengeance });
+    const pts = pointsMission({ difficulte: m.difficulte, reussie: true, vengeance: m.vengeance }, S.infos?.duree ?? 6);
     return `<div class="verdict ${ok ? 'ok' : 'ko'}"><strong>Mission ${i + 1} : ${ok ? 'réussie' : 'ratée'}${m.vengeance ? ' (vengeance)' : ''}</strong><span>${ok ? `+${pts} pts` : '0 pt'}</span></div>`;
   });
   const grillages = (r.paris ?? []).map((p) => {

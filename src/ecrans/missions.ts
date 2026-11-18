@@ -1,17 +1,18 @@
 // Choix des missions et onglet « Mes missions ».
 import { S, estHote } from '../etat';
 import { esc } from '../outils';
-import { POINTS_MISSION } from '../score';
+import { pointsGrosse } from '../score';
 import type { MissionTiree } from '../types';
 import { attenteDes, bulle } from './commun';
 import { maFlashEnCours } from './flash';
 import { POINTS_FLASH } from '../flash';
 
 const ETIQUETTE_TYPE = { vie: 'Vie réelle', jeu: 'Dans les mini-jeux' } as const;
+const NIVEAU = { facile: 'Facile', difficile: 'Difficile', longue: 'Longue durée' } as const;
 
 export function carteMission(m: MissionTiree, opts: { secret?: boolean; bouton?: string } = {}): string {
   return `<article class="mission ${m.difficulte}">
-    <div class="tags">${m.vengeance ? '<span class="tag vengeance">Vengeance ×2</span>' : ''}<span class="tag">${m.difficulte === 'facile' ? 'Facile' : 'Difficile'} · ${POINTS_MISSION[m.difficulte] * (m.vengeance ? 2 : 1)} pts</span><span class="tag discret">${ETIQUETTE_TYPE[m.type]}</span></div>
+    <div class="tags">${m.vengeance ? '<span class="tag vengeance">Vengeance ×1,5</span>' : ''}<span class="tag">${NIVEAU[m.difficulte]} · ${pointsGrosse(m.difficulte, S.infos?.duree ?? 6, m.vengeance)} pts</span><span class="tag discret">${ETIQUETTE_TYPE[m.type]}</span></div>
     ${opts.secret
       ? `<p class="texte-secret" data-appui>${esc(m.texte)}</p><p class="aide">Appuie longtemps pour lire</p>`
       : `<p class="texte-mission">${esc(m.texte)}</p>`}
@@ -39,7 +40,7 @@ export function fenetreVengeance(): string {
   return `<div class="proces moi" role="alertdialog" aria-label="Vengeance"><div class="proces-carte">
     <p class="proces-titre">VENGEANCE !</p>
     ${alerteVengeance()}
-    <p class="aide">Sa mission de ce soir te vise et vaut le double. Tu peux l’accuser avec le bouton GRILLÉ ! si tu la démasques.</p>
+    <p class="aide">Sa mission de ce soir te vise et vaut ×1,5. Tu peux l’accuser avec le bouton GRILLÉ ! si tu la démasques.</p>
     <button class="bouton jaune" data-action="vuVengeance" data-valeur="${cle}">Compris, je me méfie</button>
   </div></div>`;
 }
@@ -49,7 +50,7 @@ function offreVengeance(): string {
   const choix = Object.keys(S.offreVengeance?.choix ?? {}).filter((u) => S.joueurs[u]);
   return `<h2>Vengeance ?</h2>
     <div class="alerte-vengeance offre"><strong>${choix.map((u) => esc(S.joueurs[u].prenom)).join(' et ')} ${choix.length > 1 ? 't’ont' : 't’a'} grillé la dernière fois.</strong>
-      <span>Tu peux te venger : ta première mission visera ${choix.length > 1 ? 'la personne de ton choix' : 'cette personne'} et vaudra <b>le double</b>. Elle sera prévenue que tu veux te venger, mais pas de ta mission.</span></div>
+      <span>Tu peux te venger : ta première mission visera ${choix.length > 1 ? 'la personne de ton choix' : 'cette personne'} et vaudra <b>×1,5</b>. Elle sera prévenue que tu veux te venger, mais pas de ta mission.</span></div>
     <div class="pile">${choix.map((u) => `<button class="bouton rose" data-action="vengeance" data-valeur="${u}">Me venger de ${esc(S.joueurs[u].prenom)}</button>`).join('')}
       <button class="bouton discret" data-action="vengeance" data-valeur="non">Non merci, pas ce soir</button></div>`;
 }

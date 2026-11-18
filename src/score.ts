@@ -3,8 +3,18 @@ import type { Difficulte, Score } from './types';
 
 /** Points de place : 1er 5, 2e 3, 3e 2, au-delà 1. Les ex aequo reçoivent les mêmes points. */
 export const POINTS_PLACE = [5, 3, 2];
-export const POINTS_MISSION: Record<Difficulte, number> = { facile: 8, difficile: 12 };
-export const VOL_DETECTIVE: Record<Difficulte, number> = { facile: 4, difficile: 6 };
+/** Grosse mission (format normal, 6 jeux). Court ×4/6, long ×8/6 : une mission longue ≈ gagner la moitié des jeux. */
+export const POINTS_MISSION: Record<Difficulte, number> = { facile: 6, difficile: 10, longue: 15 };
+/** Vol du bouton GRILLÉ ! (ou du pari détective) : à peu près la moitié de la mission. */
+export const VOL_DETECTIVE: Record<Difficulte, number> = { facile: 3, difficile: 5, longue: 8 };
+export const BONUS_VENGEANCE = 1.5;
+/** Points d'une grosse mission selon le format de la soirée (4, 6 ou 8 jeux). */
+export const pointsGrosse = (d: Difficulte, duree = 6, vengeance = false): number =>
+  Math.round(POINTS_MISSION[d] * (duree / 6) * (vengeance ? BONUS_VENGEANCE : 1));
+/** Au Parieur (vrais points), un joueur ne peut ni gagner ni perdre plus que ça sur le jeu entier. */
+export const PARIEUR_MAX = 8;
+export const PARIEUR_MIN = -6;
+export const borneParieur = (n: number): number => Math.max(PARIEUR_MIN, Math.min(PARIEUR_MAX, n));
 export const PARI_RATE = -2;
 
 /**
@@ -53,7 +63,7 @@ export interface ResultatMission {
   vengeance?: boolean;
 }
 
-export const pointsMission = (m: ResultatMission): number => (m.reussie ? POINTS_MISSION[m.difficulte] * (m.vengeance ? 2 : 1) : 0);
+export const pointsMission = (m: ResultatMission, duree = 6): number => (m.reussie ? pointsGrosse(m.difficulte, duree, m.vengeance) : 0);
 export interface ResultatPari {
   de: string; // le détective
   cible: string;
@@ -62,11 +72,11 @@ export interface ResultatPari {
 }
 
 /** Points de mission et de détective pour tout le monde, à partir des votes de la révélation. */
-export function pointsDeFin(missions: Record<string, ResultatMission[]>, paris: ResultatPari[]) {
+export function pointsDeFin(missions: Record<string, ResultatMission[]>, paris: ResultatPari[], duree = 6) {
   const missionsPts: Record<string, number> = {};
   const detective: Record<string, number> = {};
   for (const [uid, liste] of Object.entries(missions)) {
-    missionsPts[uid] = liste.reduce((t, m) => t + pointsMission(m), 0);
+    missionsPts[uid] = liste.reduce((t, m) => t + pointsMission(m, duree), 0);
     detective[uid] ??= 0;
   }
   for (const p of paris) {
@@ -97,7 +107,7 @@ export function titres(
 ): Titre[] {
   const res: Titre[] = [];
   for (const [uid, liste] of Object.entries(missions)) {
-    if (liste.some((m) => m.reussie && m.difficulte === 'difficile')) res.push({ uid, titre: 'Agent secret', pourquoi: 'grosse mission difficile réussie' });
+    if (liste.some((m) => m.reussie && m.difficulte !== 'facile')) res.push({ uid, titre: 'Agent secret', pourquoi: 'grosse mission réussie' });
   }
   for (const p of paris) {
     if (p.trouvee) {

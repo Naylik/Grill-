@@ -208,3 +208,10 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 18/11/2026 · Missions flash plus discrètes : plus de vibration ni de son à la réception (ça trahissait le porteur).
   Le tirage se fait dès l'écran des règles, où TOUT LE MONDE voit le même encart flouté « Mission flash » : le porteur
   y lit sa mission, les autres « Pas de mission pour toi ». 1 ou 2 porteurs tirés au hasard à chaque jeu (dès 3 joueurs).
+- 18/11/2026 · Grosses missions et équilibre du classement. Trois niveaux : facile (un coup simple) 6 pts, difficile
+  (un coup difficile) 10 pts, longue durée (toute la soirée, ou plusieurs fois) 15 pts, pour 6 jeux ; ×4/6 en court,
+  ×8/6 en long (une mission longue ≈ gagner la moitié des jeux). Au début, on choisit entre une longue et une plus
+  courte. Vol GRILLÉ ! : 3 / 5 / 8. Vengeance ×1,5 (×2 rendait une mission longue plus forte que 4 victoires).
+  Parieur borné entre −6 et +8 sur le jeu (avant : jusqu'à ±15 à 6 joueurs). Validé dans le document : 14 missions
+  longues ajoutées (H), 8 dans le style de Kilyan (N), ses 5 missions (K, la photo « montrée à tous à la fin »),
+  16 faciles retirées.

@@ -56,7 +56,7 @@ function fenetreAccuser(): string {
     <div class="options deux">${autres.map((u) => `<button class="option ${cible === u ? 'actif rose' : ''}" data-action="choisirAccuse" data-valeur="${u}">${nom(u)}</button>`).join('')}</div>
     <label class="champ"><span>Sa mission, à ton avis</span>
       <textarea name="accusation" rows="3" maxlength="160" placeholder="Il essaie de me faire dire « franchement »…">${esc(brouillons.accusation ?? '')}</textarea></label>
-    <p class="aide gauche"><strong>Vu juste</strong> : tu lui voles des points (${VOL_FLASH} pour une mission flash, 4 ou 6 pour sa grosse mission) et sa mission est ratée. <strong>Raté</strong> : −${PENALITE_ACCUSATION} pts. Une accusation par manche.</p>
+    <p class="aide gauche"><strong>Vu juste</strong> : tu lui voles des points (${VOL_FLASH} pour une mission flash, 3 à 8 pour sa grosse mission) et sa mission est ratée. <strong>Raté</strong> : −${PENALITE_ACCUSATION} pts. Une accusation par manche.</p>
     <div class="options deux"><button class="option" data-action="fermerAccuser">Annuler</button><button class="option actif rose" data-action="accuser" ${cible ? '' : 'disabled'}>Accuser !</button></div>
   </div></div>`;
 }

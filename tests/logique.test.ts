@@ -53,8 +53,8 @@ describe('barème', () => {
       { a: [{ difficulte: 'facile', reussie: true }, { difficulte: 'difficile', reussie: true }], b: [{ difficulte: 'difficile', reussie: false }], c: [] },
       [{ de: 'b', cible: 'a', trouvee: 'difficile' }, { de: 'c', cible: 'b', trouvee: null }],
     );
-    expect(r.missions).toEqual({ a: 20, b: 0, c: 0 }); // facile 8 + difficile 12
-    expect(r.detective).toEqual({ a: -6, b: 6, c: -2 });
+    expect(r.missions).toEqual({ a: 16, b: 0, c: 0 }); // facile 6 + difficile 10 (format normal)
+    expect(r.detective).toEqual({ a: -5, b: 5, c: -2 }); // vol d'une difficile : 5
   });
   it('titres fun', () => {
     const scores = { a: { ...scoreVide(), jeux: 10 }, b: { ...scoreVide(), jeux: 4 } };
@@ -64,10 +64,10 @@ describe('barème', () => {
 });
 
 describe('banques de contenu', () => {
-  it('missions équilibrées (au moins 15 par type et difficulté), ids uniques, {cible} bien écrit', () => {
+  it('assez de grosses missions par niveau (longue, difficile, facile), ids uniques, {cible} bien écrit', () => {
     expect(BANQUE.length).toBeGreaterThanOrEqual(60);
     expect(new Set(BANQUE.map((m) => m.id)).size).toBe(BANQUE.length);
-    for (const type of ['vie', 'jeu']) for (const d of ['facile', 'difficile']) expect(BANQUE.filter((m) => m.type === type && m.difficulte === d).length).toBeGreaterThanOrEqual(15);
+    for (const d of ['facile', 'difficile', 'longue']) expect(BANQUE.filter((m) => m.difficulte === d).length).toBeGreaterThanOrEqual(15);
     for (const m of BANQUE) {
       expect(['soft', 'epice', 'hot']).toContain(m.niveau);
       expect(m.texte.replaceAll('{cible}', '')).not.toMatch(/[{}]/);
@@ -82,11 +82,12 @@ describe('banques de contenu', () => {
 
 describe('tirage des missions', () => {
   const cibles = [{ uid: 'b', prenom: 'Manon', fois: 0 }, { uid: 'c', prenom: 'Cassie', fois: 1 }];
-  it('une facile et une difficile du bon type, cible remplacée', () => {
+  it('une longue durée et une plus courte, cible remplacée', () => {
     for (let i = 0; i < 100; i++) {
       const p = choisirPropositions({ type: 'vie', niveau: 'epice', prises: new Set(), exclues: [], cibles });
-      expect(p.map((m) => m.difficulte)).toEqual(['facile', 'difficile']);
-      expect(p.every((m) => m.type === 'vie' && !m.texte.includes('{cible}'))).toBe(true);
+      expect(p[0].difficulte).toBe('longue');
+      expect(['facile', 'difficile']).toContain(p[1].difficulte);
+      expect(p.every((m) => !m.texte.includes('{cible}'))).toBe(true);
       for (const m of p) if (m.cible) expect(m.texte).toContain(m.cible === 'b' ? 'Manon' : 'Cassie');
     }
   });

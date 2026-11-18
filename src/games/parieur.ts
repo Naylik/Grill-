@@ -2,7 +2,7 @@
 // ou son échec, puis le groupe valide le défi par vote. Pari mutuel (voir score.ts). Jamais dans les 2 premiers jeux.
 import defis from '../data/defis.json';
 import { esc, fraisDabord, melanger } from '../outils';
-import { majoriteOui, pariMutuel, type Mise } from '../score';
+import { borneParieur, majoriteOui, pariMutuel, PARIEUR_MAX, PARIEUR_MIN, type Mise } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
 
@@ -79,7 +79,8 @@ export const parieur: MiniJeu<Etat> = {
     if (valeur !== 'suivant' || etat.phase !== 'resultat') return null;
     const tour = etat.tour + 1;
     if (tour >= etat.ordre.length) {
-      return { etat, fin: { points: etat.cumul, sorte: 'reels', resume: 'Au Parieur, on gagne et on perd de vrais points.' } };
+      // Vrais points, mais bornés : un seul jeu ne doit pas décider de la soirée.
+      return { etat, fin: { points: Object.fromEntries(Object.entries(etat.cumul).map(([u, n]) => [u, borneParieur(n)])), sorte: 'reels', resume: `Au Parieur, on gagne et on perd de vrais points (entre ${PARIEUR_MIN} et +${PARIEUR_MAX}).` } };
     }
     const suite = { ...etat, tour };
     return { etat: { ...suite, phase: 'mises', etape: etapeDe(suite, 'mises'), fin: ctx.maintenant + DUREE_MISES, reussi: undefined, gains: undefined, mises: undefined } };

@@ -264,7 +264,7 @@ function bilanFinal(): Ecritures {
     paris.push({ de, cible: p.cible, trouvee });
     bilan.paris.push({ de, cible: p.cible, texte: p.texte, trouvee });
   }
-  const pts = pointsDeFin(missions, paris);
+  const pts = pointsDeFin(missions, paris, S.infos?.duree ?? 6);
   // Bouton GRILLÉ ! : les menteurs démasqués (« Raté » alors que l'accusation était juste).
   const ajustes: Record<string, number> = {};
   const enPlus: Bilan['titres'] = [];
