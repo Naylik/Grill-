@@ -164,3 +164,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   avec des points et jamais d'argent. Courbe qui grimpe avec la cagnotte (×1, ×2, ×4…) et vire du vert au rouge avec
   le risque. Au résultat : elle monte (bonne réponse, petit arpège) ou « CRASH ! » (courbe qui s'effondre, écran qui
   tremble, vibration). Au choix secret : la fusée en grand ; encaisser = « +X PTS » et pluie de jetons.
+- 18/11/2026 · Dessin téléphone arabe : chacun écrit d'abord sa propre phrase (40 s, bouton « Une idée au hasard » ;
+  sans phrase, le jeu en met une), comme Gartic Phone ; on dessine/devine ensuite sur n − 1 étapes au plus, donc
+  personne ne retombe sur sa phrase. À la révélation, chaque dessin se redessine trait par trait en accéléré
+  (1,5 à 4 s). Seules les phrases du jeu vont dans la mémoire du groupe. Le saboteur est gardé pour plus tard
+  (intéressant surtout à 5-6 joueurs).

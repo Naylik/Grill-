@@ -27,6 +27,19 @@ export function effacer(cle: string): void {
 }
 const nbPoints = (traits: Trait[]) => traits.reduce((n, t) => n + t.p.length / 2, 0);
 
+/** Garde seulement les « n » premiers points du dessin (pour le rejouer trait par trait). */
+function debut(traits: Trait[], n: number): Trait[] {
+  const res: Trait[] = [];
+  let reste = n;
+  for (const t of traits ?? []) {
+    if (reste <= 0) break;
+    const k = Math.min(t.p.length / 2, reste);
+    res.push({ ...t, p: t.p.slice(0, k * 2) });
+    reste -= k;
+  }
+  return res;
+}
+
 /** Dessine des traits sur une toile (fond blanc). */
 export function peindre(toile: HTMLCanvasElement, traits: Trait[]): void {
   const ctx = toile.getContext('2d');
@@ -49,12 +62,16 @@ export function peindre(toile: HTMLCanvasElement, traits: Trait[]): void {
 }
 
 // ——— Dessins à afficher (ceux des autres) : on les enregistre ici, la toile les retrouve par leur clé ———
-const aVoir = new Map<string, Trait[]>();
+const aVoir = new Map<string, { traits: Trait[]; replay: boolean }>();
 const dejaPeint = new WeakMap<HTMLCanvasElement, string>();
+const replays = new WeakMap<HTMLCanvasElement, { cle: string; debut: number }>();
 
-/** Une toile qui affichera ces traits (dessinée juste après l'affichage). */
-export function toileAVoir(cle: string, traits: Trait[] | undefined, classe = ''): string {
-  aVoir.set(cle, traits ?? []);
+/**
+ * Une toile qui affichera ces traits (dessinée juste après l'affichage).
+ * replay : le dessin se redessine trait par trait, en accéléré (révélation du Dessin téléphone arabe).
+ */
+export function toileAVoir(cle: string, traits: Trait[] | undefined, classe = '', replay = false): string {
+  aVoir.set(cle, { traits: traits ?? [], replay });
   return `<canvas class="toile-voir ${classe}" width="600" height="600" data-voir="${cle}" aria-label="Dessin"></canvas>`;
 }
 
@@ -66,9 +83,27 @@ function redessinerTout(): void {
 export function peindreLesToiles(): void {
   document.querySelectorAll<HTMLCanvasElement>('canvas[data-voir]').forEach((t) => {
     const cle = t.dataset.voir!;
+    const d = aVoir.get(cle) ?? { traits: [], replay: false };
+    if (d.replay) {
+      // Rejoué en accéléré : de 1,5 à 4 s selon la taille du dessin.
+      let r = replays.get(t);
+      if (!r || r.cle !== cle) {
+        r = { cle, debut: performance.now() };
+        replays.set(t, r);
+      }
+      const total = nbPoints(d.traits);
+      const duree = Math.min(4000, 1500 + total * 2);
+      const avance = Math.min(1, (performance.now() - r.debut) / duree);
+      const cleImage = `${cle}@${avance >= 1 ? 'fin' : Math.round(avance * total)}`;
+      if (dejaPeint.get(t) !== cleImage) {
+        dejaPeint.set(t, cleImage);
+        peindre(t, avance >= 1 ? d.traits : debut(d.traits, Math.round(avance * total)));
+      }
+      return;
+    }
     if (dejaPeint.get(t) !== cle) {
       dejaPeint.set(t, cle);
-      peindre(t, aVoir.get(cle) ?? []);
+      peindre(t, d.traits);
     }
   });
   document.querySelectorAll<HTMLCanvasElement>('canvas[data-dessiner]').forEach((t) => {
