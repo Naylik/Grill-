@@ -30,6 +30,7 @@ export function contexte(): ContexteHote {
     connectes: connectes(),
     maintenant: maintenant(),
     numeroJeu: S.deroule?.numeroJeu ?? 0,
+    duree: S.infos?.duree ?? 4,
     reponses: S.reponses,
     compteurs: S.compteurs,
     totaux: Object.fromEntries(uids().map((u) => [u, totalProvisoire(S.scores[u])])),

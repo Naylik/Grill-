@@ -174,6 +174,22 @@ describe('Réflexe Mallow et Le bon timing', async () => {
     expect(classementPatate(['x', 'y'], ['z'])).toEqual({ x: 0, y: 1, z: 3 });
   });
 
+  it('le format (Courte, Normale, Longue) fixe le nombre de tours de chaque jeu', async () => {
+    const { combien } = await import('../src/games/combien');
+    const { justePrix } = await import('../src/games/justePrix');
+    const { reflexe } = await import('../src/games/reflexe');
+    const { timing } = await import('../src/games/timing');
+    const uids = ['a', 'b', 'c', 'd'];
+    const ctx = (duree: number) => ({ joueurs: {}, uids, connectes: uids, maintenant: 0, numeroJeu: 1, duree, reponses: {}, compteurs: {}, totaux: {}, prive: {}, hasard: Math.random }) as never;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const e = (jeu: any, d: number) => jeu.demarrer(ctx(d)).etat;
+    expect([4, 6, 8].map((d) => e(combien, d).questions.length)).toEqual([4, 6, 8]);
+    expect([4, 6, 8].map((d) => e(justePrix, d).questions.length)).toEqual([4, 6, 8]);
+    expect([4, 6, 8].map((d) => e(reflexe, d).total)).toEqual([5, 8, 10]);
+    expect([4, 6, 8].map((d) => e(timing, d).total)).toEqual([3, 5, 6]);
+    expect(combien.tours!(8)).toBe('8 questions');
+  });
+
   it('les deux jeux sont dans la liste et peuvent sortir dès le 1er jeu', () => {
     const ids = jeuxPossibles(1, 3, []).map((j) => j.id);
     expect(ids).toContain('reflexe');

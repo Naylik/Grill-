@@ -70,9 +70,10 @@ export function ecranRegles(): string {
   const pret = S.maReponse?.etape === etape;
   const ont = S.attente?.etape === etape ? S.attente.uids ?? [] : [];
   const regles = jeu.regles
-    ? jeu.regles({ uids: uids() })
+    ? jeu.regles({ uids: uids(), duree: S.infos!.duree })
     : `<div class="regles-jeu">
         <p class="accroche-jeu">${esc(jeu.accroche)}</p>
+        ${jeu.tours ? `<span class="tours-jeu">Ce soir : ${esc(jeu.tours(S.infos!.duree))}</span>` : ''}
         <div class="regle-arene"><b>?</b><span>${esc(jeu.explication.comment)}</span></div>
         <div class="regle-arene"><b>★</b><span>${esc(jeu.explication.gagner)}</span></div>
         ${jeu.explication.note ? `<div class="regle-arene"><b>!</b><span>${esc(jeu.explication.note)}</span></div>` : ''}

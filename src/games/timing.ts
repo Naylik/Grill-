@@ -5,10 +5,11 @@ import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
-import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 import { classementBarres, hud, introArene, noteTiming, piste } from './arene';
 
-const CIBLES = [5, 7, 10]; // secondes, une par manche
+const CIBLES = [5, 7, 10, 6, 12, 15]; // secondes, une par manche
+const NB_MANCHES: [number, number, number] = [3, 5, 6]; // Courte, Normale, Longue
 const DECOMPTE = 3500; // « Prêts ? 3, 2, 1, partez ! »
 const DUREE_INTRO = 7000;
 const DUREE_PISTE = 5000;
@@ -18,6 +19,7 @@ interface Etat extends EtatDeBase {
   phase: 'intro' | 'chrono' | 'resultat' | 'bilan';
   numeroJeu: number;
   manche: number;
+  total?: number; // nombre de manches (selon le format)
   cible: number; // secondes
   depart: number; // heure serveur du départ
   temps?: Record<string, number>; // ms écoulées à l'arrêt
@@ -44,8 +46,8 @@ export const timing: MiniJeu<Etat> = {
   nom: 'Le bon timing',
   accroche: 'Un chrono invisible : arrête-le pile au bon moment.',
   explication: {
-    comment: 'Après « 3, 2, 1, partez ! », un chrono démarre… mais il est invisible. Compte dans ta tête et appuie sur STOP quand tu penses que le temps demandé est écoulé (5, 7 puis 10 secondes).',
-    gagner: 'Le plus petit écart sur les 3 manches gagne. Bonus de fierté si tu tombes pile au centième.',
+    comment: 'Après « 3, 2, 1, partez ! », un chrono démarre… mais il est invisible. Compte dans ta tête et appuie sur STOP quand tu penses que le temps demandé est écoulé (5, 7, 10 secondes…).',
+    gagner: 'Le plus petit écart sur l’ensemble des manches gagne (3 à 6 selon le format). Bonus de fierté si tu tombes pile au centième.',
   },
   icone: '<circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M12 9v4l3 2M9 2h6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>',
   couleur: '#5CD8FF',
@@ -54,16 +56,17 @@ export const timing: MiniJeu<Etat> = {
   // Les règles se lisent avant (écran « Je suis prêt ») : le jeu commence directement par la 1re manche.
   demarrer(ctx) {
     const base: Etat = {
-      etape: etapeDe(ctx.numeroJeu, -1), phase: 'intro', numeroJeu: ctx.numeroJeu, manche: 0, cible: CIBLES[0], depart: 0,
+      etape: etapeDe(ctx.numeroJeu, -1), phase: 'intro', numeroJeu: ctx.numeroJeu, manche: 0, total: selonFormat(ctx.duree, NB_MANCHES), cible: CIBLES[0], depart: 0,
       cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])), fin: ctx.maintenant + DUREE_INTRO,
     };
     return { etat: nouvelleManche(ctx, base, 0) };
   },
 
-  regles: () => introArene('LE BON TIMING', '3 MANCHES', mallow({ taille: 110, expression: 'yeuxFermes' }), [
+  tours: (duree) => `${selonFormat(duree, NB_MANCHES)} manches`,
+  regles: (v) => introArene('LE BON TIMING', `${selonFormat(v.duree, NB_MANCHES)} MANCHES`, mallow({ taille: 110, expression: 'yeuxFermes' }), [
     ['1', 'Un chrono démarre après « 3, 2, 1, partez ! »… mais il est invisible.'],
-    ['2', 'Compte dans ta tête et appuie sur STOP au temps demandé : 5, 7 puis 10 s.'],
-    ['★', 'Le plus petit écart sur les 3 manches gagne.'],
+    ['2', 'Compte dans ta tête et appuie sur STOP au temps demandé (5 s, 7 s, 10 s…).'],
+    ['★', 'Le plus petit écart total gagne.'],
   ]),
 
   piloter(ctx, etat) {
@@ -74,7 +77,7 @@ export const timing: MiniJeu<Etat> = {
       return { etat: { ...etat, phase: 'resultat', temps, cumul, fin: ctx.maintenant + DUREE_PISTE } };
     }
     if (etat.phase === 'resultat' && ctx.maintenant >= (etat.fin ?? 0)) {
-      if (etat.manche + 1 >= CIBLES.length) return { etat: { ...etat, phase: 'bilan', fin: ctx.maintenant + DUREE_BILAN } };
+      if (etat.manche + 1 >= (etat.total ?? NB_MANCHES[0])) return { etat: { ...etat, phase: 'bilan', fin: ctx.maintenant + DUREE_BILAN } };
       return { etat: nouvelleManche(ctx, etat, etat.manche + 1) };
     }
     if (etat.phase === 'bilan' && ctx.maintenant >= (etat.fin ?? 0)) {
@@ -87,24 +90,25 @@ export const timing: MiniJeu<Etat> = {
 
   ecran(v) {
     const e = v.etat;
+    const N = e.total ?? NB_MANCHES[0];
     if (e.phase === 'intro') {
       return introArene('LE BON TIMING', '3 MANCHES', mallow({ taille: 110, expression: 'yeuxFermes' }), [
         ['1', 'Un chrono démarre après « 3, 2, 1, partez ! »… mais il est invisible.'],
-        ['2', 'Compte dans ta tête et appuie sur STOP au temps demandé : 5, 7 puis 10 s.'],
-        ['★', 'Le plus petit écart sur les 3 manches gagne.'],
+        ['2', 'Compte dans ta tête et appuie sur STOP au temps demandé (5 s, 7 s, 10 s…).'],
+        ['★', 'Le plus petit écart total gagne.'],
       ], e.fin);
     }
 
     if (e.phase === 'bilan') {
       const lignes = v.uids.map((u) => ({ u, ecart: e.cumul[u] ?? 0 })).sort((a, b) => a.ecart - b.ecart);
       const meilleur = Math.max(1, lignes[0]?.ecart ?? 1);
-      return `${hud('LE BON TIMING', CIBLES.length, CIBLES.length, false)}
+      return `${hud('LE BON TIMING', N, N, false)}
         <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p><strong>${esc(v.joueurs[lignes[0].u].prenom)}</strong> a l’horloge dans la tête</p></div>
         <div class="pile">${classementBarres(lignes.map((l) => ({ joueur: v.joueurs[l.u], texte: formaterSecondes(l.ecart), part: meilleur / Math.max(1, l.ecart), moi: l.u === v.uid })))}</div>
-        <p class="aide">Écart total sur ${CIBLES.length} manches. Pas de STOP = écart maximum.</p>`;
+        <p class="aide">Écart total sur ${N} manches. Pas de STOP = écart maximum.</p>`;
     }
 
-    const entete = `${hud('LE BON TIMING', e.manche, CIBLES.length, e.phase === 'chrono')}
+    const entete = `${hud('LE BON TIMING', e.manche, N, e.phase === 'chrono')}
       <h2 class="question titre-timing">Arrête le chrono à <span class="cible-timing">${e.cible} secondes</span></h2>`;
 
     if (e.phase === 'chrono') {
@@ -141,7 +145,7 @@ export const timing: MiniJeu<Etat> = {
       ${piste(points, max, { valeur: cibleMs, libelle: `${e.cible} s` })}
       ${premier ? `<p class="aide gauche"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> est le plus proche (${ecartSigne(temps[premier] - cibleMs)}).</p>` : ''}
       ${absents.length ? `<p class="hors-piste">Pas de STOP : ${absents.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
-      <p class="attente">${e.manche + 1 < CIBLES.length ? 'Manche suivante dans un instant…' : 'Classement dans un instant…'}</p>`;
+      <p class="attente">${e.manche + 1 < N ? 'Manche suivante dans un instant…' : 'Classement dans un instant…'}</p>`;
   },
 
   gestes: {

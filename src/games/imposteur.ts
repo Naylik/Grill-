@@ -1,13 +1,13 @@
 // « L'Imposteur » : chacun voit son mot en secret, sauf l'imposteur qui en a un autre (et ne le sait pas).
 // Indices à l'oral, puis vote secret. 3 pts à l'imposteur s'il survit, sinon 1 pt à chaque bon vote.
-// Deux manches. Retiré automatiquement à 3 joueurs.
+// 2 à 4 manches selon le format. Retiré automatiquement à 3 joueurs.
 import paires from '../data/imposteur.json';
 import { auHasard, esc, melanger } from '../outils';
 import { pointsDePlace, resultatImposteur } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
-import { etapeTerminee, reponsesDe, type ContexteHote, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, type ContexteHote, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
-const NB_MANCHES = 2;
+const NB_MANCHES: [number, number, number] = [2, 3, 4]; // Courte, Normale, Longue
 const DUREE_INDICES = 150_000;
 const DUREE_VOTE = 45_000;
 
@@ -15,6 +15,7 @@ interface Etat extends EtatDeBase {
   phase: 'indices' | 'vote' | 'resultat';
   numeroJeu: number;
   manche: number;
+  total?: number; // nombre de manches (selon le format)
   theme: string;
   ordre: string[]; // ordre de parole
   dejaImposteurs: string[];
@@ -56,16 +57,17 @@ export const imposteur: MiniJeu<Etat> = {
   accroche: 'Un seul joueur n’a pas le même mot. Donnez des indices, puis démasquez-le.',
   explication: {
     comment: 'Chacun lit son mot en secret (jeux vidéo, foot, cinéma, séries). Un joueur a un mot différent, et il ne sait pas qu’il est l’imposteur. À tour de rôle, chacun donne un indice à voix haute, puis tout le monde vote en secret.',
-    gagner: 'Si l’imposteur s’en sort, il gagne 3 points. S’il est démasqué, chaque joueur qui a voté contre lui gagne 1 point. 2 manches.',
+    gagner: 'Si l’imposteur s’en sort, il gagne 3 points. S’il est démasqué, chaque joueur qui a voté contre lui gagne 1 point. 2 à 4 manches selon le format.',
     note: 'À partir de 4 joueurs.',
   },
   icone: '<path d="M3 9c3-3 15-3 18 0-1 6-4 9-9 9S4 15 3 9z" fill="currentColor"/><ellipse cx="8.5" cy="11" rx="2" ry="1.4" fill="#0D0A1E"/><ellipse cx="15.5" cy="11" rx="2" ry="1.4" fill="#0D0A1E"/>',
   couleur: '#B18CFF',
+  tours: (duree) => `${selonFormat(duree, NB_MANCHES)} manches`,
   autorise: (_n, nbJoueurs) => nbJoueurs >= 4,
 
   demarrer(ctx) {
     return nouvelleManche(ctx, {
-      numeroJeu: ctx.numeroJeu, manche: 0, dejaImposteurs: [], pairesJouees: [],
+      numeroJeu: ctx.numeroJeu, manche: 0, total: selonFormat(ctx.duree, NB_MANCHES), dejaImposteurs: [], pairesJouees: [],
       cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])),
     });
   },
@@ -93,7 +95,7 @@ export const imposteur: MiniJeu<Etat> = {
   commande(ctx, etat, valeur) {
     if (valeur === 'voter' && etat.phase === 'indices') return { etat: { ...etat, fin: ctx.maintenant } };
     if (valeur !== 'suivant' || etat.phase !== 'resultat') return null;
-    if (etat.manche + 1 >= NB_MANCHES) {
+    if (etat.manche + 1 >= (etat.total ?? NB_MANCHES[0])) {
       const nettoyage = Object.fromEntries([...ctx.uids.map((u) => [`motsImposteur/${u}`, null]), ['prive/imposteur', null]]);
       return { etat, ecritures: nettoyage, fin: { points: pointsDePlace(etat.cumul), sorte: 'place' } };
     }
@@ -104,7 +106,7 @@ export const imposteur: MiniJeu<Etat> = {
   ecran(v) {
     const e = v.etat;
     const prenom = (u: string) => esc(v.joueurs[u]?.prenom ?? '?');
-    const entete = `<p class="petit">Manche ${e.manche + 1}/${NB_MANCHES} · thème : <strong>${esc(e.theme)}</strong></p>`;
+    const entete = `<p class="petit">Manche ${e.manche + 1}/${e.total ?? NB_MANCHES[0]} · thème : <strong>${esc(e.theme)}</strong></p>`;
     if (e.phase === 'indices') {
       return `${chrono(e.fin)}${entete}
         <div class="mission"><p class="petit">Ton mot (appui long pour le lire)</p><p class="texte-secret gros-mot" data-appui>${esc(v.monMot ?? '…')}</p></div>
@@ -132,7 +134,7 @@ export const imposteur: MiniJeu<Etat> = {
       <div class="mots"><div><span class="petit">Le groupe</span><strong>${esc(e.mots?.groupe)}</strong></div><div><span class="petit">L’imposteur</span><strong>${esc(e.mots?.imposteur)}</strong></div></div>
       <div class="pile">${lignes}</div>
       ${bulle(survit ? `Bravo ${prenom(imp)}. Menteur professionnel, c’est noté.` : 'Bien joué les détectives. Pour une fois.')}
-      ${v.estHote ? `<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="suivant">${e.manche + 1 < NB_MANCHES ? 'Manche suivante' : 'Voir le classement'}</button>` : '<p class="attente bas">L’hôte passe à la suite.</p>'}`;
+      ${v.estHote ? `<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="suivant">${e.manche + 1 < (e.total ?? NB_MANCHES[0]) ? 'Manche suivante' : 'Voir le classement'}</button>` : '<p class="attente bas">L’hôte passe à la suite.</p>'}`;
   },
 
   gestes: {

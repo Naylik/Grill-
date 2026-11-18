@@ -5,9 +5,9 @@ import { melanger } from '../outils';
 import { esc } from '../outils';
 import { pointsCombien, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
-import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
-const NB_QUESTIONS = 3;
+const NB_QUESTIONS: [number, number, number] = [4, 6, 8]; // Courte, Normale, Longue
 const DUREE_QUESTION = 45_000;
 
 interface Etat extends EtatDeBase {
@@ -29,14 +29,15 @@ export const combien: MiniJeu<Etat> = {
   accroche: 'Réponds en secret, puis devine combien ont dit oui. Seul le total est révélé.',
   explication: {
     comment: 'Une question gênante s’affiche (« As-tu déjà stalké un ex ? »). Chacun répond oui ou non en secret, puis devine combien de joueurs ont dit oui. Seul le total est révélé : personne ne sait qui a répondu quoi.',
-    gagner: '3 points si tu trouves le chiffre exact, 1 point à un près. 3 questions par partie.',
+    gagner: '3 points si tu trouves le chiffre exact, 1 point à un près. 4 à 8 questions selon le format choisi.',
   },
   icone: '<path d="M12 3a9 9 0 1 0 9 9h-9z" fill="currentColor"/><path d="M15 2.5A9 9 0 0 1 21.5 9H15z" fill="currentColor" opacity=".5"/>',
   couleur: '#FF4F8B',
+  tours: (duree) => `${selonFormat(duree, NB_QUESTIONS)} questions`,
   autorise: () => true,
 
   demarrer(ctx) {
-    const choix = melanger(questions.filter((q) => q.niveau !== 'hot'), ctx.hasard).slice(0, NB_QUESTIONS).map((q) => q.texte);
+    const choix = melanger(questions.filter((q) => q.niveau !== 'hot'), ctx.hasard).slice(0, selonFormat(ctx.duree, NB_QUESTIONS)).map((q) => q.texte);
     return {
       etat: { etape: etapeDe(ctx.numeroJeu, 0), numeroJeu: ctx.numeroJeu, phase: 'question', index: 0, questions: choix, fin: ctx.maintenant + DUREE_QUESTION, cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])) },
       ecritures: { [`compteurs/${etapeDe(ctx.numeroJeu, 0)}`]: 0 },

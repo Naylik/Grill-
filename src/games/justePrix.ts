@@ -5,9 +5,9 @@ import { esc, melanger } from '../outils';
 import { plusProches, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { brouillons } from '../ui';
-import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
-const NB_MANCHES = 4;
+const NB_MANCHES: [number, number, number] = [4, 6, 8]; // Courte, Normale, Longue
 const DUREE = 40_000;
 
 interface Question { texte: string; reponse: number; unite: string }
@@ -36,15 +36,17 @@ export const justePrix: MiniJeu<Etat> = {
   accroche: 'Estime en secret. Le plus proche gagne la manche.',
   explication: {
     comment: 'Une question de culture ou une question fun (« Combien mesure la tour Eiffel ? »). Chacun tape son estimation en secret, puis on découvre la bonne réponse et celles des autres.',
-    gagner: 'Le plus proche gagne la manche. Celui qui gagne le plus de manches (sur 4) gagne le jeu.',
+    gagner: 'Le plus proche gagne la manche. Celui qui gagne le plus de manches gagne le jeu (4 à 8 manches selon le format).',
   },
   icone: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/>',
   couleur: '#FFD23F',
+  tours: (duree) => `${selonFormat(duree, NB_MANCHES)} manches`,
   autorise: () => true,
 
   demarrer(ctx) {
-    const culture = melanger(questions.filter((q) => q.categorie === 'culture'), ctx.hasard).slice(0, NB_MANCHES / 2);
-    const fun = melanger(questions.filter((q) => q.categorie === 'fun'), ctx.hasard).slice(0, NB_MANCHES / 2);
+    const nb = selonFormat(ctx.duree, NB_MANCHES);
+    const culture = melanger(questions.filter((q) => q.categorie === 'culture'), ctx.hasard).slice(0, Math.ceil(nb / 2));
+    const fun = melanger(questions.filter((q) => q.categorie === 'fun'), ctx.hasard).slice(0, Math.floor(nb / 2));
     const choix = melanger([...culture, ...fun], ctx.hasard).map(({ texte, reponse, unite }) => ({ texte, reponse, unite }));
     return {
       etat: {

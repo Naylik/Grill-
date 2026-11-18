@@ -611,3 +611,4 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 /* Règles avant chaque jeu */
 .regles-jeu { display: grid; gap: 12px; }
 .accroche-jeu { margin: 0; font-family: var(--titre); font-weight: 800; font-size: 20px; line-height: 1.2; text-wrap: balance; }
+.tours-jeu { justify-self: start; padding: 5px 12px; border-radius: 99px; background: #ffffff10; border: 1px solid var(--bord); font-family: var(--titre); font-weight: 800; font-size: 12px; letter-spacing: .04em; color: var(--jaune); }

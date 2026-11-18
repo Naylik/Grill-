@@ -8,6 +8,8 @@ export interface ContexteHote {
   connectes: string[]; // ceux qui sont là en ce moment
   maintenant: number;
   numeroJeu: number;
+  /** Format choisi dans le salon (4, 6 ou 8 jeux) : il fixe aussi le nombre de tours de chaque jeu. */
+  duree?: number;
   /** Réponses des joueurs (lisibles par l'hôte seulement), clé = uid. */
   reponses: Record<string, Reponse | undefined>;
   compteurs: Record<string, number>;
@@ -89,10 +91,16 @@ export interface MiniJeu<E extends EtatDeBase = EtatDeBase> {
   commande?(ctx: ContexteHote, etat: E, valeur: string): Avancee<E> | null;
   ecran(vue: VueJeu<E>): string;
   /** Écran de règles (avant le jeu, chacun appuie sur « Je suis prêt »). Par défaut : l'explication du jeu. */
-  regles?(vue: { uids: string[] }): string;
+  regles?(vue: { uids: string[]; duree: number }): string;
+  /** Nombre de tours selon le format, en clair (« 6 questions »), affiché avec les règles. */
+  tours?(duree: number): string;
   /** Actions des boutons du jeu (data-action="jeu" data-geste="…"). */
   gestes?: Record<string, (el: HTMLElement, outils: OutilsJoueur, vue: VueJeu<E>) => Promise<void> | void>;
 }
+
+/** Nombre de tours selon le format : [Courte, Normale, Longue]. */
+export const selonFormat = (duree: number | undefined, [courte, normale, longue]: [number, number, number]): number =>
+  duree === 8 ? longue : duree === 6 ? normale : courte;
 
 /** Les réponses valides pour l'étape en cours. */
 export function reponsesDe<T = Reponse>(ctx: ContexteHote, etape: string): Record<string, T> {

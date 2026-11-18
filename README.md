@@ -134,3 +134,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   à son rythme et appuie sur « Je suis prêt » ; le jeu démarre quand tous les joueurs connectés sont prêts (l'hôte peut
   « Lancer sans attendre »). Les jeux d'action montrent leurs règles illustrées (`regles()` du jeu) et commencent
   directement par la 1re manche : plus de décompte automatique de 7 s.
+- 18/11/2026 · Le format du salon fixe aussi le nombre de tours de chaque jeu (`selonFormat` dans `games/interface.ts`) :
+  Combien ont dit oui ? 4 / 6 / 8 questions, Juste Prix 4 / 6 / 8 manches, Imposteur 2 / 3 / 4, Réflexe 5 / 8 / 10,
+  Le bon timing 3 / 5 / 6 (Courte / Normale / Longue). Le Parieur (un défi par joueur) et Colis piégé (élimination)
+  durent déjà selon le nombre de joueurs. L'écran des règles affiche « Ce soir : 6 questions ».

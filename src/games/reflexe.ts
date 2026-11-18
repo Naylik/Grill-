@@ -6,10 +6,10 @@ import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
-import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 import { classementBarres, hud, introArene, noteReflexe, piste } from './arene';
 
-const NB_MANCHES = 5;
+const NB_MANCHES: [number, number, number] = [5, 8, 10]; // Courte, Normale, Longue
 const PENALITE = 1000; // faux départ
 const ABSENT = 1500; // pas de réponse
 const DUREE_INTRO = 7000;
@@ -20,6 +20,7 @@ interface Etat extends EtatDeBase {
   phase: 'intro' | 'attente' | 'resultat' | 'bilan';
   numeroJeu: number;
   manche: number;
+  total?: number; // nombre de manches (selon le format)
   feu: number; // heure serveur où Mallow prend feu
   leurre: number | null; // heure serveur d'un faux départ (Mallow éternue)
   temps?: Record<string, number>; // temps de la manche (ms), -1 = faux départ
@@ -54,7 +55,7 @@ export const reflexe: MiniJeu<Etat> = {
   accroche: 'Touche dès que Mallow prend feu. Pas avant !',
   explication: {
     comment: 'Gardez le doigt prêt : à un moment, Mallow prend feu sur tous les téléphones en même temps. Touche ton écran le plus vite possible. Attention : parfois Mallow éternue avant, ce n’est pas du feu ! Toucher trop tôt, c’est un faux départ.',
-    gagner: 'Le plus rapide sur 5 manches gagne. Un faux départ compte 1 seconde de pénalité.',
+    gagner: 'Le plus rapide sur l’ensemble des manches gagne (5 à 10 selon le format). Un faux départ compte 1 seconde de pénalité.',
   },
   icone: '<path d="M12 2c1.5 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-5 3-6 .3 2 1.3 3 2.3 3.3C10.6 7.3 11 4.6 12 2z" fill="currentColor"/>',
   couleur: '#FF8A3D',
@@ -65,12 +66,13 @@ export const reflexe: MiniJeu<Etat> = {
     const vide = Object.fromEntries(ctx.uids.map((u) => [u, 0]));
     const base: Etat = {
       etape: etapeDe(ctx.numeroJeu, -1), phase: 'intro', numeroJeu: ctx.numeroJeu, manche: 0, feu: 0, leurre: null,
-      historique: {}, cumul: vide, fin: ctx.maintenant + DUREE_INTRO,
+      historique: {}, cumul: vide, total: selonFormat(ctx.duree, NB_MANCHES), fin: ctx.maintenant + DUREE_INTRO,
     };
     return { etat: nouvelleManche(ctx, base, 0) };
   },
 
-  regles: () => introArene('RÉFLEXE MALLOW', '5 MANCHES', mallow({ taille: 110 }), [
+  tours: (duree) => `${selonFormat(duree, NB_MANCHES)} manches`,
+  regles: (v) => introArene('RÉFLEXE MALLOW', `${selonFormat(v.duree, NB_MANCHES)} MANCHES`, mallow({ taille: 110 }), [
     ['1', 'Attends que Mallow prenne feu sur tous les écrans.'],
     ['2', 'Touche le plus vite possible : on mesure en millisecondes.'],
     ['!', 'S’il éternue, ce n’est pas du feu. Trop tôt : 1 s de pénalité.'],
@@ -86,12 +88,12 @@ export const reflexe: MiniJeu<Etat> = {
       return { etat: { ...etat, phase: 'resultat', temps, historique, cumul, fin: ctx.maintenant + DUREE_PISTE } };
     }
     if (etat.phase === 'resultat' && ctx.maintenant >= (etat.fin ?? 0)) {
-      if (etat.manche + 1 >= NB_MANCHES) return { etat: { ...etat, phase: 'bilan', fin: ctx.maintenant + DUREE_BILAN } };
+      if (etat.manche + 1 >= (etat.total ?? NB_MANCHES[0])) return { etat: { ...etat, phase: 'bilan', fin: ctx.maintenant + DUREE_BILAN } };
       return { etat: nouvelleManche(ctx, etat, etat.manche + 1) };
     }
     if (etat.phase === 'bilan' && ctx.maintenant >= (etat.fin ?? 0)) {
       const meilleur = Object.entries(etat.cumul).sort((a, b) => a[1] - b[1])[0];
-      const resume = meilleur ? `${ctx.joueurs[meilleur[0]]?.prenom} : ${Math.round(meilleur[1] / NB_MANCHES)} ms en moyenne.` : undefined;
+      const resume = meilleur ? `${ctx.joueurs[meilleur[0]]?.prenom} : ${Math.round(meilleur[1] / (etat.total ?? NB_MANCHES[0]))} ms en moyenne.` : undefined;
       return { etat, fin: { points: pointsDePlace(etat.cumul, false), sorte: 'place', resume } };
     }
     return null;
@@ -99,6 +101,7 @@ export const reflexe: MiniJeu<Etat> = {
 
   ecran(v) {
     const e = v.etat;
+    const N = e.total ?? NB_MANCHES[0];
     if (e.phase === 'intro') {
       return introArene('RÉFLEXE MALLOW', '5 MANCHES', mallow({ taille: 110 }), [
         ['1', 'Attends que Mallow prenne feu sur tous les écrans.'],
@@ -109,18 +112,18 @@ export const reflexe: MiniJeu<Etat> = {
 
     if (e.phase === 'bilan') {
       const lignes = v.uids
-        .map((u) => ({ u, moy: Math.round((e.cumul[u] ?? ABSENT * NB_MANCHES) / NB_MANCHES) }))
+        .map((u) => ({ u, moy: Math.round((e.cumul[u] ?? ABSENT * N) / N) }))
         .sort((a, b) => a.moy - b.moy);
       const meilleure = lignes[0]?.moy ?? 1;
-      return `${hud('RÉFLEXE MALLOW', NB_MANCHES, NB_MANCHES, false)}
+      return `${hud('RÉFLEXE MALLOW', N, N, false)}
         <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p><strong>${esc(v.joueurs[lignes[0].u].prenom)}</strong> a les meilleurs réflexes</p></div>
         <div class="pile">${classementBarres(lignes.map((l) => ({ joueur: v.joueurs[l.u], texte: `${l.moy} ms`, part: meilleure / l.moy, moi: l.u === v.uid })))}</div>
-        <p class="aide">Moyenne sur ${NB_MANCHES} manches, faux départs comptés 1&#8239;000 ms.</p>`;
+        <p class="aide">Moyenne sur ${N} manches, faux départs comptés 1&#8239;000 ms.</p>`;
     }
 
     const record = meilleurTemps(e.historique?.[v.uid]);
-    const entete = `${hud('RÉFLEXE MALLOW', e.manche, NB_MANCHES, e.phase === 'attente')}
-      <div class="record-arene"><span>MANCHE ${e.manche + 1}/${NB_MANCHES}</span><span>TON RECORD <b>${record !== null ? `${record} ms` : '—'}</b></span></div>`;
+    const entete = `${hud('RÉFLEXE MALLOW', e.manche, N, e.phase === 'attente')}
+      <div class="record-arene"><span>MANCHE ${e.manche + 1}/${N}</span><span>TON RECORD <b>${record !== null ? `${record} ms` : '—'}</b></span></div>`;
 
     if (e.phase === 'attente') {
       const moi = v.local[e.etape] as number | undefined;
@@ -160,7 +163,7 @@ export const reflexe: MiniJeu<Etat> = {
       ${piste(points, max)}
       ${fauxDeparts.length ? `<p class="hors-piste rouge">Faux départ : ${fauxDeparts.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       ${absents.length ? `<p class="hors-piste">Trop tard : ${absents.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
-      <p class="attente">${e.manche + 1 < NB_MANCHES ? 'Manche suivante dans un instant…' : 'Classement dans un instant…'}</p>`;
+      <p class="attente">${e.manche + 1 < N ? 'Manche suivante dans un instant…' : 'Classement dans un instant…'}</p>`;
   },
 
   gestes: {
