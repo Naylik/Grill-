@@ -14,6 +14,7 @@ import { jeuParId } from './games';
 import { localJeu, vueJeu } from './ecrans/deroule';
 import { action, afficher, brouillons, installer, vibrer } from './ui';
 import { garderEcranAllume } from './veille';
+import { installerGlisser } from './glisser';
 import { esc, normaliserCode, nettoyerPrenom } from './outils';
 import { copier, imagePodium, partager } from './partage';
 import { totalFinal } from './score';
@@ -26,6 +27,7 @@ import type { Duree, ModeChoix } from './types';
 
 const app = document.getElementById('app')!;
 installer(app);
+installerGlisser();
 
 /** Code présent dans le lien (QR code) : https://…/#ABCD */
 const codeDuLien = (): string | null => normaliserCode(location.hash.slice(1)) || null;
@@ -424,7 +426,7 @@ function horloge(): void {
     }
     el.classList.toggle('en-cours', reste <= 0);
   });
-  document.querySelectorAll<HTMLButtonElement>('.stop-timing[data-depart]').forEach((b) => {
+  document.querySelectorAll<HTMLElement>('.stop-timing[data-depart], .cible-patate[data-depart], .consigne-patate[data-depart]').forEach((b) => {
     b.classList.toggle('pas-encore', t < Number(b.dataset.depart));
   });
   requestAnimationFrame(horloge);
@@ -432,6 +434,11 @@ function horloge(): void {
 requestAnimationFrame(horloge);
 
 // Chronos : mis à jour sans redessiner l'écran. Un tic sonore pendant les 5 dernières secondes.
+// La Patate : la mèche fait tic-tac tant que la patate circule.
+setInterval(() => {
+  if (document.querySelector('.zone-patate')) sons.meche();
+}, 480);
+
 const ticsJoues = new Map<string, number>();
 setInterval(() => {
   document.querySelectorAll<HTMLElement>('.chrono[data-fin]').forEach((el) => {

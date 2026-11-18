@@ -95,6 +95,17 @@ export function momentsForts(): void {
       });
     }
   }
+  // La Patate : elle arrive chez moi, puis elle explose.
+  if (d.phase === 'jeu' && d.jeuEnCours === 'patate' && S.jeu) {
+    const p = S.jeu as { phase?: string; porteur?: string; etape?: string; manche?: number; explose?: string };
+    if (p.phase === 'jeu' && p.porteur === S.uid) moment(`patate-${p.etape}`, () => vibrer(90));
+    if (p.phase === 'boum') {
+      moment(`boum-${d.numeroJeu}-${p.manche}`, () => {
+        sons.boum();
+        vibrer(p.explose === S.uid ? [400, 100, 400] : 200);
+      });
+    }
+  }
   // Bouton GRILLÉ ! : une accusation tombe, puis le verdict, sur tous les téléphones en même temps.
   const a = accusationEnCours(S.accusations);
   if (a) {

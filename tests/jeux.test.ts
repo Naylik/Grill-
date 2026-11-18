@@ -131,6 +131,49 @@ describe('Réflexe Mallow et Le bon timing', async () => {
       expect(phases.at(-1)).toBe('bilan');
     }
   });
+  it('La Patate : passes, explosions cachées, élimination jusqu’au dernier', async () => {
+    const { patate, classementPatate } = await import('../src/games/patate');
+    const uids = ['a', 'b', 'c', 'd'];
+    const joueurs = Object.fromEntries(uids.map((u) => [u, { prenom: u.toUpperCase(), couleur: '#fff' }])) as never;
+    let t = 0;
+    let prive: Record<string, unknown> = {};
+    const ctx = (reponses: Record<string, unknown> = {}) => ({ joueurs, uids, connectes: uids, maintenant: t, numeroJeu: 3, reponses: reponses as never, compteurs: {}, totaux: {}, prive, hasard: () => 0.3 });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let etat: any = patate.demarrer(ctx() as never).etat;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const avancer = (reponses = {}): any => {
+      const av = patate.piloter(ctx(reponses) as never, etat);
+      if (av?.ecritures) prive = { ...prive, ...Object.fromEntries(Object.entries(av.ecritures).map(([k, v]) => [k.replace('prive/', ''), v])) };
+      if (av && !av.fin) etat = av.etat;
+      return av;
+    };
+    t = 8000;
+    avancer();
+    expect(etat.phase).toBe('jeu');
+    const explosion = (prive.patate as { explosion: number }).explosion;
+    expect(explosion - etat.depart).toBeGreaterThanOrEqual(15000);
+    expect(explosion - etat.depart).toBeLessThanOrEqual(60000);
+    expect(JSON.stringify(etat)).not.toContain(String(Math.round(explosion))); // le moment reste caché
+    // Lancer avant « Partez ! » : ignoré. Après : la patate change de main.
+    const porteur = etat.porteur;
+    const vers = uids.find((u) => u !== porteur)!;
+    expect(avancer({ [porteur]: { etape: etat.etape, vers } })).toBeNull();
+    t = etat.depart + 100;
+    avancer({ [porteur]: { etape: etat.etape, vers } });
+    expect(etat.porteur).toBe(vers);
+    // Explosions successives jusqu'au dernier survivant.
+    let fin;
+    for (let i = 0; i < 20 && !fin; i++) {
+      t += 61000;
+      fin = avancer()?.fin;
+    }
+    expect(etat.elimines).toHaveLength(3);
+    expect(etat.elimines[0]).toBe(vers); // la première explosion tombe chez celui qui tenait la patate
+    expect(fin.points[etat.vivants[0]]).toBe(5);
+    expect(fin.points[etat.elimines[0]]).toBe(1);
+    expect(classementPatate(['x', 'y'], ['z'])).toEqual({ x: 0, y: 1, z: 3 });
+  });
+
   it('les deux jeux sont dans la liste et peuvent sortir dès le 1er jeu', () => {
     const ids = jeuxPossibles(1, 3, []).map((j) => j.id);
     expect(ids).toContain('reflexe');

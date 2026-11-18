@@ -540,3 +540,30 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .proces.rate .proces-titre { color: var(--cyan); text-shadow: 0 0 20px #5CD8FF66; }
 .proces .chrono { align-self: center; }
 .bandeau-proces { position: fixed; z-index: 20; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); padding: 10px 14px; border-radius: 14px; background: #2A1B4AEE; border: 1px solid #FF5A3D88; font-size: 14px; text-align: center; pointer-events: none; }
+
+/* ——— La Patate ——— */
+.consigne-patate { display: grid; gap: 4px; text-align: center; padding: 14px; border-radius: 20px; background: linear-gradient(180deg, #FF7A3D33, #FF7A3D11); border: 2px solid var(--orange); animation: arrive .3s cubic-bezier(.3, 1.6, .5, 1); }
+.consigne-patate span { font-size: 13px; font-weight: 800; letter-spacing: .06em; color: var(--orange); }
+.consigne-patate strong { font-family: var(--titre); font-size: 26px; line-height: 1.1; }
+.consigne-patate.pas-encore strong { filter: blur(8px); }
+.consigne-spectateur { margin: 0; text-align: center; color: var(--texte-2); font-weight: 700; }
+.cibles-patate { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.cible-patate { min-height: 54px; min-width: 96px; padding: 0 16px; border-radius: 18px; border: 2px solid var(--c); background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--texte); font-family: var(--titre); font-weight: 800; font-size: 16px; cursor: pointer; }
+.cible-patate.pas-encore { opacity: .4; }
+.zone-patate { display: grid; place-items: center; min-height: 220px; position: relative; }
+.zone-patate::before { content: ''; position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #FF7A3D55, transparent 65%); animation: pulse-patate .9s ease-in-out infinite; }
+@keyframes pulse-patate { 50% { transform: scale(1.12); opacity: .6; } }
+.patate-a-lancer { position: relative; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; animation: tremble-patate .18s linear infinite; }
+.patate-a-lancer.tenue { animation: none; cursor: grabbing; }
+.patate-chez { position: relative; animation: respire 1.2s ease-in-out infinite; }
+@keyframes tremble-patate { 25% { translate: -2px 1px; } 75% { translate: 2px -1px; } }
+.dessin-patate { display: block; filter: drop-shadow(0 10px 20px #0008); }
+.dessin-patate .etincelle { transform-origin: 128px 15px; animation: etincelle .15s ease-in-out infinite alternate; }
+@keyframes etincelle { to { transform: scale(1.4); opacity: .7; } }
+.joueurs-arene > div.elimine { opacity: .45; text-decoration: line-through; }
+.joueurs-arene > div.porteur { border-color: var(--orange); box-shadow: 0 0 16px -4px var(--orange); }
+.joueurs-arene > div.porteur em { color: var(--orange); }
+.boum-patate { position: relative; display: grid; place-items: center; height: 200px; }
+.boum-patate .eclat { position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #FFF6EA 0%, #FFD84A 25%, #FF7A3D 50%, #FF5A3D00 70%); animation: eclat .6s cubic-bezier(.2, .9, .3, 1) both; }
+@keyframes eclat { from { transform: scale(.1); opacity: 1; } 60% { opacity: 1; } to { transform: scale(1.6); opacity: .25; } }
+.mot-boum { position: relative; margin: 0; font-family: var(--titre); font-weight: 900; font-size: 64px; color: #FFF6EA; text-shadow: 0 4px 0 #B32A12, 0 0 30px #FF5A3D; animation: tampon .4s cubic-bezier(.2, 1.4, .4, 1) .15s both; }

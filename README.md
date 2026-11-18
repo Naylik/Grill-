@@ -109,3 +109,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   « Raté » est vérifié : menteur = −3 pts et l'accuseur récupère son dû. Une seule accusation à la fois ; pendant une
   manche de Réflexe ou de Timing, le bouton est caché, le procès devient un bandeau et ses délais sont repoussés.
   Nouvelles règles Firebase (nœud `accusations`) : à republier dans la console.
+- 18/11/2026 · Nouveau jeu « La Patate » (`src/games/patate.ts`, geste dans `src/glisser.ts`) : la patate-bombe arrive
+  avec une consigne (« Un animal en B »), on dit un mot à voix haute (le groupe juge) puis on la lance en la faisant
+  glisser vers un joueur (ou en touchant son nom). Elle explose entre 15 s et 1 min, moment connu de l'hôte seulement
+  (`prive/patate`). Élimination jusqu'au dernier survivant ; points de place selon l'ordre d'élimination. 3 joueurs minimum.

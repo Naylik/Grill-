@@ -134,6 +134,15 @@ export const sons = {
   rate(): void {
     [392, 349, 311].forEach((f, i) => note(f, i * 0.22, i === 2 ? 0.5 : 0.2, 'triangle', 0.18));
   },
+  /** La Patate : explosion (gros souffle grave). */
+  boum(): void {
+    bruit(0, 1.1, 900, 80, 0.8);
+    note(70, 0, 0.6, 'sawtooth', 0.25);
+  },
+  /** La Patate : tic-tac de la mèche. */
+  meche(): void {
+    note(2200, 0, 0.03, 'square', 0.035);
+  },
   /** Mission réussie : petit arpège joyeux. */
   reussi(): void {
     [659, 784, 1047].forEach((f, i) => note(f, i * 0.09, 0.22, 'triangle', 0.2));
