@@ -60,15 +60,21 @@ export const reflexe: MiniJeu<Etat> = {
   couleur: '#FF8A3D',
   autorise: () => true,
 
+  // Les règles se lisent avant (écran « Je suis prêt ») : le jeu commence directement par la 1re manche.
   demarrer(ctx) {
     const vide = Object.fromEntries(ctx.uids.map((u) => [u, 0]));
-    return {
-      etat: {
-        etape: etapeDe(ctx.numeroJeu, -1), phase: 'intro', numeroJeu: ctx.numeroJeu, manche: 0, feu: 0, leurre: null,
-        historique: {}, cumul: vide, fin: ctx.maintenant + DUREE_INTRO,
-      },
+    const base: Etat = {
+      etape: etapeDe(ctx.numeroJeu, -1), phase: 'intro', numeroJeu: ctx.numeroJeu, manche: 0, feu: 0, leurre: null,
+      historique: {}, cumul: vide, fin: ctx.maintenant + DUREE_INTRO,
     };
+    return { etat: nouvelleManche(ctx, base, 0) };
   },
+
+  regles: () => introArene('RÉFLEXE MALLOW', '5 MANCHES', mallow({ taille: 110 }), [
+    ['1', 'Attends que Mallow prenne feu sur tous les écrans.'],
+    ['2', 'Touche le plus vite possible : on mesure en millisecondes.'],
+    ['!', 'S’il éternue, ce n’est pas du feu. Trop tôt : 1 s de pénalité.'],
+  ]),
 
   piloter(ctx, etat) {
     if (etat.phase === 'intro' && ctx.maintenant >= (etat.fin ?? 0)) return { etat: nouvelleManche(ctx, etat, 0) };

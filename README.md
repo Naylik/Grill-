@@ -130,3 +130,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   pas Colis piégé. Désormais chaque téléphone publie sa version (`joueurs/{uid}/version`, heure de construction) et se
   met à jour tout seul si un autre joueur a plus récent (une fois par version). Si un jeu reste inconnu, l'écran
   affiche « Ton appli n'est pas à jour » avec un bouton « Mettre à jour » (la partie reprend après).
+- 18/11/2026 · Écran « Règles » avant chaque mini-jeu (nouvelle étape `regles` après la roue ou le vote) : chacun lit
+  à son rythme et appuie sur « Je suis prêt » ; le jeu démarre quand tous les joueurs connectés sont prêts (l'hôte peut
+  « Lancer sans attendre »). Les jeux d'action montrent leurs règles illustrées (`regles()` du jeu) et commencent
+  directement par la 1re manche : plus de décompte automatique de 7 s.

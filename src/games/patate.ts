@@ -120,7 +120,17 @@ export const patate: MiniJeu<Etat> = {
       etape: `patate-${ctx.numeroJeu}-intro`, phase: 'intro', numeroJeu: ctx.numeroJeu, manche: 0, vivants: [...ctx.uids], elimines: [],
       porteur: ctx.uids[0], passe: 0, consigne: '', depart: 0, fin: ctx.maintenant + DUREE_INTRO,
     };
-    return { etat: base };
+    // Les règles se lisent avant (écran « Je suis prêt ») : on commence directement par le premier colis.
+    return nouvelleManche(ctx, base, 0);
+  },
+
+  regles: (v) => {
+    const total = Math.max(1, v.uids.length - 1);
+    return introArene('COLIS PIÉGÉ', `${total} ÉLIMINATION${total > 1 ? 'S' : ''}`, dessinColis(150), [
+      ['1', 'Quand le colis arrive chez toi, dis à voix haute un mot qui répond à la consigne.'],
+      ['2', 'Puis fais-le glisser vers un joueur pour le lui renvoyer.'],
+      ['!', 'Il saute entre 15 s et 1 min. Celui qui l’a est éliminé.'],
+    ]);
   },
 
   piloter(ctx, brut) {

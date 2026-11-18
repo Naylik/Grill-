@@ -51,14 +51,20 @@ export const timing: MiniJeu<Etat> = {
   couleur: '#5CD8FF',
   autorise: () => true,
 
+  // Les règles se lisent avant (écran « Je suis prêt ») : le jeu commence directement par la 1re manche.
   demarrer(ctx) {
-    return {
-      etat: {
-        etape: etapeDe(ctx.numeroJeu, -1), phase: 'intro', numeroJeu: ctx.numeroJeu, manche: 0, cible: CIBLES[0], depart: 0,
-        cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])), fin: ctx.maintenant + DUREE_INTRO,
-      },
+    const base: Etat = {
+      etape: etapeDe(ctx.numeroJeu, -1), phase: 'intro', numeroJeu: ctx.numeroJeu, manche: 0, cible: CIBLES[0], depart: 0,
+      cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])), fin: ctx.maintenant + DUREE_INTRO,
     };
+    return { etat: nouvelleManche(ctx, base, 0) };
   },
+
+  regles: () => introArene('LE BON TIMING', '3 MANCHES', mallow({ taille: 110, expression: 'yeuxFermes' }), [
+    ['1', 'Un chrono démarre après « 3, 2, 1, partez ! »… mais il est invisible.'],
+    ['2', 'Compte dans ta tête et appuie sur STOP au temps demandé : 5, 7 puis 10 s.'],
+    ['★', 'Le plus petit écart sur les 3 manches gagne.'],
+  ]),
 
   piloter(ctx, etat) {
     if (etat.phase === 'intro' && ctx.maintenant >= (etat.fin ?? 0)) return { etat: nouvelleManche(ctx, etat, 0) };

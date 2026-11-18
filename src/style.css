@@ -607,3 +607,7 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .ligne-saison .cuisson.c3, .ligne-saison .cuisson.c4 { color: var(--orange); }
 .ligne-saison .total { font-family: var(--titre); font-weight: 800; }
 .ligne-saison .total small { font-size: 11px; color: var(--texte-3); }
+
+/* Règles avant chaque jeu */
+.regles-jeu { display: grid; gap: 12px; }
+.accroche-jeu { margin: 0; font-family: var(--titre); font-weight: 800; font-size: 20px; line-height: 1.2; text-wrap: balance; }

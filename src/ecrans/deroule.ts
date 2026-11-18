@@ -56,6 +56,38 @@ export function ecranChoixJeu(): string {
     ${attenteDes(uids(), S.joueurs, (u) => ont.includes(u) || (u === S.uid && !!monVote))}`;
 }
 
+// ——— Règles du jeu (avant chaque jeu) ———
+
+export function ecranRegles(): string {
+  const d = S.deroule!;
+  const jeu = jeuParId(d.jeuEnCours);
+  if (!jeu) {
+    return `<h2>Ton appli n’est pas à jour</h2>
+      <p class="aide gauche">Ce jeu vient d’être ajouté et ton téléphone a encore l’ancienne version. Mets-la à jour : tu reviens dans la partie juste après, avec tes missions.</p>
+      <button class="bouton jaune" data-action="majAppli">Mettre à jour</button>`;
+  }
+  const etape = `pret-${d.numeroJeu}`;
+  const pret = S.maReponse?.etape === etape;
+  const ont = S.attente?.etape === etape ? S.attente.uids ?? [] : [];
+  const regles = jeu.regles
+    ? jeu.regles({ uids: uids() })
+    : `<div class="regles-jeu">
+        <p class="accroche-jeu">${esc(jeu.accroche)}</p>
+        <div class="regle-arene"><b>?</b><span>${esc(jeu.explication.comment)}</span></div>
+        <div class="regle-arene"><b>★</b><span>${esc(jeu.explication.gagner)}</span></div>
+        ${jeu.explication.note ? `<div class="regle-arene"><b>!</b><span>${esc(jeu.explication.note)}</span></div>` : ''}
+      </div>`;
+  return `<div class="entete-jeu" style="--c:${jeu.couleur}"><span>Jeu ${d.numeroJeu}/${S.infos!.duree} · les règles</span><strong>${esc(jeu.nom)}</strong></div>
+    ${regles}
+    <div class="pile bas">
+      ${pret
+        ? `<p class="attente">Prêt ! On attend les autres…</p>`
+        : `<button class="bouton vert" data-action="pret">Je suis prêt</button>`}
+      ${attenteDes(uids(), S.joueurs, (u) => ont.includes(u) || (u === S.uid && pret))}
+      ${estHote() ? `<button class="bouton discret" data-action="hote" data-valeur="forcer">Lancer sans attendre</button>` : ''}
+    </div>`;
+}
+
 // ——— Mini-jeu ———
 
 export function vueJeu(): VueJeu<never> {

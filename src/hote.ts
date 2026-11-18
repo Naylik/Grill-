@@ -51,6 +51,7 @@ function etapeAttendue(d: Deroule): string | null {
     case 'miPartie': return 'mission2';
     case 'detective': return 'detective';
     case 'choixJeu': return d.propositions ? `choix-${d.numeroJeu}` : null;
+    case 'regles': return `pret-${d.numeroJeu}`;
     case 'jeu': return (S.jeu as { etape?: string } | null)?.etape ?? null;
     default: return null;
   }
@@ -81,6 +82,14 @@ function resultatVoteJeu(d: Deroule): string {
   const max = Math.max(0, ...Object.values(votes));
   const enTete = d.propositions!.filter((id) => (votes[id] ?? 0) === max);
   return auHasard(enTete);
+}
+
+/** Avant chaque jeu : l'écran des règles, le temps que tout le monde lise et appuie sur « Je suis prêt ». */
+function entrerRegles(id: string): Ecritures {
+  return {
+    'deroule/phase': 'regles', 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null,
+    'reponses': null, 'attente': null,
+  };
 }
 
 function demarrerJeu(id: string): Ecritures {
@@ -268,9 +277,12 @@ function calculer(): Ecritures | null {
       break;
     case 'choixJeu': {
       const fini = now >= (d.finChrono ?? 0) || (d.propositions && tousPrets(`choix-${d.numeroJeu}`));
-      if (fini) e = demarrerJeu(d.roue?.gagnant ?? (d.propositions?.length ? resultatVoteJeu(d) : JEUX[0].id));
+      if (fini) e = entrerRegles(d.roue?.gagnant ?? (d.propositions?.length ? resultatVoteJeu(d) : JEUX[0].id));
       break;
     }
+    case 'regles':
+      if (d.jeuEnCours && tousPrets(`pret-${d.numeroJeu}`)) e = demarrerJeu(d.jeuEnCours);
+      break;
     case 'jeu': {
       const jeu = jeuParId(d.jeuEnCours);
       if (jeu && S.jeu && (S.jeu as { jeuId?: string }).jeuId === jeu.id) {
@@ -348,6 +360,8 @@ export async function commandeHote(valeur: string): Promise<void> {
       deroule: { phase: 'salon', numeroJeu: 0 }, jeu: null, scores: null, reponses: null, compteurs: null, tirage: null,
       revelation: null, votes: null, paris: null, motsImposteur: null, attente: null, prive: null, accusations: null, vengeance: null,
     };
+  } else if (valeur === 'forcer' && d.phase === 'regles' && d.jeuEnCours) {
+    e = demarrerJeu(d.jeuEnCours);
   } else if (valeur === 'forcer' && ['missions', 'miPartie', 'detective'].includes(d.phase)) {
     // L'hôte peut avancer sans attendre un joueur absent ou trop lent.
     e = d.phase === 'detective' ? entrerRevelation() : entrerChoixJeu(d.phase === 'missions' ? 1 : d.numeroJeu + 1);

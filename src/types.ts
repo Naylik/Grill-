@@ -10,6 +10,7 @@ export type Phase =
   | 'salon'
   | 'missions' // choix de la 1re mission
   | 'choixJeu' // roue ou vote
+  | 'regles' // règles du jeu tiré : chacun appuie sur « Je suis prêt »
   | 'jeu' // un mini-jeu en cours
   | 'classement' // classement provisoire entre deux jeux
   | 'miPartie' // choix de la 2e mission

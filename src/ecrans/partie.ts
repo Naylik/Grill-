@@ -6,6 +6,7 @@ import { sonActif } from '../son';
 import { ecranChoixMission, ongletMissions } from './missions';
 import { coucheGrille } from './accusation';
 import { fenetreVengeance } from './missions';
+import { ecranRegles } from './deroule';
 import { ecranChoixJeu, ecranClassement, ecranDetective, ecranFin, ecranJeu, ecranRevelation } from './deroule';
 
 function bandeau(): string {
@@ -32,6 +33,7 @@ function contenuPartie(): string {
     case 'missions': return ecranChoixMission(1);
     case 'miPartie': return ecranChoixMission(2);
     case 'choixJeu': return ecranChoixJeu();
+    case 'regles': return ecranRegles();
     case 'jeu': return ecranJeu();
     case 'classement': return ecranClassement();
     case 'detective': return ecranDetective();

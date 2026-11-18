@@ -235,6 +235,14 @@ action('choisirMission', async (el) => {
   }
 });
 
+action('pret', async (el) => {
+  if (S.deroule?.phase !== 'regles') return;
+  (el as HTMLButtonElement).disabled = true;
+  vibrer(40);
+  sons.ding();
+  await repondre(`pret-${S.deroule.numeroJeu}`);
+});
+
 action('voterJeu', (el) => {
   sons.ding();
   return repondre(`choix-${S.deroule!.numeroJeu}`, { jeu: el.dataset.valeur });

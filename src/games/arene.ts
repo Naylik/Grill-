@@ -16,7 +16,7 @@ export function introArene(titre: string, sousTitre: string, illustration: strin
     <div class="hud-arene"><span>${esc(titre)}</span><span>${esc(sousTitre)}</span></div>
     <div class="illustration flotte">${illustration}</div>
     ${regles.map(([n, t]) => `<div class="regle-arene"><b>${esc(n)}</b><span>${esc(t)}</span></div>`).join('')}
-    <div class="debut-arene"><span>Ça commence dans</span>${chrono(fin)}</div>
+    ${fin ? `<div class="debut-arene"><span>Ça commence dans</span>${chrono(fin)}</div>` : ''}
   </div>`;
 }
 

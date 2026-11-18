@@ -88,7 +88,7 @@ export const mancheAction = (ctx: Contexte): boolean =>
 /** Le bouton GRILLÉ ! est-il proposé à ce joueur maintenant ? */
 export function peutAccuser(uid: string, ctx: Contexte, accs: Accusations | null | undefined, nbJoueurs: number): boolean {
   if (nbJoueurs < 2 || ctx.numeroJeu < 1) return false;
-  if (!['choixJeu', 'jeu', 'classement', 'miPartie'].includes(ctx.phase)) return false;
+  if (!['choixJeu', 'regles', 'jeu', 'classement', 'miPartie'].includes(ctx.phase)) return false;
   if (mancheAction(ctx)) return false;
   if (accusationEnCours(accs)) return false;
   return !accs?.[ctx.numeroJeu]?.[uid];

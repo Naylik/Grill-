@@ -88,6 +88,8 @@ export interface MiniJeu<E extends EtatDeBase = EtatDeBase> {
   /** Bouton de l'hôte dans le jeu (« Question suivante »…). */
   commande?(ctx: ContexteHote, etat: E, valeur: string): Avancee<E> | null;
   ecran(vue: VueJeu<E>): string;
+  /** Écran de règles (avant le jeu, chacun appuie sur « Je suis prêt »). Par défaut : l'explication du jeu. */
+  regles?(vue: { uids: string[] }): string;
   /** Actions des boutons du jeu (data-action="jeu" data-geste="…"). */
   gestes?: Record<string, (el: HTMLElement, outils: OutilsJoueur, vue: VueJeu<E>) => Promise<void> | void>;
 }

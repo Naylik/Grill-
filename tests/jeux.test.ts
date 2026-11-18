@@ -99,7 +99,7 @@ describe('Réflexe Mallow et Le bon timing', async () => {
     expect(ecartCompte(undefined, 5)).toBe(5000);
     expect(formaterSecondes(4870)).toBe('4,87 s');
   });
-  it('déroulé complet : intro, manches, piste, bilan, puis points de place', async () => {
+  it('déroulé complet : manches (les règles sont lues avant), piste, bilan, puis points de place', async () => {
     const { reflexe } = await import('../src/games/reflexe');
     const { timing } = await import('../src/games/timing');
     const uids = ['a', 'b', 'c'];
@@ -109,7 +109,7 @@ describe('Réflexe Mallow et Le bon timing', async () => {
       const ctx = () => ({ joueurs, uids, connectes: uids, maintenant: t, numeroJeu: 1, reponses: {} as Record<string, never>, compteurs: {}, totaux: {}, prive: {}, hasard: () => 0.5 });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let etat: any = jeu.demarrer(ctx() as never).etat;
-      expect(etat.phase).toBe('intro');
+      expect(['attente', 'chrono']).toContain(etat.phase); // directement la 1re manche
       const phases: string[] = [];
       for (let i = 0; i < 40; i++) {
         t += 20000;
@@ -139,7 +139,9 @@ describe('Réflexe Mallow et Le bon timing', async () => {
     let prive: Record<string, unknown> = {};
     const ctx = (reponses: Record<string, unknown> = {}) => ({ joueurs, uids, connectes: uids, maintenant: t, numeroJeu: 3, reponses: reponses as never, compteurs: {}, totaux: {}, prive, hasard: () => 0.3 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let etat: any = patate.demarrer(ctx() as never).etat;
+    const debut = patate.demarrer(ctx() as never);
+    let etat: any = debut.etat;
+    prive = { patate: (debut.ecritures as Record<string, unknown>)['prive/patate'] };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const avancer = (reponses = {}): any => {
       const av = patate.piloter(ctx(reponses) as never, etat);
@@ -147,9 +149,7 @@ describe('Réflexe Mallow et Le bon timing', async () => {
       if (av && !av.fin) etat = av.etat;
       return av;
     };
-    t = 8000;
-    avancer();
-    expect(etat.phase).toBe('jeu');
+    expect(etat.phase).toBe('jeu'); // directement le premier colis
     const explosion = (prive.patate as { explosion: number }).explosion;
     expect(explosion - etat.depart).toBeGreaterThanOrEqual(15000);
     expect(explosion - etat.depart).toBeLessThanOrEqual(60000);
