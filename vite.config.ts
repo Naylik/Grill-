@@ -5,6 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa';
 // base './' : le site marche quel que soit le nom du dépôt GitHub Pages.
 export default defineConfig({
   base: './',
+  // Version de l'appli = heure de construction : sert à repérer un téléphone resté sur une ancienne version.
+  define: { __VERSION__: JSON.stringify(Date.now()) },
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',

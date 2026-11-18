@@ -33,6 +33,8 @@ export interface Joueur {
   couleur: string;
   rejointLe: number;
   connecte: boolean;
+  /** Version de l'appli sur ce téléphone (heure de construction). */
+  version?: number;
 }
 
 export interface Deroule {

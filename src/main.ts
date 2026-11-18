@@ -17,6 +17,7 @@ import { localJeu, vueJeu } from './ecrans/deroule';
 import { action, afficher, brouillons, installer, vibrer } from './ui';
 import { garderEcranAllume } from './veille';
 import { installerGlisser } from './glisser';
+import { mettreAJour, retenirEnregistrement } from './version';
 import { esc, normaliserCode, nettoyerPrenom } from './outils';
 import { copier, imagePodium, partager } from './partage';
 import { totalFinal } from './score';
@@ -310,6 +311,11 @@ action('vengeance', async (el) => {
   await repondre('mission1');
 });
 
+action('majAppli', (el) => {
+  (el as HTMLButtonElement).disabled = true;
+  void mettreAJour();
+});
+
 action('vuVengeance', (el) => {
   vengeancesVues.add(el.dataset.valeur!);
   demanderAffichage();
@@ -582,6 +588,7 @@ if (!configManquante) {
 registerSW({
   immediate: true,
   onRegisteredSW(_url, enregistrement) {
+    retenirEnregistrement(enregistrement);
     if (!enregistrement) return;
     const verifier = () => void enregistrement.update().catch(() => undefined);
     setInterval(verifier, 60 * 60 * 1000);

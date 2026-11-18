@@ -76,7 +76,13 @@ export function vueJeu(): VueJeu<never> {
 
 export function ecranJeu(): string {
   const jeu = jeuParId(S.deroule!.jeuEnCours);
-  if (!jeu || !S.jeu || (S.jeu as { jeuId?: string }).jeuId !== jeu.id) return `<p class="attente">Chargement du jeu…</p>`;
+  if (!jeu) {
+    // Jeu inconnu : ce téléphone a une ancienne version de l'appli.
+    return `<h2>Ton appli n’est pas à jour</h2>
+      <p class="aide gauche">Ce jeu vient d’être ajouté et ton téléphone a encore l’ancienne version. Mets-la à jour : tu reviens dans la partie juste après, avec tes missions.</p>
+      <button class="bouton jaune" data-action="majAppli">Mettre à jour</button>`;
+  }
+  if (!S.jeu || (S.jeu as { jeuId?: string }).jeuId !== jeu.id) return `<p class="attente">Chargement du jeu…</p>`;
   return `<div class="entete-jeu" style="--c:${jeu.couleur}"><span>Jeu ${S.deroule!.numeroJeu}/${S.infos!.duree}</span><strong>${esc(jeu.nom)}</strong></div>${jeu.ecran(vueJeu())}`;
 }
 

@@ -126,3 +126,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   réveil, qui tremble de plus en plus et dont le couvercle se bombe à chaque passe (la tension monte sans révéler
   le moment de l'explosion). Explosion « KABOOM » : le colis gonfle, flash blanc, l'écran tremble, le carton vole,
   le réveil part en l'air. Pas de carte à la fin, juste « X est éliminé ». Identifiant interne inchangé (`patate`).
+- 18/11/2026 · Correctif « bloqué sur Chargement du jeu » : un téléphone resté sur une ancienne version ne connaissait
+  pas Colis piégé. Désormais chaque téléphone publie sa version (`joueurs/{uid}/version`, heure de construction) et se
+  met à jour tout seul si un autre joueur a plus récent (une fois par version). Si un jeu reste inconnu, l'écran
+  affiche « Ton appli n'est pas à jour » avec un bouton « Mettre à jour » (la partie reprend après).

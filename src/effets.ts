@@ -10,6 +10,7 @@ import { majoriteOui, missionTrouvee } from './score';
 import { sons } from './son';
 import { confettis } from './confettis';
 import { accusationEnCours } from './accusations';
+import { VERSION, verifierVersion } from './version';
 
 export function repondre(etape: string, valeurs: Record<string, unknown> = {}): Promise<void> {
   return set(ref(db, `salons/${S.code}/reponses/${S.uid}`), { ...valeurs, etape });
@@ -28,6 +29,9 @@ export function effetsJoueur(): void {
   const d = S.deroule;
   const code = S.code;
   if (!code || !d || !S.joueurs[S.uid]) return;
+  // Version de l'appli : je publie la mienne, et je me mets à jour si quelqu'un a plus récent.
+  if (VERSION && S.joueurs[S.uid].version !== VERSION) une('version', () => set(ref(db, `salons/${code}/joueurs/${S.uid}/version`), VERSION));
+  verifierVersion(Object.values(S.joueurs).map((j) => j.version));
   const prets = charges.has('secrets') && charges.has('maReponse');
   const { secrets } = S;
 
