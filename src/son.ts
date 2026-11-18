@@ -25,8 +25,30 @@ export function basculerSon(): boolean {
   return actif;
 }
 
+/** Vidéo « Grillé ! » : pendant l'enregistrement, les sons partent aussi dans la vidéo (même son coupé). */
+let sortieVideo: MediaStreamAudioDestinationNode | null = null;
+
+export function ouvrirSortieVideo(): MediaStream | null {
+  try {
+    ctx ??= new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    if (ctx.state === 'suspended') void ctx.resume();
+    sortieVideo = ctx.createMediaStreamDestination();
+    return sortieVideo.stream;
+  } catch {
+    return null;
+  }
+}
+export function fermerSortieVideo(): void {
+  sortieVideo = null;
+}
+/** Vers le haut-parleur (si le son est actif) et vers la vidéo (si on enregistre). */
+function brancher(c: AudioContext, n: AudioNode): void {
+  if (actif) n.connect(c.destination);
+  if (sortieVideo) n.connect(sortieVideo);
+}
+
 function audio(): AudioContext | null {
-  if (!actif) return null;
+  if (!actif && !sortieVideo) return null;
   try {
     ctx ??= new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     if (ctx.state === 'suspended') void ctx.resume();
@@ -65,7 +87,7 @@ function note(f: number, debut: number, duree: number, type: OscillatorType = 's
   g.gain.setValueAtTime(0.0001, t);
   g.gain.exponentialRampToValueAtTime(volume, t + 0.01);
   g.gain.exponentialRampToValueAtTime(0.0001, t + duree);
-  o.connect(g).connect(c.destination);
+  brancher(c, o.connect(g));
   o.start(t);
   o.stop(t + duree + 0.05);
 }
@@ -87,7 +109,7 @@ function bruit(debut: number, duree: number, de: number, vers: number, volume = 
   g.gain.setValueAtTime(0.0001, t);
   g.gain.exponentialRampToValueAtTime(volume, t + 0.05);
   g.gain.exponentialRampToValueAtTime(0.0001, t + duree * 0.95);
-  s.connect(f).connect(g).connect(c.destination);
+  brancher(c, s.connect(f).connect(g));
   s.start(t);
 }
 

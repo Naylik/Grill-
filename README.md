@@ -221,3 +221,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 18/11/2026 · « Dernière chance ! » après chaque jeu (25 s) : un écran rappelle à tout le monde qu'on peut appuyer
   sur GRILLÉ ! (mission flash du jeu qui vient de finir, ou grosse mission) avant la révélation des missions flash.
   « Rien à signaler » pour passer ; on attend la fin d'une accusation en cours. Mission flash grillée : vol de 2 pts.
+- 18/11/2026 · Vidéos « Grillé ! » à partager (maquettes validées par Kilyan) : récap de la soirée (≈ 22 s, écran de
+  fin : podium avec Mallow grillés, 3 grosses missions révélées avec tampon, titres) et moment GRILLÉ ! (≈ 8 s, au
+  classement et à la fin, pour chaque accusation réussie). Fabriquées sur le téléphone : toile dessinée image par image
+  et filmée (MediaRecorder) avec les bruitages de l'appli (pschhh, ding, mèche, boum, tampon), mp4 de préférence,
+  puis « Partager » (WhatsApp, Instagram…) ou téléchargement. Pas de serveur, pas de vraie photo.

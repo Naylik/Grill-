@@ -13,6 +13,7 @@ import { brouillons } from '../ui';
 import { attenteDes, bulle, chrono, pastille } from './commun';
 import { carteMission } from './missions';
 import { blocFlash } from './flash';
+import { boutonsVideo } from './video';
 import { mallow, sequenceGrille } from '../mallow';
 import { missionsGrillees, PENALITE_MENSONGE } from '../accusations';
 
@@ -142,7 +143,7 @@ export function ecranClassement(): string {
       <span class="rang">${i + 1}</span>${pastille(S.joueurs[u], 30)}<strong>${nom(u)}${place}</strong>
       <span class="gain">${gagne > 0 ? `+${gagne}` : gagne < 0 ? gagne : ''}</span><span class="total">${totalProvisoire(S.scores[u])}</span></div>`;
   }).join('');
-  const suivant = d.numeroJeu >= total ? 'Passer au pari détective' : d.numeroJeu === total / 2 ? 'Mi-partie : nouvelles missions' : `Jeu suivant (${d.numeroJeu + 1}/${total})`;
+  const suivant = d.numeroJeu >= total ? 'Passer au pari détective' : `Jeu suivant (${d.numeroJeu + 1}/${total})`;
   return `<p class="petit centre-texte">${jeu ? `Fin de « ${esc(jeu.nom)} »` : ''} · ${d.numeroJeu}/${total}</p>
     <h2>Classement provisoire</h2>
     ${d.dernierJeu?.resume ? `<p class="aide gauche">${esc(d.dernierJeu.resume)}</p>` : ''}
@@ -150,6 +151,7 @@ export function ecranClassement(): string {
     <p class="aide">Sans les points de mission : ils tombent à la fin.</p>
     ${d.vanne ? bulle(esc(d.vanne)) : ''}
     <button class="rappel" data-action="onglet" data-valeur="missions">${rappel.texte}</button>
+    ${boutonsVideo({ numeroJeu: d.numeroJeu })}
     <div class="pile bas">${estHote() ? boutonHote('suivant', suivant) : '<p class="attente">Pause ! L’hôte lance la suite quand tout le monde est prêt.</p>'}</div>`;
 }
 
@@ -308,7 +310,7 @@ export function ecranFin(): string {
     const t = (b?.titres ?? []).filter((x) => x.uid === u);
     return `<div class="boite detail-joueur">
       <div class="ligne">${pastille(S.joueurs[u], 30)}<strong>${nom(u)}</strong><span class="total">${totalFinal(s)} pts</span></div>
-      <div class="chiffres"><span>Mini-jeux <b>${s.jeux + s.parieur}</b></span><span>Missions <b>${s.missions}</b></span><span>Détective <b>${s.detective > 0 ? '+' : ''}${s.detective}</b></span>${s.grille ? `<span>Grillé ! <b>${s.grille > 0 ? '+' : ''}${s.grille}</b></span>` : ''}</div>
+      <div class="chiffres"><span>Mini-jeux <b>${s.jeux + s.parieur}</b></span><span>Missions <b>${s.missions}</b></span>${s.flash ? `<span>Flash <b>+${s.flash}</b></span>` : ''}<span>Détective <b>${s.detective > 0 ? '+' : ''}${s.detective}</b></span>${s.grille ? `<span>Grillé ! <b>${s.grille > 0 ? '+' : ''}${s.grille}</b></span>` : ''}</div>
       ${t.length ? `<div class="titres">${t.map((x) => `<span class="titre-fun" title="${esc(x.pourquoi)}">${esc(x.titre)}</span>`).join('')}</div>` : ''}
     </div>`;
   }).join('');
@@ -319,6 +321,7 @@ export function ecranFin(): string {
     ${bulle(`Bravo ${nom(vainqueur)}. Les autres : on se refait ça ?`)}
     ${details}
     ${classementDeSaison()}
+    ${boutonsVideo({ recap: true })}
     <div class="pile bas"><button class="bouton rose" data-action="partagerPodium">Partager le podium</button>
       ${estHote() ? boutonHote('rejouer', 'Rejouer') : '<p class="attente">L’hôte peut relancer une partie.</p>'}
       <button class="bouton discret" data-action="quitter">Quitter</button></div>`;

@@ -10,6 +10,7 @@ import { commandeHote, commandeJeu, piloter } from './hote';
 import { effetsJoueur, momentsForts, repondre } from './effets';
 import { basculerSon, debloquer, sons } from './son';
 import { choisirMission, prendreMissionVengeance } from './missions';
+import { ouvrirStudio } from './ecrans/video';
 import { vengeancesVues } from './ecrans/missions';
 import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from './saison';
 import { jeuParId } from './games';
@@ -251,6 +252,9 @@ action('outil', (el) => {
   demanderAffichage();
 });
 
+action('video', (el) => {
+  void ouvrirStudio(el.dataset.valeur!);
+});
 action('passerGrillage', async () => {
   const f = S.deroule?.flash;
   if (S.deroule?.phase !== 'flash' || f?.etape !== 'grillage') return;
