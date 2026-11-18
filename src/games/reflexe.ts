@@ -9,7 +9,7 @@ import { pointsDePlace } from '../score';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 import { classementBarres, hud, introArene, noteReflexe, piste } from './arene';
 
-const NB_MANCHES: [number, number, number] = [5, 8, 10]; // Courte, Normale, Longue
+const NB_MANCHES: [number, number, number] = [3, 4, 5]; // Courte, Normale, Longue (au-delà, c'est épuisant)
 const PENALITE = 1000; // faux départ
 const ABSENT = 1500; // pas de réponse
 const DUREE_INTRO = 7000;
@@ -55,7 +55,7 @@ export const reflexe: MiniJeu<Etat> = {
   accroche: 'Touche dès que Mallow prend feu. Pas avant !',
   explication: {
     comment: 'Gardez le doigt prêt : à un moment, Mallow prend feu sur tous les téléphones en même temps. Touche ton écran le plus vite possible. Attention : parfois Mallow éternue avant, ce n’est pas du feu ! Toucher trop tôt, c’est un faux départ.',
-    gagner: 'Le plus rapide sur l’ensemble des manches gagne (5 à 10 selon le format). Un faux départ compte 1 seconde de pénalité.',
+    gagner: 'Le plus rapide sur l’ensemble des manches gagne (3 à 5 selon le format). Un faux départ compte 1 seconde de pénalité.',
   },
   icone: '<path d="M12 2c1.5 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-5 3-6 .3 2 1.3 3 2.3 3.3C10.6 7.3 11 4.6 12 2z" fill="currentColor"/>',
   couleur: '#FF8A3D',

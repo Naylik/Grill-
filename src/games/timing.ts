@@ -9,7 +9,7 @@ import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat }
 import { classementBarres, hud, introArene, noteTiming, piste } from './arene';
 
 const CIBLES = [5, 7, 10, 6, 12, 15]; // secondes, une par manche
-const NB_MANCHES: [number, number, number] = [3, 5, 6]; // Courte, Normale, Longue
+const NB_MANCHES: [number, number, number] = [2, 3, 4]; // Courte, Normale, Longue (au-delà, c'est épuisant)
 const DECOMPTE = 3500; // « Prêts ? 3, 2, 1, partez ! »
 const DUREE_INTRO = 7000;
 const DUREE_PISTE = 5000;
@@ -47,7 +47,7 @@ export const timing: MiniJeu<Etat> = {
   accroche: 'Un chrono invisible : arrête-le pile au bon moment.',
   explication: {
     comment: 'Après « 3, 2, 1, partez ! », un chrono démarre… mais il est invisible. Compte dans ta tête et appuie sur STOP quand tu penses que le temps demandé est écoulé (5, 7, 10 secondes…).',
-    gagner: 'Le plus petit écart sur l’ensemble des manches gagne (3 à 6 selon le format). Bonus de fierté si tu tombes pile au centième.',
+    gagner: 'Le plus petit écart sur l’ensemble des manches gagne (2 à 4 selon le format). Bonus de fierté si tu tombes pile au centième.',
   },
   icone: '<circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M12 9v4l3 2M9 2h6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>',
   couleur: '#5CD8FF',

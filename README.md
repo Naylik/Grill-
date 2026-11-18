@@ -138,3 +138,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Combien ont dit oui ? 4 / 6 / 8 questions, Juste Prix 4 / 6 / 8 manches, Imposteur 2 / 3 / 4, Réflexe 5 / 8 / 10,
   Le bon timing 3 / 5 / 6 (Courte / Normale / Longue). Le Parieur (un défi par joueur) et Colis piégé (élimination)
   durent déjà selon le nombre de joueurs. L'écran des règles affiche « Ce soir : 6 questions ».
+- 18/11/2026 · Jeux de réflexes raccourcis (trop répétitifs et épuisants) : Réflexe Mallow 3 / 4 / 5 manches,
+  Le bon timing 2 / 3 / 4 (Courte / Normale / Longue). Colis piégé se joue en 2 tours : élimination jusqu'au dernier
+  survivant, écran de fin de tour, puis tout le monde repart en vie ; le classement additionne les places des 2 tours.

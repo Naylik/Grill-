@@ -31,7 +31,12 @@ interface Etat extends EtatDeBase {
   consigne: string;
   depart: number; // la patate peut être lancée à partir de cet instant
   explose?: string; // qui a explosé (phase boum)
+  tour?: number; // 0 puis 1 : le colis se joue en 2 tours, tout le monde repart en vie au 2e
+  cumul?: Record<string, number>; // classement interne cumulé des tours (plus grand = mieux)
+  places?: Record<string, number[]>; // place de chacun à chaque tour (1 = survivant)
 }
+
+const NB_TOURS = 2;
 
 const etapeDe = (n: number, m: number, p: number) => `patate-${n}-${m}-${p}`;
 const consigne = (hasard: () => number) =>
@@ -108,7 +113,7 @@ export const patate: MiniJeu<Etat> = {
   accroche: 'Dis un mot, renvoie le colis. Il va sauter…',
   explication: {
     comment: 'Le colis piégé arrive sur le téléphone de quelqu’un avec une consigne (« Un animal en B »). Il dit un mot à voix haute, puis renvoie le colis au joueur de son choix en le faisant glisser. Le colis tremble de plus en plus. Il saute à un moment caché, entre 15 secondes et 1 minute : celui qui l’a est éliminé.',
-    gagner: 'Le dernier survivant gagne. Les autres sont classés dans l’ordre d’élimination.',
+    gagner: 'On joue 2 tours : à chaque tour, on élimine jusqu’au dernier survivant, puis tout le monde repart en vie. Le classement additionne les places des 2 tours.',
     note: 'Le groupe juge le mot dit à voix haute : pas de mot, pas de lancer !',
   },
   icone: '<path d="M3 8h18v12H3z" fill="currentColor"/><path d="M2 5h20v4H2z" fill="currentColor" opacity=".7"/><path d="M10 5h4v15h-4z" fill="#fff" opacity=".45"/>',
@@ -124,12 +129,11 @@ export const patate: MiniJeu<Etat> = {
     return nouvelleManche(ctx, base, 0);
   },
 
-  regles: (v) => {
-    const total = Math.max(1, v.uids.length - 1);
-    return introArene('COLIS PIÉGÉ', `${total} ÉLIMINATION${total > 1 ? 'S' : ''}`, dessinColis(150), [
+  regles: () => {
+    return introArene('COLIS PIÉGÉ', `${NB_TOURS} TOURS`, dessinColis(150), [
       ['1', 'Quand le colis arrive chez toi, dis à voix haute un mot qui répond à la consigne.'],
       ['2', 'Puis fais-le glisser vers un joueur pour le lui renvoyer.'],
-      ['!', 'Il saute entre 15 s et 1 min. Celui qui l’a est éliminé.'],
+      ['!', 'Il saute entre 15 s et 1 min. Celui qui l’a est éliminé. 2 tours : tout le monde repart en vie au 2e.'],
     ]);
   },
 
@@ -157,14 +161,23 @@ export const patate: MiniJeu<Etat> = {
     }
     if (etat.phase === 'boum' && now >= (etat.fin ?? 0)) {
       if (etat.vivants.length >= 2) return nouvelleManche(ctx, etat, etat.manche + 1);
-      return { etat: { ...etat, phase: 'bilan', fin: now + DUREE_BILAN } };
+      // Fin du tour : on note la place de chacun (1 = survivant) et on cumule.
+      const scoreTour = classementPatate(etat.elimines, etat.vivants);
+      const ordre = [...etat.vivants, ...[...etat.elimines].reverse()];
+      const cumul = Object.fromEntries(ctx.uids.map((u) => [u, (etat.cumul?.[u] ?? 0) + (scoreTour[u] ?? 0)]));
+      const places = Object.fromEntries(ctx.uids.map((u) => [u, [...(etat.places?.[u] ?? []), ordre.indexOf(u) + 1 || ordre.length]]));
+      return { etat: { ...etat, phase: 'bilan', cumul, places, fin: now + DUREE_BILAN } };
     }
     if (etat.phase === 'bilan' && now >= (etat.fin ?? 0)) {
-      const gagnant = etat.vivants[0];
-      return {
-        etat,
-        fin: { points: pointsDePlace(classementPatate(etat.elimines, etat.vivants)), sorte: 'place', resume: gagnant ? `${ctx.joueurs[gagnant]?.prenom} survit au colis piégé.` : undefined },
-      };
+      const tour = etat.tour ?? 0;
+      if (tour + 1 < NB_TOURS) {
+        // 2e tour : tout le monde repart en vie.
+        return nouvelleManche(ctx, { ...etat, tour: tour + 1, vivants: [...ctx.uids], elimines: [], explose: undefined }, etat.manche + 1);
+      }
+      const cumul = etat.cumul ?? classementPatate(etat.elimines, etat.vivants);
+      const meilleur = Math.max(...Object.values(cumul));
+      const gagnants = Object.keys(cumul).filter((u) => cumul[u] === meilleur).map((u) => ctx.joueurs[u]?.prenom);
+      return { etat, fin: { points: pointsDePlace(cumul), sorte: 'place', resume: `${gagnants.join(' et ')} : le meilleur survivant des ${NB_TOURS} tours.` } };
     }
     return null;
   },
@@ -174,23 +187,38 @@ export const patate: MiniJeu<Etat> = {
     const total = Math.max(1, v.uids.length - 1);
     const nom = (u: string) => esc(v.joueurs[u]?.prenom ?? '?');
     if (e.phase === 'intro') {
-      return introArene('COLIS PIÉGÉ', `${total} ÉLIMINATION${total > 1 ? 'S' : ''}`, dessinColis(150), [
+      return introArene('COLIS PIÉGÉ', `${NB_TOURS} TOURS`, dessinColis(150), [
         ['1', 'Quand le colis arrive chez toi, dis à voix haute un mot qui répond à la consigne.'],
         ['2', 'Puis fais-le glisser vers un joueur pour le lui renvoyer.'],
-        ['!', 'Il saute entre 15 s et 1 min. Celui qui l’a est éliminé.'],
+        ['!', 'Il saute entre 15 s et 1 min. Celui qui l’a est éliminé. 2 tours : tout le monde repart en vie au 2e.'],
       ], e.fin);
     }
     const bandeJoueurs = `<div class="joueurs-arene">${v.uids.map((u) => {
       const elimine = e.elimines.includes(u);
       return `<div class="${u === v.uid ? 'moi' : ''} ${elimine ? 'elimine' : ''} ${u === e.porteur && e.phase === 'jeu' ? 'porteur' : ''}"><span class="pastille" style="--c:${v.joueurs[u].couleur};width:24px;height:24px"></span>${nom(u)}<em>${elimine ? 'éliminé' : u === e.porteur && e.phase === 'jeu' ? 'colis !' : 'en vie'}</em></div>`;
     }).join('')}</div>`;
-    const tete = hud('COLIS PIÉGÉ', e.elimines.length, total, e.phase === 'jeu');
+    const tete = hud(`COLIS PIÉGÉ · TOUR ${(e.tour ?? 0) + 1}/${NB_TOURS}`, e.elimines.length, total, e.phase === 'jeu');
 
     if (e.phase === 'bilan') {
-      const ordre = [...e.vivants, ...[...e.elimines].reverse()];
+      const tour = e.tour ?? 0;
+      const dernier = tour + 1 >= NB_TOURS;
+      const placeTexte = (p: number) => (p === 1 ? '1er' : `${p}e`);
+      if (!dernier) {
+        // Fin du 1er tour : qui a survécu, et on repart.
+        const ordre = [...e.vivants, ...[...e.elimines].reverse()];
+        return `${tete}
+          <div class="vainqueur-arene">${dessinColis(90)}<p><strong>${nom(ordre[0])}</strong> survit au tour ${tour + 1}</p></div>
+          <div class="pile">${classementBarres(ordre.map((u, i) => ({ joueur: v.joueurs[u], texte: i === 0 ? 'survivant' : placeTexte(i + 1), part: 1 - i / ordre.length, moi: u === v.uid })))}</div>
+          <p class="attente">Tour ${tour + 2} dans un instant : tout le monde repart en vie…</p>`;
+      }
+      // Fin du jeu : classement sur les ${NB_TOURS} tours.
+      const cumul = e.cumul ?? {};
+      const ordre = [...v.uids].sort((a, b) => (cumul[b] ?? 0) - (cumul[a] ?? 0));
+      const max = Math.max(1, ...Object.values(cumul));
       return `${tete}
-        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p><strong>${nom(ordre[0])}</strong> survit au colis piégé</p></div>
-        <div class="pile">${classementBarres(ordre.map((u, i) => ({ joueur: v.joueurs[u], texte: i === 0 ? 'survivant' : `${e.elimines.length - e.elimines.indexOf(u) + 1}e`, part: 1 - i / ordre.length, moi: u === v.uid })))}</div>`;
+        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p><strong>${nom(ordre[0])}</strong> survit le mieux au colis piégé</p></div>
+        <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: (e.places?.[u] ?? []).map(placeTexte).join(' · '), part: (cumul[u] ?? 0) / max, moi: u === v.uid })))}</div>
+        <p class="aide">Place à chaque tour. Le classement additionne les ${NB_TOURS} tours.</p>`;
     }
     if (e.phase === 'boum') {
       const moi = e.explose === v.uid;

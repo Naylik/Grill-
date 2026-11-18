@@ -163,14 +163,16 @@ describe('Réflexe Mallow et Le bon timing', async () => {
     expect(etat.porteur).toBe(vers);
     // Explosions successives jusqu'au dernier survivant.
     let fin;
-    for (let i = 0; i < 20 && !fin; i++) {
+    for (let i = 0; i < 40 && !fin; i++) {
       t += 61000;
       fin = avancer()?.fin;
     }
-    expect(etat.elimines).toHaveLength(3);
-    expect(etat.elimines[0]).toBe(vers); // la première explosion tombe chez celui qui tenait la patate
-    expect(fin.points[etat.vivants[0]]).toBe(5);
-    expect(fin.points[etat.elimines[0]]).toBe(1);
+    // 2 tours : chacun a une place par tour, et le classement additionne les deux.
+    expect(etat.tour).toBe(1);
+    for (const u of uids) expect(etat.places[u]).toHaveLength(2);
+    expect(etat.places[vers][0]).toBe(4); // au 1er tour, la première explosion tombe chez celui qui tenait le colis
+    const meilleur = uids.reduce((a, b) => (etat.cumul[a] >= etat.cumul[b] ? a : b));
+    expect(fin.points[meilleur]).toBe(5);
     expect(classementPatate(['x', 'y'], ['z'])).toEqual({ x: 0, y: 1, z: 3 });
   });
 
@@ -185,8 +187,8 @@ describe('Réflexe Mallow et Le bon timing', async () => {
     const e = (jeu: any, d: number) => jeu.demarrer(ctx(d)).etat;
     expect([4, 6, 8].map((d) => e(combien, d).questions.length)).toEqual([4, 6, 8]);
     expect([4, 6, 8].map((d) => e(justePrix, d).questions.length)).toEqual([4, 6, 8]);
-    expect([4, 6, 8].map((d) => e(reflexe, d).total)).toEqual([5, 8, 10]);
-    expect([4, 6, 8].map((d) => e(timing, d).total)).toEqual([3, 5, 6]);
+    expect([4, 6, 8].map((d) => e(reflexe, d).total)).toEqual([3, 4, 5]);
+    expect([4, 6, 8].map((d) => e(timing, d).total)).toEqual([2, 3, 4]);
     expect(combien.tours!(8)).toBe('8 questions');
   });
 
