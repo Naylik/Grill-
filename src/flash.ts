@@ -1,4 +1,4 @@
-// Missions flash : à chaque jeu, 1 joueur (2 à partir de 5 joueurs) reçoit en secret une petite mission liée à CE jeu.
+// Missions flash : à chaque jeu, 1 ou 2 joueurs (tirés au hasard) reçoivent en secret une petite mission liée à CE jeu.
 // L'hôte ne choisit pas les missions : il publie seulement une « graine » au début du jeu. Chaque téléphone en déduit
 // tout seul s'il est tiré au sort et quelle mission il reçoit, puis l'écrit dans ses secrets (lisibles par lui seul).
 // À la fin du jeu, les porteurs révèlent leur mission et le groupe vote : réussie = +3 pts.
@@ -26,7 +26,9 @@ export const VOL_FLASH = 2;
 /** Numéro de mission utilisé par le bouton GRILLÉ ! pour une mission flash (1 = la grosse mission). */
 export const NUMERO_FLASH = 3;
 
-export const nbPorteurs = (nbJoueurs: number): number => (nbJoueurs >= 5 ? 2 : 1);
+/** 1 ou 2 porteurs, au hasard à chaque jeu (2 plus souvent quand on est nombreux). */
+export const nbPorteurs = (nbJoueurs: number, hasard: () => number = Math.random): number =>
+  nbJoueurs < 3 ? 1 : hasard() < (nbJoueurs >= 5 ? 0.6 : 0.4) ? 2 : 1;
 
 /** Petit hachage stable (FNV-1a) : le même texte donne le même nombre sur tous les téléphones. */
 export function hacher(texte: string): number {

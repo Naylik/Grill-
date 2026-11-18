@@ -53,13 +53,13 @@ export function effetsJoueur(): void {
   }
   // Mission flash : au début du jeu, je regarde si je suis tiré au sort, et je tire ma mission (en secret).
   const t = d.flashTirage;
-  const jeuPret = (S.jeu as { jeuId?: string } | null)?.jeuId === d.jeuEnCours;
-  if (d.phase === 'jeu' && t && t.numero === d.numeroJeu && d.jeuEnCours && jeuPret && !secrets.flash?.[`j${t.numero}`]) {
+  if ((d.phase === 'regles' || d.phase === 'jeu') && t && t.numero === d.numeroJeu && d.jeuEnCours && !secrets.flash?.[`j${t.numero}`]) {
     const tous = Object.entries(S.joueurs).sort((a, b) => a[1].rejointLe - b[1].rejointLe).map(([u]) => u);
     const rang = porteursFlash(t.graine, tous, t.nb).indexOf(S.uid);
     if (rang >= 0) {
       // Jamais mon coéquipier comme cible (jeux d'équipe).
-      const equipes = ((S.jeu as { equipes?: string[][] }).equipes ?? []).filter(Boolean);
+      const jeuPret = (S.jeu as { jeuId?: string } | null)?.jeuId === d.jeuEnCours;
+      const equipes = jeuPret ? ((S.jeu as { equipes?: string[][] }).equipes ?? []).filter(Boolean) : [];
       const partenaires = equipes.find((e) => e.includes(S.uid)) ?? [];
       const cibles = tous.filter((u) => u !== S.uid && !partenaires.includes(u)).map((u) => ({ uid: u, prenom: S.joueurs[u].prenom }));
       const m = tirerFlash({ jeu: d.jeuEnCours, graine: t.graine, rang, dejaVus: memoireDuGroupe(), cibles });
@@ -156,8 +156,7 @@ export function momentsForts(): void {
       setTimeout(() => { sons.reussi(); if (moi) { confettis(80); vibrer([80, 40, 160]); } }, t.phase === 'revele' ? 900 : 0);
     });
   }
-  // Mission flash : je viens d'en recevoir une (vibration discrète), puis le verdict du groupe.
-  if (d.phase === 'jeu' && d.flashTirage && S.secrets.flash?.[`j${d.flashTirage.numero}`]) moment(`flash-recue-${d.flashTirage.numero}`, () => { vibrer([60, 60, 60, 60, 160]); sons.ding(); });
+  // Mission flash : le verdict du groupe (pas de vibration à la réception : ça trahirait le porteur).
   if (d.phase === 'flash' && d.flash?.etape === 'resultat') moment(`flash-res-${d.flash.numero}`, () => { if (d.flash?.resultats?.[S.uid]) { sons.reussi(); confettis(50); } else if (d.flash?.resultats && S.uid in d.flash.resultats) sons.rate(); else sons.ding(); });
   // Champ de mines : gemme (ding) ou KABOOM.
   if (d.phase === 'jeu' && d.jeuEnCours === 'mines' && S.jeu) {

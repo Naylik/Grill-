@@ -13,9 +13,11 @@ describe('missions flash', () => {
     for (const m of FLASH) expect(JEUX.some((j) => j.id === m.jeu), m.id).toBe(true);
   });
 
-  it('1 porteur jusqu’à 4 joueurs, 2 à partir de 5 ; même tirage sur tous les téléphones', () => {
-    expect(nbPorteurs(4)).toBe(1);
-    expect(nbPorteurs(5)).toBe(2);
+  it('1 ou 2 porteurs au hasard (dès 3 joueurs) ; même tirage sur tous les téléphones', () => {
+    expect(nbPorteurs(2, () => 0)).toBe(1);
+    expect(nbPorteurs(4, () => 0.1)).toBe(2);
+    expect(nbPorteurs(4, () => 0.9)).toBe(1);
+    expect(nbPorteurs(6, () => 0.5)).toBe(2);
     const uids = ['a', 'b', 'c', 'd', 'e'];
     const p = porteursFlash(42, uids, 2);
     expect(p).toHaveLength(2);

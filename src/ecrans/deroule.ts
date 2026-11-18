@@ -12,6 +12,7 @@ import { RAPPELS_MISSION } from '../narrateur';
 import { brouillons } from '../ui';
 import { attenteDes, bulle, chrono, pastille } from './commun';
 import { carteMission } from './missions';
+import { blocFlash } from './flash';
 import { mallow, sequenceGrille } from '../mallow';
 import { missionsGrillees, PENALITE_MENSONGE } from '../accusations';
 
@@ -81,6 +82,7 @@ export function ecranRegles(): string {
       </div>`;
   return `<div class="entete-jeu" style="--c:${jeu.couleur}"><span>Jeu ${d.numeroJeu}/${S.infos!.duree} · les règles</span><strong>${esc(jeu.nom)}</strong></div>
     ${regles}
+    ${blocFlash()}
     <div class="pile bas">
       ${pret
         ? `<p class="attente">Prêt ! On attend les autres…</p>`

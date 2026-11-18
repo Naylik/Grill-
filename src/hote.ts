@@ -94,6 +94,9 @@ function resultatVoteJeu(d: Deroule): string {
 function entrerRegles(id: string): Ecritures {
   return {
     'deroule/phase': 'regles', 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null,
+    // Missions flash : l'hôte publie seulement une graine ; chaque téléphone en déduit s'il est porteur, et laquelle.
+    // Tirage dès l'écran des règles : tout le monde y voit le même encart, porteur ou non.
+    'deroule/flashTirage': { numero: S.deroule?.numeroJeu ?? 0, graine: 1 + Math.floor(Math.random() * 2_000_000_000), nb: nbPorteurs(uids().length) }, 'deroule/flash': null,
     'reponses': null, 'attente': null,
   };
 }
@@ -101,11 +104,8 @@ function entrerRegles(id: string): Ecritures {
 function demarrerJeu(id: string): Ecritures {
   const jeu = jeuParId(id)!;
   const av = jeu.demarrer(contexte());
-  const numero = S.deroule?.numeroJeu ?? 0;
   return {
     'deroule/phase': 'jeu', 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null,
-    // Missions flash : l'hôte publie seulement une graine ; chaque téléphone en déduit s'il est porteur, et laquelle.
-    'deroule/flashTirage': { numero, graine: 1 + Math.floor(Math.random() * 2_000_000_000), nb: nbPorteurs(uids().length) }, 'deroule/flash': null,
     'reponses': null, 'attente': null,
     ...appliquer(av, id),
   };

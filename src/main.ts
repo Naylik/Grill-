@@ -11,7 +11,6 @@ import { effetsJoueur, momentsForts, repondre } from './effets';
 import { basculerSon, debloquer, sons } from './son';
 import { choisirMission, prendreMissionVengeance } from './missions';
 import { vengeancesVues } from './ecrans/missions';
-import { flashVues } from './ecrans/flash';
 import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from './saison';
 import { jeuParId } from './games';
 import { localJeu, vueJeu } from './ecrans/deroule';
@@ -341,10 +340,6 @@ action('majAppli', (el) => {
   void mettreAJour();
 });
 
-action('vuFlash', (el) => {
-  flashVues.add(el.dataset.valeur!);
-  demanderAffichage();
-});
 action('vuVengeance', (el) => {
   vengeancesVues.add(el.dataset.valeur!);
   demanderAffichage();

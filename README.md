@@ -205,3 +205,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   et laquelle (jamais la même pour deux porteurs, jamais son coéquipier comme cible). Après le jeu : révélation,
   vote du groupe, +3 pts si réussie. Grillée avant avec GRILLÉ ! = ratée et l'accuseur vole 2 pts. Titre « Éclair ».
   Aucune règle Firebase à republier pour ce changement.
+- 18/11/2026 · Missions flash plus discrètes : plus de vibration ni de son à la réception (ça trahissait le porteur).
+  Le tirage se fait dès l'écran des règles, où TOUT LE MONDE voit le même encart flouté « Mission flash » : le porteur
+  y lit sa mission, les autres « Pas de mission pour toi ». 1 ou 2 porteurs tirés au hasard à chaque jeu (dès 3 joueurs).

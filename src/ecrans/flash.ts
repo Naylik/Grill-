@@ -1,8 +1,7 @@
 // Missions flash : la fenêtre « MISSION FLASH » quand on en reçoit une, et l'étape de vote après chaque jeu.
 import { S, estHote } from '../etat';
 import { esc } from '../outils';
-import { POINTS_FLASH, VOL_FLASH } from '../flash';
-import { jeuParId } from '../games';
+import { POINTS_FLASH } from '../flash';
 import { chrono, pastille } from './commun';
 
 const nom = (u: string) => esc(S.joueurs[u]?.prenom ?? '?');
@@ -16,23 +15,15 @@ export function maFlashEnCours(): { numero: number; texte: string } | null {
   return m ? { numero: t.numero, texte: m.texte } : null;
 }
 
-/** Fenêtres déjà fermées sur ce téléphone (par jeu). */
-export const flashVues = new Set<string>();
-
-/** Fenêtre montrée une fois au porteur, par-dessus tout, quand il reçoit sa mission flash. */
-export function fenetreFlash(): string {
+/** Encart de l'écran des règles, identique pour tout le monde : flouté, on appuie longtemps pour lire.
+ *  Le porteur y lit sa mission ; les autres lisent qu'ils n'en ont pas. Personne ne peut savoir qui en a une. */
+export function blocFlash(): string {
+  const d = S.deroule;
+  if (!d?.flashTirage || d.flashTirage.numero !== d.numeroJeu) return '';
   const f = maFlashEnCours();
-  const cle = `${S.deroule?.partieId}-${f?.numero}`;
-  if (!f || flashVues.has(cle)) return '';
-  const jeu = jeuParId(S.deroule?.jeuEnCours);
-  return `<div class="proces moi flash-fenetre" role="alertdialog" aria-label="Mission flash"><div class="proces-carte">
-    <p class="proces-titre eclair">⚡ MISSION FLASH</p>
-    <p class="aide">Rien que pour ${jeu ? esc(jeu.nom) : 'ce jeu'}. Cache ton écran !</p>
-    <article class="mission flash"><div class="tags"><span class="tag eclair">Flash · +${POINTS_FLASH} pts</span></div>
-      <p class="texte-secret" data-appui>${esc(f.texte)}</p><p class="aide">Appuie longtemps pour lire</p></article>
-    <p class="aide gauche">Elle sera révélée à tous juste après le jeu, et le groupe votera. Si quelqu’un te grille avant, il te vole ${VOL_FLASH} pts.</p>
-    <button class="bouton jaune" data-action="vuFlash" data-valeur="${cle}">Compris</button>
-  </div></div>`;
+  const texte = f ? f.texte : 'Pas de mission flash pour toi ce coup-ci. Ouvre l’œil : quelqu’un en a peut-être une…';
+  return `<article class="mission flash bloc-flash"><div class="tags"><span class="tag eclair">⚡ Mission flash</span></div>
+    <p class="texte-secret" data-appui>${esc(texte)}</p><p class="aide">Cache ton écran et appuie longtemps pour lire</p></article>`;
 }
 
 /** Après chaque jeu : les missions flash révélées, le vote du groupe, puis le verdict. */
