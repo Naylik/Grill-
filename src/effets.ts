@@ -126,13 +126,18 @@ export function momentsForts(): void {
     const emoji = REACTIONS[Number(cle.split('-').pop())] ?? '😂';
     for (let i = 0; i < Math.min(5, n - avant); i++) setTimeout(() => envolerReaction(emoji), i * 120);
   }
-  // Télépathie : une équipe vient de se connecter (même mot).
+  // Télépathie : 3, 2, 1 (tic) puis CRIEZ ; une équipe qui se connecte (confettis pour elle).
   if (d.phase === 'jeu' && d.jeuEnCours === 'telepathie' && S.jeu) {
-    const t = S.jeu as { phase?: string; manche?: number; equipes?: string[][]; trouve?: Record<string, number> };
-    if (t.phase === 'revele') {
-      const ok = Object.entries(t.trouve ?? {}).filter(([, m]) => m === (t.manche ?? 0) + 1).map(([k]) => Number(k));
-      if (ok.length) moment(`tele-${d.numeroJeu}-${t.manche}`, () => { const moi = ok.some((k) => t.equipes?.[k]?.includes(S.uid)); sons.reussi(); if (moi) { confettis(70); vibrer([80, 40, 160]); } });
-    }
+    const t = S.jeu as { phase?: string; manche?: number; fin?: number; equipes?: string[][]; trouve?: Record<string, number> };
+    if (t.phase === 'decompte') moment(`tele-dec-${d.numeroJeu}-${t.manche}`, () => {
+      const reste = (t.fin ?? 0) - maintenant();
+      [3, 2, 1, 0].forEach((k) => { const dans = reste - 1500 - k * 1000; if (dans >= -200) setTimeout(() => (k ? sons.tic() : sons.tic(true)), Math.max(0, dans)); });
+    });
+    const connectees = Object.entries(t.trouve ?? {}).filter(([, m]) => m === (t.manche ?? 0) + 1).map(([k]) => Number(k));
+    if (connectees.length && t.phase !== 'decompte') moment(`tele-${d.numeroJeu}-${t.manche}-${connectees.join('.')}`, () => {
+      const moi = connectees.some((k) => t.equipes?.[k]?.includes(S.uid));
+      setTimeout(() => { sons.reussi(); if (moi) { confettis(80); vibrer([80, 40, 160]); } }, t.phase === 'revele' ? 900 : 0);
+    });
   }
   // Champ de mines : gemme (ding) ou KABOOM.
   if (d.phase === 'jeu' && d.jeuEnCours === 'mines' && S.jeu) {

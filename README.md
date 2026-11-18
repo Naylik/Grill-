@@ -190,3 +190,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   (majuscules, accents et articles ignorés). L'équipe qui trouve en le moins de manches gagne (8 max). Nombre impair :
   un arbitre parie au début sur l'équipe gagnante (+2) et son nombre de manches (+2 exact, +1 à une manche près).
   4 joueurs min. Visuel : deux ampoules aux couleurs du duo, l'arc entre elles s'allume quand ils se connectent.
+- 18/11/2026 · Télépathie refaite, ambiance voyance (choix C) : boule de cristal multicolore et cartes de tarot qui se
+  retournent. Chaque manche : 3-2-1 « CRIEZ ! », les duos crient leur mot à table puis le tapent en 12 s (l'appli
+  compare et garde le « film » du chemin parcouru). Pluriels ignorés ; mots presque pareils : le duo conteste et le
+  groupe vote (pas de vote = accepté). Sabotage : une fois par partie, une équipe impose un mot interdit à une autre
+  pour la manche suivante ; s'il est prononcé, la manche est ratée.
