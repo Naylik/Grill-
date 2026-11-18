@@ -105,8 +105,11 @@ export function momentsForts(): void {
     if (p.phase === 'jeu' && p.porteur === S.uid) moment(`patate-${p.etape}`, () => vibrer(90));
     if (p.phase === 'boum') {
       moment(`boum-${d.numeroJeu}-${p.manche}`, () => {
-        sons.boum();
-        vibrer(p.explose === S.uid ? [400, 100, 400] : 200);
+        // Le colis explose au bout de 0,7 s : son et vibration à ce moment-là.
+        setTimeout(() => {
+          sons.boum();
+          vibrer(p.explose === S.uid ? [400, 100, 400] : 200);
+        }, 700);
       });
     }
   }

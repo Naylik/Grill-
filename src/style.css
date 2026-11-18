@@ -551,22 +551,42 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .cible-patate { min-height: 54px; min-width: 96px; padding: 0 16px; border-radius: 18px; border: 2px solid var(--c); background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--texte); font-family: var(--titre); font-weight: 800; font-size: 16px; cursor: pointer; }
 .cible-patate.pas-encore { opacity: .4; }
 .zone-patate { display: grid; place-items: center; min-height: 220px; position: relative; }
-.zone-patate::before { content: ''; position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #FF7A3D55, transparent 65%); animation: pulse-patate .9s ease-in-out infinite; }
+.zone-patate::before { content: ''; position: absolute; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, #E0A06044, transparent 65%); animation: pulse-patate .9s ease-in-out infinite; }
 @keyframes pulse-patate { 50% { transform: scale(1.12); opacity: .6; } }
-.patate-a-lancer { position: relative; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; animation: tremble-patate .18s linear infinite; }
-.patate-a-lancer.tenue { animation: none; cursor: grabbing; }
-.patate-chez { position: relative; animation: respire 1.2s ease-in-out infinite; }
-@keyframes tremble-patate { 25% { translate: -2px 1px; } 75% { translate: 2px -1px; } }
-.dessin-patate { display: block; filter: drop-shadow(0 10px 20px #0008); }
-.dessin-patate .etincelle { transform-origin: 128px 15px; animation: etincelle .15s ease-in-out infinite alternate; }
-@keyframes etincelle { to { transform: scale(1.4); opacity: .7; } }
+.patate-a-lancer { position: relative; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; line-height: 0; }
+.patate-a-lancer.tenue { cursor: grabbing; }
+.patate-a-lancer.tenue .dessin-colis { animation: none; }
+.patate-chez { position: relative; line-height: 0; }
+/* Le colis : il tremble de plus en plus fort et son couvercle se bombe à chaque passe (--t de 0 à 1). */
+.dessin-colis { display: block; overflow: visible; filter: drop-shadow(0 12px 20px #0009); animation: tremble-colis .14s linear infinite; }
+@keyframes tremble-colis { 25% { translate: calc(-1px - var(--t) * 4px) calc(var(--t) * 1px); rotate: calc(-.5deg - var(--t) * 2.5deg); } 75% { translate: calc(1px + var(--t) * 4px) calc(var(--t) * -1px); rotate: calc(.5deg + var(--t) * 2.5deg); } }
+.dessin-colis .couvercle { transform-box: fill-box; transform-origin: 50% 100%; animation: bombe-colis calc(1.4s - var(--t) * 1s) ease-in-out infinite; }
+@keyframes bombe-colis { 50% { transform: translateY(calc(-1px - var(--t) * 7px)) scaleY(1.04); } }
+.dessin-colis .aiguille { transform-origin: 140px 132px; animation: aiguille-colis calc(1s - var(--t) * .6s) steps(12) infinite; }
+@keyframes aiguille-colis { to { transform: rotate(360deg); } }
 .joueurs-arene > div.elimine { opacity: .45; text-decoration: line-through; }
 .joueurs-arene > div.porteur { border-color: var(--orange); box-shadow: 0 0 16px -4px var(--orange); }
 .joueurs-arene > div.porteur em { color: var(--orange); }
-.boum-patate { position: relative; display: grid; place-items: center; height: 200px; }
-.boum-patate .eclat { position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, #FFF6EA 0%, #FFD84A 25%, #FF7A3D 50%, #FF5A3D00 70%); animation: eclat .6s cubic-bezier(.2, .9, .3, 1) both; }
-@keyframes eclat { from { transform: scale(.1); opacity: 1; } 60% { opacity: 1; } to { transform: scale(1.6); opacity: .25; } }
-.mot-boum { position: relative; margin: 0; font-family: var(--titre); font-weight: 900; font-size: 64px; color: #FFF6EA; text-shadow: 0 4px 0 #B32A12, 0 0 30px #FF5A3D; animation: tampon .4s cubic-bezier(.2, 1.4, .4, 1) .15s both; }
+/* Colis piégé : l'explosion « KABOOM » (le colis gonfle, flash blanc, l'écran tremble, le carton vole). */
+.boum-colis { position: relative; display: grid; place-items: center; height: 260px; animation: secoue-colis .5s linear .7s; }
+.boum-colis > * { grid-area: 1 / 1; }
+.colis-charge { line-height: 0; animation: charge-colis .7s ease-in both, cache .01s linear .7s forwards; }
+.colis-charge .dessin-colis { animation-duration: .06s; }
+@keyframes charge-colis { to { transform: scale(1.2, .9); } }
+@keyframes cache { to { opacity: 0; visibility: hidden; } }
+.bulle-kaboom { position: relative; z-index: 2; width: min(92%, 300px); overflow: visible; opacity: 0; animation: kaboom .55s cubic-bezier(.2, 1.6, .4, 1) .72s forwards; }
+@keyframes kaboom { from { opacity: 1; transform: scale(.1) rotate(-20deg); } to { opacity: 1; transform: scale(1) rotate(-6deg); } }
+.boum-colis .panneau { position: absolute; z-index: 1; width: 70px; height: 54px; border-radius: 4px; background: #C8925A; border: 3px solid #24123A; opacity: 0; animation: vol-carton 1.3s cubic-bezier(.2, .8, .3, 1) .7s forwards; }
+.boum-colis .panneau::after { content: ''; position: absolute; inset: 0 38%; background: #E7C089; }
+@keyframes vol-carton { from { opacity: 1; transform: translate(0, 0) rotate(0); } to { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)); } }
+.reveil-vole { position: absolute; z-index: 3; width: 56px; line-height: 0; opacity: 0; animation: reveil-vole 1.6s cubic-bezier(.3, .7, .4, 1) .7s forwards; }
+@keyframes reveil-vole { 0% { opacity: 1; transform: translate(0, 0) rotate(0); } 55% { transform: translate(-30px, -170px) rotate(-400deg); } 100% { opacity: 1; transform: translate(-70px, -110px) rotate(-720deg) scale(.8); } }
+.fumee-kaboom { position: absolute; z-index: 1; width: 70%; top: -10px; overflow: visible; }
+.fumee-kaboom circle { opacity: 0; animation: fumee-colis 2.4s ease-out 1s infinite; }
+.fumee-kaboom circle:nth-child(2) { animation-delay: 1.4s; } .fumee-kaboom circle:nth-child(3) { animation-delay: 1.8s; }
+@keyframes fumee-colis { 0% { opacity: 0; translate: 0 0; scale: .6; } 25% { opacity: .5; } 100% { opacity: 0; translate: 8px -60px; scale: 1.6; } }
+.flash-blanc { position: fixed; inset: 0; z-index: 30; pointer-events: none; background: #fff; opacity: 0; animation: flash-blanc .45s ease-out .7s; }
+@keyframes flash-blanc { from { opacity: .85; } to { opacity: 0; } }
 
 /* ——— Saisons et vengeance ——— */
 .saison-actuelle { margin: 0; font-weight: 800; }

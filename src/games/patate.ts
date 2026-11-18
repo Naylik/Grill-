@@ -1,6 +1,7 @@
-// « La Patate » : une patate-bombe passe de téléphone en téléphone. Celui qui l'a dit à voix haute un mot qui
-// répond à la consigne (« Un animal en B »), puis la lance (glisser vers un joueur, ou toucher son nom).
-// Elle explose à un moment caché (entre 15 s et 1 min) : celui qui l'a est éliminé. On continue jusqu'au dernier.
+// « Colis piégé » (identifiant interne « patate », son premier nom) : un colis piégé passe de téléphone en
+// téléphone. Celui qui l'a dit à voix haute un mot qui répond à la consigne (« Un animal en B »), puis le renvoie
+// (glisser vers un joueur, ou toucher son nom). Le colis tremble un peu plus à chaque passe. Il « explose » à un
+// moment caché (entre 15 s et 1 min) : KABOOM, celui qui l'a est éliminé. On continue jusqu'au dernier.
 // Le moment de l'explosion n'est connu que de l'hôte (prive/patate) : personne ne peut tricher en le lisant.
 import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
@@ -57,32 +58,61 @@ function nouvelleManche(ctx: { maintenant: number; hasard: () => number; connect
   return { etat, ecritures: { 'prive/patate': { explosion } } };
 }
 
-/** La patate dessinée : une pomme de terre avec une mèche, qui transpire. */
-export function dessinPatate(taille = 150, inquiete = true): string {
-  return `<svg class="dessin-patate" width="${taille}" height="${taille}" viewBox="0 0 160 160" aria-hidden="true">
-    <path d="M104 34 Q112 18 126 16" stroke="#3A2A1A" stroke-width="5" fill="none" stroke-linecap="round"/>
-    <g class="etincelle"><circle cx="128" cy="15" r="8" fill="#FFD84A"/><circle cx="128" cy="15" r="4" fill="#fff"/></g>
-    <path d="M30 86 C24 52 54 30 88 34 C122 38 140 62 134 96 C128 130 96 144 66 138 C40 132 34 112 30 86 Z" fill="#D9A066" stroke="#1B1233" stroke-width="5"/>
-    <circle cx="52" cy="66" r="3.5" fill="#A8743F"/><circle cx="112" cy="110" r="4" fill="#A8743F"/><circle cx="98" cy="54" r="3" fill="#A8743F"/><circle cx="60" cy="118" r="3" fill="#A8743F"/>
-    <ellipse cx="68" cy="88" rx="6" ry="8" fill="#1B1233"/><ellipse cx="96" cy="88" rx="6" ry="8" fill="#1B1233"/>
-    <circle cx="70" cy="85" r="2.2" fill="#fff"/><circle cx="98" cy="85" r="2.2" fill="#fff"/>
-    ${inquiete
-      ? '<path d="M70 112 Q82 104 94 112" stroke="#1B1233" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M118 70 Q123 80 118 85 Q113 80 118 70Z" fill="#7FD8FF" stroke="#1B1233" stroke-width="2"/>'
-      : '<path d="M70 106 Q82 116 94 106" stroke="#1B1233" stroke-width="4.5" fill="none" stroke-linecap="round"/>'}
+const T = '#24123A';
+
+/**
+ * Le colis piégé : un carton « FRAGILE » avec un réveil scotché dessus.
+ * tension (0 à 1) : il tremble plus fort et le couvercle se bombe à chaque passe (sans dire quand il va sauter).
+ */
+export function dessinColis(taille = 150, tension = 0): string {
+  return `<svg class="dessin-colis" style="--t:${Math.max(0, Math.min(1, tension)).toFixed(2)}" width="${taille}" viewBox="0 0 220 200" aria-hidden="true">
+    <ellipse cx="110" cy="190" rx="84" ry="8" fill="#000" opacity=".3"/>
+    <path d="M30 70 L190 70 L190 180 Q190 186 184 186 L36 186 Q30 186 30 180 Z" fill="#C8925A" stroke="${T}" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M168 70 L190 70 L190 180 Q190 186 184 186 L168 186 Z" fill="#A9743F"/>
+    <rect x="96" y="70" width="28" height="116" fill="#E7C089" opacity=".9"/>
+    <g class="couvercle">
+      <path d="M22 50 L198 50 L198 74 L22 74 Z" fill="#D8A066" stroke="${T}" stroke-width="5" stroke-linejoin="round"/>
+      <rect x="96" y="50" width="28" height="24" fill="#E7C089"/>
+      <path d="M26 54 L120 54" stroke="#fff" stroke-width="3" opacity=".5" stroke-linecap="round"/>
+    </g>
+    <g transform="rotate(-6 70 128)">
+      <rect x="40" y="100" width="62" height="52" rx="6" fill="#FFF6EA" stroke="${T}" stroke-width="3.5"/>
+      <text x="71" y="122" text-anchor="middle" font-family="Bungee, Unbounded, Arial Black, sans-serif" font-size="11" font-weight="900" fill="#E2344C">FRAGILE</text>
+      <path d="M50 132 h42 M50 142 h30" stroke="#C4BCE6" stroke-width="3" stroke-linecap="round"/>
+    </g>
+    <circle cx="140" cy="132" r="26" fill="#FFF6EA" stroke="${T}" stroke-width="4.5"/>
+    <circle cx="140" cy="132" r="20" fill="none" stroke="#E2344C" stroke-width="2" stroke-dasharray="2 8.5"/>
+    <path class="aiguille" d="M140 132 L140 116" stroke="${T}" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="140" cy="132" r="3.5" fill="${T}"/>
+    <path d="M124 108 l-6 -8 M156 108 l6 -8" stroke="${T}" stroke-width="5" stroke-linecap="round"/>
   </svg>`;
 }
 
+/** L'explosion : bulle « KABOOM », morceaux de carton qui volent, réveil projeté en l'air, fumée. */
+const KABOOM = `<svg class="bulle-kaboom" viewBox="0 0 240 200" aria-hidden="true">
+  <path d="M120 6 L140 54 L190 26 L176 78 L232 86 L186 116 L222 160 L166 150 L160 196 L122 160 L84 196 L80 150 L22 162 L58 118 L8 88 L64 78 L48 26 L100 54 Z" fill="#FFD84A" stroke="${T}" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M120 40 L134 70 L168 56 L158 88 L194 96 L162 112 L184 140 L148 134 L142 162 L120 140 L98 162 L92 134 L56 140 L78 112 L46 96 L82 88 L72 56 L106 70 Z" fill="#FF8A3D"/>
+  <text x="120" y="112" text-anchor="middle" font-family="Bungee, Unbounded, Arial Black, sans-serif" font-weight="900" font-size="34" fill="#FFF6EA" stroke="${T}" stroke-width="5" paint-order="stroke">KABOOM</text>
+</svg>`;
+const REVEIL = `<svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="32" r="24" fill="#FFF6EA" stroke="${T}" stroke-width="4.5"/><path d="M30 32 L30 16 M30 32 L40 38" stroke="${T}" stroke-width="4" stroke-linecap="round"/><path d="M12 10 l-6 -6 M48 10 l6 -6" stroke="${T}" stroke-width="5" stroke-linecap="round"/></svg>`;
+const FUMEE = `<svg class="fumee-kaboom" viewBox="0 0 200 120" aria-hidden="true"><g fill="#B9B3C7"><circle cx="70" cy="80" r="18"/><circle cx="100" cy="70" r="22"/><circle cx="130" cy="82" r="16"/></g></svg>`;
+const PANNEAUX = ['-130px,-150px,-200deg', '130px,-140px,220deg', '-140px,110px,-260deg', '140px,120px,280deg', '0px,-170px,160deg']
+  .map((v) => { const [dx, dy, r] = v.split(','); return `<span class="panneau" style="--dx:${dx};--dy:${dy};--r:${r}"></span>`; }).join('');
+
+/** Tension du colis : elle monte avec le nombre de passes de la manche (0 à 1). */
+const tensionDe = (passe: number) => Math.min(1, passe / 8);
+
 export const patate: MiniJeu<Etat> = {
   id: 'patate',
-  nom: 'La Patate',
-  accroche: 'Dis un mot, lance la patate. Elle va exploser…',
+  nom: 'Colis piégé',
+  accroche: 'Dis un mot, renvoie le colis. Il va sauter…',
   explication: {
-    comment: 'La patate arrive sur le téléphone de quelqu’un avec une consigne (« Un animal en B »). Il dit un mot à voix haute, puis la lance vers le joueur de son choix en la faisant glisser. Elle explose à un moment caché, entre 15 secondes et 1 minute : celui qui l’a est éliminé.',
+    comment: 'Le colis piégé arrive sur le téléphone de quelqu’un avec une consigne (« Un animal en B »). Il dit un mot à voix haute, puis renvoie le colis au joueur de son choix en le faisant glisser. Le colis tremble de plus en plus. Il saute à un moment caché, entre 15 secondes et 1 minute : celui qui l’a est éliminé.',
     gagner: 'Le dernier survivant gagne. Les autres sont classés dans l’ordre d’élimination.',
     note: 'Le groupe juge le mot dit à voix haute : pas de mot, pas de lancer !',
   },
-  icone: '<path d="M6 13c-.6-4 2.6-7 6.6-6.6 4 .4 6 3.4 5.4 7.4-.6 3.8-4 5.6-7.2 5C8 18.2 6.4 16.4 6 13z" fill="currentColor"/><path d="M15 7c.6-2 2-3 3.6-3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>',
-  couleur: '#FF7A3D',
+  icone: '<path d="M3 8h18v12H3z" fill="currentColor"/><path d="M2 5h20v4H2z" fill="currentColor" opacity=".7"/><path d="M10 5h4v15h-4z" fill="#fff" opacity=".45"/>',
+  couleur: '#E0A060',
   autorise: (_n, nb) => nb >= 3,
 
   demarrer(ctx) {
@@ -123,7 +153,7 @@ export const patate: MiniJeu<Etat> = {
       const gagnant = etat.vivants[0];
       return {
         etat,
-        fin: { points: pointsDePlace(classementPatate(etat.elimines, etat.vivants)), sorte: 'place', resume: gagnant ? `${ctx.joueurs[gagnant]?.prenom} survit à la patate.` : undefined },
+        fin: { points: pointsDePlace(classementPatate(etat.elimines, etat.vivants)), sorte: 'place', resume: gagnant ? `${ctx.joueurs[gagnant]?.prenom} survit au colis piégé.` : undefined },
       };
     }
     return null;
@@ -134,31 +164,37 @@ export const patate: MiniJeu<Etat> = {
     const total = Math.max(1, v.uids.length - 1);
     const nom = (u: string) => esc(v.joueurs[u]?.prenom ?? '?');
     if (e.phase === 'intro') {
-      return introArene('LA PATATE', `${total} EXPLOSION${total > 1 ? 'S' : ''}`, dessinPatate(120), [
-        ['1', 'Quand la patate arrive chez toi, dis à voix haute un mot qui répond à la consigne.'],
-        ['2', 'Puis fais-la glisser vers un joueur pour la lui lancer.'],
-        ['!', 'Elle explose entre 15 s et 1 min. Celui qui l’a est éliminé.'],
+      return introArene('COLIS PIÉGÉ', `${total} ÉLIMINATION${total > 1 ? 'S' : ''}`, dessinColis(150), [
+        ['1', 'Quand le colis arrive chez toi, dis à voix haute un mot qui répond à la consigne.'],
+        ['2', 'Puis fais-le glisser vers un joueur pour le lui renvoyer.'],
+        ['!', 'Il saute entre 15 s et 1 min. Celui qui l’a est éliminé.'],
       ], e.fin);
     }
     const bandeJoueurs = `<div class="joueurs-arene">${v.uids.map((u) => {
       const elimine = e.elimines.includes(u);
-      return `<div class="${u === v.uid ? 'moi' : ''} ${elimine ? 'elimine' : ''} ${u === e.porteur && e.phase === 'jeu' ? 'porteur' : ''}"><span class="pastille" style="--c:${v.joueurs[u].couleur};width:24px;height:24px"></span>${nom(u)}<em>${elimine ? 'boum' : u === e.porteur && e.phase === 'jeu' ? 'patate !' : 'en vie'}</em></div>`;
+      return `<div class="${u === v.uid ? 'moi' : ''} ${elimine ? 'elimine' : ''} ${u === e.porteur && e.phase === 'jeu' ? 'porteur' : ''}"><span class="pastille" style="--c:${v.joueurs[u].couleur};width:24px;height:24px"></span>${nom(u)}<em>${elimine ? 'éliminé' : u === e.porteur && e.phase === 'jeu' ? 'colis !' : 'en vie'}</em></div>`;
     }).join('')}</div>`;
-    const tete = hud('LA PATATE', e.elimines.length, total, e.phase === 'jeu');
+    const tete = hud('COLIS PIÉGÉ', e.elimines.length, total, e.phase === 'jeu');
 
     if (e.phase === 'bilan') {
       const ordre = [...e.vivants, ...[...e.elimines].reverse()];
       return `${tete}
-        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p><strong>${nom(ordre[0])}</strong> survit à la patate</p></div>
+        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p><strong>${nom(ordre[0])}</strong> survit au colis piégé</p></div>
         <div class="pile">${classementBarres(ordre.map((u, i) => ({ joueur: v.joueurs[u], texte: i === 0 ? 'survivant' : `${e.elimines.length - e.elimines.indexOf(u) + 1}e`, part: 1 - i / ordre.length, moi: u === v.uid })))}</div>`;
     }
     if (e.phase === 'boum') {
       const moi = e.explose === v.uid;
       return `${tete}
-        <div class="boum-patate" aria-live="assertive"><div class="eclat"></div><p class="mot-boum">BOUM !</p></div>
-        <h2 class="question centre-texte">${moi ? 'Tu as explosé…' : `${nom(e.explose!)} est éliminé`}</h2>
+        <div class="boum-colis" aria-live="assertive">
+          ${PANNEAUX}
+          <span class="reveil-vole">${REVEIL}</span>
+          ${KABOOM}${FUMEE}
+          <div class="colis-charge">${dessinColis(190, 1)}</div>
+          <div class="flash-blanc"></div>
+        </div>
+        <h2 class="question centre-texte">${moi ? 'Tu es éliminé…' : `${nom(e.explose!)} est éliminé`}</h2>
         ${bandeJoueurs}
-        <p class="attente">${e.vivants.length >= 2 ? 'Nouvelle patate dans un instant…' : 'C’est fini !'}</p>`;
+        <p class="attente">${e.vivants.length >= 2 ? 'Nouveau colis dans un instant…' : 'C’est fini !'}</p>`;
     }
     // En jeu.
     const porteur = e.porteur === v.uid;
@@ -169,12 +205,12 @@ export const patate: MiniJeu<Etat> = {
       return `${tete}
         <div class="consigne-patate" data-depart="${e.depart}"><span>C’EST TOI ! Dis à voix haute :</span><strong>${esc(e.consigne)}</strong></div>
         <div class="cibles-patate">${cibles.map((u) => `<button class="cible-patate" style="--c:${v.joueurs[u].couleur}" data-action="jeu" data-geste="lancer" data-valeur="${u}" data-depart="${e.depart}">${nom(u)}</button>`).join('')}</div>
-        <div class="zone-patate"><div class="patate-a-lancer" data-glisser-patate>${dessinPatate(150)}</div></div>
-        <p class="aide">Fais glisser la patate vers un joueur (ou touche son nom).</p>`;
+        <div class="zone-patate"><div class="patate-a-lancer" data-glisser-patate>${dessinColis(190, tensionDe(e.passe))}</div></div>
+        <p class="aide">Fais glisser le colis vers un joueur (ou touche son nom).</p>`;
     }
     return `${tete}
-      <div class="zone-patate spectateur"><div class="patate-chez">${dessinPatate(130)}</div></div>
-      <h2 class="question centre-texte">${lanceVers ? `Lancée vers ${nom(lanceVers)} !` : `La patate est chez <span style="color:${v.joueurs[e.porteur]?.couleur}">${nom(e.porteur)}</span>`}</h2>
+      <div class="zone-patate spectateur"><div class="patate-chez">${dessinColis(170, tensionDe(e.passe))}</div></div>
+      <h2 class="question centre-texte">${lanceVers ? `Renvoyé à ${nom(lanceVers)} !` : `Le colis est chez <span style="color:${v.joueurs[e.porteur]?.couleur}">${nom(e.porteur)}</span>`}</h2>
       ${lanceVers ? '' : `<p class="consigne-spectateur">« ${esc(e.consigne)} »</p>`}
       ${elimine ? '<p class="aide">Tu es éliminé : profite du spectacle.</p>' : ''}
       ${bandeJoueurs}`;

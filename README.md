@@ -122,3 +122,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   de se venger : si elle accepte, sa 1re mission vise son « grilleur » (au choix s'il y en a plusieurs) et vaut ×2 ;
   la cible est prévenue par une fenêtre (« X a juré de se venger de toi ce soir »), sans connaître la mission.
   Nouvelles règles Firebase (`saisons`, `vengeance`) : à republier dans la console.
+- 18/11/2026 · « La Patate » devient « Colis piégé » (choisi parmi plusieurs pistes) : un carton « FRAGILE » avec un
+  réveil, qui tremble de plus en plus et dont le couvercle se bombe à chaque passe (la tension monte sans révéler
+  le moment de l'explosion). Explosion « KABOOM » : le colis gonfle, flash blanc, l'écran tremble, le carton vole,
+  le réveil part en l'air. Pas de carte à la fin, juste « X est éliminé ». Identifiant interne inchangé (`patate`).
