@@ -185,3 +185,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   (par défaut). Révélation avec badges carte par carte et parts qui changent de taille, puis la roue tourne : 32 crans,
   curseur qui claque avec un « tic », ralentissement ; l'hôte tire le gagnant avant (selon les parts) et la rotation
   suit l'heure du serveur, identique sur tous les téléphones. 4 / 6 / 8 manches selon le format. 3 joueurs min.
+- 18/11/2026 · Nouvelle catégorie « Jeu d'équipe » avec Télépathie : duos tirés au sort. Manche 1, chacun écrit un mot
+  en secret ; ensuite chaque duo voit ses deux mots et cherche un mot « entre les deux », jusqu'à écrire le même
+  (majuscules, accents et articles ignorés). L'équipe qui trouve en le moins de manches gagne (8 max). Nombre impair :
+  un arbitre parie au début sur l'équipe gagnante (+2) et son nombre de manches (+2 exact, +1 à une manche près).
+  4 joueurs min. Visuel : deux ampoules aux couleurs du duo, l'arc entre elles s'allume quand ils se connectent.

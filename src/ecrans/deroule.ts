@@ -73,6 +73,7 @@ export function ecranRegles(): string {
     ? jeu.regles({ uids: uids(), duree: S.infos!.duree })
     : `<div class="regles-jeu">
         <p class="accroche-jeu">${esc(jeu.accroche)}</p>
+        ${jeu.categorie === 'equipe' ? '<span class="tours-jeu equipe-chip">JEU D’ÉQUIPE · en duos</span>' : ''}
         ${jeu.tours ? `<span class="tours-jeu">Ce soir : ${esc(jeu.tours(S.infos!.duree))}</span>` : ''}
         <div class="regle-arene"><b>?</b><span>${esc(jeu.explication.comment)}</span></div>
         <div class="regle-arene"><b>★</b><span>${esc(jeu.explication.gagner)}</span></div>

@@ -126,6 +126,14 @@ export function momentsForts(): void {
     const emoji = REACTIONS[Number(cle.split('-').pop())] ?? '😂';
     for (let i = 0; i < Math.min(5, n - avant); i++) setTimeout(() => envolerReaction(emoji), i * 120);
   }
+  // Télépathie : une équipe vient de se connecter (même mot).
+  if (d.phase === 'jeu' && d.jeuEnCours === 'telepathie' && S.jeu) {
+    const t = S.jeu as { phase?: string; manche?: number; equipes?: string[][]; trouve?: Record<string, number> };
+    if (t.phase === 'revele') {
+      const ok = Object.entries(t.trouve ?? {}).filter(([, m]) => m === (t.manche ?? 0) + 1).map(([k]) => Number(k));
+      if (ok.length) moment(`tele-${d.numeroJeu}-${t.manche}`, () => { const moi = ok.some((k) => t.equipes?.[k]?.includes(S.uid)); sons.reussi(); if (moi) { confettis(70); vibrer([80, 40, 160]); } });
+    }
+  }
   // Champ de mines : gemme (ding) ou KABOOM.
   if (d.phase === 'jeu' && d.jeuEnCours === 'mines' && S.jeu) {
     const m = S.jeu as { phase?: string; tour?: number; sures?: number; dernier?: { joueur: string } };

@@ -84,6 +84,8 @@ export interface MiniJeu<E extends EtatDeBase = EtatDeBase> {
   /** Icône (contenu d'un SVG 24 × 24). */
   icone: string;
   couleur: string;
+  /** Catégorie spéciale (« equipe » : jeu en duos). */
+  categorie?: 'equipe';
   /** Le jeu peut-il être tiré pour ce numéro de jeu et ce nombre de joueurs ? */
   autorise(numeroJeu: number, nbJoueurs: number): boolean;
   demarrer(ctx: ContexteHote): Avancee<E>;

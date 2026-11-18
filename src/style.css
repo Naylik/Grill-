@@ -778,3 +778,27 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 @keyframes gagne-roue { from { opacity: 0; transform: scale(.3) rotate(-8deg); } }
 .journal-roue { display: grid; gap: 2px; font-size: 13px; color: var(--texte-2); min-height: 40px; }
 .journal-roue p { margin: 0; }
+
+/* Télépathie (jeu d'équipe) : deux ampoules aux couleurs du duo, un arc qui s'allume quand ils se connectent. */
+.equipe-chip { display: inline-block; padding: 4px 10px; border-radius: 99px; background: #FF8FC822; border: 1px solid #FF8FC8; color: #FF8FC8; font-family: var(--titre); font-weight: 800; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; margin-left: auto; }
+.tours-jeu.equipe-chip { margin-left: 0; }
+.equipe-tele { position: relative; padding: 14px 12px; border-radius: 18px; background: #ffffff08; border: 1px solid var(--bord); transition: border-color .3s, box-shadow .3s; }
+.equipe-tele.moi { border-color: #ffffff40; }
+.equipe-tele.connectee { border-color: #FF8FC8; box-shadow: 0 0 24px #FF8FC855, inset 0 0 18px #FF8FC822; }
+.ampoules { display: flex; align-items: center; gap: 6px; }
+.ampoule { flex: 1; min-width: 0; display: grid; justify-items: center; gap: 4px; text-align: center; }
+.ampoule b { font-size: 13px; }
+.ampoule em { font-style: normal; font-family: var(--titre); font-weight: 800; font-size: 17px; color: var(--texte, #fff); padding: 4px 10px; border-radius: 10px; background: #0006; max-width: 100%; overflow-wrap: anywhere; }
+.bulbe { width: 34px; height: 34px; border-radius: 50% 50% 46% 46%; background: radial-gradient(circle at 35% 30%, #fff 0 12%, var(--k) 45%, #0000 100%), var(--k); opacity: .45; box-shadow: 0 0 6px var(--k); }
+.connectee .bulbe { opacity: 1; box-shadow: 0 0 22px var(--k), 0 0 44px var(--k); animation: pulse-bulbe 1.4s ease-in-out infinite; }
+.arc-tele { flex: 0 0 34px; height: 3px; border-radius: 3px; background: repeating-linear-gradient(90deg, #ffffff30 0 5px, transparent 5px 9px); }
+.connectee .arc-tele { background: linear-gradient(90deg, #FF8FC8, #FFD84A, #FF8FC8); background-size: 200% 100%; box-shadow: 0 0 12px #FF8FC8; animation: arc-tele 0.8s linear infinite; }
+.tele-ok { margin: 10px 0 0; text-align: center; font-family: var(--titre); font-weight: 900; letter-spacing: .04em; color: #FF8FC8; text-shadow: 0 0 14px #FF8FC8; animation: tele-ok .5s cubic-bezier(.2,1.6,.4,1); }
+.histo-tele { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; justify-content: center; }
+.histo-tele span { font-size: 12px; padding: 3px 8px; border-radius: 8px; background: #ffffff0c; color: var(--doux, #bbb); }
+.manches-pari { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.manches-pari button { padding: 12px 0; border-radius: 12px; border: 1px solid var(--bord); background: #ffffff08; color: inherit; font-family: var(--titre); font-weight: 800; font-size: 18px; }
+.manches-pari button.actif { background: var(--jaune); color: #111; border-color: var(--jaune); }
+@keyframes pulse-bulbe { 50% { transform: scale(1.08); } }
+@keyframes arc-tele { to { background-position: -200% 0; } }
+@keyframes tele-ok { from { transform: scale(.5); opacity: 0; } }

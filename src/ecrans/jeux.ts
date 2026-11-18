@@ -6,7 +6,7 @@ import { mallow } from '../mallow';
 export function ecranListeJeux(): string {
   const jeux = JEUX.map(
     (j) => `<article class="fiche-jeu" style="--c:${j.couleur}">
-      <div class="fiche-tete"><span class="fiche-icone"><svg viewBox="0 0 24 24" aria-hidden="true">${j.icone}</svg></span><h3>${esc(j.nom)}</h3></div>
+      <div class="fiche-tete"><span class="fiche-icone"><svg viewBox="0 0 24 24" aria-hidden="true">${j.icone}</svg></span><h3>${esc(j.nom)}</h3>${j.categorie === 'equipe' ? '<span class="equipe-chip">Jeu d’équipe</span>' : ''}</div>
       <p>${esc(j.explication.comment)}</p>
       <p class="fiche-gagner"><strong>Pour gagner :</strong> ${esc(j.explication.gagner)}</p>
       ${j.explication.note ? `<p class="fiche-note">${esc(j.explication.note)}</p>` : ''}

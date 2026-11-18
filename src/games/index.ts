@@ -11,9 +11,10 @@ import { quitteOuDouble } from './quitteOuDouble';
 import { telephone } from './telephone';
 import { champDeMines } from './mines';
 import { territoires } from './territoires';
+import { telepathie } from './telepathie';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const JEUX: MiniJeu<any>[] = [combien, justePrix, parieur, imposteur, reflexe, timing, patate, quitteOuDouble, telephone, champDeMines, territoires];
+export const JEUX: MiniJeu<any>[] = [combien, justePrix, parieur, imposteur, reflexe, timing, patate, quitteOuDouble, telephone, champDeMines, territoires, telepathie];
 
 export const jeuParId = (id?: string) => JEUX.find((j) => j.id === id);
 
