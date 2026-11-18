@@ -15,9 +15,18 @@ export function action(nom: string, f: Action): void {
 
 export function installer(el: HTMLElement): void {
   racine = el;
+  // Jeux de réflexe : les boutons marqués data-immediat réagissent dès que le doigt touche l'écran
+  // (le « click » arrive plus tard, au relâchement : trop lent pour mesurer un réflexe).
+  document.addEventListener('pointerdown', (e) => {
+    const cible = (e.target as HTMLElement).closest<HTMLElement>('[data-action][data-immediat]');
+    if (!cible || (cible as HTMLButtonElement).disabled) return;
+    e.preventDefault();
+    const f = actions.get(cible.dataset.action!);
+    if (f) Promise.resolve(f(cible)).catch((err) => console.error(err));
+  });
   document.addEventListener('click', (e) => {
     const cible = (e.target as HTMLElement).closest<HTMLElement>('[data-action]');
-    if (!cible || (cible as HTMLButtonElement).disabled) return;
+    if (!cible || (cible as HTMLButtonElement).disabled || cible.hasAttribute('data-immediat')) return;
     e.preventDefault();
     const f = actions.get(cible.dataset.action!);
     if (f) Promise.resolve(f(cible)).catch((err) => console.error(err));

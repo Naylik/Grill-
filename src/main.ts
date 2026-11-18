@@ -331,6 +331,44 @@ quandCaChange(() => {
 });
 setInterval(() => void piloter(), 500);
 
+// Horloge des jeux d'action (Réflexe Mallow, Le bon timing) : le feu, les éternuements et le décompte
+// apparaissent à l'heure du serveur, donc au même instant sur tous les téléphones.
+const sonsJoues = new Set<string>();
+function horloge(): void {
+  const t = maintenant();
+  document.querySelectorAll<HTMLElement>('[data-feu]').forEach((el) => {
+    const feu = Number(el.dataset.feu);
+    const enFeu = t >= feu;
+    el.classList.toggle('en-feu', enFeu);
+    const leurre = el.dataset.leurre ? Number(el.dataset.leurre) : NaN;
+    el.classList.toggle('eternue', !Number.isNaN(leurre) && t >= leurre && t < leurre + 700);
+    if (enFeu && t < feu + 1000 && !sonsJoues.has(`feu-${feu}`)) {
+      sonsJoues.add(`feu-${feu}`);
+      sons.pschhh();
+    }
+  });
+  document.querySelectorAll<HTMLElement>('.cadran-timing[data-depart]').forEach((el) => {
+    const reste = Number(el.dataset.depart) - t;
+    const texte = reste > 3000 ? 'Prêts ?' : reste > 2000 ? '3' : reste > 1000 ? '2' : reste > 0 ? '1' : reste > -1200 ? 'Partez !' : '';
+    const span = el.querySelector('.decompte');
+    if (span && span.textContent !== texte) {
+      span.textContent = texte;
+      const cle = `${el.dataset.depart}-${texte}`;
+      if (texte && texte !== 'Prêts ?' && !sonsJoues.has(cle)) {
+        sonsJoues.add(cle);
+        if (texte === 'Partez !') sons.ding();
+        else sons.tic();
+      }
+    }
+    el.classList.toggle('en-cours', reste <= 0);
+  });
+  document.querySelectorAll<HTMLButtonElement>('.stop-timing[data-depart]').forEach((b) => {
+    b.classList.toggle('pas-encore', t < Number(b.dataset.depart));
+  });
+  requestAnimationFrame(horloge);
+}
+requestAnimationFrame(horloge);
+
 // Chronos : mis à jour sans redessiner l'écran. Un tic sonore pendant les 5 dernières secondes.
 const ticsJoues = new Map<string, number>();
 setInterval(() => {

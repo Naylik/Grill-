@@ -396,3 +396,36 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 /* Place au dernier jeu, sous le prénom (classement provisoire) */
 .ligne-classement strong { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
 .place-jeu { font-family: var(--corps); font-size: 12px; font-weight: 700; color: var(--texte-3); }
+
+/* ——— Réflexe Mallow ——— */
+.aire-reflexe { position: relative; width: 100%; height: min(58vh, 420px); border-radius: 28px; border: 1px solid var(--bord); background: var(--verre); color: var(--texte); display: grid; place-items: center; overflow: hidden; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; transition: background .08s; }
+.aire-reflexe > span { position: absolute; }
+.consigne-attente, .consigne-feu, .atchoum { top: 22px; left: 0; right: 0; text-align: center; font-family: var(--titre); font-weight: 900; font-size: 22px; }
+.consigne-feu, .atchoum, .flammes-reflexe { opacity: 0; }
+.mallow-reflexe { bottom: 40px; left: 50%; transform: translateX(-50%); }
+.flammes-reflexe { bottom: 120px; left: 50%; width: 200px; margin-left: -100px; }
+.flammes-reflexe svg { width: 100%; display: block; }
+.flammes-reflexe path { transform-box: fill-box; transform-origin: 50% 100%; animation: flamme .16s ease-in-out infinite alternate; }
+.aire-reflexe.en-feu { background: radial-gradient(circle at 50% 70%, #FF8A3D66, transparent 65%), #2A1230; border-color: #FF8A3D; }
+.aire-reflexe.en-feu .consigne-attente { opacity: 0; }
+.aire-reflexe.en-feu .consigne-feu { opacity: 1; color: var(--jaune); font-size: 34px; }
+.aire-reflexe.en-feu .flammes-reflexe { opacity: 1; }
+.aire-reflexe.en-feu .mallow-reflexe { animation: tremble-reflexe .1s linear infinite; }
+.aire-reflexe.eternue .atchoum { opacity: 1; color: var(--cyan); transform: rotate(-6deg); }
+.aire-reflexe.eternue .consigne-attente { opacity: 0; }
+.aire-reflexe.eternue .mallow-reflexe { transform: translateX(-50%) scale(1.08, .9); }
+@keyframes tremble-reflexe { 50% { transform: translateX(calc(-50% + 4px)); } }
+.resultat-local { bottom: 12px; left: 0; right: 0; text-align: center; font-family: var(--titre); font-size: 26px; }
+.aire-reflexe.fini { border-color: var(--bord); }
+.rouge { color: var(--rose); }
+
+/* ——— Le bon timing ——— */
+.cible-timing { color: var(--cyan); white-space: nowrap; }
+.cadran-timing { position: relative; align-self: center; width: min(62vw, 240px); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; background: var(--verre); border: 3px solid var(--cyan); box-shadow: 0 0 40px -10px #5CD8FF88; }
+.cadran-timing > span { position: absolute; }
+.decompte { font-family: var(--titre); font-weight: 900; font-size: 40px; color: var(--jaune); }
+.chrono-cache { font-family: var(--titre); font-weight: 900; font-size: 90px; color: var(--cyan); opacity: 0; }
+.cadran-timing.en-cours .chrono-cache { opacity: 1; animation: pulse 1.4s ease-in-out infinite; }
+.stop-timing { min-height: 120px !important; font-size: 40px !important; border-radius: 28px !important; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.stop-timing.pas-encore { opacity: .45; }
+.pts:empty { visibility: hidden; }

@@ -83,3 +83,25 @@ describe('banques', () => {
     for (const d of defis) expect(d.texte.toLowerCase()).not.toMatch(/\b(bois|boire|verre|shot|alcool)\b/);
   });
 });
+
+describe('Réflexe Mallow et Le bon timing', async () => {
+  const { tempsCompte } = await import('../src/games/reflexe');
+  const { ecartCompte, formaterSecondes } = await import('../src/games/timing');
+  it('réflexe : faux départ et absence pénalisés', () => {
+    expect(tempsCompte(250)).toBe(250);
+    expect(tempsCompte(-1)).toBe(1000);
+    expect(tempsCompte(undefined)).toBe(1500);
+    expect(tempsCompte(9000)).toBe(1500);
+  });
+  it('timing : écart au temps demandé', () => {
+    expect(ecartCompte(10120, 10)).toBe(120);
+    expect(ecartCompte(9800, 10)).toBe(200);
+    expect(ecartCompte(undefined, 5)).toBe(5000);
+    expect(formaterSecondes(4870)).toBe('4,87 s');
+  });
+  it('les deux jeux sont dans la liste et peuvent sortir dès le 1er jeu', () => {
+    const ids = jeuxPossibles(1, 3, []).map((j) => j.id);
+    expect(ids).toContain('reflexe');
+    expect(ids).toContain('timing');
+  });
+});

@@ -4,9 +4,11 @@ import { combien } from './combien';
 import { justePrix } from './justePrix';
 import { parieur } from './parieur';
 import { imposteur } from './imposteur';
+import { reflexe } from './reflexe';
+import { timing } from './timing';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const JEUX: MiniJeu<any>[] = [combien, justePrix, parieur, imposteur];
+export const JEUX: MiniJeu<any>[] = [combien, justePrix, parieur, imposteur, reflexe, timing];
 
 export const jeuParId = (id?: string) => JEUX.find((j) => j.id === id);
 

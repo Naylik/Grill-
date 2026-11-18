@@ -93,3 +93,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 18/11/2026 · Cap du fondateur : pas de nouvelle mécanique pour l'instant (missions flash, pouvoirs, traître… mis de côté).
   Le cœur du jeu = des missions secrètes vraiment drôles + des mini-jeux vraiment cool à jouer. Priorités : enrichir
   les missions et ajouter / améliorer les mini-jeux.
+- 18/11/2026 · Deux mini-jeux d'action : Réflexe Mallow (5 manches, toucher dès que Mallow prend feu, pièges
+  « atchoum », faux départ = 1 s de pénalité) et Le bon timing (3 manches, chrono invisible à arrêter à 5, 7 puis 10 s).
+  Le feu et le départ du chrono sont fixés à l'heure du serveur (même instant sur tous les téléphones), et le toucher est
+  pris dès que le doigt touche l'écran (data-immediat). Les manches s'enchaînent seules. 6 mini-jeux au total.
