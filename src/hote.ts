@@ -7,7 +7,8 @@ import { S, estHote } from './etat';
 import { JEUX, jeuParId, jeuxPossibles, jeuxPourVote } from './games';
 import type { Avancee, ContexteHote } from './games/interface';
 import { auHasard, melanger } from './outils';
-import { majoriteOui, missionTrouvee, pointsDeFin, scoreVide, titres, totalProvisoire, type ResultatMission, type ResultatPari } from './score';
+import { majoriteOui, missionTrouvee, pointsDeFin, scoreVide, titres, totalProvisoire, VOL_DETECTIVE, type ResultatMission, type ResultatPari } from './score';
+import { accusationsADoubler, liste as listeAccusations, mancheAction, missionsGrillees, PENALITE_ACCUSATION, PENALITE_MENSONGE, piloterAccusations } from './accusations';
 import { vanneDuClassement } from './narrateur';
 import type { Bilan, Deroule, EtatRevelation, Score } from './types';
 
@@ -135,6 +136,16 @@ function votantsMissions(sujet: string) {
   return connectes().filter((u) => u !== sujet);
 }
 
+/** Accusations GRILLÉ ! auxquelles le sujet a répondu « Raté » : le groupe vérifie s'il a menti. */
+const mensongesDe = (sujet: string) => accusationsADoubler(S.accusations, sujet).map((a) => ({ cle: a.cle, de: a.de, texte: a.texte }));
+
+/** Après les votes de missions (et les paris) : les mensonges éventuels, puis le résultat. */
+function apresParis(sujet: string, now: number): Ecritures {
+  const mensonges = mensongesDe(sujet);
+  if (mensonges.length) return { 'deroule/revelation/etape': 'mensonges', 'deroule/revelation/mensonges': mensonges, 'deroule/revelation/fin': now + DUREE_VOTE };
+  return { 'deroule/revelation/etape': 'resultat', 'deroule/revelation/fin': null };
+}
+
 function etapeRevelation(r: EtatRevelation): Ecritures | null {
   const sujet = r.ordre[r.index];
   const now = maintenant();
@@ -145,16 +156,24 @@ function etapeRevelation(r: EtatRevelation): Ecritures | null {
   }
   if (r.etape === 'vote') {
     const nb = missionsDe(sujet).length;
-    const fini = votantsMissions(sujet).every((v) => Array.from({ length: nb }, (_, i) => S.votes[`m${i + 1}-${sujet}`]?.[v] !== undefined).every(Boolean));
+    // Les missions grillées en direct ne se votent pas : elles sont ratées.
+    const grillees = missionsGrillees(S.accusations, sujet);
+    const aVoter = Array.from({ length: nb }, (_, i) => i + 1).filter((n) => !grillees[n]);
+    const fini = votantsMissions(sujet).every((v) => aVoter.every((n) => S.votes[`m${n}-${sujet}`]?.[v] !== undefined));
     if (!fini && now < (r.fin ?? 0)) return null;
     const paris = Object.entries(S.paris)
       .filter(([de, p]) => !p.passe && p.cible === sujet && p.texte && de !== sujet)
       .map(([de, p]) => ({ de, texte: p.texte! }));
     if (paris.length) return { 'deroule/revelation/etape': 'detective', 'deroule/revelation/paris': paris, 'deroule/revelation/fin': now + DUREE_VOTE };
-    return { 'deroule/revelation/etape': 'resultat', 'deroule/revelation/fin': null };
+    return apresParis(sujet, now);
   }
   if (r.etape === 'detective') {
     const fini = (r.paris ?? []).every((p) => connectes().filter((v) => v !== p.de && v !== sujet).every((v) => S.votes[`d-${p.de}`]?.[v] !== undefined));
+    if (!fini && now < (r.fin ?? 0)) return null;
+    return apresParis(sujet, now);
+  }
+  if (r.etape === 'mensonges') {
+    const fini = (r.mensonges ?? []).every((m) => connectes().filter((v) => v !== m.de && v !== sujet).every((v) => S.votes[`l-${m.cle}`]?.[v] !== undefined));
     if (!fini && now < (r.fin ?? 0)) return null;
     return { 'deroule/revelation/etape': 'resultat', 'deroule/revelation/fin': null };
   }
@@ -165,10 +184,11 @@ function bilanFinal(): Ecritures {
   const missions: Record<string, ResultatMission[]> = {};
   const bilan: Bilan = { missions: {}, paris: [], titres: [] };
   for (const u of uids()) {
+    const grillees = missionsGrillees(S.accusations, u);
     const liste = missionsDe(u).map((m, i) => ({
       difficulte: m.difficulte,
       texte: m.texte,
-      reussie: majoriteOui(Object.values(S.votes[`m${i + 1}-${u}`] ?? {}).map((v) => v === true)),
+      reussie: !grillees[i + 1] && majoriteOui(Object.values(S.votes[`m${i + 1}-${u}`] ?? {}).map((v) => v === true)),
     }));
     bilan.missions[u] = liste;
     missions[u] = liste;
@@ -182,9 +202,35 @@ function bilanFinal(): Ecritures {
     bilan.paris.push({ de, cible: p.cible, texte: p.texte, trouvee });
   }
   const pts = pointsDeFin(missions, paris);
+  // Bouton GRILLÉ ! : les menteurs démasqués (« Raté » alors que l'accusation était juste).
+  const ajustes: Record<string, number> = {};
+  const enPlus: Bilan['titres'] = [];
+  bilan.mensonges = [];
+  for (const u of uids()) {
+    for (const a of accusationsADoubler(S.accusations, u)) {
+      const n = missionTrouvee(Object.values(S.votes[`l-${a.cle}`] ?? {}).map(Number));
+      const difficulte = n ? missionsDe(u)[n - 1]?.difficulte : undefined;
+      if (!difficulte) continue;
+      const vol = VOL_DETECTIVE[difficulte];
+      ajustes[a.de] = (ajustes[a.de] ?? 0) + PENALITE_ACCUSATION + vol; // il récupère ses 2 points et vole son dû
+      ajustes[u] = (ajustes[u] ?? 0) - PENALITE_MENSONGE - vol;
+      bilan.mensonges.push({ de: a.de, cible: u, texte: a.texte });
+      enPlus.push({ uid: u, titre: 'Menteur démasqué', pourquoi: 'a répondu « Raté » à une accusation juste' });
+    }
+  }
+  for (const a of listeAccusations(S.accusations)) {
+    if (a.statut === 'grille' || a.verdict === 'grille') {
+      enPlus.push({ uid: a.de, titre: 'Sherlock', pourquoi: 'a grillé quelqu’un en direct' });
+      enPlus.push({ uid: a.cible, titre: 'Grillé', pourquoi: 'mission découverte en direct' });
+    }
+  }
   const scores: Record<string, Score> = {};
-  for (const u of uids()) scores[u] = { ...scoreVide(), ...S.scores[u], missions: pts.missions[u] ?? 0, detective: pts.detective[u] ?? 0 };
-  bilan.titres = titres(scores, missions, paris);
+  for (const u of uids()) {
+    const avant = { ...scoreVide(), ...S.scores[u] };
+    scores[u] = { ...avant, missions: pts.missions[u] ?? 0, detective: pts.detective[u] ?? 0, grille: (avant.grille ?? 0) + (ajustes[u] ?? 0) };
+  }
+  const tous = [...titres(scores, missions, paris), ...enPlus];
+  bilan.titres = tous.filter((t, i) => tous.findIndex((x) => x.uid === t.uid && x.titre === t.titre) === i);
   return { scores, 'deroule/phase': 'fin', 'deroule/bilan': bilan, 'deroule/revelation': null, attente: null };
 }
 
@@ -194,6 +240,12 @@ function calculer(): Ecritures | null {
   const d = S.deroule;
   if (!d) return null;
   const now = maintenant();
+  // Bouton GRILLÉ ! : l'accusation en cours avance quelle que soit l'étape de la partie.
+  if (d.phase !== 'salon' && d.phase !== 'fin') {
+    const pause = mancheAction({ phase: d.phase, numeroJeu: d.numeroJeu, jeuEnCours: d.jeuEnCours, phaseJeu: (S.jeu as { phase?: string } | null)?.phase });
+    const acc = piloterAccusations({ accs: S.accusations, votes: S.votes, connectes: connectes(), maintenant: now, scores: S.scores, pause });
+    if (acc) return acc;
+  }
   let e: Ecritures | null = null;
   switch (d.phase) {
     case 'missions':
@@ -277,7 +329,7 @@ export async function commandeHote(valeur: string): Promise<void> {
     await remove(ref(db, `secrets/${S.code}`));
     e = {
       deroule: { phase: 'salon', numeroJeu: 0 }, jeu: null, scores: null, reponses: null, compteurs: null, tirage: null,
-      revelation: null, votes: null, paris: null, motsImposteur: null, attente: null, prive: null,
+      revelation: null, votes: null, paris: null, motsImposteur: null, attente: null, prive: null, accusations: null,
     };
   } else if (valeur === 'forcer' && ['missions', 'miPartie', 'detective'].includes(d.phase)) {
     // L'hôte peut avancer sans attendre un joueur absent ou trop lent.

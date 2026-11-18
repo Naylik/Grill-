@@ -102,3 +102,10 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   éternue), note du temps (Éclair, Très rapide…), cadran à graduations et gros bouton STOP. Après chaque manche, une piste
   en couloirs de course montre qui a touché (ou arrêté) avant qui, avec la ligne du temps visé pour Le bon timing
   (idée reprise de la 3e maquette). À la fin du jeu, classement en barres. Éléments partagés : `src/games/arene.ts`.
+- 18/11/2026 · Bouton GRILLÉ ! (`src/accusations.ts`, `src/ecrans/accusation.ts`) : pendant la partie, 1 accusation par
+  joueur et par manche (jeu). L'accuseur écrit ce qu'il croit être la mission ; seul l'accusé la compare à ses vraies
+  missions et répond « Il m'a eu » (sa mission s'affiche, le groupe vote : grillée = mission ratée, vol de 4/6 pts) ou
+  « Raté » (l'accuseur perd 2 pts, la mission reste secrète, tout le monde voit la proposition). À la révélation, chaque
+  « Raté » est vérifié : menteur = −3 pts et l'accuseur récupère son dû. Une seule accusation à la fois ; pendant une
+  manche de Réflexe ou de Timing, le bouton est caché, le procès devient un bandeau et ses délais sont repoussés.
+  Nouvelles règles Firebase (nœud `accusations`) : à republier dans la console.

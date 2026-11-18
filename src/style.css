@@ -514,3 +514,29 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .stop-timing:active { transform: translateY(6px); box-shadow: 0 2px 0 #7A1426, 0 0 30px -6px #FF5A6E; }
 .stop-timing.pas-encore { opacity: .4; }
 .pts:empty { visibility: hidden; }
+
+/* ——— Bouton GRILLÉ ! ——— */
+.bouton-grille { position: fixed; z-index: 20; right: max(16px, env(safe-area-inset-right)); bottom: max(18px, env(safe-area-inset-bottom)); width: 78px; height: 78px; border-radius: 50%; border: 3px solid #FFD2C2; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: .9; color: #fff; font-family: var(--titre); font-weight: 900;
+  background: radial-gradient(circle at 35% 30%, #FF9A76, #FF5A3D 50%, #B32A12); box-shadow: 0 6px 0 #7A1B0B, 0 0 30px -4px #FF5A3D; animation: arrive .35s cubic-bezier(.3, 1.6, .5, 1); transition: transform .06s, box-shadow .06s; }
+.bouton-grille span { font-size: 12px; letter-spacing: .02em; }
+.bouton-grille b { font-size: 26px; }
+.bouton-grille:active { transform: translateY(5px); box-shadow: 0 1px 0 #7A1B0B, 0 0 20px -4px #FF5A3D; }
+/* Laisse de la place sous le contenu pour que le bouton ne cache pas le dernier bouton de l'écran. */
+.ecran:has(~ .bouton-grille) { padding-bottom: 110px; }
+
+.proces { position: fixed; inset: 0; z-index: 35; display: flex; align-items: flex-end; justify-content: center; overflow-y: auto; padding: max(16px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); background: #0D0A1ECC; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); animation: fondu .2s; }
+@keyframes fondu { from { opacity: 0; } }
+.proces-carte { width: min(100%, 480px); margin-top: auto; display: flex; flex-direction: column; gap: 12px; padding: 20px 18px; border-radius: 28px; background: linear-gradient(180deg, #2A1B4A, #160F2E); border: 1px solid #FF5A3D66; box-shadow: 0 -10px 60px -20px #FF5A3D88; animation: monte .35s cubic-bezier(.2, 1.2, .4, 1); }
+@keyframes monte { from { transform: translateY(60px); opacity: 0; } }
+.proces-titre { margin: 0; text-align: center; font-family: var(--titre); font-weight: 900; font-size: 30px; letter-spacing: -1px; color: #FF7A5C; text-shadow: 0 0 20px #FF5A3D88; animation: tampon .4s cubic-bezier(.2, 1.4, .4, 1) both; }
+.proces.moi .proces-carte { border-color: var(--jaune); }
+.proces.moi .proces-titre { color: var(--jaune); }
+.proces-qui { display: flex; align-items: center; justify-content: center; gap: 10px; text-align: center; font-size: 16px; }
+.proces-proposition { margin: 0; padding: 12px 14px; border-radius: 16px; background: #FFFFFF10; border: 1px dashed var(--bord); font-weight: 700; font-size: 17px; text-align: center; }
+.proces-mission { margin: 0; padding: 12px 14px; border-radius: 16px; background: #FFF6EA; color: #2A1E3D; font-weight: 800; font-size: 16px; }
+.proces-verdict { margin: 0; text-align: center; font-size: 16px; }
+.proces.grille .proces-carte { border-color: var(--orange); background: radial-gradient(120% 80% at 50% 0%, #6A2412, #1A0D1E 70%); }
+.proces.rate .proces-titre { color: var(--cyan); text-shadow: 0 0 20px #5CD8FF66; }
+.proces .chrono { align-self: center; }
+.bandeau-proces { position: fixed; z-index: 20; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); padding: 10px 14px; border-radius: 14px; background: #2A1B4AEE; border: 1px solid #FF5A3D88; font-size: 14px; text-align: center; pointer-events: none; }

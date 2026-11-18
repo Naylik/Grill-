@@ -79,6 +79,32 @@
             }
           }
         },
+        "accusations": {
+          ".read": "auth != null",
+          "$numero": {
+            "$accuseur": {
+              ".write": "auth != null && auth.uid === $accuseur && !data.exists() && root.child('salons/' + $code + '/joueurs/' + auth.uid).exists()",
+              ".validate": "newData.hasChildren(['cible', 'texte', 'le']) && (data.exists() || (!newData.child('reponse').exists() && !newData.child('mission').exists() && !newData.child('statut').exists()))",
+              "cible": {
+                ".validate": "newData.isString() && newData.val() !== $accuseur && root.child('salons/' + $code + '/joueurs/' + newData.val()).exists()"
+              },
+              "texte": {
+                ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 160"
+              },
+              "le": {
+                ".validate": "newData.isNumber() && newData.val() <= now + 60000"
+              },
+              "reponse": {
+                ".write": "auth != null && !data.exists() && auth.uid === root.child('salons/' + $code + '/accusations/' + $numero + '/' + $accuseur + '/cible').val()",
+                ".validate": "newData.val() === 'eu' || newData.val() === 'rate'"
+              },
+              "mission": {
+                ".write": "auth != null && !data.exists() && auth.uid === root.child('salons/' + $code + '/accusations/' + $numero + '/' + $accuseur + '/cible').val()",
+                ".validate": "newData.hasChildren(['numero', 'texte', 'difficulte'])"
+              }
+            }
+          }
+        },
         "paris": {
           ".read": "auth != null && root.child('salons/' + $code + '/infos/hote').val() === auth.uid",
           "$uid": {

@@ -51,6 +51,28 @@ describe.skipIf(!emulateurDispo)('règles de sécurité', () => {
     await assertSucceeds(get(ref(bd('hote'), `salons/${C}/reponses`)));
   });
 
+  it('bouton GRILLÉ ! : une accusation par manche, seul l’accusé répond, personne ne triche', async () => {
+    const acc = `salons/${C}/accusations/2/manon`;
+    const base = { cible: 'cassie', texte: 'Elle me fait dire franchement', le: Date.now() };
+    // On ne peut pas accuser au nom d'un autre, ni s'accuser soi-même, ni répondre à sa place.
+    await assertFails(set(ref(bd('cassie'), acc), base));
+    await assertFails(set(ref(bd('manon'), `salons/${C}/accusations/2/manon`), { ...base, cible: 'manon' }));
+    await assertFails(set(ref(bd('manon'), acc), { ...base, reponse: 'eu' }));
+    await assertSucceeds(set(ref(bd('manon'), acc), base));
+    // Une seule accusation par manche : pas de seconde écriture.
+    await assertFails(set(ref(bd('manon'), acc), { ...base, cible: 'hote' }));
+    // Tout le monde peut lire l'accusation.
+    await assertSucceeds(get(ref(bd('hote'), `salons/${C}/accusations`)));
+    // Seule l'accusée répond, une seule fois.
+    await assertFails(set(ref(bd('manon'), `${acc}/reponse`), 'eu'));
+    await assertFails(set(ref(bd('hote'), `${acc}/reponse`), 'bof'));
+    await assertSucceeds(update(ref(bd('cassie'), acc), { reponse: 'eu', mission: { numero: 1, texte: 'Fais dire franchement', difficulte: 'facile' } }));
+    await assertFails(set(ref(bd('cassie'), `${acc}/reponse`), 'rate'));
+    // Le verdict et les points restent à l'hôte.
+    await assertFails(set(ref(bd('manon'), `${acc}/statut`), 'grille'));
+    await assertSucceeds(set(ref(bd('hote'), `${acc}/statut`), 'vote'));
+  });
+
   it("seul l'hôte pilote la partie et les scores", async () => {
     await assertFails(set(ref(bd('manon'), `salons/${C}/deroule/phase`), 'fin'));
     await assertFails(set(ref(bd('manon'), `salons/${C}/scores/manon/jeux`), 99));

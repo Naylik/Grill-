@@ -123,6 +123,17 @@ export const sons = {
   podium(): void {
     [523, 659, 784, 1047, 784, 1047].forEach((f, i) => note(f, i * 0.13, i === 5 ? 0.7 : 0.18, 'triangle', 0.22));
   },
+  /** Bouton GRILLÉ ! : une accusation tombe (petite sirène). */
+  accusation(): void {
+    [0, 1, 2].forEach((i) => {
+      note(880, i * 0.32, 0.15, 'square', 0.09);
+      note(660, i * 0.32 + 0.16, 0.15, 'square', 0.09);
+    });
+  },
+  /** Accusation ratée : « wouah wouah » qui descend. */
+  rate(): void {
+    [392, 349, 311].forEach((f, i) => note(f, i * 0.22, i === 2 ? 0.5 : 0.2, 'triangle', 0.18));
+  },
   /** Mission réussie : petit arpège joyeux. */
   reussi(): void {
     [659, 784, 1047].forEach((f, i) => note(f, i * 0.09, 0.22, 'triangle', 0.2));

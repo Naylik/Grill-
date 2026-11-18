@@ -4,6 +4,7 @@ import { db } from './firebase';
 import { DELAI_REPRISE_HOTE, quiDoitReprendre, reprendreLaMain, signalerPresence } from './salon';
 import type { Deroule, Infos, Joueur, Pari, Score, Secrets } from './types';
 import type { Reponse } from './games/interface';
+import type { Accusations } from './accusations';
 
 export interface Etat {
   uid: string;
@@ -26,6 +27,8 @@ export interface Etat {
   /** Paris détective de tous : seul l'hôte peut les lire. */
   paris: Record<string, Pari>;
   prive: Record<string, unknown>;
+  /** Bouton GRILLÉ ! : accusations de la partie (lisibles par tous, sans les missions sauf aveu). */
+  accusations: Accusations;
   charge: boolean;
   // Propre à ce téléphone
   onglet: 'partie' | 'missions';
@@ -38,12 +41,14 @@ export interface Etat {
   vueAccueil: 'accueil' | 'jeux';
   /** Image du podium affichée quand le téléphone ne sait pas partager directement. */
   apercuImage: string | null;
+  /** Le joueur a ouvert la fenêtre « Accuser quelqu'un ». */
+  accuser: boolean;
 }
 
 export const S: Etat = {
   uid: '', code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
-  revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, charge: false,
-  onglet: 'partie', erreur: null, toast: null, apercuImage: null, confirmerQuitter: false, vueAccueil: 'accueil',
+  revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, accusations: {}, charge: false,
+  onglet: 'partie', erreur: null, toast: null, apercuImage: null, confirmerQuitter: false, vueAccueil: 'accueil', accuser: false,
 };
 
 export const estHote = (): boolean => !!S.infos && S.infos.hote === S.uid;
@@ -109,6 +114,7 @@ export function ecouterSalon(code: string): void {
   ecoute(`${base}/compteurs`, 'compteurs', {});
   ecoute(`${base}/revelation`, 'revelation', {});
   ecoute(`${base}/votes`, 'votes', {});
+  ecoute(`${base}/accusations`, 'accusations', {});
   ecoute(`secrets/${code}/${S.uid}`, 'secrets', {});
   ecoute(`${base}/motsImposteur/${S.uid}`, 'monMot', null);
   ecoute(`${base}/attente`, 'attente', null);
@@ -126,7 +132,7 @@ export function quitterEcoute(): void {
   if (minuterieReprise) clearTimeout(minuterieReprise);
   Object.assign(S, {
     code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
-    revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, onglet: 'partie', confirmerQuitter: false,
+    revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, accusations: {}, onglet: 'partie', confirmerQuitter: false, accuser: false,
   });
   localStorage.removeItem('grille:salon');
 }

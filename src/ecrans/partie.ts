@@ -4,6 +4,7 @@ import { esc } from '../outils';
 import { boutonSon, pastille } from './commun';
 import { sonActif } from '../son';
 import { ecranChoixMission, ongletMissions } from './missions';
+import { coucheGrille } from './accusation';
 import { ecranChoixJeu, ecranClassement, ecranDetective, ecranFin, ecranJeu, ecranRevelation } from './deroule';
 
 function bandeau(): string {
@@ -41,5 +42,5 @@ function contenuPartie(): string {
 
 export function ecranPartie(): string {
   const contenu = S.onglet === 'missions' ? ongletMissions() : `<section class="ecran phase-${S.deroule!.phase}">${contenuPartie()}</section>`;
-  return bandeau() + contenu;
+  return bandeau() + contenu + coucheGrille();
 }

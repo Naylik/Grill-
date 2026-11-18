@@ -11,6 +11,7 @@ import { brouillons } from '../ui';
 import { attenteDes, bulle, chrono, pastille } from './commun';
 import { carteMission } from './missions';
 import { mallow, sequenceGrille } from '../mallow';
+import { missionsGrillees, PENALITE_MENSONGE } from '../accusations';
 
 /** Mémoire locale des jeux sur ce téléphone (ex. « j'ai répondu oui »). */
 export const localJeu: Record<string, unknown> = {};
@@ -154,7 +155,9 @@ export function ecranRevelation(): string {
     return `${entete}<p class="attente">En attente du téléphone de ${nom(sujet)}…</p>
       <div class="pile bas">${boutonHote('passer', 'Passer ce joueur', 'rose')}</div>`;
   }
-  const cartes = missions.map((m, i) => `<p class="intitule">Mission ${i + 1}</p>${carteMission({ ...m, id: '', type: m.type as 'vie' | 'jeu' })}`);
+  const grillees = missionsGrillees(S.accusations, sujet);
+  const marqueGrillee = (n: number) => `<div class="verdict grille"><strong>Grillée en direct par ${nom(grillees[n])}</strong><span>ratée</span></div>`;
+  const cartes = missions.map((m, i) => `<p class="intitule">Mission ${i + 1}</p>${carteMission({ ...m, id: '', type: m.type as 'vie' | 'jeu' })}${grillees[i + 1] ? marqueGrillee(i + 1) : ''}`);
 
   if (r.etape === 'recit') {
     return `${entete}${chrono(r.fin)}
@@ -162,7 +165,7 @@ export function ecranRevelation(): string {
       ${cartes.join('')}`;
   }
   if (r.etape === 'vote') {
-    const blocs = missions.map((_, i) => `${cartes[i]}${moiSujet ? '' : boutonsVote(`m${i + 1}-${sujet}`, [{ valeur: 'true', texte: 'Réussi', couleur: 'vert' }, { valeur: 'false', texte: 'Raté', couleur: 'rose' }])}`);
+    const blocs = missions.map((_, i) => `${cartes[i]}${moiSujet || grillees[i + 1] ? '' : boutonsVote(`m${i + 1}-${sujet}`, [{ valeur: 'true', texte: 'Réussi', couleur: 'vert' }, { valeur: 'false', texte: 'Raté', couleur: 'rose' }])}`);
     return `${entete}${chrono(r.fin)}
       ${moiSujet ? bulle('Les autres votent. Fais tes yeux de chien battu.') : '<p class="aide gauche">Mission réussie ou ratée ? Le groupe décide.</p>'}
       ${blocs.join('')}
@@ -180,8 +183,22 @@ export function ecranRevelation(): string {
     return `${entete}${chrono(r.fin)}${bulle(`Des détectives pensent avoir grillé ${nom(sujet)}…`)}${cartes.join('')}${blocs.join('')}
       <div class="pile bas">${boutonHote('cloreVote', 'Clore le vote', 'discret')}</div>`;
   }
+  if (r.etape === 'mensonges') {
+    const blocs = (r.mensonges ?? []).map((m) => {
+      const peutVoter = S.uid !== m.de && S.uid !== sujet;
+      return `<div class="boite"><p>En pleine partie, <strong>${nom(m.de)}</strong> a accusé ${nom(sujet)} :</p><p class="texte-mission">« ${esc(m.texte)} »</p>
+        <p class="aide gauche">${nom(sujet)} a répondu « Raté ». ${peutVoter ? 'Il a menti ?' : 'Les autres jugent.'}</p>
+        ${peutVoter ? boutonsVote(`l-${m.cle}`, [
+          ...missions.map((_, i) => ({ valeur: String(i + 1), texte: `Menti : mission ${i + 1}`, couleur: 'rose' })),
+          { valeur: '0', texte: 'Il a dit vrai', couleur: 'vert' },
+        ]) : ''}</div>`;
+    });
+    return `${entete}${chrono(r.fin)}${bulle(`${nom(sujet)} a-t-il menti quand on l’a accusé ? S’il a menti : −${PENALITE_MENSONGE} pts.`)}${cartes.join('')}${blocs.join('')}
+      <div class="pile bas">${boutonHote('cloreVote', 'Clore le vote', 'discret')}</div>`;
+  }
   // Résultat pour ce joueur (calculé ici à partir des votes, comme le fera l'hôte à la fin).
   const verdicts = missions.map((m, i) => {
+    if (grillees[i + 1]) return `<div class="verdict grille"><strong>Mission ${i + 1} : grillée en direct</strong><span>0 pt</span></div>`;
     const ok = majoriteOui(Object.values(S.votes[`m${i + 1}-${sujet}`] ?? {}).map((v) => v === true));
     return `<div class="verdict ${ok ? 'ok' : 'ko'}"><strong>Mission ${i + 1} : ${ok ? 'réussie' : 'ratée'}</strong><span>${ok ? `+${m.difficulte === 'facile' ? 6 : 10} pts` : '0 pt'}</span></div>`;
   });
@@ -189,12 +206,17 @@ export function ecranRevelation(): string {
     const n = missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number));
     return `<div class="verdict ${n ? 'grille' : 'ko'}"><strong>${nom(p.de)} : ${n ? `grillé, mission ${n} !` : 'pari raté'}</strong><span>${n ? 'vol de points' : '−2 pts'}</span></div>`;
   });
+  const menteur = (r.mensonges ?? []).map((m) => {
+    const n = missionTrouvee(Object.values(S.votes[`l-${m.cle}`] ?? {}).map(Number));
+    return `<div class="verdict ${n ? 'grille' : 'ok'}"><strong>${n ? `Menteur ! ${nom(m.de)} avait vu juste` : `Accusation de ${nom(m.de)} : il a dit vrai`}</strong><span>${n ? `−${PENALITE_MENSONGE} pts` : 'rien'}</span></div>`;
+  });
   const dernier = r.index + 1 >= r.ordre.length;
-  const grille = (r.paris ?? []).some((p) => missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number)) > 0);
+  const grille = (r.paris ?? []).some((p) => missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number)) > 0)
+    || (r.mensonges ?? []).some((m) => missionTrouvee(Object.values(S.votes[`l-${m.cle}`] ?? {}).map(Number)) > 0);
   const moment = grille
     ? `<div class="moment-grille">${sequenceGrille(140)}<p class="titre-grille">GRILLÉ !</p></div>`
     : '';
-  return `${moment}${entete}<div class="pile">${verdicts.join('')}${grillages.join('')}</div>
+  return `${moment}${entete}<div class="pile">${verdicts.join('')}${grillages.join('')}${menteur.join('')}</div>
     ${bulle(verdicts.every((v) => v.includes('ok')) ? `${nom(sujet)}, agent d’élite. Ça fait peur.` : `${nom(sujet)}, l’espionnage, ce n’est peut-être pas pour toi.`)}
     <div class="pile bas">${estHote() ? boutonHote('suivant', dernier ? 'Voir le podium' : 'Joueur suivant') : '<p class="attente">L’hôte passe à la suite.</p>'}</div>`;
 }
@@ -212,11 +234,11 @@ export function ecranFin(): string {
     })
     .join('');
   const details = liste.map((u) => {
-    const s = S.scores[u] ?? scoreVide();
+    const s = { ...scoreVide(), ...S.scores[u] };
     const t = (b?.titres ?? []).filter((x) => x.uid === u);
     return `<div class="boite detail-joueur">
       <div class="ligne">${pastille(S.joueurs[u], 30)}<strong>${nom(u)}</strong><span class="total">${totalFinal(s)} pts</span></div>
-      <div class="chiffres"><span>Mini-jeux <b>${s.jeux + s.parieur}</b></span><span>Missions <b>${s.missions}</b></span><span>Détective <b>${s.detective > 0 ? '+' : ''}${s.detective}</b></span></div>
+      <div class="chiffres"><span>Mini-jeux <b>${s.jeux + s.parieur}</b></span><span>Missions <b>${s.missions}</b></span><span>Détective <b>${s.detective > 0 ? '+' : ''}${s.detective}</b></span>${s.grille ? `<span>Grillé ! <b>${s.grille > 0 ? '+' : ''}${s.grille}</b></span>` : ''}</div>
       ${t.length ? `<div class="titres">${t.map((x) => `<span class="titre-fun" title="${esc(x.pourquoi)}">${esc(x.titre)}</span>`).join('')}</div>` : ''}
     </div>`;
   }).join('');

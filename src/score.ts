@@ -35,8 +35,10 @@ export function majoriteOui(votes: boolean[]): boolean {
 export const scoreVide = (): Score => ({ jeux: 0, parieur: 0, missions: 0, detective: 0 });
 
 /** Classement provisoire : sans les points de mission (révélés à la fin seulement). */
-export const totalProvisoire = (s?: Score): number => (s ? s.jeux + s.parieur : 0);
-export const totalFinal = (s?: Score): number => (s ? s.jeux + s.parieur + s.missions + s.detective : 0);
+// Les points du bouton GRILLÉ ! sont publics dès le verdict : ils comptent tout de suite.
+// (Un score peut être incomplet : un joueur accusé avant le 1er jeu n'a que « grille ».)
+export const totalProvisoire = (s?: Partial<Score>): number => (s ? (s.jeux ?? 0) + (s.parieur ?? 0) + (s.grille ?? 0) : 0);
+export const totalFinal = (s?: Partial<Score>): number => (s ? totalProvisoire(s) + (s.missions ?? 0) + (s.detective ?? 0) : 0);
 
 /** Combien ont dit oui ? : 3 pts si chiffre exact, 1 pt à un près. */
 export function pointsCombien(estimation: number, vrai: number): number {

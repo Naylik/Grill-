@@ -2,6 +2,8 @@ import './style.css';
 import { registerSW } from 'virtual:pwa-register';
 import QRCode from 'qrcode';
 import { ref, runTransaction, set, update } from 'firebase/database';
+import { accusationEnCours } from './accusations';
+import { accusationPossible } from './ecrans/accusation';
 import { connexion, configManquante, db, maintenant } from './firebase';
 import { S, brancherAffichage, demanderAffichage, ecouterSalon, estHote, quandCaChange, quitterEcoute } from './etat';
 import { commandeHote, commandeJeu, piloter } from './hote';
@@ -274,6 +276,66 @@ action('voter', async (el) => {
   await set(ref(db, `salons/${S.code}/votes/${el.dataset.sujet}/${S.uid}`), valeur);
   sons.ding();
   vibrer(30);
+});
+
+// ——— Bouton GRILLÉ ! ———
+
+action('ouvrirAccuser', () => {
+  if (!accusationPossible()) return;
+  S.accuser = true;
+  brouillons.accuse = '';
+  brouillons.accusation = '';
+  vibrer(40);
+  demanderAffichage();
+});
+action('fermerAccuser', () => {
+  S.accuser = false;
+  demanderAffichage();
+});
+action('choisirAccuse', (el) => {
+  brouillons.accuse = el.dataset.valeur!;
+  demanderAffichage();
+});
+action('accuser', async (el) => {
+  const cible = brouillons.accuse;
+  const texte = (brouillons.accusation ?? '').trim();
+  if (!cible || !S.joueurs[cible] || cible === S.uid) return;
+  if (texte.length < 3) {
+    montrerToast('Écris ce que tu crois être sa mission.');
+    return;
+  }
+  if (!accusationPossible()) {
+    S.accuser = false;
+    montrerToast('Trop tard : une accusation est déjà en cours.');
+    return;
+  }
+  (el as HTMLButtonElement).disabled = true;
+  try {
+    await set(ref(db, `salons/${S.code}/accusations/${S.deroule!.numeroJeu}/${S.uid}`), { cible, texte: texte.slice(0, 160), le: maintenant() });
+    S.accuser = false;
+    brouillons.accusation = '';
+  } catch (e) {
+    console.error(e);
+    montrerToast('Accusation impossible, réessaie.');
+  } finally {
+    (el as HTMLButtonElement).disabled = false;
+    demanderAffichage();
+  }
+});
+action('repondreAccusation', async (el) => {
+  const a = accusationEnCours(S.accusations);
+  if (!a || a.cible !== S.uid || a.reponse) return;
+  const chemin = `salons/${S.code}/accusations/${a.numeroJeu}/${a.de}`;
+  if (el.dataset.valeur === 'eu') {
+    const numero = Number(el.dataset.numero);
+    const m = numero === 1 ? S.secrets.mission1 : S.secrets.mission2;
+    if (!m) return;
+    // Seul cas où une mission quitte le téléphone avant la fin : l'accusé avoue.
+    await update(ref(db, chemin), { mission: { numero, texte: m.texte, difficulte: m.difficulte }, reponse: 'eu' });
+  } else {
+    await set(ref(db, `${chemin}/reponse`), 'rate');
+  }
+  vibrer(60);
 });
 
 // ——— Partage ———

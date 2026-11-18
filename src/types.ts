@@ -49,9 +49,11 @@ export interface Deroule {
 export interface EtatRevelation {
   ordre: string[]; // uids dans l'ordre de passage
   index: number;
-  etape: 'recit' | 'vote' | 'detective' | 'resultat';
+  etape: 'recit' | 'vote' | 'detective' | 'mensonges' | 'resultat';
   fin?: number;
   paris?: { de: string; texte: string }[]; // suppositions visant le joueur en cours
+  /** Accusations GRILLÉ ! auxquelles le joueur en cours a répondu « Raté » : a-t-il menti ? */
+  mensonges?: { cle: string; de: string; texte: string }[];
 }
 
 /** Pari détective, écrit en secret (lisible par son auteur et l'hôte seulement). */
@@ -64,6 +66,8 @@ export interface Pari {
 export interface Bilan {
   missions: Record<string, { difficulte: Difficulte; reussie: boolean; texte: string }[]>;
   paris: { de: string; cible: string; texte: string; trouvee: Difficulte | null }[];
+  /** Mensonges découverts à la révélation (accusé qui avait répondu « Raté » à tort). */
+  mensonges?: { de: string; cible: string; texte: string }[];
   titres: { uid: string; titre: string; pourquoi: string }[];
 }
 
@@ -99,5 +103,7 @@ export interface Score {
   parieur: number; // vrais points gagnés/perdus au Parieur
   missions: number; // révélés à la fin seulement
   detective: number;
+  /** Points du bouton GRILLÉ ! (vols, accusations ratées, mensonges démasqués). */
+  grille?: number;
   detail?: Record<string, number>; // points par jeu (clé : numéro du jeu)
 }

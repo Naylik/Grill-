@@ -9,6 +9,7 @@ import { maintenant } from './firebase';
 import { majoriteOui, missionTrouvee } from './score';
 import { sons } from './son';
 import { confettis } from './confettis';
+import { accusationEnCours } from './accusations';
 
 export function repondre(etape: string, valeurs: Record<string, unknown> = {}): Promise<void> {
   return set(ref(db, `salons/${S.code}/reponses/${S.uid}`), { ...valeurs, etape });
@@ -76,7 +77,8 @@ export function momentsForts(): void {
   const r = d.revelation;
   if (d.phase === 'revelation' && r?.etape === 'resultat') {
     const sujet = r.ordre[r.index];
-    const grille = (r.paris ?? []).some((p) => missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number)) > 0);
+    const grille = (r.paris ?? []).some((p) => missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number)) > 0)
+      || (r.mensonges ?? []).some((m) => missionTrouvee(Object.values(S.votes[`l-${m.cle}`] ?? {}).map(Number)) > 0);
     const nbMissions = S.revelation[sujet]?.missions?.length ?? 0;
     const reussie = Array.from({ length: nbMissions }, (_, i) =>
       majoriteOui(Object.values(S.votes[`m${i + 1}-${sujet}`] ?? {}).map((v) => v === true)),
@@ -92,6 +94,21 @@ export function momentsForts(): void {
         confettis(70);
       });
     }
+  }
+  // Bouton GRILLÉ ! : une accusation tombe, puis le verdict, sur tous les téléphones en même temps.
+  const a = accusationEnCours(S.accusations);
+  if (a) {
+    moment(`accusation-${a.cle}`, () => {
+      sons.accusation();
+      vibrer(a.cible === S.uid ? [200, 80, 200, 80, 300] : [120]);
+    });
+    if (a.statut === 'grille') {
+      moment(`grille-direct-${a.cle}`, () => {
+        sons.grille();
+        setTimeout(() => vibrer([120, 60, 220]), 1450);
+      });
+    }
+    if (a.statut === 'rate') moment(`rate-${a.cle}`, () => sons.rate());
   }
   // Podium.
   if (d.phase === 'fin') {
