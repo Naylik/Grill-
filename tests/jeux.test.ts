@@ -99,6 +99,38 @@ describe('Réflexe Mallow et Le bon timing', async () => {
     expect(ecartCompte(undefined, 5)).toBe(5000);
     expect(formaterSecondes(4870)).toBe('4,87 s');
   });
+  it('déroulé complet : intro, manches, piste, bilan, puis points de place', async () => {
+    const { reflexe } = await import('../src/games/reflexe');
+    const { timing } = await import('../src/games/timing');
+    const uids = ['a', 'b', 'c'];
+    const joueurs = Object.fromEntries(uids.map((u, i) => [u, { prenom: `J${i}`, couleur: '#fff' }])) as never;
+    for (const [jeu, valeurs] of [[reflexe, { a: 200, b: 300, c: -1 }], [timing, { a: 5100, b: 6000, c: 4000 }]] as const) {
+      let t = 1000;
+      const ctx = () => ({ joueurs, uids, connectes: uids, maintenant: t, numeroJeu: 1, reponses: {} as Record<string, never>, compteurs: {}, totaux: {}, prive: {}, hasard: () => 0.5 });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let etat: any = jeu.demarrer(ctx() as never).etat;
+      expect(etat.phase).toBe('intro');
+      const phases: string[] = [];
+      for (let i = 0; i < 40; i++) {
+        t += 20000;
+        const c = ctx();
+        if (etat.phase === 'attente' || etat.phase === 'chrono') {
+          for (const u of uids) c.reponses[u] = { etape: etat.etape, temps: valeurs[u as 'a'] } as never;
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const av: any = jeu.piloter(c as never, etat);
+        if (!av) continue;
+        if (av.fin) {
+          expect(av.fin.points.a).toBeGreaterThan(av.fin.points.c);
+          break;
+        }
+        etat = av.etat;
+        phases.push(etat.phase);
+      }
+      expect(phases).toContain('resultat');
+      expect(phases.at(-1)).toBe('bilan');
+    }
+  });
   it('les deux jeux sont dans la liste et peuvent sortir dès le 1er jeu', () => {
     const ids = jeuxPossibles(1, 3, []).map((j) => j.id);
     expect(ids).toContain('reflexe');

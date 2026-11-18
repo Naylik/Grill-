@@ -97,3 +97,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   « atchoum », faux départ = 1 s de pénalité) et Le bon timing (3 manches, chrono invisible à arrêter à 5, 7 puis 10 s).
   Le feu et le départ du chrono sont fixés à l'heure du serveur (même instant sur tous les téléphones), et le toucher est
   pris dès que le doigt touche l'écran (data-immediat). Les manches s'enchaînent seules. 6 mini-jeux au total.
+- 18/11/2026 · Réflexe Mallow et Le bon timing passent au style « Arène » (choisi parmi 3 maquettes) : écran d'intro
+  avec les règles, barre des manches, arène qui s'embrase (Mallow surpris quand il prend feu, yeux fermés quand il
+  éternue), note du temps (Éclair, Très rapide…), cadran à graduations et gros bouton STOP. Après chaque manche, une piste
+  en couloirs de course montre qui a touché (ou arrêté) avant qui, avec la ligne du temps visé pour Le bon timing
+  (idée reprise de la 3e maquette). À la fin du jeu, classement en barres. Éléments partagés : `src/games/arene.ts`.

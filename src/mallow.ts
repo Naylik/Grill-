@@ -9,6 +9,8 @@ interface Options {
   trait?: string;
   /** Couronne du « Roi de la soirée ». */
   couronne?: boolean;
+  /** Expression : normale, surprise (il prend feu), yeux fermés (il éternue ou il compte). */
+  expression?: 'normale' | 'surprise' | 'yeuxFermes';
 }
 
 const TRAIT = '#24123A';
@@ -31,11 +33,17 @@ export function mallow(o: Options = {}): string {
     <path d="M52 98 L52 140" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".8"/>
     <path d="M66 92 Q78 85 90 91" stroke="${t}" stroke-width="5" stroke-linecap="round" fill="none"/>
     <path d="M110 88 Q122 81 134 86" stroke="${t}" stroke-width="5" stroke-linecap="round" fill="none"/>
-    <g class="yeux"><ellipse cx="78" cy="112" rx="9" ry="12" fill="${t}"/><ellipse cx="122" cy="112" rx="9" ry="12" fill="${t}"/>
-      <circle cx="81" cy="107" r="3.6" fill="#fff"/><circle cx="125" cy="107" r="3.6" fill="#fff"/><circle cx="75" cy="117" r="1.6" fill="#fff"/><circle cx="119" cy="117" r="1.6" fill="#fff"/></g>
+    ${o.expression === 'yeuxFermes'
+      ? `<path d="M68 112 Q78 104 88 112 M112 112 Q122 104 132 112" stroke="${t}" stroke-width="6" stroke-linecap="round" fill="none"/>`
+      : `<g class="yeux"><ellipse cx="78" cy="112" rx="9" ry="12" fill="${t}"/><ellipse cx="122" cy="112" rx="9" ry="12" fill="${t}"/>
+      <circle cx="81" cy="107" r="3.6" fill="#fff"/><circle cx="125" cy="107" r="3.6" fill="#fff"/><circle cx="75" cy="117" r="1.6" fill="#fff"/><circle cx="119" cy="117" r="1.6" fill="#fff"/></g>`}
     <ellipse cx="62" cy="130" rx="9" ry="5" fill="#FF8FA8" opacity=".75"/><ellipse cx="138" cy="130" rx="9" ry="5" fill="#FF8FA8" opacity=".75"/>
-    <path d="M86 130 Q100 147 116 130 Z" fill="#4A1430" stroke="${t}" stroke-width="4" stroke-linejoin="round"/>
-    <path d="M94 137 Q101 133 108 137 Q101 143 94 137 Z" fill="#FF6B8A"/>
+    ${o.expression === 'surprise'
+      ? `<ellipse cx="100" cy="140" rx="10" ry="12" fill="#4A1430" stroke="${t}" stroke-width="4"/><path d="M150 92 Q156 104 150 110 Q144 104 150 92Z" fill="#7FD3FF"/>`
+      : o.expression === 'yeuxFermes'
+        ? `<ellipse cx="100" cy="140" rx="11" ry="8" fill="#4A1430" stroke="${t}" stroke-width="4"/>`
+        : `<path d="M86 130 Q100 147 116 130 Z" fill="#4A1430" stroke="${t}" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M94 137 Q101 133 108 137 Q101 143 94 137 Z" fill="#FF6B8A"/>`}
   </svg>`;
 }
 
