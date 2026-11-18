@@ -153,3 +153,10 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   (5 / 6 / 7 selon le format). Bonne réponse : la cagnotte passe à 1 puis double ; erreur : tout perdu. Après chaque
   bonne réponse, choix secret : encaisser ou doubler (sans réponse : on encaisse). La bonne réponse reste chez l'hôte
   (`prive/quitte`) jusqu'au résultat. 40 questions (10 par niveau), avec la mémoire du groupe.
+- 18/11/2026 · Nouveau jeu « Dessin téléphone arabe » (`src/games/telephone.ts`, dessin au doigt dans `src/dessin.ts`,
+  40 phrases dans `src/data/dessins.json`), façon Gartic Phone : phrase → dessin (60 s) → devinette (35 s) → dessin…,
+  chacun passe sur une chaîne différente à chaque étape et ne voit jamais la sienne (3 / 4 / 5 étapes selon le format,
+  jamais plus que de joueurs). 6 couleurs, gomme, annuler, effacer, 3 épaisseurs ; envoi automatique à la fin du temps.
+  Révélation : l'hôte dévoile chaque chaîne étape par étape (« Suivant », petit son), puis chacun vote pour le dessin le
+  plus drôle et dit si le sens est resté. Points internes : 3 au dessin le plus drôle, 1 par chaîne qui garde le sens.
+  Dessins en traits légers (points 0-999, 3 000 points max). Bouton GRILLÉ ! caché pendant qu'on dessine. 3 joueurs min.

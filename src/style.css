@@ -623,3 +623,24 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .choix-quiz.bonne { border-color: var(--vert); background: #5CF2C226; color: var(--texte); }
 .choix-quiz.bonne b { background: var(--vert); color: var(--fond); }
 .choix-quiz.fausse { border-color: var(--rose); background: #FF5A6E1F; opacity: .85; }
+
+/* ——— Dessin téléphone arabe (façon Gartic Phone) ——— */
+.atelier { display: grid; gap: 10px; padding: 10px; border-radius: 24px; background: #ffffff0d; border: 1px solid var(--bord); }
+.toile-dessin, .toile-voir { display: block; width: 100%; max-width: 100%; aspect-ratio: 1; height: auto; border-radius: 16px; background: #fff; box-shadow: 0 10px 30px -12px #000a; }
+.toile-dessin { touch-action: none; cursor: crosshair; }
+.toile-voir.grande { box-shadow: 0 10px 30px -12px #000a, 0 0 0 3px #3B8BFF55; }
+.barre-outils { display: grid; gap: 10px; }
+.couleurs, .epaisseurs, .actions-dessin { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.couleur { width: 38px; height: 38px; border-radius: 50%; border: 3px solid #ffffff33; background: var(--k); cursor: pointer; transition: transform .1s; }
+.couleur.actif { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 0 3px var(--k); }
+.epaisseur { width: 46px; height: 40px; border-radius: 12px; border: 2px solid var(--bord); background: #ffffff08; display: grid; place-items: center; cursor: pointer; }
+.epaisseur i { width: var(--t); height: var(--t); border-radius: 50%; background: var(--texte); }
+.epaisseur.actif { border-color: var(--jaune); background: #FFD84A22; }
+.outil-dessin { min-height: 40px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--bord); background: #ffffff08; color: var(--texte); font-family: var(--titre); font-weight: 700; font-size: 13px; cursor: pointer; }
+.outil-dessin.actif { border-color: var(--cyan); background: #5CD8FF22; }
+.champ-texte { width: 100%; min-height: 54px; padding: 0 16px; border-radius: 16px; border: 2px solid var(--bord); background: #ffffff0d; color: var(--texte); font: inherit; font-size: 18px; font-weight: 700; }
+.maillon { display: grid; gap: 8px; padding: 12px; border-radius: 20px; background: #ffffff0b; border: 1px solid var(--bord); }
+.maillon.depart { border-color: var(--jaune); }
+.maillon.nouveau { animation: arrive .45s cubic-bezier(.3, 1.5, .5, 1); border-color: var(--cyan); }
+.auteur-maillon { font-family: var(--titre); font-size: 12px; font-weight: 800; letter-spacing: .05em; color: var(--texte-2); text-transform: uppercase; }
+.devinette-maillon { margin: 0; font-family: var(--titre); font-weight: 800; font-size: 20px; line-height: 1.2; }

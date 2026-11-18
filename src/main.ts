@@ -17,6 +17,7 @@ import { localJeu, vueJeu } from './ecrans/deroule';
 import { action, afficher, brouillons, installer, vibrer } from './ui';
 import { garderEcranAllume } from './veille';
 import { installerGlisser } from './glisser';
+import { annuler, brancherHeure, effacer, installerDessin, outil, peindreLesToiles } from './dessin';
 import { mettreAJour, retenirEnregistrement } from './version';
 import { esc, normaliserCode, nettoyerPrenom } from './outils';
 import { copier, imagePodium, partager } from './partage';
@@ -31,6 +32,8 @@ import type { Duree, ModeChoix } from './types';
 const app = document.getElementById('app')!;
 installer(app);
 installerGlisser();
+installerDessin();
+brancherHeure(() => maintenant() - Date.now());
 
 /** Code présent dans le lien (QR code) : https://…/#ABCD */
 const codeDuLien = (): string | null => normaliserCode(location.hash.slice(1)) || null;
@@ -233,6 +236,16 @@ action('choisirMission', async (el) => {
     sons.ding();
     await repondre(`mission${numero}`);
   }
+});
+
+// Dessin téléphone arabe : couleur, épaisseur, gomme, annuler, effacer.
+action('outil', (el) => {
+  const d = el.dataset;
+  if (d.couleur) outil.couleur = d.couleur;
+  if (d.epaisseur) outil.epaisseur = Number(d.epaisseur);
+  if (d.annuler) annuler(d.annuler);
+  if (d.effacer) effacer(d.effacer);
+  demanderAffichage();
 });
 
 action('pret', async (el) => {
@@ -520,6 +533,7 @@ function horloge(): void {
   document.querySelectorAll<HTMLElement>('.stop-timing[data-depart], .cible-patate[data-depart], .consigne-patate[data-depart]').forEach((b) => {
     b.classList.toggle('pas-encore', t < Number(b.dataset.depart));
   });
+  peindreLesToiles();
   requestAnimationFrame(horloge);
 }
 requestAnimationFrame(horloge);

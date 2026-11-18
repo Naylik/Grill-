@@ -101,6 +101,11 @@ export function momentsForts(): void {
       });
     }
   }
+  // Dessin téléphone arabe : un petit son à chaque étape dévoilée.
+  if (d.phase === 'jeu' && d.jeuEnCours === 'telephone' && S.jeu) {
+    const t = S.jeu as { phase?: string; revue?: number; affiches?: number };
+    if (t.phase === 'revue') moment(`tel-${d.numeroJeu}-${t.revue}-${t.affiches}`, () => sons.ding());
+  }
   // Vengeance : je suis prévenu qu'on veut se venger de moi.
   if (S.annonceVengeance?.de) moment(`vengeance-${S.deroule?.partieId}`, () => vibrer([200, 100, 200, 100, 400]));
   // La Patate : elle arrive chez moi, puis elle explose.
