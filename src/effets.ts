@@ -121,6 +121,12 @@ export function momentsForts(): void {
     const emoji = REACTIONS[Number(cle.split('-').pop())] ?? '😂';
     for (let i = 0; i < Math.min(5, n - avant); i++) setTimeout(() => envolerReaction(emoji), i * 120);
   }
+  // Champ de mines : gemme (ding) ou KABOOM.
+  if (d.phase === 'jeu' && d.jeuEnCours === 'mines' && S.jeu) {
+    const m = S.jeu as { phase?: string; tour?: number; sures?: number; dernier?: { joueur: string } };
+    if (m.phase === 'tour' && (m.sures ?? 0) > 0) moment(`mines-${d.numeroJeu}-${m.tour}-${m.sures}`, () => sons.ding());
+    if (m.phase === 'boum') moment(`mines-boum-${d.numeroJeu}-${m.tour}`, () => { sons.boum(); vibrer(m.dernier?.joueur === S.uid ? [400, 100, 400] : 200); });
+  }
   // Dessin téléphone arabe : un petit son à chaque étape dévoilée.
   if (d.phase === 'jeu' && d.jeuEnCours === 'telephone' && S.jeu) {
     const t = S.jeu as { phase?: string; revue?: number; affiches?: number };

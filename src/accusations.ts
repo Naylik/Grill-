@@ -15,7 +15,7 @@ export const DUREE_VERDICT = 7_000; // le temps d'afficher « GRILLÉ ! » ou «
 export const PENALITE_ACCUSATION = 2;
 export const PENALITE_MENSONGE = 3;
 /** Jeux d'action : le bouton disparaît pendant les manches (on tape vite, on ne doit pas accuser par erreur). */
-const JEUX_ACTION: Record<string, string[]> = { reflexe: ['attente'], timing: ['chrono'], patate: ['jeu'], telephone: ['etape'] };
+const JEUX_ACTION: Record<string, string[]> = { reflexe: ['attente'], timing: ['chrono'], patate: ['jeu'], telephone: ['etape'], mines: ['pose', 'tour'] };
 
 export interface MissionDevoilee {
   numero: number; // 1 ou 2

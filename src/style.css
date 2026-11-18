@@ -720,3 +720,28 @@ input.code { font-weight: 800; font-size: 26px; letter-spacing: 12px; }
 .reaction:active { transform: scale(1.25); }
 .reaction-volante { position: fixed; bottom: 90px; z-index: 40; font-size: 38px; pointer-events: none; animation: envol-reaction 2.1s cubic-bezier(.2, .7, .4, 1) forwards; }
 @keyframes envol-reaction { 0% { transform: translateY(0) scale(.5); opacity: 0; } 15% { opacity: 1; transform: translateY(-40px) scale(1.2); } 100% { transform: translate(var(--derive), -60vh) scale(1); opacity: 0; } }
+
+/* ——— Champ de mines (codes visuels des jeux de mines : tuiles ardoise, gemme verte, bombe rouge) ——— */
+.champ { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; padding: 12px; border-radius: 18px; background: #0F1B24; border: 1px solid #22394A; }
+.case-champ { position: relative; aspect-ratio: 1; border-radius: 10px; border: 0; padding: 0; display: grid; place-items: center; overflow: hidden; }
+.case-champ.fermee { background: linear-gradient(180deg, #34505F, #2A4150); box-shadow: 0 5px 0 #1A2B36, inset 0 1px 0 #ffffff18; cursor: default; }
+button.case-champ.fermee { cursor: pointer; transition: transform .08s, background .15s; }
+button.case-champ.fermee:hover { background: linear-gradient(180deg, #3E5E70, #31495A); }
+button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 0 #1A2B36; }
+.case-champ.choisie { background: linear-gradient(180deg, #7A2A35, #5A1E28); box-shadow: 0 5px 0 #3A1018, 0 0 0 2px #FF5A6E; }
+.case-champ svg { width: 70%; height: 70%; }
+.case-champ.sure { background: #0B141B; box-shadow: inset 0 0 0 2px #1E3A2C; animation: gemme .35s cubic-bezier(.3, 1.6, .5, 1); }
+.case-champ.sure svg { filter: drop-shadow(0 0 8px #3DF58AAA); }
+@keyframes gemme { from { transform: scale(.4); } }
+.case-champ.minee { background: #2A0F16; box-shadow: inset 0 0 0 2px #FF5A6E88; }
+.case-champ.minee.vient { animation: mine-saute .6s ease-out; }
+@keyframes mine-saute { 0% { transform: scale(1.4); background: #FFB547; } 40% { background: #FF5A3D; } }
+.case-champ.minee small { position: absolute; bottom: 2px; left: 0; right: 0; font-size: 8px; font-weight: 800; color: #FFD3DA; text-align: center; }
+.ma-mine { position: absolute; inset: 0; display: grid; place-items: center; opacity: .35; }
+.ma-mine svg { width: 55%; height: 55%; }
+.pot-mines { display: flex; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 14px; background: #0F1B24; border: 1px solid #22394A; font-family: var(--titre); font-size: 13px; color: #9FB3C2; }
+.pot-mines b { color: #3DF58A; font-size: 18px; }
+.boum-mine { position: relative; display: grid; place-items: center; height: 120px; }
+.eclat-mine { position: absolute; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #FFF6EA, #FFB547 30%, #FF5A3D 55%, transparent 70%); animation: eclat-mine .6s cubic-bezier(.2, .9, .3, 1) both; }
+@keyframes eclat-mine { from { transform: scale(.1); opacity: 1; } to { transform: scale(1.5); opacity: .2; } }
+.boum-mine .mot-boum { position: relative; margin: 0; font-family: var(--titre); font-weight: 900; font-size: 56px; color: #FFF6EA; text-shadow: 0 4px 0 #B32A12, 0 0 30px #FF5A3D; animation: tampon .4s cubic-bezier(.2, 1.4, .4, 1) .1s both; }

@@ -174,3 +174,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   feuille s'envole « chez Kilyan ». Révélation façon album : chaque chaîne défile comme une conversation (avatar à la
   couleur du joueur, bulles, dessins encadrés rejoués trait par trait), réactions 😂 🔥 💀 👏 qui s'envolent chez tout
   le monde (compteurs partagés). Les textes tapés sont gardés si l'écran se met à jour.
+- 18/11/2026 · Nouveau jeu « Champ de mines » (`src/games/mines.ts`), codes visuels des jeux de mines (tuiles
+  ardoise, gemme verte, bombe rouge ; sans logo ni charte d'un site réel) : chacun pose une mine en secret (connue de
+  l'hôte seul, `prive/mines`), puis chacun son tour ouvre des colis : le k-ième colis sûr du tour rapporte k pts ;
+  on encaisse ou on continue. Sauter sur une mine fait perdre le tour et rapporte au poseur au moins 3 pts.
+  Bluff à voix haute encouragé. 2 / 2 / 3 tours chacun selon le format. 3 joueurs min.

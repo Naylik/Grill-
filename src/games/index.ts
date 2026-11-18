@@ -9,9 +9,10 @@ import { timing } from './timing';
 import { patate } from './patate';
 import { quitteOuDouble } from './quitteOuDouble';
 import { telephone } from './telephone';
+import { champDeMines } from './mines';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const JEUX: MiniJeu<any>[] = [combien, justePrix, parieur, imposteur, reflexe, timing, patate, quitteOuDouble, telephone];
+export const JEUX: MiniJeu<any>[] = [combien, justePrix, parieur, imposteur, reflexe, timing, patate, quitteOuDouble, telephone, champDeMines];
 
 export const jeuParId = (id?: string) => JEUX.find((j) => j.id === id);
 
