@@ -73,6 +73,23 @@ describe.skipIf(!emulateurDispo)('règles de sécurité', () => {
     await assertSucceeds(set(ref(bd('hote'), `${acc}/statut`), 'vote'));
   });
 
+  it('vengeance : seul le joueur tiré voit son offre et ne prévient que sa cible ; saisons protégées', async () => {
+    await assertSucceeds(set(ref(bd('hote'), `salons/${C}/vengeance/offre/manon`), { choix: { cassie: true } }));
+    await assertSucceeds(get(ref(bd('manon'), `salons/${C}/vengeance/offre/manon`)));
+    await assertFails(get(ref(bd('cassie'), `salons/${C}/vengeance/offre/manon`)));
+    await assertFails(set(ref(bd('manon'), `salons/${C}/vengeance/annonce/hote`), { de: 'manon' })); // pas dans ses choix
+    await assertFails(set(ref(bd('cassie'), `salons/${C}/vengeance/annonce/cassie`), { de: 'cassie' }));
+    await assertSucceeds(set(ref(bd('manon'), `salons/${C}/vengeance/annonce/cassie`), { de: 'manon' }));
+    await assertSucceeds(get(ref(bd('cassie'), `salons/${C}/vengeance/annonce/cassie`)));
+    await assertFails(get(ref(bd('hote'), `salons/${C}/vengeance/annonce/cassie`)));
+    await assertFails(get(ref(bd('manon'), `salons/${C}/vengeance/annonce/cassie`)));
+    const id = 'abcdefghjk23';
+    await assertSucceeds(set(ref(bd('manon'), `saisons/${id}`), { infos: { nom: 'Coloc', createur: 'manon', creeLe: 1 }, membres: { manon: { points: 0 } } }));
+    await assertFails(set(ref(bd('cassie'), `saisons/${id}/membres/cassie`), { points: 999 })); // pas membre
+    await assertSucceeds(set(ref(bd('manon'), `saisons/${id}/membres/cassie`), { points: 10 }));
+    await assertSucceeds(get(ref(bd('cassie'), `saisons/${id}`)));
+  });
+
   it("seul l'hôte pilote la partie et les scores", async () => {
     await assertFails(set(ref(bd('manon'), `salons/${C}/deroule/phase`), 'fin'));
     await assertFails(set(ref(bd('manon'), `salons/${C}/scores/manon/jeux`), 99));

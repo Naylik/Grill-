@@ -39,7 +39,9 @@ export function effetsJoueur(): void {
   if (!prets) return;
 
   if (d.phase === 'missions') {
-    if (!secrets.mission1 && !secrets.propositions1?.length) une('p1', () => preparerPropositions(code, S.uid, S.joueurs, secrets, 1));
+    // Pas de propositions tant que le joueur tiré au sort n'a pas répondu à l'offre de vengeance.
+    const attendVengeance = charges.has('offreVengeance') ? !!S.offreVengeance && !secrets.vengeanceChoix : true;
+    if (!secrets.mission1 && !secrets.propositions1?.length && !attendVengeance) une('p1', () => preparerPropositions(code, S.uid, S.joueurs, secrets, 1));
     if (secrets.mission1 && S.maReponse?.etape !== 'mission1') une('r1', () => repondre('mission1'));
   }
   if (d.phase === 'miPartie') {
@@ -49,7 +51,7 @@ export function effetsJoueur(): void {
   if (d.phase === 'detective' && S.monPari && S.maReponse?.etape !== 'detective') une('rd', () => repondre('detective'));
   // À la révélation, chacun publie ses propres missions (personne d'autre ne peut les lire avant).
   if (d.phase === 'revelation' && charges.has('revelation') && !S.revelation[S.uid]?.missions && secrets.mission1) {
-    const missions = [secrets.mission1, secrets.mission2].filter(Boolean).map((m) => ({ texte: m!.texte, difficulte: m!.difficulte, type: m!.type }));
+    const missions = [secrets.mission1, secrets.mission2].filter(Boolean).map((m) => ({ texte: m!.texte, difficulte: m!.difficulte, type: m!.type, ...(m!.vengeance ? { vengeance: true } : {}) }));
     une('rev', () => set(ref(db, `salons/${code}/revelation/${S.uid}`), { missions }));
   }
 }
@@ -95,6 +97,8 @@ export function momentsForts(): void {
       });
     }
   }
+  // Vengeance : je suis prévenu qu'on veut se venger de moi.
+  if (S.annonceVengeance?.de) moment(`vengeance-${S.deroule?.partieId}`, () => vibrer([200, 100, 200, 100, 400]));
   // La Patate : elle arrive chez moi, puis elle explose.
   if (d.phase === 'jeu' && d.jeuEnCours === 'patate' && S.jeu) {
     const p = S.jeu as { phase?: string; porteur?: string; etape?: string; manche?: number; explose?: string };

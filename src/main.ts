@@ -9,7 +9,9 @@ import { S, brancherAffichage, demanderAffichage, ecouterSalon, estHote, quandCa
 import { commandeHote, commandeJeu, piloter } from './hote';
 import { effetsJoueur, momentsForts, repondre } from './effets';
 import { basculerSon, debloquer, sons } from './son';
-import { choisirMission } from './missions';
+import { choisirMission, prendreMissionVengeance } from './missions';
+import { vengeancesVues } from './ecrans/missions';
+import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from './saison';
 import { jeuParId } from './games';
 import { localJeu, vueJeu } from './ecrans/deroule';
 import { action, afficher, brouillons, installer, vibrer } from './ui';
@@ -165,7 +167,12 @@ action('mode', (el) => changerReglages(S.code!, { modeChoix: el.dataset.valeur a
 
 action('lancer', async () => {
   if (!estHote() || Object.keys(S.joueurs).length < MIN_JOUEURS) return;
-  await update(ref(db, `salons/${S.code}/deroule`), { phase: 'missions', numeroJeu: 0 });
+  // Saison : au plus une vengeance par partie, tirée au hasard parmi les joueurs grillés la dernière fois.
+  const offre = tirerVengeance(S.saison, Object.keys(S.joueurs));
+  await update(ref(db, `salons/${S.code}`), {
+    vengeance: offre ? { offre: { [offre.de]: { choix: Object.fromEntries(offre.choix.map((u) => [u, true])) } } } : null,
+    deroule: { phase: 'missions', numeroJeu: 0, partieId: `${S.code}-${Date.now()}` },
+  });
 });
 
 action('quitter', async () => {
@@ -278,6 +285,76 @@ action('voter', async (el) => {
   await set(ref(db, `salons/${S.code}/votes/${el.dataset.sujet}/${S.uid}`), valeur);
   sons.ding();
   vibrer(30);
+});
+
+// ——— Vengeance (saisons) ———
+
+action('vengeance', async (el) => {
+  const choix = el.dataset.valeur!;
+  if (!S.code || !S.offreVengeance || S.secrets.vengeanceChoix) return;
+  (el as HTMLButtonElement).disabled = true;
+  if (choix === 'non' || !S.offreVengeance.choix[choix]) {
+    await set(ref(db, `secrets/${S.code}/${S.uid}/vengeanceChoix`), 'non');
+    return;
+  }
+  const mission = await prendreMissionVengeance(S.code, S.uid, S.joueurs, choix);
+  if (!mission) {
+    await set(ref(db, `secrets/${S.code}/${S.uid}/vengeanceChoix`), 'non');
+    montrerToast('Pas de mission de vengeance disponible, désolé !');
+    return;
+  }
+  // La cible est prévenue (sans savoir comment).
+  await set(ref(db, `salons/${S.code}/vengeance/annonce/${choix}`), { de: S.uid });
+  vibrer([100, 50, 200]);
+  sons.ding();
+  await repondre('mission1');
+});
+
+action('vuVengeance', (el) => {
+  vengeancesVues.add(el.dataset.valeur!);
+  demanderAffichage();
+});
+
+// ——— Saison (salon, hôte) ———
+
+action('menuSaison', () => {
+  S.menuSaison = !S.menuSaison;
+  demanderAffichage();
+});
+action('creerSaison', async (el) => {
+  const nom = (brouillons.nomSaison ?? '').trim().slice(0, 30);
+  if (!estHote() || !S.code) return;
+  if (nom.length < 2) {
+    montrerToast('Donne un nom à la saison.');
+    return;
+  }
+  (el as HTMLButtonElement).disabled = true;
+  const id = nouvelIdSaison();
+  const j = S.joueurs[S.uid];
+  try {
+    await set(ref(db, `saisons/${id}`), {
+      infos: { nom, createur: S.uid, creeLe: maintenant() },
+      membres: { [S.uid]: { prenom: j.prenom, couleur: j.couleur, points: 0, missions: 0, parties: 0 } },
+    });
+    await update(ref(db, `salons/${S.code}/infos`), { saison: id, nomSaison: nom });
+    retenirSaison(id, nom);
+    S.menuSaison = false;
+    brouillons.nomSaison = '';
+  } catch (e) {
+    console.error(e);
+    montrerToast('Impossible de créer la saison.');
+  } finally {
+    (el as HTMLButtonElement).disabled = false;
+    demanderAffichage();
+  }
+});
+action('choisirSaison', async (el) => {
+  if (!estHote() || !S.code) return;
+  const id = el.dataset.valeur!;
+  const connue = saisonsConnues().find((s) => s.id === id);
+  await update(ref(db, `salons/${S.code}/infos`), id === 'aucune' ? { saison: null, nomSaison: null } : { saison: id, nomSaison: connue?.nom ?? 'Saison' });
+  S.menuSaison = false;
+  demanderAffichage();
 });
 
 // ——— Bouton GRILLÉ ! ———

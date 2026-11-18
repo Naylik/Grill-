@@ -113,3 +113,12 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   avec une consigne (« Un animal en B »), on dit un mot à voix haute (le groupe juge) puis on la lance en la faisant
   glisser vers un joueur (ou en touchant son nom). Elle explose entre 15 s et 1 min, moment connu de l'hôte seulement
   (`prive/patate`). Élimination jusqu'au dernier survivant ; points de place selon l'ordre d'élimination. 3 joueurs minimum.
+- 18/11/2026 · Saisons (`src/saison.ts`) : l'hôte crée ou reprend une saison dans le salon (nom libre, sans durée).
+  À chaque fin de partie, la saison cumule les points, les missions réussies et les parties jouées. Classement de saison
+  sur l'écran final, avec la cuisson de chaque Mallow (seul le dessus dore, jamais le visage) selon les missions
+  réussies : Cru 0, Tiède 3, Doré 8, Caramel 15, Flambé 25.
+- 18/11/2026 · Vengeance : on retient qui a découvert ta mission (bouton GRILLÉ !, pari détective, mensonge démasqué).
+  Au lancement de la partie suivante, au plus UNE personne, tirée au hasard parmi les grillés présents, se voit proposer
+  de se venger : si elle accepte, sa 1re mission vise son « grilleur » (au choix s'il y en a plusieurs) et vaut ×2 ;
+  la cible est prévenue par une fenêtre (« X a juré de se venger de toi ce soir »), sans connaître la mission.
+  Nouvelles règles Firebase (`saisons`, `vengeance`) : à republier dans la console.

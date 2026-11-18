@@ -49,7 +49,11 @@ export function pointsCombien(estimation: number, vrai: number): number {
 export interface ResultatMission {
   difficulte: Difficulte;
   reussie: boolean;
+  /** Mission de vengeance (saisons) : points doublés. */
+  vengeance?: boolean;
 }
+
+export const pointsMission = (m: ResultatMission): number => (m.reussie ? POINTS_MISSION[m.difficulte] * (m.vengeance ? 2 : 1) : 0);
 export interface ResultatPari {
   de: string; // le détective
   cible: string;
@@ -62,7 +66,7 @@ export function pointsDeFin(missions: Record<string, ResultatMission[]>, paris: 
   const missionsPts: Record<string, number> = {};
   const detective: Record<string, number> = {};
   for (const [uid, liste] of Object.entries(missions)) {
-    missionsPts[uid] = liste.reduce((t, m) => t + (m.reussie ? POINTS_MISSION[m.difficulte] : 0), 0);
+    missionsPts[uid] = liste.reduce((t, m) => t + pointsMission(m), 0);
     detective[uid] ??= 0;
   }
   for (const p of paris) {

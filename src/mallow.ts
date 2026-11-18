@@ -11,23 +11,42 @@ interface Options {
   couronne?: boolean;
   /** Expression : normale, surprise (il prend feu), yeux fermés (il éternue ou il compte). */
   expression?: 'normale' | 'surprise' | 'yeuxFermes';
+  /** Cuisson (saisons) : 0 cru, 1 tiède, 2 doré (par défaut), 3 caramel, 4 flambé. Seul le dessus change. */
+  cuisson?: number;
 }
 
+/** Couleur du dessus et de son reflet, selon la cuisson. Le corps et le visage restent toujours clairs. */
+const DESSUS = [
+  ['#FFF1E2', '#FFFAF4'],
+  ['#F7C58A', '#FBDDB4'],
+  ['#E0873E', '#F7C58A'],
+  ['#B8642A', '#D98A4A'],
+  ['#A9521F', '#D17A3A'],
+];
+export const NOMS_CUISSON = ['Cru', 'Tiède', 'Doré', 'Caramel', 'Flambé'];
+const FLAMMES_DESSUS = (t: string) =>
+  `<g class="flammes-cuisson"><path d="M76 40 C70 28 78 22 80 12 C88 22 92 30 86 40 Z" fill="#FFB547" stroke="${t}" stroke-width="3"/><path d="M98 38 C92 22 102 14 102 2 C112 16 116 26 108 38 Z" fill="#FF7A3D" stroke="${t}" stroke-width="3"/><path d="M120 40 C116 30 122 24 126 16 C132 26 132 34 128 40 Z" fill="#FFB547" stroke="${t}" stroke-width="3"/></g>`;
+
 const TRAIT = '#24123A';
-const viewBox = (o: Options) => (o.vue === 'tete' ? (o.couronne ? '32 4 136 176' : '32 30 136 150') : o.couronne ? '0 -14 200 264' : '0 0 200 250');
+const viewBox = (o: Options) => {
+  const haut = o.couronne || o.cuisson === 4;
+  return o.vue === 'tete' ? (haut ? '32 4 136 176' : '32 30 136 150') : haut ? '0 -14 200 264' : '0 0 200 250';
+};
 const COURONNE = (t: string) =>
   `<path d="M64 34 L70 4 L86 20 L100 -8 L114 20 L130 4 L136 34 Z" fill="#FFD84A" stroke="${t}" stroke-width="4" stroke-linejoin="round"/><circle cx="100" cy="22" r="5" fill="#FF5A6E"/>`;
 
 export function mallow(o: Options = {}): string {
   const t = o.trait ?? TRAIT;
   const etiquette = o.vue === 'tete' ? 'aria-hidden="true"' : 'role="img" aria-label="Mallow, la mascotte chamallow"';
+  const [dessus, reflet] = DESSUS[Math.max(0, Math.min(4, o.cuisson ?? 2))];
   return `<svg xmlns="http://www.w3.org/2000/svg" class="mallow" viewBox="${viewBox(o)}" width="${o.taille ?? 160}" ${etiquette}>
     ${o.vue === 'tete' ? '' : `<ellipse cx="100" cy="242" rx="42" ry="6" fill="#000" opacity=".22"/>
     <rect x="94" y="150" width="12" height="92" rx="6" fill="#E9C08C" stroke="${t}" stroke-width="4"/>`}
     <path d="M40 66 Q40 46 62 44 L138 44 Q160 46 160 66 L160 150 Q160 174 100 176 Q40 174 40 150 Z" fill="#FFF7F0" stroke="${t}" stroke-width="5" stroke-linejoin="round"/>
     <path d="M140 80 L152 80 L152 150 Q150 166 116 170 Q140 160 140 146 Z" fill="#F0DCCF"/>
-    <path d="M40 64 Q40 38 100 38 Q160 38 160 64 L160 74 Q152 88 140 78 Q130 94 118 81 Q106 96 94 82 Q82 95 71 80 Q58 92 49 78 Q44 84 40 76 Z" fill="#E0873E" stroke="${t}" stroke-width="5" stroke-linejoin="round"/>
-    <ellipse cx="100" cy="52" rx="50" ry="10" fill="#F7C58A"/>
+    <path d="M40 64 Q40 38 100 38 Q160 38 160 64 L160 74 Q152 88 140 78 Q130 94 118 81 Q106 96 94 82 Q82 95 71 80 Q58 92 49 78 Q44 84 40 76 Z" fill="${dessus}" stroke="${t}" stroke-width="5" stroke-linejoin="round"/>
+    <ellipse cx="100" cy="52" rx="50" ry="10" fill="${reflet}"/>
+    ${o.cuisson === 4 && !o.couronne ? FLAMMES_DESSUS(t) : ''}
     <path d="M66 50 Q84 44 104 46" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none" opacity=".75"/>
     ${o.couronne ? COURONNE(t) : ''}
     <path d="M52 98 L52 140" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".8"/>

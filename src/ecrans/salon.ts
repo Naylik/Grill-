@@ -1,6 +1,28 @@
 import { S, estHote } from '../etat';
 import { MAX_JOUEURS, MIN_JOUEURS } from '../salon';
 import { carteJoueur, erreur } from './commun';
+import { esc } from '../outils';
+import { brouillons } from '../ui';
+import { saisonsConnues } from '../saison';
+
+/** Choix de la saison (hôte) : nouvelle saison, une saison déjà jouée, ou sans saison. */
+function blocSaison(hote: boolean): string {
+  const infos = S.infos!;
+  const actuelle = infos.saison ? `Saison « ${esc(infos.nomSaison ?? '')} »` : 'Sans saison';
+  if (!hote) return infos.saison ? `<div class="pile"><span class="intitule">Saison</span><p class="saison-actuelle">${actuelle}</p></div>` : '';
+  const connues = saisonsConnues().filter((s) => s.id !== infos.saison);
+  return `<div class="pile">
+    <span class="intitule">Saison</span>
+    <button class="option saison-actuelle ${infos.saison ? 'actif jaune' : ''}" data-action="menuSaison">${actuelle}<small>${S.menuSaison ? 'fermer' : 'changer'}</small></button>
+    ${S.menuSaison ? `<div class="boite menu-saison">
+      <label class="champ"><span>Nouvelle saison</span><input name="nomSaison" maxlength="30" placeholder="Les Daronnes, Coloc 2026…" value="${esc(brouillons.nomSaison ?? '')}" data-entree="creerSaison"></label>
+      <button class="bouton jaune" data-action="creerSaison">Créer la saison</button>
+      ${connues.length ? `<span class="intitule">Reprendre une saison</span>${connues.map((s) => `<button class="option" data-action="choisirSaison" data-valeur="${s.id}">${esc(s.nom)}</button>`).join('')}` : ''}
+      ${infos.saison ? '<button class="bouton discret" data-action="choisirSaison" data-valeur="aucune">Jouer sans saison</button>' : ''}
+      <p class="aide gauche">Une saison cumule les points de vos parties, fait dorer les Mallow et permet de se venger d’une partie à l’autre.</p>
+    </div>` : ''}
+  </div>`;
+}
 
 export function lienSalon(code: string): string {
   return `${location.origin}${location.pathname}#${code}`;
@@ -41,6 +63,7 @@ export function ecranSalon(qr: string): string {
         ${choix('mode', 'vote', infos.modeChoix, 'Vote entre 2', 'vert')}
       </div>
     </div>
+    ${blocSaison(hote)}
     <div class="pile">
       <span class="intitule">Joueurs · ${n}/${MAX_JOUEURS}</span>
       ${joueurs.map(([id, j]) => carteJoueur(j, id === infos.hote ? ' · hôte' : '', id === S.uid ? 'moi' : '')).join('')}

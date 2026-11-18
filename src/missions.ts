@@ -66,6 +66,27 @@ export async function preparerPropositions(code: string, uid: string, joueurs: R
 }
 
 /**
+ * Vengeance (saisons) : une mission qui vise la personne choisie, réservée comme les autres, qui vaut ×2.
+ * On prend une mission avec {cible} (le joueur doit agir sur sa cible), du type et de la difficulté du hasard.
+ */
+export async function prendreMissionVengeance(code: string, uid: string, joueurs: Record<string, Joueur>, cible: string): Promise<MissionTiree | null> {
+  const { prises } = await etatTirage(code, uid, joueurs);
+  const candidates = melanger(BANQUE.filter((m) => m.texte.includes('{cible}') && NIVEAUX_AUTORISES.epice.includes(m.niveau) && !prises.has(m.id)));
+  for (const m of candidates) {
+    try {
+      await set(ref(db, `salons/${code}/tirage/prises/${await empreinte(`${code}:${m.id}`)}`), true);
+    } catch {
+      continue; // prise entre-temps par quelqu'un d'autre
+    }
+    await runTransaction(ref(db, `salons/${code}/tirage/cibles/${cible}`), (n: number | null) => Math.min(2, (n ?? 0) + 1));
+    const mission: MissionTiree = { id: m.id, type: m.type, difficulte: m.difficulte, texte: m.texte.replaceAll('{cible}', joueurs[cible].prenom), cible, vengeance: true };
+    await update(ref(db, cheminSecrets(code, uid)), { mission1: mission, vengeanceChoix: cible });
+    return mission;
+  }
+  return null;
+}
+
+/**
  * Le joueur garde une des deux missions : on la réserve (personne d'autre ne pourra l'avoir)
  * et on compte la cible. Si quelqu'un a été plus rapide, on retire de nouvelles propositions.
  */

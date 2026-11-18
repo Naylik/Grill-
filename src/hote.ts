@@ -2,12 +2,13 @@
 // Il regarde l'état de la partie et décide de l'étape suivante. Tout est recalculé à partir de Firebase :
 // si l'hôte change (départ, coupure), le nouvel hôte reprend exactement là où on en était.
 import { ref, remove, update } from 'firebase/database';
+import { majSaison } from './saison';
 import { db, maintenant } from './firebase';
 import { S, estHote } from './etat';
 import { JEUX, jeuParId, jeuxPossibles, jeuxPourVote } from './games';
 import type { Avancee, ContexteHote } from './games/interface';
 import { auHasard, melanger } from './outils';
-import { majoriteOui, missionTrouvee, pointsDeFin, scoreVide, titres, totalProvisoire, VOL_DETECTIVE, type ResultatMission, type ResultatPari } from './score';
+import { majoriteOui, missionTrouvee, pointsDeFin, scoreVide, titres, totalFinal, totalProvisoire, VOL_DETECTIVE, type ResultatMission, type ResultatPari } from './score';
 import { accusationsADoubler, liste as listeAccusations, mancheAction, missionsGrillees, PENALITE_ACCUSATION, PENALITE_MENSONGE, piloterAccusations } from './accusations';
 import { vanneDuClassement } from './narrateur';
 import type { Bilan, Deroule, EtatRevelation, Score } from './types';
@@ -188,6 +189,7 @@ function bilanFinal(): Ecritures {
     const liste = missionsDe(u).map((m, i) => ({
       difficulte: m.difficulte,
       texte: m.texte,
+      vengeance: !!m.vengeance,
       reussie: !grillees[i + 1] && majoriteOui(Object.values(S.votes[`m${i + 1}-${u}`] ?? {}).map((v) => v === true)),
     }));
     bilan.missions[u] = liste;
@@ -228,6 +230,16 @@ function bilanFinal(): Ecritures {
   for (const u of uids()) {
     const avant = { ...scoreVide(), ...S.scores[u] };
     scores[u] = { ...avant, missions: pts.missions[u] ?? 0, detective: pts.detective[u] ?? 0, grille: (avant.grille ?? 0) + (ajustes[u] ?? 0) };
+  }
+  // Rancune de la saison : qui a découvert la mission de qui ce soir.
+  const grilleurs: Record<string, string[]> = {};
+  const ajouter = (cible: string, de: string) => (grilleurs[cible] = [...(grilleurs[cible] ?? []), de]);
+  for (const p of paris) if (p.trouvee) ajouter(p.cible, p.de);
+  for (const m of bilan.mensonges) ajouter(m.cible, m.de);
+  for (const a of listeAccusations(S.accusations)) if (a.statut === 'grille' || a.verdict === 'grille') ajouter(a.cible, a.de);
+  bilan.grilleurs = grilleurs;
+  for (const [u, liste] of Object.entries(missions)) {
+    if (liste.some((m) => m.vengeance && m.reussie)) enPlus.push({ uid: u, titre: 'Vengeur', pourquoi: 'mission de vengeance réussie' });
   }
   const tous = [...titres(scores, missions, paris), ...enPlus];
   bilan.titres = tous.filter((t, i) => tous.findIndex((x) => x.uid === t.uid && x.titre === t.titre) === i);
@@ -320,6 +332,11 @@ export async function commandeHote(valeur: string): Promise<void> {
       e = r.index + 1 < r.ordre.length
         ? { 'deroule/revelation': { ordre: r.ordre, index: r.index + 1, etape: 'recit', fin: maintenant() + DUREE_RECIT } }
         : bilanFinal();
+      if (r.index + 1 >= r.ordre.length) {
+        await ecrire(e);
+        await enregistrerSaison(e);
+        return;
+      }
     } else if (valeur === 'passer') {
       e = { 'deroule/revelation/etape': 'resultat', 'deroule/revelation/fin': null };
     } else if (valeur === 'cloreVote') {
@@ -329,13 +346,35 @@ export async function commandeHote(valeur: string): Promise<void> {
     await remove(ref(db, `secrets/${S.code}`));
     e = {
       deroule: { phase: 'salon', numeroJeu: 0 }, jeu: null, scores: null, reponses: null, compteurs: null, tirage: null,
-      revelation: null, votes: null, paris: null, motsImposteur: null, attente: null, prive: null, accusations: null,
+      revelation: null, votes: null, paris: null, motsImposteur: null, attente: null, prive: null, accusations: null, vengeance: null,
     };
   } else if (valeur === 'forcer' && ['missions', 'miPartie', 'detective'].includes(d.phase)) {
     // L'hôte peut avancer sans attendre un joueur absent ou trop lent.
     e = d.phase === 'detective' ? entrerRevelation() : entrerChoixJeu(d.phase === 'missions' ? 1 : d.numeroJeu + 1);
   }
   if (e) await ecrire(e);
+}
+
+/** Fin de partie : on ajoute la soirée à la saison (points, missions réussies, rancunes). */
+async function enregistrerSaison(fin: Ecritures): Promise<void> {
+  const id = S.infos?.saison;
+  const bilan = fin['deroule/bilan'] as Bilan | undefined;
+  const scores = fin.scores as Record<string, Score> | undefined;
+  if (!id || !bilan || !scores) return;
+  const maj = majSaison({
+    saison: S.saison,
+    partieId: S.deroule?.partieId ?? `${S.code}-${S.infos?.creeLe}`,
+    joueurs: S.joueurs,
+    points: Object.fromEntries(Object.entries(scores).map(([u, s]) => [u, totalFinal(s)])),
+    missionsReussies: Object.fromEntries(Object.entries(bilan.missions).map(([u, l]) => [u, l.filter((m) => m.reussie).length])),
+    grilleurs: bilan.grilleurs ?? {},
+  });
+  if (!maj) return;
+  try {
+    await update(ref(db, `saisons/${id}`), JSON.parse(JSON.stringify(maj)));
+  } catch (err) {
+    console.warn('saison non enregistrée', err);
+  }
 }
 
 export async function commandeJeu(valeur: string): Promise<void> {

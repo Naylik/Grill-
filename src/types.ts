@@ -22,6 +22,9 @@ export interface Infos {
   duree: Duree;
   modeChoix: ModeChoix;
   creeLe: number;
+  /** Saison choisie par l'hôte (facultatif). */
+  saison?: string;
+  nomSaison?: string;
 }
 
 export interface Joueur {
@@ -35,6 +38,7 @@ export interface Joueur {
 export interface Deroule {
   phase: Phase;
   numeroJeu: number; // 0 avant le premier jeu, puis 1, 2, …
+  partieId?: string; // identifiant de la partie (évite de la compter deux fois dans la saison)
   jeuxJoues?: string[];
   jeuEnCours?: string; // id du mini-jeu
   propositions?: string[]; // mode vote : les jeux proposés
@@ -69,6 +73,8 @@ export interface Bilan {
   /** Mensonges découverts à la révélation (accusé qui avait répondu « Raté » à tort). */
   mensonges?: { de: string; cible: string; texte: string }[];
   titres: { uid: string; titre: string; pourquoi: string }[];
+  /** Qui a découvert la mission de qui (bouton GRILLÉ !, pari détective, mensonge) : la rancune de la saison. */
+  grilleurs?: Record<string, string[]>;
 }
 
 export interface Mission {
@@ -86,6 +92,8 @@ export interface MissionTiree {
   difficulte: Difficulte;
   texte: string; // {cible} déjà remplacé
   cible?: string; // uid
+  /** Mission de vengeance (saisons) : vaut le double. */
+  vengeance?: boolean;
 }
 
 /** Ce que seul le joueur peut lire : secrets/{code}/{uid}. */
@@ -95,6 +103,8 @@ export interface Secrets {
   propositions2?: MissionTiree[];
   mission2?: MissionTiree;
   nouvelleMissionVue?: boolean;
+  /** Réponse à l'offre de vengeance : uid de la cible, ou « non ». */
+  vengeanceChoix?: string;
 }
 
 /** Points de la partie, écrits par l'hôte. */

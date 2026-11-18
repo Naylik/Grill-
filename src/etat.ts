@@ -5,6 +5,7 @@ import { DELAI_REPRISE_HOTE, quiDoitReprendre, reprendreLaMain, signalerPresence
 import type { Deroule, Infos, Joueur, Pari, Score, Secrets } from './types';
 import type { Reponse } from './games/interface';
 import type { Accusations } from './accusations';
+import { retenirSaison, type Saison } from './saison';
 
 export interface Etat {
   uid: string;
@@ -15,7 +16,7 @@ export interface Etat {
   jeu: Record<string, unknown> | null;
   scores: Record<string, Score>;
   compteurs: Record<string, number>;
-  revelation: Record<string, { missions?: { texte: string; difficulte: 'facile' | 'difficile'; type: string }[] }>;
+  revelation: Record<string, { missions?: { texte: string; difficulte: 'facile' | 'difficile'; type: string; vengeance?: boolean }[] }>;
   votes: Record<string, Record<string, unknown>>;
   attente: { etape: string; uids: string[] } | null;
   maReponse: Reponse | null;
@@ -29,6 +30,11 @@ export interface Etat {
   prive: Record<string, unknown>;
   /** Bouton GRILLÉ ! : accusations de la partie (lisibles par tous, sans les missions sauf aveu). */
   accusations: Accusations;
+  /** Saison du salon (si l'hôte en a choisi une). */
+  saison: Saison | null;
+  /** Vengeance : l'offre qui m'est faite (si je suis le tiré au sort), et l'annonce si quelqu'un veut se venger de moi. */
+  offreVengeance: { choix: Record<string, boolean> } | null;
+  annonceVengeance: { de: string } | null;
   charge: boolean;
   // Propre à ce téléphone
   onglet: 'partie' | 'missions';
@@ -43,12 +49,14 @@ export interface Etat {
   apercuImage: string | null;
   /** Le joueur a ouvert la fenêtre « Accuser quelqu'un ». */
   accuser: boolean;
+  /** L'hôte ouvre le choix de la saison dans le salon. */
+  menuSaison: boolean;
 }
 
 export const S: Etat = {
   uid: '', code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
-  revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, accusations: {}, charge: false,
-  onglet: 'partie', erreur: null, toast: null, apercuImage: null, confirmerQuitter: false, vueAccueil: 'accueil', accuser: false,
+  revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, accusations: {}, saison: null, offreVengeance: null, annonceVengeance: null, charge: false,
+  onglet: 'partie', erreur: null, toast: null, apercuImage: null, confirmerQuitter: false, vueAccueil: 'accueil', accuser: false, menuSaison: false,
 };
 
 export const estHote = (): boolean => !!S.infos && S.infos.hote === S.uid;
@@ -100,6 +108,7 @@ export function ecouterSalon(code: string): void {
           charges.add(cle);
           if (cle === 'deroule') S.charge = true;
           if (cle === 'infos' || cle === 'joueurs') surveillerHote();
+          if (cle === 'infos') suivreSaison();
           changement();
         },
         (err) => console.warn('lecture refusée', chemin, err.message),
@@ -115,6 +124,8 @@ export function ecouterSalon(code: string): void {
   ecoute(`${base}/revelation`, 'revelation', {});
   ecoute(`${base}/votes`, 'votes', {});
   ecoute(`${base}/accusations`, 'accusations', {});
+  ecoute(`${base}/vengeance/offre/${S.uid}`, 'offreVengeance', null);
+  ecoute(`${base}/vengeance/annonce/${S.uid}`, 'annonceVengeance', null);
   ecoute(`secrets/${code}/${S.uid}`, 'secrets', {});
   ecoute(`${base}/motsImposteur/${S.uid}`, 'monMot', null);
   ecoute(`${base}/attente`, 'attente', null);
@@ -130,11 +141,36 @@ export function quitterEcoute(): void {
   abonnementReponses?.forEach((f) => f());
   abonnementReponses = null;
   if (minuterieReprise) clearTimeout(minuterieReprise);
+  abonnementSaison?.();
+  abonnementSaison = null;
+  saisonSuivie = null;
   Object.assign(S, {
     code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
-    revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, accusations: {}, onglet: 'partie', confirmerQuitter: false, accuser: false,
+    revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, accusations: {}, saison: null, offreVengeance: null, annonceVengeance: null, onglet: 'partie', confirmerQuitter: false, accuser: false, menuSaison: false,
   });
   localStorage.removeItem('grille:salon');
+}
+
+// La saison du salon : on la suit dès que l'hôte en choisit une (et on la retient sur ce téléphone).
+let abonnementSaison: Unsubscribe | null = null;
+let saisonSuivie: string | null = null;
+function suivreSaison(): void {
+  const id = S.infos?.saison ?? null;
+  if (id === saisonSuivie) return;
+  abonnementSaison?.();
+  abonnementSaison = null;
+  saisonSuivie = id;
+  S.saison = null;
+  if (!id) return;
+  if (S.infos?.nomSaison) retenirSaison(id, S.infos.nomSaison);
+  abonnementSaison = onValue(
+    ref(db, `saisons/${id}`),
+    (s) => {
+      S.saison = s.val();
+      changement();
+    },
+    (err) => console.warn('saison', err.message),
+  );
 }
 
 /** Gère qui pilote : l'hôte lit les réponses ; si l'hôte disparaît, un autre reprend la main. */

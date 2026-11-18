@@ -4,7 +4,9 @@ import { maintenant } from '../firebase';
 import { jeuParId } from '../games';
 import type { VueJeu } from '../games/interface';
 import { esc, auHasard } from '../outils';
-import { majoriteOui, missionTrouvee, places, scoreVide, totalFinal, totalProvisoire } from '../score';
+import { majoriteOui, missionTrouvee, places, pointsMission, scoreVide, totalFinal, totalProvisoire } from '../score';
+import { avantPalierSuivant, classementSaison, niveauCuisson } from '../saison';
+import { NOMS_CUISSON } from '../mallow';
 import { DUREE_RECIT } from '../hote';
 import { RAPPELS_MISSION } from '../narrateur';
 import { brouillons } from '../ui';
@@ -200,7 +202,8 @@ export function ecranRevelation(): string {
   const verdicts = missions.map((m, i) => {
     if (grillees[i + 1]) return `<div class="verdict grille"><strong>Mission ${i + 1} : grillée en direct</strong><span>0 pt</span></div>`;
     const ok = majoriteOui(Object.values(S.votes[`m${i + 1}-${sujet}`] ?? {}).map((v) => v === true));
-    return `<div class="verdict ${ok ? 'ok' : 'ko'}"><strong>Mission ${i + 1} : ${ok ? 'réussie' : 'ratée'}</strong><span>${ok ? `+${m.difficulte === 'facile' ? 6 : 10} pts` : '0 pt'}</span></div>`;
+    const pts = pointsMission({ difficulte: m.difficulte, reussie: true, vengeance: m.vengeance });
+    return `<div class="verdict ${ok ? 'ok' : 'ko'}"><strong>Mission ${i + 1} : ${ok ? 'réussie' : 'ratée'}${m.vengeance ? ' (vengeance)' : ''}</strong><span>${ok ? `+${pts} pts` : '0 pt'}</span></div>`;
   });
   const grillages = (r.paris ?? []).map((p) => {
     const n = missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number));
@@ -219,6 +222,31 @@ export function ecranRevelation(): string {
   return `${moment}${entete}<div class="pile">${verdicts.join('')}${grillages.join('')}${menteur.join('')}</div>
     ${bulle(verdicts.every((v) => v.includes('ok')) ? `${nom(sujet)}, agent d’élite. Ça fait peur.` : `${nom(sujet)}, l’espionnage, ce n’est peut-être pas pour toi.`)}
     <div class="pile bas">${estHote() ? boutonHote('suivant', dernier ? 'Voir le podium' : 'Joueur suivant') : '<p class="attente">L’hôte passe à la suite.</p>'}</div>`;
+}
+
+// ——— Saison ———
+
+/** Classement cumulé de la saison, avec la cuisson de chaque Mallow (missions réussies). */
+export function classementDeSaison(): string {
+  const id = S.infos?.saison;
+  if (!id) return '';
+  const lignes = classementSaison(S.saison);
+  const partie = S.deroule?.partieId;
+  const aJour = !!partie && !!S.saison?.parties?.[partie];
+  return `<div class="boite saison">
+    <p class="intitule">Saison « ${esc(S.infos?.nomSaison ?? S.saison?.infos?.nom ?? '')} »</p>
+    ${!aJour ? '<p class="attente">Mise à jour de la saison…</p>' : ''}
+    ${lignes.map(([u, m], i) => {
+      const n = niveauCuisson(m.missions);
+      const reste = avantPalierSuivant(m.missions);
+      return `<div class="ligne-saison ${u === S.uid ? 'moi' : ''}">
+        <span class="rang">${i + 1}</span>
+        <span class="tete-cuisson">${mallow({ vue: 'tete', taille: 46, cuisson: n })}</span>
+        <div><strong>${esc(m.prenom)}</strong><span class="cuisson c${n}">${NOMS_CUISSON[n]} · ${m.missions} mission${m.missions > 1 ? 's' : ''}${reste !== null ? ` · encore ${reste} pour ${NOMS_CUISSON[n + 1]}` : ''}</span></div>
+        <span class="total">${m.points}<small> pts</small></span></div>`;
+    }).join('')}
+    <p class="aide">${lignes.length ? `Points cumulés sur ${Math.max(...lignes.map(([, m]) => m.parties))} partie(s). Ton Mallow dore à chaque mission réussie.` : ''}</p>
+  </div>`;
 }
 
 // ——— Fin ———
@@ -248,6 +276,7 @@ export function ecranFin(): string {
     <div class="podium">${podium}</div>
     ${bulle(`Bravo ${nom(vainqueur)}. Les autres : on se refait ça ?`)}
     ${details}
+    ${classementDeSaison()}
     <div class="pile bas"><button class="bouton rose" data-action="partagerPodium">Partager le podium</button>
       ${estHote() ? boutonHote('rejouer', 'Rejouer') : '<p class="attente">L’hôte peut relancer une partie.</p>'}
       <button class="bouton discret" data-action="quitter">Quitter</button></div>`;
