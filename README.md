@@ -238,3 +238,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 19/11/2026 · Le bon timing : le « bonus de fierté » promis par les règles existe enfin. À moins de 0,05 s du temps
   demandé : « PILE ! » sur tous les écrans, confettis pour le joueur, et l'écart de la manche compte zéro.
   Télépathie : le sabotage reste visible (choix de Kilyan) ; Quitte ou Double gagnait déjà à la plus grosse cagnotte.
+- 19/11/2026 · Quitte ou Double passe au cumul (choix de Kilyan) : tout le monde joue toutes les questions.
+  Encaisser met la cagnotte dans sa banque, à l'abri, et on repart de 0 ; une erreur ne fait perdre que la cagnotte
+  en cours. À la dernière question, ce qui est en jeu est encaissé. La plus grosse banque gagne.

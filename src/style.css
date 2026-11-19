@@ -884,3 +884,4 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .pile-timing { display: grid; justify-items: center; gap: 2px; padding: 10px; border-radius: 16px; background: #FFD84A1a; border: 1px solid #FFD84A; animation: tele-ok .5s cubic-bezier(.2,1.6,.4,1); }
 .pile-timing b { font-family: var(--titre); font-weight: 900; font-size: 30px; color: var(--jaune); text-shadow: 0 0 20px var(--jaune); }
 .pile-timing span { font-weight: 800; font-size: 14px; }
+.vert-texte { color: #5CF2C2; font-weight: 800; }

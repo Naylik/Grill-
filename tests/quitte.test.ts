@@ -15,7 +15,7 @@ describe('Quitte ou Double', () => {
     expect([0, 1, 2, 4].map(doubler)).toEqual([1, 2, 4, 8]);
   });
 
-  it('partie complète : doubler, encaisser, perdre', () => {
+  it('partie complète : doubler, encaisser (banque), perdre la cagnotte en jeu, cumul', () => {
     const uids = ['a', 'b', 'c'];
     const joueurs = Object.fromEntries(uids.map((u) => [u, { prenom: u.toUpperCase() }])) as never;
     let t = 0;
@@ -29,28 +29,36 @@ describe('Quitte ou Double', () => {
     expect(JSON.stringify(e)).not.toContain('bonne'); // la bonne réponse n'est pas publique
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const av = (rep = {}): any => { const r = quitteOuDouble.piloter(ctx(rep), e); if (r && !r.fin) e = r.etat; return r; };
-    // Q1 : a et b justes, c faux.
-    const faux = (bonnes[0] + 1) % 4;
-    av({ a: { etape: e.etape, choix: bonnes[0] }, b: { etape: e.etape, choix: bonnes[0] }, c: { etape: e.etape, choix: faux } });
-    expect(e.phase).toBe('resultat');
+    const tous = (_i: number, choix: Record<string, number>) => Object.fromEntries(Object.entries(choix).map(([u, c]) => [u, { etape: e.etape, choix: c }]));
+    const faux = (i: number) => (bonnes[i] + 1) % 4;
+    // Q1 : a et b justes (1 pt en jeu), c faux.
+    av(tous(0, { a: bonnes[0], b: bonnes[0], c: faux(0) }));
     expect(e.cagnotte).toEqual({ a: 1, b: 1, c: 0 });
-    expect(e.statut.c).toBe('perdu');
     t += 7000; av();
     expect(e.phase).toBe('choix');
-    // a encaisse, b double.
+    // a encaisse (banque 1, repart de 0), b double.
     av({ a: { etape: e.etape, decision: 'encaisser' }, b: { etape: e.etape, decision: 'doubler' } });
     expect(e.phase).toBe('question');
-    expect(e.statut.a).toBe('encaisse');
-    // Q2 : b juste → 2 points ; puis b n'a pas répondu au choix → il encaisse : fin.
-    av({ b: { etape: e.etape, choix: bonnes[1] } });
-    expect(e.cagnotte.b).toBe(2);
+    expect(e.banque.a).toBe(1);
+    expect(e.cagnotte.a).toBe(0);
+    // Q2 : tout le monde rejoue ; a et c justes, b se trompe et perd son point en jeu.
+    av(tous(1, { a: bonnes[1], b: faux(1), c: bonnes[1] }));
+    expect(e.cagnotte).toEqual({ a: 1, b: 0, c: 1 });
+    expect(e.perdus).toEqual(['b']);
     t += 7000; av();
-    t += 13000; av();
+    // a et c doublent (pas de réponse = encaisse : on répond « doubler »).
+    av({ a: { etape: e.etape, decision: 'doubler' }, c: { etape: e.etape, decision: 'doubler' } });
+    // Q3 à Q5 : tout le monde juste ; à la fin, ce qui est en jeu est encaissé.
+    for (let i = 2; i < 5; i++) {
+      av(tous(i, { a: bonnes[i], b: bonnes[i], c: bonnes[i] }));
+      t += 7000; av();
+      if (e.phase === 'choix') av({ a: { etape: e.etape, decision: 'doubler' }, b: { etape: e.etape, decision: 'doubler' }, c: { etape: e.etape, decision: 'doubler' } });
+    }
     expect(e.phase).toBe('bilan');
+    expect(e.banque).toEqual({ a: 1 + 8, b: 4, c: 8 }); // a : 1 encaissé + 8 en jeu à la fin
     t += 7000;
     const fin = av().fin;
-    expect(fin.points.b).toBe(5);
-    expect(fin.points.a).toBe(3);
+    expect(fin.points.a).toBe(5);
     expect(quitteOuDouble.contenus!(e)).toHaveLength(5);
   });
 });

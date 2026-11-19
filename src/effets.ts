@@ -123,10 +123,10 @@ export function momentsForts(): void {
   }
   // Quitte ou Double : ma fusée grimpe (bonne réponse) ou crashe (tout perdu).
   if (d.phase === 'jeu' && d.jeuEnCours === 'quitte' && S.jeu) {
-    const q = S.jeu as { phase?: string; etape?: string; perdus?: string[]; statut?: Record<string, string> };
+    const q = S.jeu as { phase?: string; etape?: string; perdus?: string[]; cagnotte?: Record<string, number> };
     if (q.phase === 'resultat') {
       if (q.perdus?.includes(S.uid)) moment(`qd-${q.etape}`, () => { sons.rate(); vibrer([200, 80, 300]); });
-      else if (q.statut?.[S.uid] === 'enJeu') moment(`qd-${q.etape}`, () => sons.reussi());
+      else if ((q.cagnotte?.[S.uid] ?? 0) > 0) moment(`qd-${q.etape}`, () => sons.reussi());
     }
   }
   // Roue des territoires : la roue s'arrête sur le gagnant.
