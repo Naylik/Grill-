@@ -243,3 +243,4 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   en cours. À la dernière question, ce qui est en jeu est encaissé. La plus grosse banque gagne.
 - 19/11/2026 · Quitte ou Double : 8 / 10 / 12 questions selon le format (au lieu de 5 / 6 / 7), pour avoir le temps
   d'encaisser plusieurs fois ou de tout risquer. 40 questions ajoutées au quiz (80 au total, 20 par niveau).
+- 19/11/2026 · Mission flash Quitte ou Double : « Atteins 16 points ou plus » (au lieu de 8, trop facile avec 8 à 12 questions).
