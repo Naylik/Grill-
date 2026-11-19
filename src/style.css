@@ -737,8 +737,8 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .case-champ.minee.vient { animation: mine-saute .6s ease-out; }
 @keyframes mine-saute { 0% { transform: scale(1.4); background: #FFB547; } 40% { background: #FF5A3D; } }
 .case-champ.minee small { position: absolute; bottom: 2px; left: 0; right: 0; font-size: 8px; font-weight: 800; color: #FFD3DA; text-align: center; }
-.ma-mine { position: absolute; inset: 0; display: grid; place-items: center; opacity: .35; }
-.ma-mine svg { width: 55%; height: 55%; }
+.ma-mine { position: absolute; inset: 0; display: grid; place-items: center; }
+.ma-mine svg { width: 55%; height: 55%; opacity: .35; }
 .pot-mines { display: flex; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: 14px; background: #0F1B24; border: 1px solid #22394A; font-family: var(--titre); font-size: 13px; color: #9FB3C2; }
 .pot-mines b { color: #3DF58A; font-size: 18px; }
 .boum-mine { position: relative; display: grid; place-items: center; height: 120px; }
@@ -765,7 +765,7 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .badge-action.rate, .badge-action.pauvre { background: #4A2030; color: #FFB3BF; }
 .badge-action.protege { background: var(--cyan); color: var(--fond); box-shadow: 0 0 12px var(--cyan); }
 .badge-action.victime { background: var(--jaune); color: var(--fond); }
-.actions-roue { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.actions-roue { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
 .action-roue { min-height: 54px; border-radius: 14px; border: 1px solid #ffffff22; background: #ffffff0d; color: var(--texte); font-family: var(--titre); font-weight: 800; font-size: 13px; display: grid; place-items: center; line-height: 1.15; cursor: pointer; }
 .action-roue small { font-family: var(--corps); font-size: 10px; opacity: .75; }
 .action-roue.actif { background: linear-gradient(180deg, #B18CFF, #7B5CFF); border-color: transparent; box-shadow: 0 0 20px -4px #7B5CFF; }
@@ -859,3 +859,23 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .studio-etat { margin: 0; text-align: center; color: var(--doux, #BDB3E6); }
 .studio-boutons { display: grid; gap: 8px; width: 100%; }
 .bouton-video { font-size: 15px; }
+
+/* Champ de mines · Détecteur : le chiffre des mines autour, et ta mine en pointillés. */
+.chiffre-mine { position: absolute; top: 3px; right: 5px; font-family: var(--titre); font-weight: 900; font-size: 15px; text-shadow: 0 0 6px #000, 0 0 2px #000; }
+.chiffre-mine.n0 { color: #9FB3C2; } .chiffre-mine.n1 { color: #5CD8FF; } .chiffre-mine.n2 { color: #FFD84A; } .chiffre-mine.n3 { color: #FF5A6E; }
+.case-champ.fermee:has(.ma-mine) { outline: 2px dashed #FF5A6E; outline-offset: -4px; }
+.ma-mine em { position: absolute; bottom: 3px; left: 0; right: 0; text-align: center; font-style: normal; font-size: 8px; font-weight: 800; color: #FF8FC8; }
+
+/* Réflexe Mallow · Leurre du vainqueur : chez la victime, Mallow « chauffe » (lueur et flammes) sans prendre feu. */
+.arene-reflexe.chauffe:not(.en-feu) { background: radial-gradient(circle at 50% 60%, #FF8A3D55 0%, #4A1A2A 55%, #1A0D1E 100%); box-shadow: 0 0 40px -10px #FF8A3D; }
+.arene-reflexe.chauffe:not(.en-feu) .flammes-arene { opacity: .85; }
+.arene-reflexe.chauffe:not(.en-feu) .visage.normal { opacity: 0; }
+.arene-reflexe.chauffe:not(.en-feu) .visage.surprise { opacity: 1; }
+.arene-reflexe.chauffe + .retour-arene .attente-txt { display: none; }
+.choix-piege { display: grid; gap: 8px; padding: 14px; border-radius: 18px; background: #FF5A6E14; border: 1px solid #FF5A6E66; }
+.titre-piege { margin: 0; font-family: var(--titre); font-weight: 900; color: #FF8F9E; }
+
+/* Roue des territoires · Pacte */
+.action-roue.pacte.actif { background: linear-gradient(180deg, #5CF2C2, #1FBF8F); color: var(--fond); box-shadow: 0 0 20px -4px #5CF2C2; }
+.badge-action.pacte { background: #5CF2C2; color: var(--fond); box-shadow: 0 0 12px #5CF2C2; }
+.badge-action.trahi { background: #FF5A6E; color: #fff; box-shadow: 0 0 14px #FF5A6E; }

@@ -200,3 +200,24 @@ describe('Réflexe Mallow et Le bon timing', async () => {
     expect(ids).toContain('timing');
   });
 });
+
+import { gagnantManche, reflexe } from '../src/games/reflexe';
+describe('Réflexe Mallow · Leurre du vainqueur', () => {
+  it('le gagnant choisit sa victime ; le piège ne vise qu’elle à la manche suivante', () => {
+    expect(gagnantManche({ a: 300, b: -1, c: 250 })).toBe('c');
+    const uids = ['a', 'b', 'c'];
+    let t = 0;
+    const ctx = (reponses: Record<string, unknown> = {}) => ({ joueurs: {}, uids, connectes: uids, maintenant: t, numeroJeu: 1, duree: 6, reponses: reponses as never, compteurs: {}, totaux: {}, prive: {}, hasard: () => 0.5 }) as never;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let e: any = reflexe.demarrer(ctx()).etat;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const av = (rep = {}) => { const r = reflexe.piloter(ctx(rep), e); if (r && !r.fin) e = r.etat; };
+    av({ a: { etape: e.etape, temps: 300 }, b: { etape: e.etape, temps: 200 }, c: { etape: e.etape, temps: 400 } });
+    expect(e.phase).toBe('resultat');
+    expect(e.gagnant).toBe('b');
+    av({ b: { etape: `reflexe-1-0-piege`, cible: 'c' } });
+    expect(e.phase).toBe('attente');
+    expect(e.piege.cible).toBe('c');
+    expect(e.piege.heure).toBeLessThan(e.feu - 600);
+  });
+});

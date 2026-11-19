@@ -282,7 +282,8 @@ action('jeu', async (el) => {
   await geste(el, {
     repondre: (valeurs) => {
       sons.ding();
-      return repondre(etape, valeurs);
+      // Un geste peut répondre à une autre étape que celle du jeu (ex. le piège de Réflexe Mallow).
+      return repondre(typeof valeurs.etape === 'string' ? valeurs.etape : etape, valeurs);
     },
     incrementer: async (compteur) => {
       await runTransaction(ref(db, `salons/${S.code}/compteurs/${compteur}`), (n: number | null) => (n ?? 0) + 1);
@@ -524,6 +525,9 @@ function horloge(): void {
     el.classList.toggle('en-feu', enFeu);
     const leurre = el.dataset.leurre ? Number(el.dataset.leurre) : NaN;
     el.classList.toggle('eternue', !Number.isNaN(leurre) && t >= leurre && t < leurre + 700);
+    // Leurre du vainqueur : chez la victime seulement, Mallow « chauffe » comme s'il allait prendre feu.
+    const piege = el.dataset.piege ? Number(el.dataset.piege) : NaN;
+    el.classList.toggle('chauffe', !Number.isNaN(piege) && t >= piege && t < piege + 650);
     if (enFeu && t < feu + 1000 && !sonsJoues.has(`feu-${feu}`)) {
       sonsJoues.add(`feu-${feu}`);
       sons.pschhh();

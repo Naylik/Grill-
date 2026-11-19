@@ -3,6 +3,7 @@
 // encaisser, ou continuer. Tomber sur une mine fait perdre les points du tour, et c'est le poseur de la mine qui gagne.
 // Bluff : à voix haute, chacun peut « conseiller » le joueur… et l'envoyer sur sa propre mine.
 // Les mines ne sont connues que de l'hôte (prive/mines) jusqu'à ce qu'elles sautent.
+// Détecteur : chaque colis sûr ouvert affiche le nombre de mines dans les 8 cases autour (comme au démineur).
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
@@ -10,6 +11,7 @@ import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeB
 import { classementBarres, hud } from './arene';
 
 const NB_CASES = 20; // grille de 4 × 5
+const COLONNES = 5;
 const TOURS_PAR_JOUEUR: [number, number, number] = [2, 2, 3]; // Courte, Normale, Longue
 const DUREE_POSE = 30_000;
 const DUREE_ACTION = 20_000;
@@ -27,6 +29,7 @@ interface Etat extends EtatDeBase {
   pot: number; // points du tour en cours (perdus si mine)
   sures: number; // colis sûrs ouverts pendant ce tour
   ouvertes: Record<string, 'sur' | 'mine'>; // case → ce qu'elle cachait
+  chiffres?: Record<string, number>; // détecteur : mines autour de chaque colis sûr ouvert
   poseurs?: Record<string, string[]>; // cases minées révélées → qui les avait posées
   banque: Record<string, number>;
   bonus: Record<string, number>; // points gagnés grâce à sa mine
@@ -41,6 +44,23 @@ const etapeDe = (e: Pick<Etat, 'numeroJeu' | 'tour' | 'action'>) => `mines-${e.n
 const joueurDu = (e: Etat) => e.ordre[e.tour % e.ordre.length];
 /** Le k-ième colis sûr du tour rapporte k points. */
 export const gainSur = (sures: number): number => sures + 1;
+
+/** Détecteur : nombre de cases minées parmi les 8 cases autour de « i » (diagonales comprises). */
+export function minesAutour(i: number, mines: Record<string, string[]>): number {
+  const l = Math.floor(i / COLONNES);
+  const c = i % COLONNES;
+  let n = 0;
+  for (let dl = -1; dl <= 1; dl++) {
+    for (let dc = -1; dc <= 1; dc++) {
+      if (!dl && !dc) continue;
+      const l2 = l + dl;
+      const c2 = c + dc;
+      if (l2 < 0 || c2 < 0 || c2 >= COLONNES || l2 * COLONNES + c2 >= NB_CASES) continue;
+      if (mines[l2 * COLONNES + c2]?.length) n++;
+    }
+  }
+  return n;
+}
 
 function tourSuivant(ctx: ContexteHote, e: Etat, mines: Record<string, string[]>): { etat: Etat } {
   const tour = e.tour + 1;
@@ -57,7 +77,7 @@ export const champDeMines: MiniJeu<Etat> = {
   explication: {
     comment: 'Chacun pose d’abord une mine en secret sur la grille. Puis, chacun son tour, on ouvre des colis : chaque colis sûr rapporte plus que le précédent (1, 2, 3 pts…). Tu peux t’arrêter pour encaisser, ou continuer. Si tu tombes sur une mine, tu perds les points du tour et le poseur de la mine gagne !',
     gagner: 'Le plus de points gagne : ceux encaissés et ceux gagnés quand quelqu’un saute sur ta mine.',
-    note: 'Conseiller les autres à voix haute est autorisé… et pas forcément honnête.',
+    note: 'Détecteur : chaque colis ouvert affiche le nombre de mines dans les 8 cases autour. Tu vois ta propre mine : conseiller les autres à voix haute est autorisé… et pas forcément honnête.',
   },
   icone: '<rect x="4" y="9" width="16" height="11" rx="2" fill="currentColor"/><path d="M12 9c1-3 3-5 6-5" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="19" cy="4" r="2" fill="currentColor"/>',
   couleur: '#E0A060',
@@ -113,7 +133,7 @@ export const champDeMines: MiniJeu<Etat> = {
         };
       }
       const sures = e.sures + 1;
-      const suite: Etat = { ...e, ouvertes: { ...e.ouvertes, [c]: 'sur' }, sures, pot: e.pot + gainSur(e.sures), action: e.action + 1, fin: now + DUREE_ACTION };
+      const suite: Etat = { ...e, ouvertes: { ...e.ouvertes, [c]: 'sur' }, chiffres: { ...(e.chiffres ?? {}), [c]: minesAutour(c, mines) }, sures, pot: e.pot + gainSur(e.sures), action: e.action + 1, fin: now + DUREE_ACTION };
       // Plus aucun colis sûr fermé : il encaisse d'office.
       const resteSur = Array.from({ length: NB_CASES }, (_, i) => i).some((i) => !suite.ouvertes[i] && !mines[i]);
       if (!resteSur) return tourSuivant(ctx, { ...suite, banque: { ...suite.banque, [joueur]: (suite.banque[joueur] ?? 0) + suite.pot } }, mines);
@@ -130,7 +150,7 @@ export const champDeMines: MiniJeu<Etat> = {
   },
 
   ecran(v) {
-    const e = { ...v.etat, ouvertes: v.etat.ouvertes ?? {}, poseurs: v.etat.poseurs ?? {} };
+    const e = { ...v.etat, ouvertes: v.etat.ouvertes ?? {}, poseurs: v.etat.poseurs ?? {}, chiffres: v.etat.chiffres ?? {} };
     const nom = (u: string) => esc(v.joueurs[u]?.prenom ?? '?');
     const maMine = v.local[`mines-${e.numeroJeu}-ma-mine`] as number | undefined;
     const tete = hud('CHAMP DE MINES', Math.floor(e.tour / Math.max(1, e.ordre.length)), Math.max(1, Math.round(e.totalTours / Math.max(1, e.ordre.length))), e.phase !== 'bilan');
@@ -138,8 +158,9 @@ export const champDeMines: MiniJeu<Etat> = {
 
     const grille = (cliquable: boolean, geste: string, choisie?: number) => `<div class="champ-mines">${Array.from({ length: NB_CASES }, (_, i) => {
       const o = e.ouvertes[i];
-      const marque = maMine === i && !o ? `<span class="ma-mine">${BOMBE}</span>` : '';
-      if (o === 'sur') return `<div class="case-champ sure">${GEMME}</div>`;
+      const marque = maMine === i && !o ? `<span class="ma-mine">${BOMBE}<em>ta mine</em></span>` : '';
+      const k = e.chiffres[i];
+      if (o === 'sur') return `<div class="case-champ sure">${GEMME}${k !== undefined ? `<span class="chiffre-mine n${Math.min(3, k)}" aria-label="${k} mine${k > 1 ? 's' : ''} autour">${k}</span>` : ''}</div>`;
       if (o === 'mine') return `<div class="case-champ minee ${e.dernier?.case === i && e.phase === 'boum' ? 'vient' : ''}">${BOMBE}<small>${(e.poseurs[i] ?? []).map(nom).join(', ')}</small></div>`;
       return cliquable
         ? `<button class="case-champ fermee ${choisie === i ? 'choisie' : ''}" data-action="jeu" data-geste="${geste}" data-valeur="${i}" aria-label="Colis ${i + 1}">${marque}</button>`

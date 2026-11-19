@@ -34,3 +34,15 @@ describe('Champ de mines', () => {
     expect([0, 1, 2].map(gainSur)).toEqual([1, 2, 3]);
   });
 });
+
+import { minesAutour } from '../src/games/mines';
+describe('Champ de mines · Détecteur', () => {
+  it('compte les mines dans les 8 cases autour (grille 5 × 4)', () => {
+    const mines = { 0: ['a'], 2: ['b'], 12: ['c'] };
+    expect(minesAutour(6, mines)).toBe(3); // 0, 2 et 12 touchent la case 6 (ligne 1, colonne 1)
+    expect(minesAutour(1, mines)).toBe(2); // 0 et 2
+    expect(minesAutour(19, mines)).toBe(0);
+    expect(minesAutour(4, mines)).toBe(0); // bord droit : pas de débordement sur la ligne suivante
+    expect(minesAutour(5, { 4: ['a'] })).toBe(0); // case 4 (fin de ligne 0) n'est pas voisine de 5 (début ligne 1)
+  });
+});

@@ -7,6 +7,8 @@ export interface PartRoue {
   couleur: string;
   avant: number; // parts au début de l'animation (elles glissent vers « apres »)
   apres: number;
+  /** Pacte : la part commune de deux joueurs, rayée à leurs deux couleurs. */
+  couleur2?: string;
 }
 
 export interface EtatRoue {
@@ -95,6 +97,24 @@ function dessiner(cv: HTMLCanvasElement, e: EtatRoue, rotation: number, flap: nu
     ctx.shadowBlur = 22;
     ctx.fill();
     ctx.shadowBlur = 0;
+    if (p.couleur2) {
+      // Rayures de la 2e couleur, dans la part seulement.
+      ctx.save();
+      ctx.clip();
+      for (let r = a; r < a + da; r += 0.14) {
+        ctx.beginPath();
+        ctx.moveTo(C, C);
+        ctx.arc(C, C, R, r, Math.min(a + da, r + 0.07));
+        ctx.closePath();
+        ctx.fillStyle = p.couleur2;
+        ctx.fill();
+      }
+      ctx.restore();
+      ctx.beginPath();
+      ctx.moveTo(C, C);
+      ctx.arc(C, C, R, a, a + da);
+      ctx.closePath();
+    }
     ctx.lineWidth = 6;
     ctx.strokeStyle = '#0E0A22';
     ctx.stroke();

@@ -2,6 +2,8 @@
 // avant) : toucher trop tôt = faux départ. 5 manches ; le plus rapide au total gagne.
 // Le moment du feu est fixé en heure du serveur : il apparaît au même instant sur tous les téléphones.
 // Déroulé : intro (règles) → 5 × (attente → piste « qui a touché avant qui ») → classement du jeu.
+// Leurre du vainqueur : le gagnant d'une manche choisit en secret une victime ; à la manche suivante, sur son écran
+// seulement, Mallow « chauffe » (lueur et flammes) un instant avant le vrai feu, pour la pousser au faux départ.
 import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
 import { esc } from '../outils';
@@ -14,6 +16,7 @@ const PENALITE = 1000; // faux départ
 const ABSENT = 1500; // pas de réponse
 const DUREE_INTRO = 7000;
 const DUREE_PISTE = 4800;
+const DUREE_PISTE_CHOIX = 8000; // quand le gagnant peut choisir sa victime
 const DUREE_BILAN = 6500;
 
 interface Etat extends EtatDeBase {
@@ -26,14 +29,26 @@ interface Etat extends EtatDeBase {
   temps?: Record<string, number>; // temps de la manche (ms), -1 = faux départ
   historique: Record<string, number[]>; // temps bruts de chaque manche, par joueur
   cumul: Record<string, number>;
+  piege?: { cible: string; heure: number }; // leurre du vainqueur pour cette manche (visible chez la cible seulement)
+  gagnant?: string; // gagnant de la manche qui vient de se jouer
 }
 
 const etapeDe = (n: number, m: number) => `reflexe-${n}-${m}`;
 
-function nouvelleManche(ctx: { maintenant: number; hasard: () => number }, base: Etat, manche: number): Etat {
+const etapePiege = (n: number, m: number) => `reflexe-${n}-${m}-piege`;
+
+function nouvelleManche(ctx: { maintenant: number; hasard: () => number }, base: Etat, manche: number, cible?: string): Etat {
   const feu = ctx.maintenant + 2500 + 1500 + ctx.hasard() * 2500;
   const leurre = ctx.hasard() < 0.45 ? ctx.maintenant + 2500 + (feu - ctx.maintenant - 2500) * (0.35 + ctx.hasard() * 0.3) : null;
-  return { ...base, etape: etapeDe(base.numeroJeu, manche), phase: 'attente', manche, feu, leurre, temps: undefined, fin: feu + 4000 };
+  // Le piège tombe entre 1,2 s après le début et 0,7 s avant le vrai feu.
+  const piege = cible ? { cible, heure: ctx.maintenant + 2500 + 1200 + (feu - ctx.maintenant - 2500 - 1900) * ctx.hasard() } : undefined;
+  const { piege: _ancien, gagnant: _g, ...reste } = base;
+  return { ...reste, ...(piege ? { piege } : {}), etape: etapeDe(base.numeroJeu, manche), phase: 'attente', manche, feu, leurre, temps: undefined, fin: feu + 4000 };
+}
+
+/** Gagnant d'une manche : le temps valide le plus court. */
+export function gagnantManche(temps: Record<string, number>): string | undefined {
+  return Object.entries(temps).filter(([, t]) => t >= 0 && t < ABSENT).sort((a, b) => a[1] - b[1])[0]?.[0];
 }
 
 /** Temps comptés pour le classement : faux départ et absence pénalisés. */
@@ -48,6 +63,16 @@ const meilleurTemps = (liste: number[] = []) => {
 };
 
 const FLAMMES = '<svg class="flammes-arene" viewBox="0 0 200 120" aria-hidden="true"><path d="M40 120 C20 90 44 70 40 40 C62 62 70 88 66 120 Z" fill="#FF7A3D"/><path d="M80 120 C58 80 96 50 100 10 C118 50 140 80 120 120 Z" fill="#FFD84A"/><path d="M134 120 C130 90 144 70 160 46 C170 76 182 96 162 120 Z" fill="#FF7A3D"/></svg>';
+
+/** Le gagnant de la manche choisit sa victime (lui seul voit ce choix). */
+function choixPiege(e: Etat, v: { uid: string; uids: string[]; joueurs: Record<string, { prenom: string; couleur: string }>; local: Record<string, unknown> }): string {
+  if (e.gagnant !== v.uid) return '';
+  const fait = v.local[etapePiege(e.numeroJeu, e.manche)] as string | undefined;
+  if (fait) return `<p class="aide gauche piege-fait">Piège posé sur <strong>${esc(v.joueurs[fait]?.prenom ?? '?')}</strong>. Chut…</p>`;
+  return `<div class="choix-piege"><p class="titre-piege">Tu as gagné la manche ! Choisis ta victime</p>
+    <p class="aide gauche">À la prochaine manche, sur son écran seulement, Mallow fera semblant de prendre feu. Personne ne saura que c’est toi.</p>
+    <div class="options deux">${v.uids.filter((u) => u !== v.uid).map((u) => `<button class="option" data-action="jeu" data-geste="pieger" data-valeur="${u}">${esc(v.joueurs[u].prenom)}</button>`).join('')}</div></div>`;
+}
 
 export const reflexe: MiniJeu<Etat> = {
   id: 'reflexe',
@@ -85,11 +110,18 @@ export const reflexe: MiniJeu<Etat> = {
       const temps = Object.fromEntries(Object.entries(recues).map(([u, r]) => [u, Math.round(Number(r.temps))]));
       const historique = Object.fromEntries(ctx.uids.map((u) => [u, [...(etat.historique?.[u] ?? []), temps[u] ?? ABSENT]]));
       const cumul = Object.fromEntries(ctx.uids.map((u) => [u, (etat.cumul[u] ?? 0) + tempsCompte(temps[u])]));
-      return { etat: { ...etat, phase: 'resultat', temps, historique, cumul, fin: ctx.maintenant + DUREE_PISTE } };
+      const derniere = etat.manche + 1 >= (etat.total ?? NB_MANCHES[0]);
+      const gagnant = derniere ? undefined : gagnantManche(temps);
+      const { piege: _p, ...sansPiege } = etat;
+      return { etat: { ...sansPiege, phase: 'resultat', temps, historique, cumul, ...(gagnant ? { gagnant } : {}), fin: ctx.maintenant + (gagnant ? DUREE_PISTE_CHOIX : DUREE_PISTE) } };
     }
-    if (etat.phase === 'resultat' && ctx.maintenant >= (etat.fin ?? 0)) {
+    if (etat.phase === 'resultat') {
+      // Le gagnant a choisi sa victime : on n'attend pas la fin du chrono.
+      const choix = etat.gagnant ? reponsesDe<{ cible?: string }>(ctx, etapePiege(etat.numeroJeu, etat.manche))[etat.gagnant] : undefined;
+      if (!choix && ctx.maintenant < (etat.fin ?? 0)) return null;
       if (etat.manche + 1 >= (etat.total ?? NB_MANCHES[0])) return { etat: { ...etat, phase: 'bilan', fin: ctx.maintenant + DUREE_BILAN } };
-      return { etat: nouvelleManche(ctx, etat, etat.manche + 1) };
+      const cible = choix?.cible && choix.cible !== etat.gagnant && ctx.uids.includes(choix.cible) ? choix.cible : undefined;
+      return { etat: nouvelleManche(ctx, etat, etat.manche + 1, cible) };
     }
     if (etat.phase === 'bilan' && ctx.maintenant >= (etat.fin ?? 0)) {
       const meilleur = Object.entries(etat.cumul).sort((a, b) => a[1] - b[1])[0];
@@ -134,7 +166,7 @@ export const reflexe: MiniJeu<Etat> = {
         : `<span class="temps-arene" style="color:${couleur}">${moi < 0 ? 'OUPS' : `${moi}<small> ms</small>`}</span><span class="note-arene" style="--c:${couleur}">${note}</span>`;
       return `${entete}
         <button class="aire-reflexe arene-reflexe ${fini ? 'fini' : ''}" data-action="jeu" data-geste="taper" data-immediat
-          data-feu="${e.feu}" ${e.leurre ? `data-leurre="${e.leurre}"` : ''} aria-label="Touche dès que Mallow prend feu">
+          data-feu="${e.feu}" ${e.leurre ? `data-leurre="${e.leurre}"` : ''} ${e.piege?.cible === v.uid ? `data-piege="${e.piege.heure}"` : ''} aria-label="Touche dès que Mallow prend feu">
           <span class="anneau-arene" aria-hidden="true"></span>
           ${moi !== undefined && moi >= 0 ? '<span class="onde-arene" aria-hidden="true"></span>' : ''}
           ${FLAMMES}
@@ -163,10 +195,19 @@ export const reflexe: MiniJeu<Etat> = {
       ${piste(points, max)}
       ${fauxDeparts.length ? `<p class="hors-piste rouge">Faux départ : ${fauxDeparts.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       ${absents.length ? `<p class="hors-piste">Trop tard : ${absents.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
+      ${choixPiege(e, v)}
       <p class="attente">${e.manche + 1 < N ? 'Manche suivante dans un instant…' : 'Classement dans un instant…'}</p>`;
   },
 
   gestes: {
+    async pieger(el, o, v) {
+      const e = v.etat;
+      const etape = etapePiege(e.numeroJeu, e.manche);
+      if (e.phase !== 'resultat' || e.gagnant !== v.uid || o.local[etape] !== undefined) return;
+      o.local[etape] = el.dataset.valeur;
+      o.rafraichir();
+      await o.repondre({ cible: el.dataset.valeur, etape });
+    },
     async taper(el, o, v) {
       const etape = v.etat.etape;
       if (v.etat.phase !== 'attente' || v.maReponse?.etape === etape || o.local[etape] !== undefined) return;

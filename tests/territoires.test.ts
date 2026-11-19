@@ -1,7 +1,7 @@
 // Roue des territoires : la roue s'arrête bien sur la part tirée, et les actions suivent la règle.
 import { describe, expect, it } from 'vitest';
 import { partSousCurseur, tirerArret } from '../src/roue';
-import { appliquerActions, territoires } from '../src/games/territoires';
+import { appliquerActions, segments, territoires } from '../src/games/territoires';
 
 describe('Roue des territoires', () => {
   it('la roue s’arrête toujours sous le curseur dans la part du gagnant tiré', () => {
@@ -43,5 +43,34 @@ describe('Roue des territoires', () => {
     t += 7000; av();
     expect(e.phase).toBe('gain');
     expect(e.points[gagnant]).toBe(avant + gain);
+  });
+});
+
+describe('Roue des territoires · Pacte', () => {
+  const noms = { a: 'A', b: 'B', c: 'C', d: 'D' };
+  const base = { ordre: ['a', 'b', 'c', 'd'], parts: { a: 3, b: 3, c: 3, d: 3 }, points: { a: 5, b: 5, c: 5, d: 5 }, pot: 6 };
+  it('pacte réciproque : scellé, une seule part sur la roue', () => {
+    const r = appliquerActions(base, { a: { a: 'pacte', c: 'b' }, b: { a: 'pacte', c: 'a' }, c: { a: 'proteger' }, d: { a: 'proteger' } }, noms);
+    expect(r.pactes).toEqual([['a', 'b']]);
+    expect(r.badges.a.type).toBe('pacte');
+    expect(segments(base.ordre, r.pactes)).toEqual([['a', 'b'], ['c'], ['d']]);
+  });
+  it('trahison : le traître prend 2 parts à celui qui proposait le pacte', () => {
+    const r = appliquerActions(base, { a: { a: 'pacte', c: 'b' }, b: { a: 'voler', c: 'a' }, c: { a: 'proteger' }, d: { a: 'proteger' } }, noms);
+    expect(r.parts.a).toBe(1);
+    expect(r.parts.b).toBe(5);
+    expect(r.badges.a.type).toBe('trahi');
+    expect(r.pactes).toEqual([]);
+  });
+  it('double trahison : chacun perd 1 part, la cagnotte grossit', () => {
+    const r = appliquerActions(base, { a: { a: 'voler', c: 'b' }, b: { a: 'voler', c: 'a' }, c: { a: 'proteger' }, d: { a: 'proteger' } }, noms);
+    expect(r.parts.a).toBe(2);
+    expect(r.parts.b).toBe(2);
+    expect(r.pot).toBe(8);
+  });
+  it('pacte refusé : rien ne se passe', () => {
+    const r = appliquerActions(base, { a: { a: 'pacte', c: 'b' }, b: { a: 'agrandir' }, c: { a: 'proteger' }, d: { a: 'proteger' } }, noms);
+    expect(r.parts.a).toBe(3);
+    expect(r.badges.a.type).toBe('rate');
   });
 });

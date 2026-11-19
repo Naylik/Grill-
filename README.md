@@ -228,3 +228,10 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   puis « Partager » (WhatsApp, Instagram…) ou téléchargement. Pas de serveur, pas de vraie photo.
 - 18/11/2026 · Vidéos plus lentes et plus sobres (retour de Kilyan) : récap ≈ 32 s (4,5 s par mission révélée),
   moment GRILLÉ ! ≈ 12 s ; un seul bruitage par mission (tampon) et l'explosion du GRILLÉ !, moitié moins forts.
+- 19/11/2026 · Trois nouveautés validées sur maquette :
+  · Champ de mines · Détecteur : chaque colis sûr ouvert affiche le nombre de mines dans les 8 cases autour (comme au
+    démineur, calculé par l'hôte qui seul connaît les mines) ; ta mine est marquée en pointillés sur ton écran.
+  · Réflexe Mallow · Leurre du vainqueur : le gagnant d'une manche choisit en secret une victime ; à la manche
+    suivante, sur son écran seulement, Mallow « chauffe » 0,65 s (lueur, flammes) avant le vrai feu.
+  · Roue des territoires · Pacte : 4e action « Pacte avec X ». Réciproque : une seule part rayée aux deux couleurs,
+    cagnotte partagée. Trahison (X te vole) : il te prend 2 parts. Double vol mutuel : chacun perd 1 part, cagnotte +2.
