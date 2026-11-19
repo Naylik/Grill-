@@ -10,8 +10,9 @@ describe('Quitte ou Double', () => {
       expect(q.bonne).toBeGreaterThanOrEqual(0);
       expect(q.bonne).toBeLessThan(4);
     }
-    for (const n of [1, 2, 3, 4]) expect(quiz.filter((q) => q.niveau === n).length).toBeGreaterThanOrEqual(10);
+    for (const n of [1, 2, 3, 4]) expect(quiz.filter((q) => q.niveau === n).length).toBeGreaterThanOrEqual(20);
     expect([0, 1, 2, 3, 4].map((i) => niveauDe(i, 5))).toEqual([1, 1, 2, 3, 4]);
+    expect(new Set(quiz.map((q) => q.id)).size).toBe(quiz.length);
     expect([0, 1, 2, 4].map(doubler)).toEqual([1, 2, 4, 8]);
   });
 
@@ -48,17 +49,17 @@ describe('Quitte ou Double', () => {
     t += 7000; av();
     // a et c doublent (pas de réponse = encaisse : on répond « doubler »).
     av({ a: { etape: e.etape, decision: 'doubler' }, c: { etape: e.etape, decision: 'doubler' } });
-    // Q3 à Q5 : tout le monde juste ; à la fin, ce qui est en jeu est encaissé.
-    for (let i = 2; i < 5; i++) {
+    // Q3 à Q8 (format court : 8 questions) : tout le monde juste ; à la fin, ce qui est en jeu est encaissé.
+    for (let i = 2; i < 8; i++) {
       av(tous(i, { a: bonnes[i], b: bonnes[i], c: bonnes[i] }));
       t += 7000; av();
       if (e.phase === 'choix') av({ a: { etape: e.etape, decision: 'doubler' }, b: { etape: e.etape, decision: 'doubler' }, c: { etape: e.etape, decision: 'doubler' } });
     }
     expect(e.phase).toBe('bilan');
-    expect(e.banque).toEqual({ a: 1 + 8, b: 4, c: 8 }); // a : 1 encaissé + 8 en jeu à la fin
+    expect(e.banque).toEqual({ a: 1 + 64, b: 32, c: 64 }); // a : 1 encaissé + 64 en jeu à la fin
     t += 7000;
     const fin = av().fin;
     expect(fin.points.a).toBe(5);
-    expect(quitteOuDouble.contenus!(e)).toHaveLength(5);
+    expect(quitteOuDouble.contenus!(e)).toHaveLength(8);
   });
 });

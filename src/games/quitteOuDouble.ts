@@ -12,7 +12,7 @@ import { classementBarres, hud } from './arene';
 import { fuseeHtml } from '../fusee';
 import { sons } from '../son';
 
-const NB_QUESTIONS: [number, number, number] = [5, 6, 7]; // Courte, Normale, Longue
+const NB_QUESTIONS: [number, number, number] = [8, 10, 12]; // Courte, Normale, Longue (assez pour encaisser plusieurs fois)
 const DUREE_QUESTION = 15_000;
 const DUREE_RESULTAT = 6_000;
 const DUREE_CHOIX = 12_000;
@@ -66,7 +66,7 @@ export const quitteOuDouble: MiniJeu<Etat> = {
   accroche: 'Bonne réponse : ta cagnotte double. Encaisse avant de tout perdre.',
   explication: {
     comment: 'Une question à 4 choix, tout le monde répond en même temps. Bonne réponse : ta cagnotte passe à 1 point, puis double à chaque fois (2, 4, 8…). Mauvaise réponse : tu perds ta cagnotte en cours. Après chaque bonne réponse, tu choisis en secret : encaisser (tes points passent dans ta banque, à l’abri, et tu repars de 0) ou doubler.',
-    gagner: 'Le plus gros total encaissé gagne. Tout le monde joue toutes les questions, de plus en plus dures (5 à 7 selon le format).',
+    gagner: 'Le plus gros total encaissé gagne. Tout le monde joue toutes les questions, de plus en plus dures (8 à 12 selon le format).',
   },
   icone: '<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z" fill="currentColor"/>',
   couleur: '#FFD84A',
