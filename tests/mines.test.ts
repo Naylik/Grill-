@@ -18,7 +18,11 @@ describe('Champ de mines', () => {
     expect(JSON.stringify(e)).not.toContain('"0":["a"]'); // les mines ne sont pas publiques
     const j1 = e.ordre[0];
     // Deux colis sûrs (10 et 11) : 1 + 2 = 3 pts, puis il encaisse.
-    av({ [j1]: { etape: e.etape, case: 10 } });
+    av({ [j1]: { etape: e.etape, case: 10, detecteur: 'ma-cle-secrete' } });
+    // Détecteur secret : le chiffre est publié brouillé, lisible avec la clé du joueur seulement.
+    expect(e.detections[10].u).toBe(j1);
+    expect(lireDetection(e.detections[10].v, 'ma-cle-secrete', 10)).toBe(minesAutour(10, { 0: ['a'], 1: ['b'], 2: ['c'] }));
+    expect(e.detecteurs[j1]).toBe(1);
     av({ [j1]: { etape: e.etape, case: 11 } });
     expect(e.pot).toBe(3);
     av({ [j1]: { etape: e.etape, stop: true } });
@@ -35,7 +39,7 @@ describe('Champ de mines', () => {
   });
 });
 
-import { minesAutour } from '../src/games/mines';
+import { brouiller, lireDetection, minesAutour } from '../src/games/mines';
 describe('Champ de mines · Détecteur', () => {
   it('compte les mines dans les 8 cases autour (grille 5 × 4)', () => {
     const mines = { 0: ['a'], 2: ['b'], 12: ['c'] };
@@ -44,5 +48,16 @@ describe('Champ de mines · Détecteur', () => {
     expect(minesAutour(19, mines)).toBe(0);
     expect(minesAutour(4, mines)).toBe(0); // bord droit : pas de débordement sur la ligne suivante
     expect(minesAutour(5, { 4: ['a'] })).toBe(0); // case 4 (fin de ligne 0) n'est pas voisine de 5 (début ligne 1)
+  });
+});
+
+describe('Champ de mines · Détecteur secret', () => {
+  it('le chiffre brouillé ne se lit qu’avec la bonne clé', () => {
+    for (let k = 0; k <= 8; k++) {
+      const v = brouiller(k, 'cle-secrete-123', 7);
+      expect(lireDetection(v, 'cle-secrete-123', 7)).toBe(k);
+    }
+    const lus = new Set(Array.from({ length: 30 }, (_, i) => lireDetection(brouiller(2, 'vraie-cle', 7), `autre-${i}`, 7)));
+    expect(lus.size).toBeGreaterThan(3); // sans la clé, on lit n'importe quoi
   });
 });

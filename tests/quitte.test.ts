@@ -27,7 +27,7 @@ describe('Quitte ou Double', () => {
     let e: any = debut.etat;
     prive = { quitte: (debut.ecritures as Record<string, unknown>)['prive/quitte'] };
     const bonnes = (prive.quitte as { bonnes: number[] }).bonnes;
-    expect(JSON.stringify(e)).not.toContain('bonne'); // la bonne réponse n'est pas publique
+    expect(JSON.stringify(e)).not.toContain('"bonne"'); // la bonne réponse n'est pas publique (champ « bonne » absent)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const av = (rep = {}): any => { const r = quitteOuDouble.piloter(ctx(rep), e); if (r && !r.fin) e = r.etat; return r; };
     const tous = (_i: number, choix: Record<string, number>) => Object.fromEntries(Object.entries(choix).map(([u, c]) => [u, { etape: e.etape, choix: c }]));
