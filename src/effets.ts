@@ -156,6 +156,13 @@ export function momentsForts(): void {
       setTimeout(() => { sons.reussi(); if (moi) { confettis(80); vibrer([80, 40, 160]); } }, t.phase === 'revele' ? 900 : 0);
     });
   }
+  // Le bon timing : « PILE ! » (bonus de fierté).
+  if (d.phase === 'jeu' && d.jeuEnCours === 'timing' && S.jeu) {
+    const t = S.jeu as { phase?: string; etape?: string; cible?: number; temps?: Record<string, number> };
+    if (t.phase === 'resultat' && t.cible && Object.values(t.temps ?? {}).some((x) => Math.abs(x - t.cible! * 1000) <= 50)) {
+      moment(`pile-${t.etape}`, () => { sons.reussi(); if (Math.abs((t.temps?.[S.uid] ?? -1e9) - t.cible! * 1000) <= 50) { confettis(90); vibrer([80, 40, 160]); } });
+    }
+  }
   // Mission flash : le verdict du groupe (pas de vibration à la réception : ça trahirait le porteur).
   if (d.phase === 'flash' && d.flash?.etape === 'resultat') moment(`flash-res-${d.flash.numero}`, () => { if (d.flash?.resultats?.[S.uid]) { sons.reussi(); confettis(50); } else if (d.flash?.resultats && S.uid in d.flash.resultats) sons.rate(); else sons.ding(); });
   // Champ de mines : gemme (ding) ou KABOOM.

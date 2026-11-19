@@ -235,3 +235,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
     suivante, sur son écran seulement, Mallow « chauffe » 0,65 s (lueur, flammes) avant le vrai feu.
   · Roue des territoires · Pacte : 4e action « Pacte avec X ». Réciproque : une seule part rayée aux deux couleurs,
     cagnotte partagée. Trahison (X te vole) : il te prend 2 parts. Double vol mutuel : chacun perd 1 part, cagnotte +2.
+- 19/11/2026 · Le bon timing : le « bonus de fierté » promis par les règles existe enfin. À moins de 0,05 s du temps
+  demandé : « PILE ! » sur tous les écrans, confettis pour le joueur, et l'écart de la manche compte zéro.
+  Télépathie : le sabotage reste visible (choix de Kilyan) ; Quitte ou Double gagnait déjà à la plus grosse cagnotte.

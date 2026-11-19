@@ -28,8 +28,11 @@ interface Etat extends EtatDeBase {
 
 const etapeDe = (n: number, m: number) => `timing-${n}-${m}`;
 export const formaterSecondes = (ms: number) => `${(ms / 1000).toFixed(2).replace('.', ',')} s`;
-/** Écart compté : pas de réponse = l'écart maximum possible. */
-export const ecartCompte = (t: number | undefined, cible: number) => (t === undefined ? cible * 1000 : Math.abs(t - cible * 1000));
+/** « PILE ! » : à moins de 0,05 s du temps demandé, l'écart de la manche compte zéro (bonus de fierté). */
+export const SEUIL_PILE = 50;
+export const pile = (t: number | undefined, cible: number) => t !== undefined && Math.abs(t - cible * 1000) <= SEUIL_PILE;
+/** Écart compté : pas de réponse = l'écart maximum possible ; pile = zéro. */
+export const ecartCompte = (t: number | undefined, cible: number) => (t === undefined ? cible * 1000 : pile(t, cible) ? 0 : Math.abs(t - cible * 1000));
 const ecartSigne = (ms: number) => `${ms > 0 ? '+' : ms < 0 ? '−' : ''}${formaterSecondes(Math.abs(ms))}`;
 
 function nouvelleManche(ctx: { maintenant: number }, base: Etat, manche: number): Etat {
@@ -47,7 +50,7 @@ export const timing: MiniJeu<Etat> = {
   accroche: 'Un chrono invisible : arrête-le pile au bon moment.',
   explication: {
     comment: 'Après « 3, 2, 1, partez ! », un chrono démarre… mais il est invisible. Compte dans ta tête et appuie sur STOP quand tu penses que le temps demandé est écoulé (5, 7, 10 secondes…).',
-    gagner: 'Le plus petit écart sur l’ensemble des manches gagne (2 à 4 selon le format). Bonus de fierté si tu tombes pile au centième.',
+    gagner: 'Le plus petit écart sur l’ensemble des manches gagne (2 à 4 selon le format). Bonus de fierté : à moins de 0,05 s du temps demandé, c’est « PILE ! » et ton écart de la manche compte zéro.',
   },
   icone: '<circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M12 9v4l3 2M9 2h6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" fill="none"/>',
   couleur: '#5CD8FF',
@@ -140,7 +143,9 @@ export const timing: MiniJeu<Etat> = {
     const mien = temps[v.uid];
     const [note, couleur] = mien !== undefined ? noteTiming(mien - cibleMs) : ['PAS DE STOP', 'var(--rose)'];
     const premier = [...presents].sort((a, b) => ecartCompte(temps[a], e.cible) - ecartCompte(temps[b], e.cible))[0];
+    const piles = presents.filter((u) => pile(temps[u], e.cible));
     return `${entete}
+      ${piles.length ? `<div class="pile-timing" role="status"><b>PILE !</b><span>${piles.map((u) => esc(v.joueurs[u].prenom)).join(' et ')} : écart compté zéro</span></div>` : ''}
       <div class="mon-ecart"><span class="note-arene" style="--c:${couleur}">${note}</span>${mien !== undefined ? `<strong style="color:${couleur}">${ecartSigne(mien - cibleMs)}</strong>` : ''}</div>
       ${piste(points, max, { valeur: cibleMs, libelle: `${e.cible} s` })}
       ${premier ? `<p class="aide gauche"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> est le plus proche (${ecartSigne(temps[premier] - cibleMs)}).</p>` : ''}

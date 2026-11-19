@@ -221,3 +221,13 @@ describe('Réflexe Mallow · Leurre du vainqueur', () => {
     expect(e.piege.heure).toBeLessThan(e.feu - 600);
   });
 });
+
+import { ecartCompte, pile } from '../src/games/timing';
+describe('Le bon timing · PILE !', () => {
+  it('à moins de 0,05 s : écart compté zéro', () => {
+    expect(pile(7040, 7)).toBe(true);
+    expect(ecartCompte(7040, 7)).toBe(0);
+    expect(ecartCompte(6940, 7)).toBe(60);
+    expect(ecartCompte(undefined, 7)).toBe(7000);
+  });
+});
