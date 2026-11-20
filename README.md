@@ -310,3 +310,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   tableau « Missions à vérifier ».
 - 20/11/2026 · Missions flash : 8 de plus validées (2e série), 111 au total. Il en manque 9 (combien 3, justeprix 2,
   parieur, imposteur, quitte, telepathie 1 chacun) : 3e série proposée dans le tableau.
+- 20/11/2026 · Missions flash : 1 de plus validée (3e série), 112 au total. Manquent : combien 3, justeprix 2, imposteur 1,
+  quitte 1, telepathie 1 (quand elles sont toutes jouées, le jeu les reprend en commençant par les plus anciennes).

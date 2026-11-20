@@ -553,5 +553,10 @@
     "id": "f-telepathie-09",
     "jeu": "telepathie",
     "texte": "Avant chaque manche, pose tes doigts sur tes tempes comme un voyant qui se concentre."
+  },
+  {
+    "id": "f-parieur-10",
+    "jeu": "parieur",
+    "texte": "Frotte-toi les mains comme un banquier chaque fois que tu mises."
   }
 ]
