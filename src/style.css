@@ -264,10 +264,11 @@ h2 { font-size: var(--txt-xl); line-height: 1.2; text-wrap: balance; }
 /* Boutons lumineux */
 .bouton { border-radius: var(--r-l); font-size: var(--txt-m); font-weight: 800; transition: transform var(--t-rapide), box-shadow var(--t-rapide), filter var(--t-rapide); }
 .bouton:active:not(:disabled) { transform: scale(.97) translateY(2px); box-shadow: none !important; filter: brightness(.95); }
-.bouton.jaune { min-height: 64px; font-size: var(--txt-m); color: var(--fond); background: linear-gradient(180deg, var(--jaune-clair), var(--jaune-fort)); box-shadow: inset 0 0 0 1px #ffffff55, 0 12px 30px -8px color-mix(in srgb, var(--jaune) 55%, transparent); }
-.bouton.cyan { color: var(--fond); background: linear-gradient(180deg, var(--cyan-clair), var(--cyan-fort)); box-shadow: inset 0 0 0 1px #ffffff55, 0 12px 30px -10px color-mix(in srgb, var(--cyan) 55%, transparent); }
-.bouton.rose { color: var(--fond); background: linear-gradient(180deg, var(--rose-clair), var(--rose-fort)); box-shadow: inset 0 0 0 1px #ffffff55, 0 12px 30px -10px color-mix(in srgb, var(--rose) 55%, transparent); }
-.bouton.vert { color: var(--fond); background: linear-gradient(180deg, var(--vert-clair), var(--vert-fort)); box-shadow: inset 0 0 0 1px #ffffff55, 0 12px 30px -10px color-mix(in srgb, var(--vert) 55%, transparent); }
+/* Boutons (validés le 20/11) : un seul bouton plein, le jaune (l’action principale). Les autres : sombres, contour de couleur, texte blanc. */
+.bouton.jaune { min-height: 64px; font-size: var(--txt-m); color: var(--fond); background: var(--jaune); box-shadow: 0 4px 0 var(--jaune-ombre); }
+.bouton.cyan, .bouton.rose, .bouton.vert { color: var(--texte); background: var(--fond-3); box-shadow: inset 0 0 0 2px var(--c1), 0 4px 0 #0008; }
+.bouton.cyan { --c1: var(--cyan); } .bouton.rose { --c1: var(--rose); } .bouton.vert { --c1: var(--vert); }
+.bouton.cyan:active:not(:disabled), .bouton.rose:active:not(:disabled), .bouton.vert:active:not(:disabled) { box-shadow: inset 0 0 0 2px var(--c1) !important; }
 .bouton.discret { font-weight: 700; }
 .petit-bouton { box-shadow: none !important; }
 .options.grosses .bouton { font-size: var(--txt-xl); }
@@ -909,3 +910,14 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 /* Transition d'écran : glissement léger depuis le bas + fondu (0,3 s). */
 .entree-ecran { animation: entree-ecran .3s var(--doux); }
 @keyframes entree-ecran { from { opacity: 0; transform: translateY(14px); } }
+
+/* Cartes de jeu (validées le 20/11) : contour dégradé et halo à la couleur du jeu, pour le reconnaître d’un coup d’œil. */
+.fiche-jeu, .carte-jeu, .entete-jeu.regles {
+  --c2: color-mix(in srgb, var(--c) 45%, var(--electrique));
+  background: linear-gradient(var(--fond-2), var(--fond-2)) padding-box, linear-gradient(135deg, var(--c), var(--c2)) border-box;
+  border: 2px solid transparent; box-shadow: 0 0 26px -10px var(--c);
+}
+.carte-jeu.choisi { background: linear-gradient(var(--c), var(--c)) padding-box, linear-gradient(135deg, var(--c), var(--c2)) border-box; }
+.entete-jeu.regles { position: relative; padding: 14px 52px; }
+.icone-jeu { position: absolute; right: 12px; top: 50%; translate: 0 -50%; width: 34px; height: 34px; border-radius: var(--r-s); display: grid; place-items: center; background: var(--c); color: var(--fond); }
+.icone-jeu svg { width: 20px; height: 20px; }

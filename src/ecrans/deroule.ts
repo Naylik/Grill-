@@ -81,7 +81,7 @@ export function ecranRegles(): string {
         <div class="regle-arene"><b>★</b><span>${esc(jeu.explication.gagner)}</span></div>
         ${jeu.explication.note ? `<div class="regle-arene"><b>!</b><span>${esc(jeu.explication.note)}</span></div>` : ''}
       </div>`;
-  return `<div class="entete-jeu" style="--c:${jeu.couleur}"><span>Jeu ${d.numeroJeu}/${S.infos!.duree} · les règles</span><strong>${esc(jeu.nom)}</strong></div>
+  return `<div class="entete-jeu regles" style="--c:${jeu.couleur}"><span class="icone-jeu"><svg viewBox="0 0 24 24" aria-hidden="true">${jeu.icone}</svg></span><span>Jeu ${d.numeroJeu}/${S.infos!.duree} · les règles</span><strong>${esc(jeu.nom)}</strong></div>
     ${regles}
     ${blocFlash()}
     <div class="pile bas">
