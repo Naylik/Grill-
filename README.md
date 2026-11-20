@@ -286,3 +286,9 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   classement de la saison, s'il est là et a des points (plus à l'hôte).
 - 20/11/2026 · Tutoriel « Comment jouer » (validé par Kilyan) : 3 écrans (mission secrète, mini-jeux, bouton GRILLÉ),
   montrés une fois sur chaque téléphone à la première arrivée sur le site (`grille:tuto-vu`), avec « Passer ».
+- 20/11/2026 · Fin de soirée (validé par Kilyan) : la vidéo « Moment GRILLÉ ! » se joue automatiquement sur tous les
+  téléphones après le verdict (après la manche si un jeu d'action est en cours) ; le récap se lance comme un générique
+  10 s après l'arrivée sur le podium (une fois par téléphone, puis bouton Partager). Récit de la révélation sans chrono :
+  le joueur révélé lance le vote (« J'ai fini »), l'hôte peut aussi. Le jeu de dessin s'appelle « Dessin à la chaîne ».
+- 20/11/2026 · Pari détective : il porte sur la grosse mission seulement (missions flash du joueur affichées barrées),
+  vote « Oui, c'est sa grosse mission / À côté », points affichés depuis le barème (`VOL_DETECTIVE`, `PARI_RATE`).
