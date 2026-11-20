@@ -318,3 +318,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   les devinettes justes (sauf la sienne et celle qui suit son dessin) ; une devinette jugée juste par la majorité
   rapporte 1 pt au devineur et 1 pt au dessinateur. Le dessin le plus drôle de chaque chaîne rapporte 1 pt (au lieu de
   3 pour toute la partie). Le vote « le sens est resté jusqu'au bout » disparaît.
+- 20/11/2026 · Champ de mines, nouveau déroulé (validé par Kilyan, simulation de 30 000 parties) : en manches, les
+  joueurs encore en lice ouvrent UN colis chacun à tour de rôle ; à son tour on peut encaisser et sortir de la manche ;
+  une mine fait perdre la manche (le poseur gagne). Le 1er joueur tourne à chaque manche. Avant : le 1er à jouer gagnait
+  42 % des parties à 4 ; maintenant 30 / 30 / 27 / 24 %. 2 manches (3 en Longue). Missions flash mines-02/03/04 adaptées.

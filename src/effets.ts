@@ -176,9 +176,9 @@ export function momentsForts(): void {
   if (d.phase === 'flash' && d.flash?.etape === 'resultat') moment(`flash-res-${d.flash.numero}`, () => { if (d.flash?.resultats?.[S.uid]) { sons.reussi(); confettis(50); } else if (d.flash?.resultats && S.uid in d.flash.resultats) sons.rate(); else sons.ding(); });
   // Champ de mines : gemme (ding) ou KABOOM.
   if (d.phase === 'jeu' && d.jeuEnCours === 'mines' && S.jeu) {
-    const m = S.jeu as { phase?: string; tour?: number; sures?: number; dernier?: { joueur: string } };
-    if (m.phase === 'tour' && (m.sures ?? 0) > 0) moment(`mines-${d.numeroJeu}-${m.tour}-${m.sures}`, () => sons.ding());
-    if (m.phase === 'boum') moment(`mines-boum-${d.numeroJeu}-${m.tour}`, () => { sons.boum(); vibrer(m.dernier?.joueur === S.uid ? [400, 100, 400] : 200); });
+    const m = S.jeu as { phase?: string; dernierSur?: { action: number }; dernier?: { joueur: string; case: number } };
+    if (m.phase === 'tour' && m.dernierSur) moment(`mines-${d.numeroJeu}-sur-${m.dernierSur.action}`, () => sons.ding());
+    if (m.phase === 'boum' && m.dernier) moment(`mines-boum-${d.numeroJeu}-${m.dernier.case}`, () => { sons.boum(); vibrer(m.dernier?.joueur === S.uid ? [400, 100, 400] : 200); });
   }
   // Dessin à la chaîne : un petit son à chaque étape dévoilée.
   if (d.phase === 'jeu' && d.jeuEnCours === 'telephone' && S.jeu) {

@@ -462,6 +462,7 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .joueurs-arene { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 .joueurs-arene > div { display: flex; align-items: center; gap: 6px; padding: 5px 10px 5px 5px; border-radius: var(--r-rond); background: var(--verre); border: 1px solid var(--bord); font-size: var(--txt-s); font-weight: 700; }
 .joueurs-arene > div.moi { border-color: var(--violet); }
+.joueurs-arene > div.sorti { opacity: .55; }
 .joueurs-arene em { font-style: normal; color: var(--texte-3); font-weight: 600; }
 .joueurs-arene > div.ok em { color: var(--vert); }
 

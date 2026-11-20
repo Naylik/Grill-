@@ -342,17 +342,17 @@
   {
     "id": "f-mines-02",
     "jeu": "mines",
-    "texte": "Ouvre au moins 4 colis d’affilée sans sauter."
+    "texte": "Ouvre au moins 4 colis dans une même manche sans sauter."
   },
   {
     "id": "f-mines-03",
     "jeu": "mines",
-    "texte": "Encaisse à chaque tour dès le premier colis sûr."
+    "texte": "Encaisse à chaque manche dès ton premier colis sûr."
   },
   {
     "id": "f-mines-04",
     "jeu": "mines",
-    "texte": "Sois celui qui encaisse le plus en un seul tour."
+    "texte": "Sois celui qui encaisse le plus en une seule manche."
   },
   {
     "id": "f-mines-05",
