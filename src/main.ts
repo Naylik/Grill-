@@ -562,9 +562,17 @@ function horloge(): void {
   peindreLesToiles();
   animerFusees();
   animerRoues();
-  requestAnimationFrame(horloge);
 }
-requestAnimationFrame(horloge);
+// Économie de batterie : l'horloge ne tourne à chaque image (60 fois par seconde) que si l'écran montre
+// quelque chose qui bouge avec elle. Sinon, elle vérifie seulement toutes les 150 ms.
+const ELEMENTS_ANIMES = '[data-feu], .cadran-timing[data-depart], .stop-timing[data-depart], .cible-patate[data-depart], .consigne-patate[data-depart], canvas[data-voir], [data-fusee], canvas[data-roue]';
+function boucleHorloge(): void {
+  if (document.querySelector(ELEMENTS_ANIMES)) {
+    horloge();
+    requestAnimationFrame(boucleHorloge);
+  } else setTimeout(() => requestAnimationFrame(boucleHorloge), 150);
+}
+requestAnimationFrame(boucleHorloge);
 
 // Chronos : mis à jour sans redessiner l'écran. Un tic sonore pendant les 5 dernières secondes.
 // La Patate : la mèche fait tic-tac tant que la patate circule.

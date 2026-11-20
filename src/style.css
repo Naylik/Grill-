@@ -801,13 +801,18 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .boule-tele { position: relative; width: 120px; aspect-ratio: 1; border-radius: 50%; overflow: hidden;
   background: radial-gradient(circle at 50% 50%, transparent 45%, #3A0D6Acc 100%),
     conic-gradient(from 20deg, #FF2BC2, #9B3BFF, #2B7BFF, #00E5FF, #3DFF9A, #FFD000, #FF6A00, #FF2BC2);
-  box-shadow: 0 0 30px #FF2BC2, 0 0 70px #9B3BFFcc, 0 0 120px #00E5FF88, inset 0 0 24px #ffffff55, inset -16px -20px 40px #2A0050cc;
-  animation: halo-tele 3.2s ease-in-out infinite; }
+  box-shadow: 0 0 30px #FF2BC2, 0 0 70px #9B3BFFcc, 0 0 120px #00E5FF88, inset 0 0 24px #ffffff55, inset -16px -20px 40px #2A0050cc; z-index: 1; }
+/* Halo qui respire : une couche à part dont seule l'opacité change (bien moins gourmand qu'animer les ombres). */
+.scene-tele { position: relative; --d: 120px; }
+.scene-tele:has(.grande) { --d: 190px; }
+.scene-tele::before { content: ""; position: absolute; top: 0; left: 50%; width: var(--d); aspect-ratio: 1; translate: -50% 0; border-radius: 50%; pointer-events: none;
+  box-shadow: 0 0 46px #FF2BC2, 0 0 100px #9B3BFF, 0 0 170px #00E5FFaa; opacity: 0; will-change: opacity; animation: halo-tele 3.2s ease-in-out infinite; }
+.scene-tele:has(.allumee)::before { box-shadow: 0 0 70px #FF2BC2, 0 0 140px #FFD000, 0 0 220px #00E5FF; animation-duration: 1s; }
 .boule-tele.grande { width: 190px; }
-.boule-tele .brume { position: absolute; inset: -20%; border-radius: 50%; background: conic-gradient(from 0deg, transparent, #FF2BC2, transparent 25%, #00E5FF, transparent 50%, #FFD000, transparent 75%, #9B3BFF, transparent); filter: blur(12px); mix-blend-mode: hard-light; opacity: .85; animation: tourne-tele 4s linear infinite; }
+.boule-tele .brume { position: absolute; inset: -20%; border-radius: 50%; background: conic-gradient(from 0deg, transparent, #FF2BC2, transparent 25%, #00E5FF, transparent 50%, #FFD000, transparent 75%, #9B3BFF, transparent); filter: blur(12px); mix-blend-mode: hard-light; opacity: .85; will-change: transform; animation: tourne-tele 4s linear infinite; }
 .boule-tele .brume.b2 { animation-duration: 6.5s; animation-direction: reverse; opacity: .8; }
 .boule-tele .reflet { position: absolute; left: 20%; top: 13%; width: 30%; height: 18%; border-radius: 50%; background: #ffffffdd; filter: blur(5px); transform: rotate(-30deg); }
-.boule-tele.allumee { animation: halo-fort 1s ease-in-out infinite; }
+.boule-tele.allumee { filter: brightness(1.15) saturate(1.4); }
 .contenu-boule { position: absolute; inset: 0; display: grid; place-items: center; z-index: 2; }
 .contenu-boule b { grid-area: 1 / 1; font-family: var(--titre); color: #fff; text-shadow: 0 0 12px #2A0F45, 0 0 24px #FF5FD2; }
 .mini-boule { font-size: var(--txt-3xl); }
@@ -845,8 +850,7 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .manches-pari { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .manches-pari button { padding: 12px 0; border-radius: var(--r-s); border: 1px solid var(--bord); background: var(--voile-1); color: inherit; font-family: var(--titre); font-weight: 800; font-size: var(--txt-l); }
 .manches-pari button.actif { background: var(--jaune); color: #111; border-color: var(--jaune); }
-@keyframes halo-tele { 50% { box-shadow: 0 0 46px #FF2BC2, 0 0 100px #9B3BFF, 0 0 170px #00E5FFaa, inset 0 0 30px #ffffff77, inset -16px -20px 40px #2A0050cc; filter: saturate(1.25); } }
-@keyframes halo-fort { 50% { box-shadow: 0 0 70px #FF2BC2, 0 0 140px #FFD000, 0 0 220px #00E5FF, inset 0 0 40px #ffffffaa, inset -16px -20px 40px #2A005088; filter: brightness(1.2) saturate(1.5); } }
+@keyframes halo-tele { 50% { opacity: 1; } }
 @keyframes tourne-tele { to { transform: rotate(360deg); } }
 @keyframes chiffre-tele { 0% { opacity: 0; transform: scale(.4); } 20% { opacity: 1; transform: scale(1.1); } 75% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.6); } }
 @keyframes crie-tele { 0% { opacity: 0; transform: scale(.3) rotate(-8deg); } 40% { opacity: 1; transform: scale(1.15); } 100% { opacity: 1; transform: none; } }
