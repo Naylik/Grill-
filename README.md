@@ -305,3 +305,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   combien-04 « à au moins 3 questions ». n10 (selfie de groupe) gardée telle quelle.
 - 20/11/2026 · Missions longues qui tenaient en une seule action, passées à 2 fois : g13 (2 débats absurdes gagnés),
   g17 (2 joueurs accusés à tort), n05 (toute la table debout à 2 moments), n11 (2 joueurs racontent leur rencontre).
+- 20/11/2026 · Missions flash : 13 nouvelles validées par Kilyan (103 au total). Il en manque 17 pour atteindre 10 par
+  mini-jeu (combien, justeprix, parieur, imposteur, reflexe, quitte, mines, telepathie) : 2e série proposée dans le
+  tableau « Missions à vérifier ».

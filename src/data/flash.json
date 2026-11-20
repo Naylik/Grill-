@@ -448,5 +448,70 @@
     "id": "f-telepathie-07",
     "jeu": "telepathie",
     "texte": "Fais rire l’autre duo pendant son décompte."
+  },
+  {
+    "id": "f-combien-06",
+    "jeu": "combien",
+    "texte": "Lance un « levez la main ceux qui ont dit oui ! » et obtiens au moins 2 mains levées."
+  },
+  {
+    "id": "f-imposteur-07",
+    "jeu": "imposteur",
+    "texte": "Reçois au moins un vote contre toi alors que tu n’es pas l’imposteur."
+  },
+  {
+    "id": "f-imposteur-08",
+    "jeu": "imposteur",
+    "texte": "Donne un indice qui fait rire toute la table."
+  },
+  {
+    "id": "f-reflexe-08",
+    "jeu": "reflexe",
+    "texte": "Fais un compte à rebours à voix haute avant une manche, et qu’un joueur fasse un faux départ."
+  },
+  {
+    "id": "f-reflexe-09",
+    "jeu": "reflexe",
+    "texte": "Gagne une manche en touchant l’écran avec ton petit doigt."
+  },
+  {
+    "id": "f-timing-10",
+    "jeu": "timing",
+    "texte": "Fais faire à toute la table un « 3, 2, 1 » en chœur avant une manche."
+  },
+  {
+    "id": "f-quitte-07",
+    "jeu": "quitte",
+    "texte": "Crie « QUITTE OU DOUBLE ! » façon présentateur télé chaque fois que tu doubles."
+  },
+  {
+    "id": "f-telephone-09",
+    "jeu": "telephone",
+    "texte": "Fais deviner un de tes dessins avec moins de 5 traits."
+  },
+  {
+    "id": "f-telephone-10",
+    "jeu": "telephone",
+    "texte": "Dessine discrètement {cible} dans un de tes dessins, et qu’il ou elle se reconnaisse au déroulé."
+  },
+  {
+    "id": "f-mines-08",
+    "jeu": "mines",
+    "texte": "Utilise tes 2 détecteurs, puis fais croire à la table qu’il t’en reste un."
+  },
+  {
+    "id": "f-mines-09",
+    "jeu": "mines",
+    "texte": "Pose ta mine dans un coin de la grille, et que quelqu’un saute dessus."
+  },
+  {
+    "id": "f-territoires-10",
+    "jeu": "territoires",
+    "texte": "Réussis 2 pactes pendant le jeu (aucun des deux joueurs ne trahit)."
+  },
+  {
+    "id": "f-telepathie-08",
+    "jeu": "telepathie",
+    "texte": "Faites un check avec ton coéquipier après chaque manche où vous vous connectez."
   }
 ]
