@@ -1,6 +1,12 @@
+// Polices hébergées avec l'appli (alphabet latin seulement) : pas d'appel à Google, et elles marchent hors connexion.
+import '@fontsource/unbounded/latin-600.css';
+import '@fontsource/unbounded/latin-800.css';
+import '@fontsource/unbounded/latin-900.css';
+import '@fontsource/plus-jakarta-sans/latin-500.css';
+import '@fontsource/plus-jakarta-sans/latin-700.css';
+import '@fontsource/plus-jakarta-sans/latin-800.css';
 import './style.css';
 import { registerSW } from 'virtual:pwa-register';
-import QRCode from 'qrcode';
 import { ref, runTransaction, set, update } from 'firebase/database';
 import { accusationEnCours } from './accusations';
 import { accusationPossible } from './ecrans/accusation';
@@ -47,12 +53,13 @@ let qr = { code: '', svg: '' };
 function qrDuSalon(code: string): string {
   if (qr.code !== code) {
     qr = { code, svg: '' };
-    void QRCode.toString(lienSalon(code), { type: 'svg', margin: 1, color: { dark: '#15112E', light: '#F6F3FF' } }).then((svg) => {
+    // Le générateur de QR code n'est chargé que pour l'afficher (salon d'attente).
+    void import('qrcode').then(({ default: QRCode }) => QRCode.toString(lienSalon(code), { type: 'svg', margin: 1, color: { dark: '#15112E', light: '#F6F3FF' } }).then((svg) => {
       if (qr.code === code) {
         qr.svg = svg;
         demanderAffichage();
       }
-    });
+    }));
   }
   return qr.svg;
 }

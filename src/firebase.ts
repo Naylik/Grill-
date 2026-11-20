@@ -1,6 +1,6 @@
 // Connexion à Firebase : base temps réel + connexion anonyme (aucun compte à créer).
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, onAuthStateChanged, connectAuthEmulator, type User } from 'firebase/auth';
+import { initializeAuth, indexedDBLocalPersistence, browserLocalPersistence, signInAnonymously, onAuthStateChanged, connectAuthEmulator, type User } from 'firebase/auth';
 import { getDatabase, connectDatabaseEmulator, ref, onValue } from 'firebase/database';
 import { configFirebase } from './firebase-config';
 
@@ -14,7 +14,9 @@ const app = initializeApp(
     ? { apiKey: 'demo', projectId: 'demo-grille', databaseURL: `http://${location.hostname}:9000?ns=demo-grille` }
     : configFirebase,
 );
-export const auth = getAuth(app);
+// Connexion anonyme seulement : sans le code des fenêtres de connexion Google/Facebook (plus léger).
+// Même mémoire que d'habitude, pour que chacun garde son identité après un rechargement.
+export const auth = initializeAuth(app, { persistence: [indexedDBLocalPersistence, browserLocalPersistence] });
 export const db = getDatabase(app);
 
 if (emulateur) {

@@ -4,7 +4,8 @@ import { esc } from '../outils';
 import { liste as listeAccusations, type AccusationListee } from '../accusations';
 import { VOL_FLASH } from '../flash';
 import { totalFinal, VOL_DETECTIVE } from '../score';
-import { fabriquerVideo, partagerVideo, videoPossible, type DonneesMoment, type DonneesRecap, type JoueurVideo } from '../video';
+import { videoPossible } from '../formatVideo';
+import type { DonneesMoment, DonneesRecap, JoueurVideo } from '../video';
 
 const joueur = (u: string): JoueurVideo => ({ prenom: S.joueurs[u]?.prenom ?? '?', couleur: S.joueurs[u]?.couleur ?? '#fff' });
 const uids = () => Object.entries(S.joueurs).sort((a, b) => a[1].rejointLe - b[1].rejointLe).map(([u]) => u);
@@ -76,6 +77,8 @@ export async function ouvrirStudio(valeur: string): Promise<void> {
     ouvert = false;
   };
   try {
+    // Le module vidéo n'est chargé qu'ici, au premier clic : l'appli s'ouvre plus vite.
+    const { fabriquerVideo, partagerVideo } = await import('../video');
     const fichier = await fabriquerVideo(toile, recap ? 'recap' : 'moment', recap ? donneesRecap() : donneesMoment(a!), (p) => (barre.style.width = `${Math.round(p * 100)}%`));
     etat.textContent = 'Ta vidéo est prête !';
     boutons.innerHTML = '<button class="bouton jaune" data-studio="partager">Partager</button><button class="bouton discret" data-studio="fermer">Fermer</button>';

@@ -3,6 +3,7 @@
 //  - A · Récap de la soirée (≈ 35 s) : logo, podium, grosses missions révélées, titres, fin.
 //  - B · Moment GRILLÉ ! (≈ 12 s) : l'accusation, Mallow qui prend feu, la mission démasquée.
 import { mallow, mallowGrille } from './mallow';
+import { formatVideo } from './formatVideo';
 import { fermerSortieVideo, ouvrirSortieVideo, sons } from './son';
 
 const L = 720;
@@ -347,15 +348,6 @@ async function videoMoment(d: DonneesMoment): Promise<Video> {
 // ——— Enregistrement et partage ———
 
 /** Le meilleur format que le téléphone sait enregistrer (mp4 de préférence : WhatsApp, Instagram, TikTok). */
-function formatVideo(): { mime: string; extension: string } | null {
-  if (typeof MediaRecorder === 'undefined') return null;
-  for (const mime of ['video/mp4;codecs=avc1,mp4a', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm']) {
-    if (MediaRecorder.isTypeSupported(mime)) return { mime, extension: mime.startsWith('video/mp4') ? 'mp4' : 'webm' };
-  }
-  return null;
-}
-
-export const videoPossible = (): boolean => !!formatVideo() && typeof HTMLCanvasElement.prototype.captureStream === 'function';
 
 /**
  * Fabrique la vidéo en la jouant sur la toile donnée (elle s'affiche pendant l'enregistrement).
