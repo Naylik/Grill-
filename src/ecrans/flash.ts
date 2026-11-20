@@ -1,7 +1,7 @@
 // Missions flash : la fenêtre « MISSION FLASH » quand on en reçoit une, et l'étape de vote après chaque jeu.
 import { S, estHote } from '../etat';
 import { esc } from '../outils';
-import { POINTS_FLASH } from '../flash';
+import { POINTS_FLASH, delaiCarteFlash } from '../flash';
 import { attenteDes, chrono, pastille } from './commun';
 
 const nom = (u: string) => esc(S.joueurs[u]?.prenom ?? '?');
@@ -52,7 +52,8 @@ export function ecranFlash(): string {
       <div class="pile bas">${forcer}</div>`;
   }
   const porteurs = f.porteurs ?? [];
-  const cartes = porteurs.map((u) => {
+  const devoile = f.etape === 'vote';
+  const cartes = porteurs.map((u, rang) => {
     const m = S.revelation[u]?.flash?.[`j${f.numero}`];
     const sujet = `f${f.numero}-${u}`;
     const mon = S.votes[sujet]?.[S.uid];
@@ -71,7 +72,7 @@ export function ecranFlash(): string {
           <button class="option ${mon === true ? 'actif vert' : ''}" data-action="voter" data-sujet="${sujet}" data-valeur="true">Réussie</button>
           <button class="option ${mon === false ? 'actif rose' : ''}" data-action="voter" data-sujet="${sujet}" data-valeur="false">Ratée</button></div>`;
     }
-    return `<article class="carte-flash ${f.etape === 'resultat' ? (f.resultats?.[u] ? 'ok' : 'rate') : ''}">
+    return `<article class="carte-flash ${f.etape === 'resultat' ? (f.resultats?.[u] ? 'ok' : 'rate') : ''} ${devoile ? 'devoile' : ''}" style="--delai:${delaiCarteFlash(rang)}ms">
       <div class="proces-qui">${pastille(S.joueurs[u], 34)}<span><strong>${nom(u)}</strong> avait une mission flash</span></div>
       <p class="proces-mission">« ${esc(m?.texte ?? '…')} »</p>
       ${bas}
@@ -79,6 +80,7 @@ export function ecranFlash(): string {
   }).join('');
   return `<h2 class="titre-flash">⚡ Missions flash</h2>
     ${f.etape === 'vote' ? chrono(f.fin) : ''}
+    ${devoile ? '<p class="tambour-flash" aria-hidden="true">🥁 Qui avait une mission flash ?…</p>' : ''}
     <div class="pile">${cartes}</div>
     ${f.etape === 'vote' ? `<div class="pile bas">${forcer}</div>` : ''}`;
 }

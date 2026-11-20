@@ -967,3 +967,9 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .studio-titre { margin: 0; text-align: center; font-family: var(--titre); font-weight: 900; font-size: var(--txt-l); color: var(--jaune); animation: arrive var(--t-lent) var(--rebond); }
 .flashs-barrees { display: grid; gap: 6px; }
 .flash-barree { margin: 0; padding: 8px 12px; border-radius: var(--r-s); background: var(--voile-1); color: var(--texte-3); text-decoration: line-through; text-decoration-color: var(--rose); font-size: var(--txt-s); }
+/* Dévoilement des missions flash : roulement de tambour, puis chaque carte se retourne à son tour. */
+.tambour-flash { margin: 0; text-align: center; font-family: var(--titre); font-weight: 900; font-size: var(--txt-xl); color: var(--texte-2); animation: tambour-flash .45s ease-in-out 4, sort-tambour var(--t-normal) ease 1.8s forwards; }
+@keyframes tambour-flash { 25% { transform: rotate(-4deg) scale(1.05); } 75% { transform: rotate(4deg) scale(1.05); } }
+@keyframes sort-tambour { to { opacity: 0; height: 0; margin: 0; overflow: hidden; } }
+.carte-flash.devoile { animation: devoile-flash .8s var(--rebond) both; animation-delay: var(--delai, 0ms); }
+@keyframes devoile-flash { 0% { opacity: 0; transform: perspective(600px) rotateY(90deg) scale(.85); } 60% { opacity: 1; transform: perspective(600px) rotateY(-8deg) scale(1.04); } 100% { transform: none; } }

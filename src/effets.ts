@@ -4,7 +4,7 @@ import { ref, set } from 'firebase/database';
 import { db } from './firebase';
 import { S, charges, memoireDuGroupe } from './etat';
 import { preparerPropositions } from './missions';
-import { porteursFlash, tirerFlash } from './flash';
+import { delaiCarteFlash, DEVOILE_DEBUT, porteursFlash, tirerFlash } from './flash';
 import { vibrer } from './ui';
 import { maintenant } from './firebase';
 import { majoriteOui, missionTrouvee } from './score';
@@ -163,6 +163,14 @@ export function momentsForts(): void {
     if (t.phase === 'resultat' && t.cible && Object.values(t.temps ?? {}).some((x) => Math.abs(x - t.cible! * 1000) <= 50)) {
       moment(`pile-${t.etape}`, () => { sons.reussi(); if (Math.abs((t.temps?.[S.uid] ?? -1e9) - t.cible! * 1000) <= 50) { confettis(90); vibrer([80, 40, 160]); } });
     }
+  }
+  // Mission flash : roulement de tambour, puis un « ding » à chaque carte qui se retourne.
+  if (d.phase === 'flash' && d.flash?.etape === 'vote') {
+    const nb = d.flash.porteurs?.length ?? 0;
+    moment(`flash-devoile-${d.flash.numero}`, () => {
+      for (let t = 0; t < DEVOILE_DEBUT; t += 220) setTimeout(() => sons.tic(), t);
+      for (let i = 0; i < nb; i++) setTimeout(() => sons.ding(), delaiCarteFlash(i) + 150);
+    });
   }
   // Mission flash : le verdict du groupe (pas de vibration à la réception : ça trahirait le porteur).
   if (d.phase === 'flash' && d.flash?.etape === 'resultat') moment(`flash-res-${d.flash.numero}`, () => { if (d.flash?.resultats?.[S.uid]) { sons.reussi(); confettis(50); } else if (d.flash?.resultats && S.uid in d.flash.resultats) sons.rate(); else sons.ding(); });

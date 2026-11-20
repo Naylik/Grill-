@@ -12,7 +12,7 @@ import { majoriteOui, missionTrouvee, pointsDeFin, scoreVide, titres, totalFinal
 import { accusationEnCours, accusationsADoubler, liste as listeAccusations, mancheAction, missionsGrillees, PENALITE_ACCUSATION, PENALITE_MENSONGE, piloterAccusations } from './accusations';
 import { vanneDuClassement } from './narrateur';
 import type { Bilan, Deroule, EtatFlash, EtatRevelation, Score } from './types';
-import { flashReussie, nbPorteurs, POINTS_FLASH } from './flash';
+import { flashReussie, nbPorteurs, POINTS_FLASH, dureeDevoilement } from './flash';
 
 const DUREE_ROUE = 5_500;
 const DUREE_VOTE_JEU = 20_000;
@@ -170,7 +170,7 @@ function etapeFlash(f: EtatFlash): Ecritures | null {
     const attendus = S.deroule?.flashTirage?.numero === n ? S.deroule.flashTirage.nb : 0;
     if (revelees.length < attendus && now < (f.fin ?? 0)) return null;
     if (!revelees.length) return { 'deroule/phase': 'classement', 'deroule/flash': null };
-    return { 'deroule/flash': { numero: n, etape: 'vote', fin: now + DUREE_VOTE_FLASH, porteurs: revelees } };
+    return { 'deroule/flash': { numero: n, etape: 'vote', fin: now + dureeDevoilement(revelees.length) + DUREE_VOTE_FLASH, porteurs: revelees } };
   }
   if (f.etape === 'vote') {
     const porteurs = f.porteurs ?? [];
