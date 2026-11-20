@@ -300,3 +300,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   « Dessin à la chaîne ».
 - 20/11/2026 · Dévoilement des missions flash (validé par Kilyan) : roulement de tambour 2,2 s, puis chaque carte se
   retourne toutes les 1,8 s avec un « ding » ; le chrono du vote (30 s) ne démarre qu'après la dernière carte.
+- 20/11/2026 · Missions revues par Kilyan (tableau « Missions à vérifier ») : j17 « Finis dernier à un mini-jeu, puis gagne
+  le suivant » ; g15 à 3 joueurs différents ; n02 un SMS à chaque joueur ; n04 changer de place 2 fois ; flash
+  combien-04 « à au moins 3 questions ». n10 (selfie de groupe) gardée telle quelle.
