@@ -254,3 +254,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 20/11/2026 · Finition 2 : animations harmonisées. Deux courbes communes (`--rebond` pour ce qui apparaît, `--doux`
   pour le reste) et trois vitesses (`--t-rapide`, `--t-normal`, `--t-lent`) dans `style.css`, au lieu de 40 réglages
   différents. Les longues séquences synchronisées (vidéos, révélations) gardent leur rythme.
+- 20/11/2026 · Finition 3 (validée par Kilyan) : 7 tailles de texte pour toute l'appli (`--txt-xs` 12 px à `--txt-3xl`
+  36 px) au lieu de 25, rien sous 12 px. Seuls les très grands chiffres (40 px et plus) gardent leur taille.
