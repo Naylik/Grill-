@@ -4,7 +4,7 @@ import { maintenant } from '../firebase';
 import { jeuParId } from '../games';
 import type { VueJeu } from '../games/interface';
 import { esc, auHasard } from '../outils';
-import { majoriteOui, missionTrouvee, places, pointsMission, scoreVide, totalFinal, totalProvisoire } from '../score';
+import { majoriteOui, missionTrouvee, PARI_RATE, places, pointsMission, scoreVide, totalFinal, totalProvisoire, VOL_DETECTIVE } from '../score';
 import { avantPalierSuivant, classementSaison, niveauCuisson } from '../saison';
 import { NOMS_CUISSON } from '../mallow';
 import { RAPPELS_MISSION } from '../narrateur';
@@ -155,6 +155,13 @@ export function ecranClassement(): string {
 
 // ——— Pari détective ———
 
+/** Les missions flash déjà révélées d'un joueur, barrées : on ne parie pas dessus. */
+function flashsDejaRevelees(u: string): string {
+  const flashs = Object.values(S.revelation[u]?.flash ?? {});
+  if (!flashs.length) return '';
+  return `<div class="flashs-barrees"><p class="aide gauche">Ses missions flash (déjà révélées, ne comptent pas) :</p>${flashs.map((f) => `<p class="flash-barree">⚡ ${esc(f.texte)}</p>`).join('')}</div>`;
+}
+
 export function ecranDetective(): string {
   const ont = S.attente?.etape === 'detective' ? S.attente.uids ?? [] : [];
   const forcer = estHote() ? `<button class="bouton discret" data-action="hote" data-valeur="forcer">Continuer sans attendre</button>` : '';
@@ -167,10 +174,11 @@ export function ecranDetective(): string {
   const cible = brouillons.cible;
   const autres = uids().filter((u) => u !== S.uid);
   return `<h2>Pari détective</h2>
-    <p class="aide gauche">Choisis un joueur et écris, en secret, ce que tu crois être une de ses missions. À la révélation, le groupe dira si tu as vu juste.</p>
-    <p class="aide gauche"><strong>Juste</strong> : tu lui voles 4 pts (mission facile) ou 6 pts (difficile). <strong>Raté</strong> : −2 pts.</p>
+    <p class="aide gauche">Devine la <strong>grosse mission</strong> d’un joueur, celle de toute la soirée, et écris-la en secret. Les missions flash ne comptent pas : elles ont déjà été révélées après chaque jeu.</p>
+    <p class="aide gauche"><strong>Juste</strong> : tu lui voles ${VOL_DETECTIVE.facile}, ${VOL_DETECTIVE.difficile} ou ${VOL_DETECTIVE.longue} pts (mission facile, difficile ou longue). <strong>Raté</strong> : −${-PARI_RATE} pts.</p>
     <div class="options deux">${autres.map((u) => `<button class="option ${cible === u ? 'actif jaune' : ''}" data-action="choisirCible" data-valeur="${u}">${nom(u)}</button>`).join('')}</div>
-    <label class="champ"><span>Sa mission, à ton avis</span>
+    ${cible ? flashsDejaRevelees(cible) : ''}
+    <label class="champ"><span>Sa grosse mission, à ton avis</span>
       <textarea name="pari" rows="3" maxlength="160" placeholder="Il ou elle devait me faire dire « t’as raison »…">${esc(brouillons.pari ?? '')}</textarea></label>
     <div class="pile bas">
       <button class="bouton jaune" data-action="parier" ${cible ? '' : 'disabled'}>Valider mon pari</button>
@@ -225,8 +233,8 @@ export function ecranRevelation(): string {
     const blocs = (r.paris ?? []).map((p) => {
       const peutVoter = S.uid !== p.de && S.uid !== sujet;
       return `<div class="boite"><p><strong>${nom(p.de)}</strong> pense que ${nom(sujet)} devait :</p><p class="texte-mission">« ${esc(p.texte)} »</p>
-        ${peutVoter ? `<p class="aide gauche">C’est une de ses missions ?</p>${boutonsVote(`d-${p.de}`, [
-          ...missions.map((_, i) => ({ valeur: String(i + 1), texte: `Mission ${i + 1}`, couleur: 'vert' })),
+        ${peutVoter ? `<p class="aide gauche">C’est sa grosse mission ?</p>${boutonsVote(`d-${p.de}`, [
+          ...missions.map((_, i) => ({ valeur: String(i + 1), texte: missions.length > 1 ? `Oui, sa mission ${i + 1}` : 'Oui, c’est sa grosse mission', couleur: 'vert' })),
           { valeur: '0', texte: 'À côté', couleur: 'rose' },
         ])}` : `<p class="aide">${S.uid === p.de ? 'C’est ton pari : les autres jugent.' : 'Les autres jugent.'}</p>`}</div>`;
     });

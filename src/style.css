@@ -965,3 +965,5 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .points-tuto i { width: 8px; height: 8px; border-radius: var(--r-rond); background: #ffffff30; transition: width var(--t-normal) var(--doux), background var(--t-normal); }
 .points-tuto i.on { width: 26px; background: var(--jaune); }
 .studio-titre { margin: 0; text-align: center; font-family: var(--titre); font-weight: 900; font-size: var(--txt-l); color: var(--jaune); animation: arrive var(--t-lent) var(--rebond); }
+.flashs-barrees { display: grid; gap: 6px; }
+.flash-barree { margin: 0; padding: 8px 12px; border-radius: var(--r-s); background: var(--voile-1); color: var(--texte-3); text-decoration: line-through; text-decoration-color: var(--rose); font-size: var(--txt-s); }
