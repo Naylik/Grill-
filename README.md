@@ -303,3 +303,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 20/11/2026 · Missions revues par Kilyan (tableau « Missions à vérifier ») : j17 « Finis dernier à un mini-jeu, puis gagne
   le suivant » ; g15 à 3 joueurs différents ; n02 un SMS à chaque joueur ; n04 changer de place 2 fois ; flash
   combien-04 « à au moins 3 questions ». n10 (selfie de groupe) gardée telle quelle.
+- 20/11/2026 · Missions longues qui tenaient en une seule action, passées à 2 fois : g13 (2 débats absurdes gagnés),
+  g17 (2 joueurs accusés à tort), n05 (toute la table debout à 2 moments), n11 (2 joueurs racontent leur rencontre).

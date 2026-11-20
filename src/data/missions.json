@@ -485,7 +485,7 @@
     "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Débat",
-    "texte": "Lance un débat absurde (« les pâtes, c’est un légume ») et fais gagner ton camp par un vote à main levée."
+    "texte": "Lance 2 débats absurdes dans la soirée (« les pâtes, c’est un légume ») et fais gagner ton camp aux 2 votes à main levée."
   },
   {
     "id": "g15",
@@ -509,7 +509,7 @@
     "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Manipulation",
-    "texte": "Fais accuser un autre joueur à tort : quelqu’un doit appuyer sur GRILLÉ ! contre lui ou elle et se tromper."
+    "texte": "Fais accuser à tort 2 joueurs différents avec GRILLÉ ! dans la soirée : quelqu’un doit appuyer contre eux et se tromper."
   },
   {
     "id": "g18",
@@ -661,7 +661,7 @@
     "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Longue durée",
-    "texte": "Fais lever toute la table en même temps, au moins une fois dans la soirée."
+    "texte": "Fais lever toute la table en même temps, à 2 moments différents de la soirée."
   },
   {
     "id": "n06",
@@ -693,7 +693,7 @@
     "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Longue durée",
-    "texte": "Fais raconter à {cible} comment il ou elle a rencontré un des joueurs de la table, en entier."
+    "texte": "Fais raconter à 2 joueurs différents comment ils ont rencontré quelqu’un de la table, en entier."
   },
   {
     "id": "k01",
