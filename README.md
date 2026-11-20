@@ -273,3 +273,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 20/11/2026 · Batterie (validé par Kilyan) : l'horloge des jeux ne tourne à chaque image que si un élément animé est
   affiché (sinon toutes les 150 ms). Halo de la boule de cristal sur une couche à part dont seule l'opacité change.
   Mesuré : boule 166 ms → 7 ms de travail sur 5 s ; boucle de l'accueil 15 ms → 4 ms. Rendu identique.
+- 20/11/2026 · Ouverture plus rapide (validé par Kilyan) : polices hébergées avec l'appli (`@fontsource`, alphabet latin,
+  plus d'appel à Google, marchent hors connexion), QR code et module vidéo chargés à la demande, connexion Firebase sans
+  le code des fenêtres Google/Facebook (`initializeAuth`). Mesuré en 4G moyenne : accueil 4,5 s → 4,0 s, 715 → 662 Ko.
