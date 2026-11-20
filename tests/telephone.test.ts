@@ -1,6 +1,6 @@
 // Dessin à la chaîne : chacun passe par toutes les chaînes sans voir la sienne, et le score suit les votes.
 import { describe, expect, it } from 'vitest';
-import { chaineDe, scoreTelephone, telephone } from '../src/games/telephone';
+import { chaineDe, jugesDe, scoreTelephone, telephone } from '../src/games/telephone';
 
 describe('Dessin à la chaîne', () => {
   it('à chaque étape, chacun a une chaîne différente, et jamais la même deux fois', () => {
@@ -37,15 +37,22 @@ describe('Dessin à la chaîne', () => {
     expect(e.phase).toBe('revue');
     expect(e.chaines.every((ch: unknown[]) => ch.length === 2)).toBe(true);
     // Pas de vote tant que l'hôte n'a pas tout dévoilé.
-    expect(av(tous({ sens: true }))).toBeNull();
+    expect(av(tous({ bons: [1] }))).toBeNull();
     for (let c = 0; c < 3; c++) {
       for (let i = 0; i < 2; i++) e = telephone.commande!(ctx(), e, 'suivant')!.etat;
       expect(e.fin).toBeGreaterThan(0);
-      av(tous({ sens: c === 0, favori: c === 0 ? '0-0' : undefined }));
+      av(tous({ bons: c === 0 ? [1] : [], favori: c === 0 ? '0-0' : undefined }));
     }
     expect(e.phase).toBe('bilan');
-    const auteur = e.chaines[0][0].auteur;
-    expect(e.score[auteur]).toBeGreaterThanOrEqual(4); // 3 (le plus drôle) + 1 (sens gardé)
-    expect(scoreTelephone({ ordre: uids, chaines: [], favoris: {}, sens: {} })).toEqual({ a: 0, b: 0, c: 0 });
+    const dessinateur = e.chaines[0][0].auteur;
+    const devineur = e.chaines[0][1].auteur;
+    // Chaîne 0 : devinette jugée juste (+1 au devineur, +1 au dessinateur) et dessin le plus drôle (+1).
+    expect(e.reussis['0-1']).toBe(true);
+    expect(e.reussis['1-1']).toBe(false);
+    expect(e.score[dessinateur]).toBeGreaterThanOrEqual(2);
+    expect(e.score[devineur]).toBeGreaterThanOrEqual(1);
+    // Le devineur et le dessinateur ne jugent pas leur propre devinette.
+    expect(jugesDe(e.chaines[0], 1, uids)).toEqual(uids.filter((u) => u !== dessinateur && u !== devineur));
+    expect(scoreTelephone({ ordre: uids, chaines: [], favoris: {}, reussis: {} })).toEqual({ a: 0, b: 0, c: 0 });
   });
 });

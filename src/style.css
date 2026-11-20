@@ -721,6 +721,8 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .cadre-album .toile-voir { border-radius: 2px; box-shadow: none; }
 .vote-drole { justify-self: start; padding: 6px 12px; border-radius: var(--r-rond); border: 2px solid var(--bord); background: none; color: var(--texte-2); font-family: var(--titre); font-weight: 700; font-size: var(--txt-xs); cursor: pointer; }
 .vote-drole.actif { border-color: var(--jaune); color: var(--jaune); background: color-mix(in srgb, var(--jaune) 10%, transparent); }
+.vote-bien { justify-self: start; padding: 6px 12px; border-radius: var(--r-rond); border: 2px solid var(--bord); background: none; color: var(--texte-2); font-family: var(--titre); font-weight: 700; font-size: var(--txt-xs); cursor: pointer; }
+.vote-bien.actif { border-color: var(--vert); color: var(--vert); background: color-mix(in srgb, var(--vert) 12%, transparent); }
 /* Réactions en direct. */
 .reactions { display: flex; justify-content: center; gap: 10px; }
 .reaction { width: 54px; height: 54px; border-radius: 50%; border: 1px solid var(--bord); background: var(--voile-1); font-size: var(--txt-2xl); cursor: pointer; transition: transform var(--t-rapide); }

@@ -1,7 +1,7 @@
 // « Dessin à la chaîne » : chaque joueur reçoit une phrase et la dessine au doigt. Le dessin passe au suivant,
 // qui devine ce que c'est ; sa réponse passe au suivant, qui la dessine… Personne ne voit sa propre chaîne.
-// À la fin, on déroule chaque chaîne : chacun vote pour le dessin le plus drôle et dit si le sens est resté.
-// Points internes : 3 au dessin le plus drôle de la partie, 1 à chaque joueur d'une chaîne qui a gardé le sens.
+// À la fin, on déroule chaque chaîne : chacun dit quelles devinettes sont justes et vote pour le dessin le plus drôle.
+// Points internes : devinette juste = 1 pt au dessinateur et 1 pt au devineur ; 1 pt au dessin le plus drôle de chaque chaîne.
 import phrases from '../data/dessins.json';
 import { esc, fraisDabord, melanger } from '../outils';
 import { majoriteOui, pointsDePlace } from '../score';
@@ -36,7 +36,7 @@ interface Etat extends EtatDeBase {
   revue?: number; // chaîne en cours de révélation
   affiches?: number; // maillons déjà dévoilés de cette chaîne (1 = la phrase de départ ; l'hôte appuie sur « Suivant »)
   favoris?: Record<string, number>; // « c-s » → votes « le plus drôle »
-  sens?: Record<string, boolean>; // chaîne → le sens est resté (vote du groupe)
+  reussis?: Record<string, boolean>; // « c-s » (une devinette) → bien devinée (vote du groupe)
   score?: Record<string, number>;
 }
 
@@ -56,21 +56,29 @@ function consigne(e: Etat, uid: string): { c: number; texte?: string; dessin?: T
   return estDessin(e.etapeN) ? { c, texte: avant?.texte || '…' } : { c, dessin: avant?.dessin ?? [] };
 }
 
-/** Points internes : 3 aux auteurs du (des) dessin(s) le(s) plus drôle(s), 1 par chaîne qui garde le sens. */
-export function scoreTelephone(e: Pick<Etat, 'ordre' | 'chaines' | 'favoris' | 'sens'>): Record<string, number> {
+/** Une devinette (étape impaire) et le dessin juste avant : ces deux joueurs ne jugent pas cette devinette. */
+export const jugesDe = (chaine: Maillon[], s: number, votants: string[]): string[] =>
+  votants.filter((u) => u !== chaine[s]?.auteur && u !== chaine[s - 1]?.auteur);
+
+/**
+ * Points internes : chaque devinette jugée juste rapporte 1 pt au devineur et 1 pt au dessinateur d'avant ;
+ * le dessin le plus drôle de chaque chaîne rapporte 1 pt (à tous les ex æquo).
+ */
+export function scoreTelephone(e: Pick<Etat, 'ordre' | 'chaines' | 'favoris' | 'reussis'>): Record<string, number> {
   const score: Record<string, number> = Object.fromEntries(e.ordre.map((u) => [u, 0]));
-  const fav = e.favoris ?? {};
-  const max = Math.max(0, ...Object.values(fav));
-  if (max > 0) {
-    for (const [cle, n] of Object.entries(fav)) {
-      if (n !== max) continue;
-      const [c, s] = cle.split('-').map(Number);
-      const auteur = e.chaines[c]?.[s]?.auteur;
-      if (auteur) score[auteur] = (score[auteur] ?? 0) + 3;
-    }
+  const plus = (u?: string) => {
+    if (u) score[u] = (score[u] ?? 0) + 1;
+  };
+  for (const [cle, ok] of Object.entries(e.reussis ?? {})) {
+    if (!ok) continue;
+    const [c, s] = cle.split('-').map(Number);
+    plus(e.chaines[c]?.[s]?.auteur);
+    plus(e.chaines[c]?.[s - 1]?.auteur);
   }
-  e.chaines.forEach((chaine, c) => {
-    if (e.sens?.[c]) for (const m of chaine) score[m.auteur] = (score[m.auteur] ?? 0) + 1;
+  e.chaines.forEach((_, c) => {
+    const votes = Object.entries(e.favoris ?? {}).filter(([cle]) => Number(cle.split('-')[0]) === c);
+    const max = Math.max(0, ...votes.map(([, n]) => n));
+    if (max > 0) for (const [cle, n] of votes) if (n === max) plus(e.chaines[c]?.[Number(cle.split('-')[1])]?.auteur);
   });
   return score;
 }
@@ -81,7 +89,7 @@ export const telephone: MiniJeu<Etat> = {
   accroche: 'Dessine, devine, dessine… et regarde le sens partir en fumée.',
   explication: {
     comment: 'Chacun reçoit une phrase et la dessine au doigt. Le dessin passe au joueur suivant, qui devine ce que c’est ; sa réponse passe au suivant, qui la dessine, et ainsi de suite. À la fin, on déroule chaque chaîne sur tous les écrans.',
-    gagner: '3 points au dessin le plus drôle (vote du groupe), 1 point à chaque joueur d’une chaîne qui a gardé le sens.',
+    gagner: 'Chaque devinette jugée juste par le groupe rapporte 1 point au devineur et 1 point au dessinateur. Le dessin le plus drôle de chaque chaîne rapporte 1 point.',
   },
   icone: '<path d="M4 20l2-6L16 4l4 4-10 10z" fill="currentColor"/><path d="M14 6l4 4" stroke="#0D0A1E" stroke-width="2"/>',
   couleur: '#3B8BFF',
@@ -132,17 +140,23 @@ export const telephone: MiniJeu<Etat> = {
       if (suivante < etat.total) {
         return { etat: { ...etat, chaines, etapeN: suivante, etape: etapeDe(etat.numeroJeu, `s${suivante}`), fin: now + (estDessin(suivante) ? DUREE_DESSIN : DUREE_DEVINETTE) } };
       }
-      return { etat: { ...etat, chaines, phase: 'revue', revue: 0, affiches: 1, favoris: {}, sens: {}, etape: etapeDe(etat.numeroJeu, 'v0'), fin: undefined } };
+      return { etat: { ...etat, chaines, phase: 'revue', revue: 0, affiches: 1, favoris: {}, reussis: {}, etape: etapeDe(etat.numeroJeu, 'v0'), fin: undefined } };
     }
     // On ne vote qu'une fois toute la chaîne dévoilée (l'hôte la déroule étape par étape).
     if (etat.phase === 'revue' && toutDevoile(etat) && etapeTerminee(ctx, etat.etape, etat.fin)) {
       const c = etat.revue ?? 0;
-      const recues = reponsesDe<{ favori?: string; sens?: boolean }>(ctx, etat.etape);
+      const recues = reponsesDe<{ favori?: string; bons?: number[] }>(ctx, etat.etape);
       const favoris = { ...(etat.favoris ?? {}) };
       for (const r of Object.values(recues)) if (r.favori) favoris[r.favori] = (favoris[r.favori] ?? 0) + 1;
-      const sens = { ...(etat.sens ?? {}), [c]: majoriteOui(Object.values(recues).map((r) => r.sens === true)) };
-      if (c + 1 < n) return { etat: { ...etat, favoris, sens, revue: c + 1, affiches: 1, etape: etapeDe(etat.numeroJeu, `v${c + 1}`), fin: undefined } };
-      const fini = { ...etat, favoris, sens };
+      // Chaque devinette : la majorité de ceux qui la jugent (ni son devineur, ni le dessinateur d'avant) dit si elle est juste.
+      const reussis = { ...(etat.reussis ?? {}) };
+      const chaine = etat.chaines[c] ?? [];
+      for (let s = 1; s < chaine.length; s += 2) {
+        const juges = jugesDe(chaine, s, Object.keys(recues));
+        reussis[`${c}-${s}`] = juges.length > 0 && majoriteOui(juges.map((u) => (recues[u]?.bons ?? []).includes(s)));
+      }
+      if (c + 1 < n) return { etat: { ...etat, favoris, reussis, revue: c + 1, affiches: 1, etape: etapeDe(etat.numeroJeu, `v${c + 1}`), fin: undefined } };
+      const fini = { ...etat, favoris, reussis };
       return { etat: { ...fini, phase: 'bilan', score: scoreTelephone(fini), fin: now + DUREE_BILAN } };
     }
     if (etat.phase === 'bilan' && now >= (etat.fin ?? 0)) {
@@ -169,10 +183,10 @@ export const telephone: MiniJeu<Etat> = {
       const score = e.score ?? {};
       const ordre = [...v.uids].sort((a, b) => (score[b] ?? 0) - (score[a] ?? 0));
       const max = Math.max(1, ...ordre.map((u) => score[u] ?? 0));
-      return `${hud('DESSIN TÉLÉPHONE ARABE', e.total, e.total, false)}
+      return `${hud('DESSIN À LA CHAÎNE', e.total, e.total, false)}
         <h2 class="question centre-texte">Les meilleurs artistes</h2>
         <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${score[u] ?? 0} pts`, part: (score[u] ?? 0) / max, moi: u === v.uid })))}</div>
-        <p class="aide">3 pts au dessin le plus drôle, 1 pt par chaîne qui a gardé le sens.</p>`;
+        <p class="aide">Devinette juste : 1 pt au devineur et 1 pt au dessinateur. Dessin le plus drôle de chaque chaîne : 1 pt.</p>`;
     }
 
     const avatar = (u: string) => `<span class="avatar-album" style="--c:${v.joueurs[u]?.couleur ?? '#888'}">${esc((v.joueurs[u]?.prenom ?? '?').slice(0, 1))}</span>`;
@@ -191,7 +205,7 @@ export const telephone: MiniJeu<Etat> = {
       const chaine = e.chaines[c] ?? [];
       const ma = v.local[e.etape] as { envoye?: boolean } | undefined;
       const envoye = v.maReponse?.etape === e.etape || !!ma?.envoye;
-      const choix = (v.local[`${e.etape}-choix`] as { favori?: string; sens?: boolean } | undefined) ?? {};
+      const choix = (v.local[`${e.etape}-choix`] as { favori?: string; bons?: number[] } | undefined) ?? {};
       const devoile = Math.max(0, (e.affiches ?? 1) - 1); // maillons visibles (sans la phrase de départ)
       const complet = toutDevoile(e);
       const depart = e.phrases[c];
@@ -201,28 +215,27 @@ export const telephone: MiniJeu<Etat> = {
         ${chaine.slice(0, devoile).map((m, s) => {
           const cle = `${c}-${s}`;
           const peutVoter = complet && m.dessin && m.auteur !== v.uid && !envoye;
+          const peutJuger = (i: number) => complet && !m.dessin && !envoye && jugesDe(chaine, i, [v.uid]).length > 0;
           return `<div class="bulle-album ${m.dessin ? 'dessine' : 'devine'} ${s === devoile - 1 && !complet ? 'nouveau' : ''}">${avatar(m.auteur)}
             <div class="contenu-album"><span class="qui-album">${nom(m.auteur)} ${m.dessin ? 'a dessiné' : 'a deviné'}</span>
             ${m.dessin ? `<div class="cadre-album">${toileAVoir(`tel-${e.numeroJeu}-${cle}`, m.dessin, '', true)}</div>` : `<p class="texte-album">« ${esc(m.texte ?? '')} »</p>`}
-            ${peutVoter ? `<button class="vote-drole ${choix.favori === cle ? 'actif' : ''}" data-action="jeu" data-geste="favori" data-valeur="${cle}">${choix.favori === cle ? '★ Le plus drôle' : '☆ Le plus drôle'}</button>` : ''}</div></div>`;
+            ${peutVoter ? `<button class="vote-drole ${choix.favori === cle ? 'actif' : ''}" data-action="jeu" data-geste="favori" data-valeur="${cle}">${choix.favori === cle ? '★ Le plus drôle' : '☆ Le plus drôle'}</button>` : ''}
+            ${peutJuger(s) ? `<button class="vote-bien ${(choix.bons ?? []).includes(s) ? 'actif' : ''}" data-action="jeu" data-geste="bien" data-valeur="${s}">${(choix.bons ?? []).includes(s) ? '👍 Bien deviné !' : '👍 Bien deviné ?'}</button>` : ''}</div></div>`;
         }).join('')}
       </div>`;
       const reactions = `<div class="reactions" aria-label="Réagir">${REACTIONS.map((r, i) => `<button class="reaction" data-action="jeu" data-geste="reagir" data-valeur="${i}" aria-label="Réagir ${r}">${r}</button>`).join('')}</div>`;
       if (!complet) {
-        return `${hud('DESSIN TÉLÉPHONE ARABE', c, n, true)}
+        return `${hud('DESSIN À LA CHAÎNE', c, n, true)}
           <p class="petit centre-texte">L’ALBUM · CHAÎNE ${c + 1}/${n}</p>
           ${album}${reactions}
           <div class="pile bas">${v.estHote ? '<button class="bouton jaune" data-action="hote-jeu" data-valeur="suivant">Suivant</button>' : '<p class="attente">L’hôte tourne la page…</p>'}</div>`;
       }
-      return `${hud('DESSIN TÉLÉPHONE ARABE', c, n, true)}${chrono(e.fin)}
+      return `${hud('DESSIN À LA CHAÎNE', c, n, true)}${chrono(e.fin)}
         <p class="petit centre-texte">L’ALBUM · CHAÎNE ${c + 1}/${n} · À VOUS DE VOTER</p>
         ${album}${reactions}
         ${envoye
           ? '<p class="attente">Vote envoyé. On attend les autres…</p>'
-          : `<p class="aide gauche">Le sens est resté jusqu’au bout ?</p>
-            <div class="options deux">
-              <button class="option ${choix.sens === true ? 'actif vert' : ''}" data-action="jeu" data-geste="sens" data-valeur="oui">Oui</button>
-              <button class="option ${choix.sens === false ? 'actif rose' : ''}" data-action="jeu" data-geste="sens" data-valeur="non">Non, perdu</button></div>
+          : `<p class="aide gauche">Touche 👍 sous chaque devinette juste, et ☆ sur le dessin le plus drôle.</p>
             <button class="bouton jaune" data-action="jeu" data-geste="voter" data-envoi-auto="${e.fin}">Valider mon vote</button>`}
         ${attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && envoye))}`;
     }
@@ -230,7 +243,7 @@ export const telephone: MiniJeu<Etat> = {
     if (e.phase === 'phrase') {
       const fait = v.maReponse?.etape === e.etape || v.local[e.etape] !== undefined;
       const attente = attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && fait));
-      const tete = hud('DESSIN TÉLÉPHONE ARABE', 0, e.total + 1, true);
+      const tete = hud('DESSIN À LA CHAÎNE', 0, e.total + 1, true);
       if (fait) return `${tete}${envolee('Phrase envoyée !')}${attente}`;
       return `${tete}
         <div class="atelier-papier">
@@ -248,7 +261,7 @@ export const telephone: MiniJeu<Etat> = {
     // Une étape : dessiner, ou deviner.
     const moi = consigne(e, v.uid);
     const fait = v.maReponse?.etape === e.etape || v.local[e.etape] !== undefined;
-    const tete = hud('DESSIN TÉLÉPHONE ARABE', e.etapeN, e.total, true);
+    const tete = hud('DESSIN À LA CHAÎNE', e.etapeN, e.total, true);
     const attente = attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && fait));
     if (fait) return `${tete}${envolee(estDessin(e.etapeN) ? 'Dessin envoyé !' : 'Réponse envoyée !')}${attente}`;
     if (estDessin(e.etapeN)) {
@@ -322,18 +335,21 @@ export const telephone: MiniJeu<Etat> = {
       o.local[cle] = { ...choix, favori: choix.favori === el.dataset.valeur ? undefined : el.dataset.valeur };
       o.rafraichir();
     },
-    sens(el, o, v) {
+    bien(el, o, v) {
       const cle = `${v.etat.etape}-choix`;
-      o.local[cle] = { ...((o.local[cle] as Record<string, unknown>) ?? {}), sens: el.dataset.valeur === 'oui' };
+      const choix = (o.local[cle] as { bons?: number[] }) ?? {};
+      const s = Number(el.dataset.valeur);
+      const bons = choix.bons ?? [];
+      o.local[cle] = { ...choix, bons: bons.includes(s) ? bons.filter((x) => x !== s) : [...bons, s] };
       o.rafraichir();
     },
     async voter(_el, o, v) {
       const e = v.etat;
       if (e.phase !== 'revue' || (o.local[e.etape] as { envoye?: boolean } | undefined)?.envoye) return;
-      const choix = (o.local[`${e.etape}-choix`] as { favori?: string; sens?: boolean }) ?? {};
+      const choix = (o.local[`${e.etape}-choix`] as { favori?: string; bons?: number[] }) ?? {};
       o.local[e.etape] = { envoye: true };
       o.rafraichir();
-      await o.repondre({ ...(choix.favori ? { favori: choix.favori } : {}), sens: choix.sens === true });
+      await o.repondre({ ...(choix.favori ? { favori: choix.favori } : {}), bons: choix.bons ?? [] });
     },
   },
 };

@@ -314,3 +314,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   quitte 1, telepathie 1 (quand elles sont toutes jouées, le jeu les reprend en commençant par les plus anciennes).
 - 20/11/2026 · Champ de mines (validé par Kilyan) : 1 seul détecteur par joueur et par jeu (au lieu de 2), pour qu'il
   reste un vrai choix avec 2 tours par joueur. Mission flash mines-08 adaptée (« Utilise ton détecteur… »).
+- 20/11/2026 · Dessin à la chaîne, nouveaux points (option 1 choisie par Kilyan) : au déroulé, chacun touche 👍 sous
+  les devinettes justes (sauf la sienne et celle qui suit son dessin) ; une devinette jugée juste par la majorité
+  rapporte 1 pt au devineur et 1 pt au dessinateur. Le dessin le plus drôle de chaque chaîne rapporte 1 pt (au lieu de
+  3 pour toute la partie). Le vote « le sens est resté jusqu'au bout » disparaît.
