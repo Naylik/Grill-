@@ -260,3 +260,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   ont chacune leur clair / base / fort / ombre (`--rose-clair`, `--rose`, `--rose-fort`, `--rose-ombre`…), plus
   `--feu` (logo, bouton GRILLÉ), 4 fonds et 3 voiles de carte (`--voile-1`, `--voile-2`, `--bord`). Les nuances presque
   identiques ont été fusionnées. Les décors propres à un jeu (mines, tarot, boule de cristal) restent à part.
+- 20/11/2026 · Finition 5 (validée par Kilyan) : 6 arrondis communs (`--r-xs` 8 px à `--r-xl` 26 px, `--r-rond`) au
+  lieu de 17, et 3 hauteurs de bouton : 44 px (petit, minimum conseillé pour le doigt), 54 px (moyen), 60-64 px
+  (principal). Tous les champs de saisie ont le même arrondi.
