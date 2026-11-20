@@ -256,3 +256,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   différents. Les longues séquences synchronisées (vidéos, révélations) gardent leur rythme.
 - 20/11/2026 · Finition 3 (validée par Kilyan) : 7 tailles de texte pour toute l'appli (`--txt-xs` 12 px à `--txt-3xl`
   36 px) au lieu de 25, rien sous 12 px. Seuls les très grands chiffres (40 px et plus) gardent leur taille.
+- 20/11/2026 · Finition 4 (validée par Kilyan) : couleurs rangées en jetons dans `style.css`. Les 6 couleurs du jeu
+  ont chacune leur clair / base / fort / ombre (`--rose-clair`, `--rose`, `--rose-fort`, `--rose-ombre`…), plus
+  `--feu` (logo, bouton GRILLÉ), 4 fonds et 3 voiles de carte (`--voile-1`, `--voile-2`, `--bord`). Les nuances presque
+  identiques ont été fusionnées. Les décors propres à un jeu (mines, tarot, boule de cristal) restent à part.
