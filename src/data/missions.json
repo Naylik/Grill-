@@ -301,7 +301,7 @@
     "difficulte": "difficile",
     "niveau": "soft",
     "categorie": "Classement",
-    "texte": "Finis dernier ou avant-dernier à 3 mini-jeux d’affilée, sans te faire griller."
+    "texte": "Finis dernier à un mini-jeu, puis gagne le suivant."
   },
   {
     "id": "j19",
@@ -493,7 +493,7 @@
     "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Faire dire",
-    "texte": "Fais dire à {cible}, à voix haute, « on fait équipe, toi et moi »."
+    "texte": "Fais dire « on fait équipe, toi et moi » à 3 joueurs différents dans la soirée."
   },
   {
     "id": "g16",
@@ -637,7 +637,7 @@
     "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Longue durée",
-    "texte": "Envoie un SMS à {cible} pendant la partie et obtiens une réponse, sans que les autres le remarquent."
+    "texte": "Envoie un SMS à chaque joueur pendant la partie et obtiens une réponse de chacun, sans que les autres le remarquent."
   },
   {
     "id": "n03",
@@ -653,7 +653,7 @@
     "difficulte": "longue",
     "niveau": "soft",
     "categorie": "Longue durée",
-    "texte": "Fais changer {cible} de place à table, sans le lui demander directement."
+    "texte": "Fais changer {cible} de place à table 2 fois dans la soirée."
   },
   {
     "id": "n05",
