@@ -292,3 +292,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   le joueur révélé lance le vote (« J'ai fini »), l'hôte peut aussi. Le jeu de dessin s'appelle « Dessin à la chaîne ».
 - 20/11/2026 · Pari détective : il porte sur la grosse mission seulement (missions flash du joueur affichées barrées),
   vote « Oui, c'est sa grosse mission / À côté », points affichés depuis le barème (`VOL_DETECTIVE`, `PARI_RATE`).
+- 20/11/2026 · Barème : simulation de 20 000 soirées (4 joueurs, 6 jeux). Pistes notées (missions 9 / 12 / 15 pour que
+  facile, difficile et longue restent équitables si les missions réussissent souvent), mais Kilyan attend la soirée de
+  test pour décider : les vrais taux de réussite trancheront. Barème actuel inchangé.
