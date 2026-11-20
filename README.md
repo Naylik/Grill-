@@ -278,3 +278,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   le code des fenêtres Google/Facebook (`initializeAuth`). Mesuré en 4G moyenne : accueil 4,5 s → 4,0 s, 715 → 662 Ko.
 - 20/11/2026 · Nettoyage (validé par Kilyan) : code de l'ancienne 2e mission (mi-partie) retiré, 8 styles inutilisés
   supprimés, vérificateur ESLint ajouté (`npm run lint`, à passer avec les tests après chaque changement).
+- 20/11/2026 · Règles Firebase vérifiées par Kilyan dans la console : la version en ligne contient bien `accusations`,
+  `vengeance` et `saisons` (dernière modification des règles : 18/11).
