@@ -251,3 +251,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   partagé, fin de la vidéo récap, présentation du concept).
 - 20/11/2026 · Finition (étape 1 validée par Kilyan) : transition d'écran à chaque changement d'écran (glissement de
   14 px depuis le bas + fondu, 0,3 s), rejouée seulement quand l'écran change, jamais coupée par un rafraîchissement.
+- 20/11/2026 · Finition 2 : animations harmonisées. Deux courbes communes (`--rebond` pour ce qui apparaît, `--doux`
+  pour le reste) et trois vitesses (`--t-rapide`, `--t-normal`, `--t-lent`) dans `style.css`, au lieu de 40 réglages
+  différents. Les longues séquences synchronisées (vidéos, révélations) gardent leur rythme.
