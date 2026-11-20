@@ -249,3 +249,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   l'écran de ce joueur (publié brouillé avec une clé que seul son téléphone connaît) ; les autres voient une loupe 🔍.
 - 20/11/2026 · Slogan choisi par Kilyan : « Qui va se faire griller ? » (accueil sous le logo, description du lien
   partagé, fin de la vidéo récap, présentation du concept).
+- 20/11/2026 · Finition (étape 1 validée par Kilyan) : transition d'écran à chaque changement d'écran (glissement de
+  14 px depuis le bas + fondu, 0,3 s), rejouée seulement quand l'écran change, jamais coupée par un rafraîchissement.

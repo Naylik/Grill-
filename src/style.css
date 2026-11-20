@@ -890,3 +890,7 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 
 /* Le slogan, sous le logo de l'accueil */
 .slogan { margin: 4px 0 0; text-align: center; font-family: var(--titre); font-weight: 800; font-size: 18px; color: var(--texte); opacity: .9; letter-spacing: .02em; }
+
+/* Transition d'écran : glissement léger depuis le bas + fondu (0,3 s). */
+.entree-ecran { animation: entree-ecran .3s cubic-bezier(.2, .8, .3, 1); }
+@keyframes entree-ecran { from { opacity: 0; transform: translateY(14px); } }

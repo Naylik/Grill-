@@ -56,6 +56,13 @@ function qrDuSalon(code: string): string {
   return qr.svg;
 }
 
+/** Identifie l'écran affiché : quand elle change, le nouvel écran arrive avec une transition. */
+function cleEcran(): string {
+  const d = S.deroule!;
+  const sousEtape = d.phase === 'jeu' ? (S.jeu as { phase?: string } | null)?.phase : d.phase === 'flash' ? d.flash?.etape : d.phase === 'revelation' ? `${d.revelation?.index}-${d.revelation?.etape}` : '';
+  return [S.onglet, d.phase, d.numeroJeu, d.jeuEnCours ?? '', sousEtape ?? ''].join('|');
+}
+
 function rendu(): void {
   if (configManquante) {
     afficher(`<section class="ecran"><h1 class="logo">Grillé !</h1><p class="erreur">La configuration Firebase n’est pas encore collée dans <code>src/firebase-config.ts</code> (voir README).</p></section>`);
@@ -66,7 +73,7 @@ function rendu(): void {
     return;
   }
   if (!S.code) {
-    afficher(S.vueAccueil === 'jeux' ? ecranListeJeux() : ecranAccueil(codeDuLien()));
+    afficher(S.vueAccueil === 'jeux' ? ecranListeJeux() : ecranAccueil(codeDuLien()), `accueil-${S.vueAccueil}`);
     return;
   }
   if (!S.charge || !S.infos || !S.deroule) {
@@ -81,7 +88,7 @@ function rendu(): void {
     rendu();
     return;
   }
-  afficher((S.deroule.phase === 'salon' ? ecranSalon(qrDuSalon(S.code)) : ecranPartie()) + surcouches());
+  afficher((S.deroule.phase === 'salon' ? ecranSalon(qrDuSalon(S.code)) : ecranPartie()) + surcouches(), cleEcran());
 }
 // Un écran qui plante ne doit jamais bloquer la partie : on garde l'écran précédent et on réessaie au prochain changement.
 /** Le petit message temporaire et l'aperçu de l'image à enregistrer. */

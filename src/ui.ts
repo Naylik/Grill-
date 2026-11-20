@@ -45,14 +45,31 @@ export function installer(el: HTMLElement): void {
   });
 }
 
-export function afficher(html: string): void {
-  if (html === dernierHtml) return;
+let derniereCle = '';
+
+/**
+ * Transition d'écran : quand on change d'écran (« cle » différente), le nouvel écran arrive en glissant
+ * légèrement du bas avec un fondu. Le reste du temps, rien ne bouge (on ne rejoue pas l'animation).
+ */
+export function afficher(html: string, cle = ''): void {
+  const nouvelEcran = cle !== derniereCle;
+  derniereCle = cle;
+  if (html === dernierHtml && !nouvelEcran) return;
   dernierHtml = html;
   const modele = document.createElement('template');
   modele.innerHTML = html;
   // On ne touche qu'à ce qui a changé : le défilement en cours, le champ en cours de saisie
   // et les animations déjà jouées ne sont pas interrompus (bug de défilement au Parieur, 16/11).
   harmoniser(racine, modele.content);
+  if (nouvelEcran) {
+    const ecran = racine.querySelector<HTMLElement>('.ecran');
+    if (ecran) {
+      ecran.classList.remove('entree-ecran');
+      void ecran.offsetWidth; // relance l'animation
+      ecran.classList.add('entree-ecran');
+      window.scrollTo({ top: 0 });
+    }
+  }
 }
 
 /** Met à jour `cible` pour qu'il ressemble à `source`, en gardant les éléments existants quand c'est possible. */
@@ -75,8 +92,10 @@ export function harmoniser(cible: Node, source: Node): void {
     }
     const oe = o as Element;
     const ne = n as Element;
+    const enTransition = oe.classList.contains('entree-ecran'); // ne pas couper la transition d'écran en cours
     for (const attr of Array.from(oe.attributes)) if (!ne.hasAttribute(attr.name)) oe.removeAttribute(attr.name);
     for (const attr of Array.from(ne.attributes)) if (oe.getAttribute(attr.name) !== attr.value) oe.setAttribute(attr.name, attr.value);
+    if (enTransition) oe.classList.add('entree-ecran');
     if (oe instanceof HTMLInputElement && document.activeElement !== oe) {
       const v = ne.getAttribute('value') ?? '';
       if (oe.value !== v) oe.value = v;
