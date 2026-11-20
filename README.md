@@ -270,3 +270,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 20/11/2026 · Rechargement de page (validé par Kilyan) : les choix secrets des jeux (ma mine, clé du détecteur, piège,
   sabotage, mise pas encore envoyée) sont gardés sur le téléphone du joueur (`src/memoireJeu.ts`, localStorage), jamais
   envoyés en ligne, effacés en quittant la partie. Une mémoire d'un autre salon est ignorée.
+- 20/11/2026 · Batterie (validé par Kilyan) : l'horloge des jeux ne tourne à chaque image que si un élément animé est
+  affiché (sinon toutes les 150 ms). Halo de la boule de cristal sur une couche à part dont seule l'opacité change.
+  Mesuré : boule 166 ms → 7 ms de travail sur 5 s ; boucle de l'accueil 15 ms → 4 ms. Rendu identique.
