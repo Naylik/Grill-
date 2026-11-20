@@ -267,3 +267,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   autres sont sombres avec un contour de couleur. Cartes de jeu (règles, choix du jeu, liste des jeux) à contour dégradé
   et halo à la couleur du jeu, avec son icône. Boutons « sticker » (`src/stickers.ts`) : panneau STOP du Bon timing et
   flamme GRILLÉ (sans point d'exclamation, plus lisible en petit).
+- 20/11/2026 · Rechargement de page (validé par Kilyan) : les choix secrets des jeux (ma mine, clé du détecteur, piège,
+  sabotage, mise pas encore envoyée) sont gardés sur le téléphone du joueur (`src/memoireJeu.ts`, localStorage), jamais
+  envoyés en ligne, effacés en quittant la partie. Une mémoire d'un autre salon est ignorée.
