@@ -6,7 +6,7 @@ import { flammeGrille } from '../stickers';
 import type { Joueur } from '../types';
 import { esc } from '../outils';
 import { brouillons } from '../ui';
-import { niveauCuisson, saisonsConnues } from '../saison';
+import { classementSaison, niveauCuisson, saisonsConnues } from '../saison';
 
 /** Choix de la saison (hôte) : nouvelle saison, une saison déjà jouée, ou sans saison. */
 function blocSaison(hote: boolean): string {
@@ -39,17 +39,25 @@ function cuissonDe(uid: string): number {
   return S.infos?.saison ? niveauCuisson(S.saison?.membres?.[uid]?.missions ?? 0) : 0;
 }
 
+/** La couronne : au joueur en tête du classement de la saison (s'il est là et a marqué des points). */
+function roiDeSaison(): string | null {
+  if (!S.infos?.saison) return null;
+  const [premier] = classementSaison(S.saison);
+  return premier && premier[1].points > 0 && S.joueurs[premier[0]] ? premier[0] : null;
+}
+
 /** Le feu de camp : chaque joueur arrive avec son Mallow (plus ou moins grillé), le feu grandit avec le groupe. */
 function feuDeCamp(joueurs: [string, Joueur][]): string {
   const n = joueurs.length;
+  const roi = roiDeSaison();
   const places = PLACES_FEU.slice(0, MAX_JOUEURS).map(([x, y], i) => {
     const entree = joueurs[i];
     if (!entree) return `<div class="place-feu vide" style="left:${x}%;top:${y}%"><div class="silhouette">?</div><span class="nom">Libre</span></div>`;
     const [u, j] = entree;
     const c = cuissonDe(u);
-    const titre = `${j.prenom} · ${NOMS_CUISSON[c]}${u === S.infos!.hote ? ' · hôte' : ''}${j.connecte ? '' : ' · déconnecté'}`;
+    const titre = `${j.prenom} · ${NOMS_CUISSON[c]}${u === roi ? ' · en tête de la saison' : ''}${u === S.infos!.hote ? ' · hôte' : ''}${j.connecte ? '' : ' · déconnecté'}`;
     return `<div class="place-feu joueur ${u === S.uid ? 'moi' : ''} ${j.connecte ? '' : 'absent'}" style="left:${x}%;top:${y}%" title="${esc(titre)}" aria-label="${esc(titre)}">
-      ${mallow({ vue: 'tete', taille: 54, couronne: u === S.infos!.hote, cuisson: c })}<span class="nom" style="--c:${j.couleur}">${esc(j.prenom)}</span></div>`;
+      ${mallow({ vue: 'tete', taille: 54, couronne: u === roi, cuisson: c })}<span class="nom" style="--c:${j.couleur}">${esc(j.prenom)}</span></div>`;
   }).join('');
   const texte = n < MIN_JOUEURS
     ? `Autour du feu : <b>${n} chamallow${n > 1 ? 's' : ''}</b>, encore ${MIN_JOUEURS - n} pour commencer`
