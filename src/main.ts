@@ -22,6 +22,7 @@ import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from '.
 import { jeuParId } from './games';
 import { vueJeu } from './ecrans/deroule';
 import { localJeu } from './memoireJeu';
+import { ecranTuto, marquerTutoVu, tutoDejaVu } from './ecrans/tuto';
 import { action, afficher, brouillons, installer, vibrer } from './ui';
 import { garderEcranAllume } from './veille';
 import { installerGlisser } from './glisser';
@@ -38,6 +39,9 @@ import { ecranListeJeux } from './ecrans/jeux';
 import { ecranSalon, lienSalon } from './ecrans/salon';
 import { ecranPartie } from './ecrans/partie';
 import type { Duree, ModeChoix } from './types';
+
+// Première visite sur ce téléphone : le tutoriel s'affiche avant l'accueil.
+if (!tutoDejaVu()) S.vueAccueil = 'tuto';
 
 const app = document.getElementById('app')!;
 installer(app);
@@ -81,7 +85,8 @@ function rendu(): void {
     return;
   }
   if (!S.code) {
-    afficher(S.vueAccueil === 'jeux' ? ecranListeJeux() : ecranAccueil(codeDuLien()), `accueil-${S.vueAccueil}`);
+    if (S.vueAccueil === 'tuto') afficher(ecranTuto(), `tuto-${S.etapeTuto}`);
+    else afficher(S.vueAccueil === 'jeux' ? ecranListeJeux() : ecranAccueil(codeDuLien()), `accueil-${S.vueAccueil}`);
     return;
   }
   if (!S.charge || !S.infos || !S.deroule) {
@@ -185,6 +190,10 @@ action('rejoindre', async (el) => {
   }
 });
 
+action('reglages', () => {
+  S.reglagesOuverts = !S.reglagesOuverts;
+  demanderAffichage();
+});
 action('duree', (el) => changerReglages(S.code!, { duree: Number(el.dataset.valeur) as Duree }));
 action('mode', (el) => changerReglages(S.code!, { modeChoix: el.dataset.valeur as ModeChoix }));
 
@@ -205,6 +214,17 @@ action('quitter', async () => {
   quitterEcoute();
   garderEcranAllume(false);
   history.replaceState(null, '', location.pathname);
+  demanderAffichage();
+});
+
+// Tutoriel : « Suivant », puis « C'est parti ! » (ou « Passer ») le marque comme vu sur ce téléphone.
+action('tuto', (el) => {
+  if (el.dataset.valeur === 'suivant') S.etapeTuto++;
+  else {
+    marquerTutoVu();
+    S.vueAccueil = 'accueil';
+  }
+  scrollTo(0, 0);
   demanderAffichage();
 });
 

@@ -916,3 +916,51 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .entete-jeu.regles { position: relative; padding: 14px 52px; }
 .icone-jeu { position: absolute; right: 12px; top: 50%; translate: 0 -50%; width: 34px; height: 34px; border-radius: var(--r-s); display: grid; place-items: center; background: var(--c); color: var(--fond); }
 .icone-jeu svg { width: 20px; height: 20px; }
+
+/* ——— Salon : le feu de camp (validé le 20/11) ——— */
+.feu-de-camp { position: relative; height: 350px; border-radius: var(--r-xl); overflow: hidden; border: 1px solid var(--bord);
+  background: radial-gradient(circle at 50% 62%, color-mix(in srgb, var(--orange) calc(20% + var(--n) * 8%), transparent), transparent 42%), radial-gradient(ellipse at 50% 100%, #2A1B4A, var(--fond) 70%); }
+.titre-feu { position: absolute; left: 12px; right: 12px; top: 12px; margin: 0; text-align: center; font-size: var(--txt-s); font-weight: 800; color: var(--texte-2); }
+.titre-feu b { color: var(--orange); }
+.feu-de-camp .buches { position: absolute; left: 50%; top: 67%; width: 90px; height: 16px; translate: -50% 0; rotate: -8deg; border-radius: var(--r-xs); background: linear-gradient(90deg, #6A3A1C, #9A5A2C, #6A3A1C); box-shadow: 0 0 0 2px #2A1408; }
+.feu-de-camp .buches.b2 { rotate: 10deg; }
+/* Le feu grandit avec le nombre de joueurs. */
+.feu-central { position: absolute; left: 50%; top: 58%; width: 70px; aspect-ratio: 96 / 112; translate: -50% -50%; scale: calc(.7 + var(--n) * .08); transform-origin: 50% 90%;
+  filter: drop-shadow(0 0 24px var(--orange)); animation: crepite 1.6s ease-in-out infinite alternate; transition: scale var(--t-lent) var(--rebond); }
+.feu-central svg { width: 100%; height: 100%; }
+@keyframes crepite { to { transform: scaleY(1.06) scaleX(.96); } }
+.place-feu { position: absolute; display: grid; justify-items: center; gap: 2px; translate: -50% -50%; }
+.place-feu .nom { padding: 2px 9px; border-radius: var(--r-rond); background: var(--c); color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-xs); white-space: nowrap; box-shadow: 0 3px 0 #0006; }
+.place-feu.joueur { animation: arrive-feu .7s var(--rebond) both; }
+.place-feu.joueur svg { filter: drop-shadow(0 6px 8px #0009); }
+.place-feu.moi .nom { outline: 2px solid var(--texte); outline-offset: 2px; }
+.place-feu.absent { opacity: .45; filter: grayscale(.6); }
+.place-feu.vide .silhouette { width: 44px; height: 54px; border: 3px dashed #ffffff35; border-radius: 30px 30px 12px 12px; display: grid; place-items: center; font-family: var(--titre); font-weight: 900; font-size: var(--txt-xl); color: #ffffff50; }
+.place-feu.vide .nom { background: var(--voile-2); color: var(--texte-3); box-shadow: none; }
+@keyframes arrive-feu { 0% { transform: translateY(-140px) scale(.6); opacity: 0; } 60% { transform: translateY(6px) scale(1.06, .92); opacity: 1; } 100% { transform: none; } }
+.resume-reglages { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 54px; padding: 0 16px; border-radius: var(--r-l); border: 1px solid var(--bord); background: var(--voile-1); color: var(--texte-2); font-family: var(--corps); font-weight: 800; font-size: var(--txt-s); text-align: left; cursor: pointer; }
+.resume-reglages b { color: var(--texte); }
+.reglages-salon { display: grid; gap: 14px; }
+
+/* ——— Tutoriel « Comment jouer » ——— */
+.tuto { text-align: center; align-items: center; }
+.tuto .pile.bas { align-self: stretch; }
+.etape-tuto { font-family: var(--titre); font-weight: 900; font-size: var(--txt-xs); letter-spacing: .12em; color: var(--texte-3); }
+.tuto h2 { font-size: var(--txt-2xl); line-height: 1.15; }
+.tuto > p { margin: 0; max-width: 320px; color: var(--texte-2); font-size: var(--txt-m); line-height: 1.45; }
+.illu-tuto { height: 230px; width: 100%; display: grid; place-items: center; }
+.illu-mission { position: relative; width: 230px; height: 220px; display: grid; place-items: center start; }
+.carte-tuto { position: absolute; right: 0; top: 34px; width: 92px; height: 118px; border-radius: var(--r-m); background: linear-gradient(160deg, var(--jaune-clair), var(--jaune-fort)); border: 3px solid #1A1033; rotate: 12deg; display: grid; place-items: center; font-family: var(--titre); font-weight: 900; font-size: var(--txt-s); color: #1A1033; box-shadow: 0 10px 20px #0008; animation: carte-tuto 2.4s ease-in-out infinite; }
+@keyframes carte-tuto { 50% { transform: translateY(-6px) rotate(4deg); } }
+.icones-tuto { display: grid; grid-template-columns: repeat(3, 64px); gap: 12px; }
+.icones-tuto span { width: 64px; height: 64px; border-radius: var(--r-m); display: grid; place-items: center; color: var(--c); background: linear-gradient(var(--fond-2), var(--fond-2)) padding-box, linear-gradient(135deg, var(--c), var(--electrique)) border-box; border: 2px solid transparent; box-shadow: 0 0 18px -6px var(--c); animation: arrive var(--t-lent) var(--rebond) both; }
+.icones-tuto span:nth-child(2) { animation-delay: .08s; } .icones-tuto span:nth-child(3) { animation-delay: .16s; } .icones-tuto span:nth-child(4) { animation-delay: .24s; } .icones-tuto span:nth-child(5) { animation-delay: .32s; } .icones-tuto span:nth-child(6) { animation-delay: .4s; }
+.icones-tuto svg { width: 30px; height: 30px; }
+.flamme-tuto { position: relative; width: 110px; aspect-ratio: 96 / 112; display: grid; place-items: center; filter: drop-shadow(0 0 18px var(--orange)) drop-shadow(0 6px 0 #7A1B0B); }
+.flamme-tuto svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.flamme-tuto span { position: relative; top: 18px; font-family: var(--titre); font-weight: 900; font-size: var(--txt-m); color: #fff; -webkit-text-stroke: 3px #7A1B0B; paint-order: stroke fill; }
+.flamme-tuto i { position: absolute; right: -34px; bottom: -14px; font-size: 44px; font-style: normal; rotate: -20deg; animation: appui-tuto 1.4s ease-in-out infinite; }
+@keyframes appui-tuto { 40% { transform: translate(-6px, -6px); } 55% { transform: translate(-3px, -2px) scale(.92); } }
+.points-tuto { display: flex; gap: 8px; }
+.points-tuto i { width: 8px; height: 8px; border-radius: var(--r-rond); background: #ffffff30; transition: width var(--t-normal) var(--doux), background var(--t-normal); }
+.points-tuto i.on { width: 26px; background: var(--jaune); }

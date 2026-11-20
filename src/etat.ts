@@ -45,7 +45,11 @@ export interface Etat {
   /** Le joueur a appuyé sur « Quitter » : on lui demande de confirmer. */
   confirmerQuitter: boolean;
   /** Sur l'accueil : l'accueil lui-même ou la liste des jeux. */
-  vueAccueil: 'accueil' | 'jeux';
+  vueAccueil: 'accueil' | 'jeux' | 'tuto';
+  /** Écran du tutoriel « Comment jouer » (0, 1 ou 2). */
+  etapeTuto: number;
+  /** Salon : réglages de la partie dépliés. */
+  reglagesOuverts: boolean;
   /** Image du podium affichée quand le téléphone ne sait pas partager directement. */
   apercuImage: string | null;
   /** Le joueur a ouvert la fenêtre « Accuser quelqu'un ». */
@@ -57,7 +61,7 @@ export interface Etat {
 export const S: Etat = {
   uid: '', code: null, infos: null, joueurs: {}, deroule: null, jeu: null, scores: {}, compteurs: {},
   revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, accusations: {}, saison: null, offreVengeance: null, annonceVengeance: null, charge: false,
-  onglet: 'partie', erreur: null, toast: null, apercuImage: null, confirmerQuitter: false, vueAccueil: 'accueil', accuser: false, menuSaison: false,
+  onglet: 'partie', erreur: null, toast: null, apercuImage: null, confirmerQuitter: false, vueAccueil: 'accueil', etapeTuto: 0, reglagesOuverts: false, accuser: false, menuSaison: false,
 };
 
 /**
