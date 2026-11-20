@@ -96,7 +96,8 @@ function entrerRegles(id: string): Ecritures {
     'deroule/phase': 'regles', 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null,
     // Missions flash : l'hôte publie seulement une graine ; chaque téléphone en déduit s'il est porteur, et laquelle.
     // Tirage dès l'écran des règles : tout le monde y voit le même encart, porteur ou non.
-    'deroule/flashTirage': { numero: S.deroule?.numeroJeu ?? 0, graine: 1 + Math.floor(Math.random() * 2_000_000_000), nb: nbPorteurs(uids().length) }, 'deroule/flash': null,
+    // Au moins un porteur par jeu, choisi parmi les joueurs présents (un téléphone déconnecté ne peut pas la révéler).
+    'deroule/flashTirage': { numero: S.deroule?.numeroJeu ?? 0, graine: 1 + Math.floor(Math.random() * 2_000_000_000), nb: Math.min(nbPorteurs(uids().length), Math.max(1, connectes().length)), joueurs: connectes().length ? connectes() : uids() }, 'deroule/flash': null,
     'reponses': null, 'attente': null,
   };
 }

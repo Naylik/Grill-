@@ -78,3 +78,17 @@ describe('équilibre du barème', () => {
     expect(borneParieur(3)).toBe(3);
   });
 });
+
+describe('au moins une mission flash par jeu, chez un joueur présent', () => {
+  it('le porteur est toujours tiré parmi les présents', () => {
+    for (let graine = 1; graine < 300; graine++) {
+      const presents = ['a', 'c', 'd'];
+      const p = porteursFlash(graine, presents, 1);
+      expect(p).toHaveLength(1);
+      expect(presents).toContain(p[0]);
+    }
+  });
+  it('il y a toujours au moins un porteur', () => {
+    for (let n = 1; n <= 6; n++) for (let i = 0; i < 50; i++) expect(nbPorteurs(n, () => i / 50)).toBeGreaterThanOrEqual(1);
+  });
+});

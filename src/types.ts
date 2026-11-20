@@ -55,7 +55,8 @@ export interface Deroule {
   revelation?: EtatRevelation;
   bilan?: Bilan;
   /** Missions flash : graine publiée au début de chaque jeu (chaque téléphone en déduit s'il est porteur). */
-  flashTirage?: { numero: number; graine: number; nb: number };
+  /** `joueurs` : les joueurs présents au tirage (un absent ne peut pas être le seul porteur). */
+  flashTirage?: { numero: number; graine: number; nb: number; joueurs?: string[] };
   /** Missions flash : révélation et vote après le jeu. */
   flash?: EtatFlash;
 }

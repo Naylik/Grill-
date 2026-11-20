@@ -55,7 +55,7 @@ export function effetsJoueur(): void {
   const t = d.flashTirage;
   if ((d.phase === 'regles' || d.phase === 'jeu') && t && t.numero === d.numeroJeu && d.jeuEnCours && !secrets.flash?.[`j${t.numero}`]) {
     const tous = Object.entries(S.joueurs).sort((a, b) => a[1].rejointLe - b[1].rejointLe).map(([u]) => u);
-    const rang = porteursFlash(t.graine, tous, t.nb).indexOf(S.uid);
+    const rang = porteursFlash(t.graine, t.joueurs?.length ? t.joueurs : tous, t.nb).indexOf(S.uid);
     if (rang >= 0) {
       // Jamais mon coéquipier comme cible (jeux d'équipe).
       const jeuPret = (S.jeu as { jeuId?: string } | null)?.jeuId === d.jeuEnCours;
