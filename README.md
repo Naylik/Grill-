@@ -263,3 +263,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 20/11/2026 · Finition 5 (validée par Kilyan) : 6 arrondis communs (`--r-xs` 8 px à `--r-xl` 26 px, `--r-rond`) au
   lieu de 17, et 3 hauteurs de bouton : 44 px (petit, minimum conseillé pour le doigt), 54 px (moyen), 60-64 px
   (principal). Tous les champs de saisie ont le même arrondi.
+- 20/11/2026 · Nouveau visuel (validé par Kilyan) : un seul bouton plein par écran, le jaune (action principale) ; les
+  autres sont sombres avec un contour de couleur. Cartes de jeu (règles, choix du jeu, liste des jeux) à contour dégradé
+  et halo à la couleur du jeu, avec son icône. Boutons « sticker » (`src/stickers.ts`) : panneau STOP du Bon timing et
+  flamme GRILLÉ (sans point d'exclamation, plus lisible en petit).
