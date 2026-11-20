@@ -298,3 +298,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 20/11/2026 · Missions flash : au moins un porteur par jeu (1 ou 2), tiré parmi les joueurs présents au moment du
   tirage (`flashTirage.joueurs`) : un téléphone déconnecté ne peut plus être le seul porteur. Présentation du concept :
   « Dessin à la chaîne ».
+- 20/11/2026 · Dévoilement des missions flash (validé par Kilyan) : roulement de tambour 2,2 s, puis chaque carte se
+  retourne toutes les 1,8 s avec un « ding » ; le chrono du vote (30 s) ne démarre qu'après la dernière carte.
