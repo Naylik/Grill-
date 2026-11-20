@@ -538,7 +538,7 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .bouton-grille span { position: relative; top: 16px; font-family: var(--titre); font-weight: 900; font-size: 13.5px; letter-spacing: -.02em; color: #fff; -webkit-text-stroke: 3px #7A1B0B; paint-order: stroke fill; }
 .bouton-grille:active { transform: translateY(4px); filter: drop-shadow(0 0 10px var(--orange)) drop-shadow(0 1px 0 #7A1B0B); }
 /* Laisse de la place sous le contenu pour que le bouton ne cache pas le dernier bouton de l'écran. */
-.ecran:has(~ .bouton-grille) { padding-bottom: 110px; }
+.ecran:has(~ .bouton-grille) { padding-bottom: 125px; }
 
 .proces { position: fixed; inset: 0; z-index: 35; display: flex; align-items: flex-end; justify-content: center; overflow-y: auto; padding: max(16px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--fond) 85%, transparent); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); animation: fondu .2s; }
 @keyframes fondu { from { opacity: 0; } }
