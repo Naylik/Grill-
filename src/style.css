@@ -524,20 +524,19 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .cadran-timing.fini { animation: none; border-color: var(--vert); }
 .cadran-timing.fini .mallow-compte { opacity: .25 !important; }
 .arrete { font-family: var(--titre); font-weight: 900; font-size: var(--txt-xl); color: var(--vert); transform: rotate(-8deg); padding: 4px 12px; border: 3px solid var(--vert); border-radius: var(--r-s); background: color-mix(in srgb, var(--fond) 85%, transparent); animation: tampon var(--t-normal) both; }
-.stop-timing { align-self: center; width: 140px; height: 140px; border-radius: 50%; border: 0; cursor: pointer; font-family: var(--titre); font-weight: 900; font-size: var(--txt-3xl); letter-spacing: .04em; color: #fff;
-  background: radial-gradient(circle at 35% 30%, var(--rose-clair), var(--rose) 45%, var(--rose-ombre)); box-shadow: 0 8px 0 #7A1426, 0 0 40px -6px var(--rose); transition: transform var(--t-rapide), box-shadow var(--t-rapide), opacity .2s;
+.stop-timing { align-self: center; width: 150px; height: 157px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 0 22px color-mix(in srgb, var(--rose) 55%, transparent)); transition: transform var(--t-rapide), opacity .2s;
   touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
-.stop-timing:active { transform: translateY(6px); box-shadow: 0 2px 0 #7A1426, 0 0 30px -6px var(--rose); }
+.stop-timing svg { display: block; width: 100%; height: 100%; }
+.stop-timing:active { transform: translateY(5px) scale(.96); }
 .stop-timing.pas-encore { opacity: .4; }
 .pts:empty { visibility: hidden; }
 
 /* ——— Bouton GRILLÉ ! ——— */
-.bouton-grille { position: fixed; z-index: 20; right: max(16px, env(safe-area-inset-right)); bottom: max(18px, env(safe-area-inset-bottom)); width: 78px; height: 78px; border-radius: 50%; border: 3px solid #FFD2C2; cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: .9; color: #fff; font-family: var(--titre); font-weight: 900;
-  background: radial-gradient(circle at 35% 30%, var(--feu-clair), var(--feu) 50%, #B32A12); box-shadow: 0 6px 0 #7A1B0B, 0 0 30px -4px var(--feu); animation: arrive var(--t-normal) var(--rebond); transition: transform var(--t-rapide), box-shadow var(--t-rapide); }
-.bouton-grille span { font-size: var(--txt-xs); letter-spacing: .02em; }
-.bouton-grille b { font-size: var(--txt-2xl); }
-.bouton-grille:active { transform: translateY(5px); box-shadow: 0 1px 0 #7A1B0B, 0 0 20px -4px var(--feu); }
+.bouton-grille { position: fixed; z-index: 20; right: max(14px, env(safe-area-inset-right)); bottom: max(14px, env(safe-area-inset-bottom)); width: 88px; height: 103px; padding: 0; border: 0; background: none; cursor: pointer;
+  display: grid; place-items: center; filter: drop-shadow(0 0 14px var(--orange)) drop-shadow(0 5px 0 #7A1B0B); animation: arrive var(--t-normal) var(--rebond); transition: transform var(--t-rapide), filter var(--t-rapide); }
+.bouton-grille svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.bouton-grille span { position: relative; top: 16px; font-family: var(--titre); font-weight: 900; font-size: 13.5px; letter-spacing: -.02em; color: #fff; -webkit-text-stroke: 3px #7A1B0B; paint-order: stroke fill; }
+.bouton-grille:active { transform: translateY(4px); filter: drop-shadow(0 0 10px var(--orange)) drop-shadow(0 1px 0 #7A1B0B); }
 /* Laisse de la place sous le contenu pour que le bouton ne cache pas le dernier bouton de l'écran. */
 .ecran:has(~ .bouton-grille) { padding-bottom: 110px; }
 

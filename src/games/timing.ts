@@ -2,6 +2,7 @@
 // demandé, en comptant dans ta tête. 3 manches ; le plus petit écart total gagne.
 // Déroulé : intro (règles) → 3 × (chrono → piste avec la ligne cible) → classement du jeu.
 import { maintenant } from '../firebase';
+import { panneauStop } from '../stickers';
 import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
@@ -126,7 +127,7 @@ export const timing: MiniJeu<Etat> = {
         </div>
         ${fini
           ? `<p class="attente">Résultat quand tout le monde aura appuyé…</p>`
-          : `<button class="stop-timing" data-action="jeu" data-geste="stop" data-immediat data-depart="${e.depart}" aria-label="Stop">STOP</button>`}
+          : `<button class="stop-timing" data-action="jeu" data-geste="stop" data-immediat data-depart="${e.depart}" aria-label="Stop">${panneauStop()}</button>`}
         <div class="joueurs-arene">${v.uids.map((u) => {
           const ok = v.ontRepondu.includes(u) || (u === v.uid && fini);
           return `<div class="${u === v.uid ? 'moi' : ''} ${ok ? 'ok' : ''}"><span class="pastille" style="--c:${v.joueurs[u].couleur};width:24px;height:24px"></span>${esc(v.joueurs[u].prenom)}<em>${ok ? 'arrêté' : '…'}</em></div>`;

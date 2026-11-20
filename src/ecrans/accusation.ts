@@ -1,5 +1,6 @@
 // Écrans du bouton GRILLÉ ! : le bouton rond, la fenêtre pour accuser, et le « procès » visible par tous.
 import { S } from '../etat';
+import { flammeGrille } from '../stickers';
 import { esc } from '../outils';
 import { brouillons } from '../ui';
 import { sequenceGrille } from '../mallow';
@@ -22,10 +23,10 @@ export function contexteAccusation() {
 export const accusationPossible = (): boolean =>
   !!S.deroule && peutAccuser(S.uid, contexteAccusation(), S.accusations, Object.keys(S.joueurs).length);
 
-/** Le gros bouton rond, en bas à droite de l'écran. */
+/** Le bouton flamme, en bas à droite de l'écran. */
 export function boutonGrille(): string {
   if (!accusationPossible() || S.accuser) return '';
-  return `<button class="bouton-grille" data-action="ouvrirAccuser" aria-label="GRILLÉ ! Accuser quelqu’un"><span>GRILLÉ</span><b>!</b></button>`;
+  return `<button class="bouton-grille" data-action="ouvrirAccuser" aria-label="GRILLÉ ! Accuser quelqu’un">${flammeGrille()}<span>GRILLÉ</span></button>`;
 }
 
 /** Mes missions encore actives (pas grillées en direct). */
