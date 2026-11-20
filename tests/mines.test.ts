@@ -5,7 +5,7 @@ import { champDeMines, gainSur } from '../src/games/mines';
 describe('Champ de mines', () => {
   it('partie : pose secrète, colis sûrs, encaisser, sauter sur la mine d’un autre', () => {
     const uids = ['a', 'b', 'c'];
-    let t = 0;
+    const t = 0;
     let prive: Record<string, unknown> = {};
     const ctx = (reponses: Record<string, unknown> = {}) => ({ joueurs: {}, uids, connectes: uids, maintenant: t, numeroJeu: 5, duree: 4, reponses: reponses as never, compteurs: {}, totaux: {}, prive, hasard: () => 0.5 }) as never;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

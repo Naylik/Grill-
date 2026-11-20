@@ -140,8 +140,8 @@ describe('Réflexe Mallow et Le bon timing', async () => {
     let t = 0;
     let prive: Record<string, unknown> = {};
     const ctx = (reponses: Record<string, unknown> = {}) => ({ joueurs, uids, connectes: uids, maintenant: t, numeroJeu: 3, reponses: reponses as never, compteurs: {}, totaux: {}, prive, hasard: () => 0.3 });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const debut = patate.demarrer(ctx() as never);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let etat: any = debut.etat;
     prive = { patate: (debut.ecritures as Record<string, unknown>)['prive/patate'] };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -206,11 +206,11 @@ describe('Réflexe Mallow · Leurre du vainqueur', () => {
   it('le gagnant choisit sa victime ; le piège ne vise qu’elle à la manche suivante', () => {
     expect(gagnantManche({ a: 300, b: -1, c: 250 })).toBe('c');
     const uids = ['a', 'b', 'c'];
-    let t = 0;
+    const t = 0;
     const ctx = (reponses: Record<string, unknown> = {}) => ({ joueurs: {}, uids, connectes: uids, maintenant: t, numeroJeu: 1, duree: 6, reponses: reponses as never, compteurs: {}, totaux: {}, prive: {}, hasard: () => 0.5 }) as never;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let e: any = reflexe.demarrer(ctx()).etat;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const av = (rep = {}) => { const r = reflexe.piloter(ctx(rep), e); if (r && !r.fin) e = r.etat; };
     av({ a: { etape: e.etape, temps: 300 }, b: { etape: e.etape, temps: 200 }, c: { etape: e.etape, temps: 400 } });
     expect(e.phase).toBe('resultat');

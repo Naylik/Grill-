@@ -31,8 +31,7 @@ function bandeau(): string {
 
 function contenuPartie(): string {
   switch (S.deroule!.phase) {
-    case 'missions': return ecranChoixMission(1);
-    case 'miPartie': return ecranChoixMission(2);
+    case 'missions': return ecranChoixMission();
     case 'choixJeu': return ecranChoixJeu();
     case 'regles': return ecranRegles();
     case 'jeu': return ecranJeu();

@@ -55,18 +55,18 @@ function offreVengeance(): string {
       <button class="bouton discret" data-action="vengeance" data-valeur="non">Non merci, pas ce soir</button></div>`;
 }
 
-export function ecranChoixMission(numero: 1 | 2): string {
-  if (numero === 1 && S.offreVengeance && !S.secrets.vengeanceChoix && !S.secrets.mission1) return offreVengeance();
-  return alerteVengeance() + ecranChoixMissionNormal(numero);
+export function ecranChoixMission(): string {
+  if (S.offreVengeance && !S.secrets.vengeanceChoix && !S.secrets.mission1) return offreVengeance();
+  return alerteVengeance() + ecranChoixMissionNormal();
 }
 
-function ecranChoixMissionNormal(numero: 1 | 2): string {
-  const propositions = numero === 1 ? S.secrets.propositions1 : S.secrets.propositions2;
-  const choisie = numero === 1 ? S.secrets.mission1 : S.secrets.mission2;
+function ecranChoixMissionNormal(): string {
+  const propositions = S.secrets.propositions1;
+  const choisie = S.secrets.mission1;
   const uids = Object.keys(S.joueurs);
-  const prets = S.attente?.etape === `mission${numero}` ? S.attente.uids ?? [] : [];
+  const prets = S.attente?.etape === 'mission1' ? S.attente.uids ?? [] : [];
   const forcer = estHote() ? `<button class="bouton discret" data-action="hote" data-valeur="forcer">Continuer sans attendre</button>` : '';
-  const titre = numero === 1 ? 'Ta grosse mission' : 'Nouvelle mission !';
+  const titre = 'Ta grosse mission';
   if (choisie) {
     return `<h2>${titre}</h2>
       ${bulle('Mission acceptée. Maintenant, sois naturel. Enfin, essaie.')}
@@ -77,12 +77,11 @@ function ecranChoixMissionNormal(numero: 1 | 2): string {
   if (!propositions?.length) return `<h2>${titre}</h2><p class="attente">Tirage de tes missions…</p>`;
   return `<h2>${titre}</h2>
     <p class="aide gauche">Garde-en une, en secret : elle dure toute la soirée. Cache ton écran ! Pendant les jeux, tu recevras peut-être aussi des missions flash.</p>
-    ${propositions.map((m, i) => carteMission(m, { bouton: `<button class="bouton ${m.difficulte === 'facile' ? 'cyan' : 'rose'}" data-action="choisirMission" data-numero="${numero}" data-index="${i}">Je prends celle-ci</button>` })).join('')}`;
+    ${propositions.map((m, i) => carteMission(m, { bouton: `<button class="bouton ${m.difficulte === 'facile' ? 'cyan' : 'rose'}" data-action="choisirMission" data-index="${i}">Je prends celle-ci</button>` })).join('')}`;
 }
 
 export function ongletMissions(): string {
-  const { mission1, mission2 } = S.secrets;
-  const liste = [mission1, mission2].filter(Boolean) as MissionTiree[];
+  const liste = S.secrets.mission1 ? [S.secrets.mission1] : [];
   const flash = maFlashEnCours();
   return `<section class="ecran">
     <h2>Mes missions</h2>

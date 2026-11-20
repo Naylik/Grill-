@@ -32,16 +32,15 @@ export function boutonGrille(): string {
 /** Mes missions encore actives (pas grillées en direct). */
 export function missionsActives(): { numero: number; mission: MissionTiree }[] {
   const grillees = missionsGrillees(S.accusations, S.uid);
-  const res = ([[1, S.secrets.mission1], [2, S.secrets.mission2]] as const)
-    .filter(([n, m]) => m && !grillees[n])
-    .map(([n, m]) => ({ numero: n as number, mission: m! }));
+  const res: { numero: number; mission: MissionTiree }[] = [];
+  if (S.secrets.mission1 && !grillees[1]) res.push({ numero: 1, mission: S.secrets.mission1 });
   // Ma mission flash du jeu en cours (numéro 100 + jeu, pour le bouton GRILLÉ !).
   const flash = maFlashEnCours();
   if (flash && !grillees[100 + flash.numero]) res.push({ numero: 100 + flash.numero, mission: { id: 'flash', type: 'jeu', difficulte: 'facile', texte: flash.texte } });
   return res;
 }
 
-const intituleMission = (numero: number) => (numero >= 100 ? '⚡ Mission flash' : numero === 1 ? 'Grosse mission' : `Mission ${numero}`);
+const intituleMission = (numero: number) => (numero >= 100 ? '⚡ Mission flash' : 'Grosse mission');
 
 function fenetreAccuser(): string {
   if (!S.accuser) return '';

@@ -15,7 +15,6 @@ export type Phase =
   | 'jeu' // un mini-jeu en cours
   | 'flash' // après chaque jeu : les missions flash sont révélées et votées
   | 'classement' // classement provisoire entre deux jeux
-  | 'miPartie' // ancienne 2e mission (plus utilisée : une seule grosse mission par soirée)
   | 'detective'
   | 'revelation'
   | 'fin';
@@ -119,9 +118,6 @@ export interface MissionTiree {
 export interface Secrets {
   propositions1?: MissionTiree[];
   mission1?: MissionTiree;
-  propositions2?: MissionTiree[];
-  mission2?: MissionTiree;
-  nouvelleMissionVue?: boolean;
   /** Missions flash reçues, par jeu (clé « j{numeroJeu} »). */
   flash?: Record<string, { id: string; jeu: string; texte: string; cible?: string }>;
   /** Réponse à l'offre de vengeance : uid de la cible, ou « non ». */

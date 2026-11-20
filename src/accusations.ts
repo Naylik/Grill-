@@ -89,7 +89,7 @@ export const mancheAction = (ctx: Contexte): boolean =>
 /** Le bouton GRILLÉ ! est-il proposé à ce joueur maintenant ? */
 export function peutAccuser(uid: string, ctx: Contexte, accs: Accusations | null | undefined, nbJoueurs: number): boolean {
   if (nbJoueurs < 2 || ctx.numeroJeu < 1) return false;
-  if (!['choixJeu', 'regles', 'jeu', 'classement', 'miPartie', 'flash'].includes(ctx.phase)) return false;
+  if (!['choixJeu', 'regles', 'jeu', 'classement', 'flash'].includes(ctx.phase)) return false;
   // Après un jeu : seulement pendant la « dernière chance », avant la révélation des missions flash.
   if (ctx.phase === 'flash' && ctx.phaseJeu !== 'grillage') return false;
   if (mancheAction(ctx)) return false;

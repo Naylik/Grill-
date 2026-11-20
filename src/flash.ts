@@ -23,9 +23,6 @@ export interface FlashTiree {
 export const FLASH = banque as MissionFlash[];
 export const POINTS_FLASH = 3;
 export const VOL_FLASH = 2;
-/** Numéro de mission utilisé par le bouton GRILLÉ ! pour une mission flash (1 = la grosse mission). */
-export const NUMERO_FLASH = 3;
-
 /** 1 ou 2 porteurs, au hasard à chaque jeu (2 plus souvent quand on est nombreux). */
 export const nbPorteurs = (nbJoueurs: number, hasard: () => number = Math.random): number =>
   nbJoueurs < 3 ? 1 : hasard() < (nbJoueurs >= 5 ? 0.6 : 0.4) ? 2 : 1;

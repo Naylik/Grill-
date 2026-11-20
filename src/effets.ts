@@ -48,7 +48,7 @@ export function effetsJoueur(): void {
   if (d.phase === 'missions') {
     // Pas de propositions tant que le joueur tiré au sort n'a pas répondu à l'offre de vengeance.
     const attendVengeance = charges.has('offreVengeance') ? !!S.offreVengeance && !secrets.vengeanceChoix : true;
-    if (!secrets.mission1 && !secrets.propositions1?.length && !attendVengeance) une('p1', () => preparerPropositions(code, S.uid, S.joueurs, secrets, 1, memoireDuGroupe()));
+    if (!secrets.mission1 && !secrets.propositions1?.length && !attendVengeance) une('p1', () => preparerPropositions(code, S.uid, S.joueurs, secrets, memoireDuGroupe()));
     if (secrets.mission1 && S.maReponse?.etape !== 'mission1') une('r1', () => repondre('mission1'));
   }
   // Mission flash : au début du jeu, je regarde si je suis tiré au sort, et je tire ma mission (en secret).
@@ -75,7 +75,8 @@ export function effetsJoueur(): void {
   if (d.phase === 'detective' && S.monPari && S.maReponse?.etape !== 'detective') une('rd', () => repondre('detective'));
   // À la révélation, chacun publie ses propres missions (personne d'autre ne peut les lire avant).
   if (d.phase === 'revelation' && charges.has('revelation') && !S.revelation[S.uid]?.missions && secrets.mission1) {
-    const missions = [secrets.mission1, secrets.mission2].filter(Boolean).map((m) => ({ id: m!.id, texte: m!.texte, difficulte: m!.difficulte, type: m!.type, ...(m!.vengeance ? { vengeance: true } : {}) }));
+    const m = secrets.mission1;
+    const missions = [{ id: m.id, texte: m.texte, difficulte: m.difficulte, type: m.type, ...(m.vengeance ? { vengeance: true } : {}) }];
     une('rev', () => set(ref(db, `salons/${code}/revelation/${S.uid}/missions`), missions));
   }
 }

@@ -55,13 +55,12 @@ async function etatTirage(code: string, uid: string, joueurs: Record<string, Jou
   return { prises, cibles };
 }
 
-/** Tire et enregistre (en secret) les 2 propositions du joueur, si ce n'est pas déjà fait. */
-export async function preparerPropositions(code: string, uid: string, joueurs: Record<string, Joueur>, secrets: Secrets, numero: 1 | 2, dejaJouees: Record<string, boolean> = {}): Promise<void> {
-  const cle = numero === 1 ? 'propositions1' : 'propositions2';
+/** Tire et enregistre (en secret) les 2 propositions de grosse mission du joueur, si ce n'est pas déjà fait. */
+export async function preparerPropositions(code: string, uid: string, joueurs: Record<string, Joueur>, secrets: Secrets, dejaJouees: Record<string, boolean> = {}): Promise<void> {
+  const cle = 'propositions1';
   if (secrets[cle]?.length) return;
   const { prises, cibles } = await etatTirage(code, uid, joueurs);
-  // La 2e mission est d'un autre type que la 1re.
-  const type: TypeMission = numero === 2 ? (secrets.mission1?.type === 'vie' ? 'jeu' : 'vie') : Math.random() < 0.5 ? 'vie' : 'jeu';
+  const type: TypeMission = Math.random() < 0.5 ? 'vie' : 'jeu';
   const exclues = [...(secrets.propositions1 ?? []).map((m) => m.id)];
   // Mémoire du groupe : pas de mission déjà jouée par ce groupe… tant qu'il en reste assez de nouvelles.
   let propositions = choisirPropositions({ type, niveau: 'epice', prises, exclues: [...exclues, ...Object.keys(dejaJouees)], cibles });
@@ -94,8 +93,8 @@ export async function prendreMissionVengeance(code: string, uid: string, joueurs
  * Le joueur garde une des deux missions : on la réserve (personne d'autre ne pourra l'avoir)
  * et on compte la cible. Si quelqu'un a été plus rapide, on retire de nouvelles propositions.
  */
-export async function choisirMission(code: string, uid: string, joueurs: Record<string, Joueur>, secrets: Secrets, numero: 1 | 2, index: number): Promise<boolean> {
-  const cle = numero === 1 ? 'propositions1' : 'propositions2';
+export async function choisirMission(code: string, uid: string, joueurs: Record<string, Joueur>, secrets: Secrets, index: number): Promise<boolean> {
+  const cle = 'propositions1';
   const mission = secrets[cle]?.[index];
   if (!mission) return false;
   try {
@@ -103,7 +102,7 @@ export async function choisirMission(code: string, uid: string, joueurs: Record<
   } catch {
     // Déjà prise par un autre joueur : nouvelles propositions.
     await set(ref(db, `${cheminSecrets(code, uid)}/${cle}`), null);
-    await preparerPropositions(code, uid, joueurs, { ...secrets, [cle]: undefined }, numero);
+    await preparerPropositions(code, uid, joueurs, { ...secrets, [cle]: undefined });
     return false;
   }
   if (mission.cible) {
@@ -122,6 +121,6 @@ export async function choisirMission(code: string, uid: string, joueurs: Record<
       }
     }
   }
-  await update(ref(db, cheminSecrets(code, uid)), { [`mission${numero}`]: mission });
+  await update(ref(db, cheminSecrets(code, uid)), { mission1: mission });
   return true;
 }

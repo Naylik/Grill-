@@ -54,7 +54,6 @@ code { background: var(--fond-3); padding: 2px 6px; border-radius: var(--r-xs); 
 .flamme { width: 70px; height: 82px; animation: flotte 3s ease-in-out infinite; }
 
 .logo { font-size: 58px; line-height: 1; color: var(--jaune); text-shadow: 0 5px 0 #C2410C; letter-spacing: -1px; }
-.sous-titre { margin: 4px 0 0; color: var(--texte-2); text-align: center; }
 
 /* Narrateur */
 .narrateur { display: flex; gap: 12px; align-items: flex-end; }
@@ -126,8 +125,6 @@ input.code::placeholder { letter-spacing: 14px; color: var(--bord); }
 .code-mini { margin-left: auto; font-family: var(--titre); color: var(--texte-3); letter-spacing: 2px; font-size: var(--txt-s); }
 .centre-texte { text-align: center; }
 .aide.gauche { text-align: left; }
-.petit-bouton { min-height: 44px !important; font-size: var(--txt-m) !important; padding: 0 16px; box-shadow: 0 4px 0 var(--ombre) !important; }
-.ligne-titre { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 textarea { border: 3px solid var(--bord); border-radius: var(--r-l); background: var(--fond); color: var(--texte); font-family: var(--corps); font-weight: 700; font-size: var(--txt-m); padding: 14px 18px; resize: none; width: 100%; }
 textarea:focus { outline: none; border-color: var(--cyan); }
 
@@ -270,7 +267,6 @@ h2 { font-size: var(--txt-xl); line-height: 1.2; text-wrap: balance; }
 .bouton.cyan { --c1: var(--cyan); } .bouton.rose { --c1: var(--rose); } .bouton.vert { --c1: var(--vert); }
 .bouton.cyan:active:not(:disabled), .bouton.rose:active:not(:disabled), .bouton.vert:active:not(:disabled) { box-shadow: inset 0 0 0 2px var(--c1) !important; }
 .bouton.discret { font-weight: 700; }
-.petit-bouton { box-shadow: none !important; }
 .options.grosses .bouton { font-size: var(--txt-xl); }
 
 /* Champs */
@@ -317,7 +313,6 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .logo { font-family: var(--titre); font-weight: 900; font-size: 54px; line-height: .95; letter-spacing: -2px; color: var(--jaune); text-shadow: none; filter: drop-shadow(0 6px 0 #4B2BC9) drop-shadow(0 0 24px color-mix(in srgb, var(--feu-clair) 40%, transparent)); }
 .logo .lettre { display: inline-block; background: linear-gradient(180deg, #FFF3A6 0%, var(--jaune) 45%, var(--feu-clair) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; animation: tombe .7s var(--rebond) both; }
 @keyframes tombe { from { transform: translateY(-50px) rotate(-12deg); opacity: 0; } }
-.sous-titre { font-weight: 700; margin-top: 8px; }
 .flotte { animation: flotte 3.2s ease-in-out infinite; }
 @keyframes flotte { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(2deg); } }
 .mallow { display: block; overflow: visible; }
@@ -644,7 +639,6 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .toile-dessin, .toile-voir { display: block; width: 100%; max-width: 100%; aspect-ratio: 1; height: auto; border-radius: var(--r-m); background: #fff; box-shadow: 0 10px 30px -12px #000a; }
 .toile-dessin { touch-action: none; cursor: crosshair; }
 .toile-voir.grande { box-shadow: 0 10px 30px -12px #000a, 0 0 0 3px #3B8BFF55; }
-.barre-outils { display: grid; gap: 10px; }
 .couleurs, .epaisseurs, .actions-dessin { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .couleur { width: 38px; height: 38px; border-radius: 50%; border: 3px solid #ffffff33; background: var(--k); cursor: pointer; transition: transform var(--t-rapide); }
 .couleur.actif { border-color: #fff; transform: scale(1.15); box-shadow: 0 0 0 3px var(--k); }
@@ -657,8 +651,6 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .maillon { display: grid; gap: 8px; padding: 12px; border-radius: var(--r-l); background: var(--voile-1); border: 1px solid var(--bord); }
 .maillon.depart { border-color: var(--jaune); }
 .maillon.nouveau { animation: arrive var(--t-lent) var(--rebond); border-color: var(--cyan); }
-.auteur-maillon { font-family: var(--titre); font-size: var(--txt-xs); font-weight: 800; letter-spacing: .05em; color: var(--texte-2); text-transform: uppercase; }
-.devinette-maillon { margin: 0; font-family: var(--titre); font-weight: 800; font-size: var(--txt-xl); line-height: 1.2; }
 
 /* Quitte ou Double : la fusée */
 .fusee { position: relative; border-radius: var(--r-l); background: radial-gradient(120% 90% at 50% 100%, #2A1F55, var(--fond-1) 70%); border: 1px solid var(--bord); overflow: hidden; }

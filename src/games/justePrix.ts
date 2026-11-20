@@ -25,7 +25,7 @@ const etapeDe = (n: number, i: number) => `prix-${n}-${i}`;
 export const formater = (n: number) => n.toLocaleString('fr-FR');
 /** « 42 195 », « 3,5 » ou « 1 789 » → nombre. */
 export function lireNombre(saisie: string): number | null {
-  const propre = saisie.replace(/[\s  ]/g, '').replace(',', '.');
+  const propre = saisie.replace(/[\s\u202F\u00A0]/g, '').replace(',', '.');
   if (!/^-?\d+(\.\d+)?$/.test(propre)) return null;
   return Number(propre);
 }

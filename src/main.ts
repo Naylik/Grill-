@@ -238,9 +238,6 @@ action('annulerQuitter', () => {
 
 action('onglet', (el) => {
   S.onglet = el.dataset.valeur as typeof S.onglet;
-  if (S.onglet === 'missions' && S.secrets.mission2 && !S.secrets.nouvelleMissionVue) {
-    void set(ref(db, `secrets/${S.code}/${S.uid}/nouvelleMissionVue`), true);
-  }
   scrollTo(0, 0);
   demanderAffichage();
 });
@@ -248,12 +245,11 @@ action('onglet', (el) => {
 // ——— Pendant la partie ———
 
 action('choisirMission', async (el) => {
-  const numero = Number(el.dataset.numero) as 1 | 2;
   (el as HTMLButtonElement).disabled = true;
-  if (await choisirMission(S.code!, S.uid, S.joueurs, S.secrets, numero, Number(el.dataset.index))) {
+  if (await choisirMission(S.code!, S.uid, S.joueurs, S.secrets, Number(el.dataset.index))) {
     vibrer(80);
     sons.ding();
-    await repondre(`mission${numero}`);
+    await repondre('mission1');
   }
 });
 
@@ -464,7 +460,7 @@ action('repondreAccusation', async (el) => {
   if (el.dataset.valeur === 'eu') {
     const numero = Number(el.dataset.numero);
     const flash = numero >= 100 ? S.secrets.flash?.[`j${numero - 100}`] : undefined;
-    const m = numero === 1 ? S.secrets.mission1 : numero === 2 ? S.secrets.mission2 : flash ? { texte: flash.texte, difficulte: 'facile' as const } : undefined;
+    const m = numero === 1 ? S.secrets.mission1 : flash ? { texte: flash.texte, difficulte: 'facile' as const } : undefined;
     if (!m) return;
     // Seul cas où une mission quitte le téléphone avant la fin : l'accusé avoue.
     await update(ref(db, chemin), { mission: { numero, texte: m.texte, difficulte: m.difficulte }, reponse: 'eu' });

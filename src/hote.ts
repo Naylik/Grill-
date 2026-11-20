@@ -55,7 +55,6 @@ function tousPrets(etape: string): boolean {
 function etapeAttendue(d: Deroule): string | null {
   switch (d.phase) {
     case 'missions': return 'mission1';
-    case 'miPartie': return 'mission2';
     case 'detective': return 'detective';
     case 'choixJeu': return d.propositions ? `choix-${d.numeroJeu}` : null;
     case 'regles': return `pret-${d.numeroJeu}`;
@@ -336,9 +335,6 @@ function calculer(): Ecritures | null {
     case 'missions':
       if (tousPrets('mission1')) e = entrerChoixJeu(1);
       break;
-    case 'miPartie':
-      if (tousPrets('mission2')) e = entrerChoixJeu(d.numeroJeu + 1);
-      break;
     case 'choixJeu': {
       const fini = now >= (d.finChrono ?? 0) || (d.propositions && tousPrets(`choix-${d.numeroJeu}`));
       if (fini) e = entrerRegles(d.roue?.gagnant ?? (d.propositions?.length ? resultatVoteJeu(d) : JEUX[0].id));
@@ -432,7 +428,7 @@ export async function commandeHote(valeur: string): Promise<void> {
     e = d.flash?.etape === 'vote' || d.flash?.etape === 'grillage' ? { 'deroule/flash/fin': maintenant() - 1 } : { 'deroule/phase': 'classement' };
   } else if (valeur === 'forcer' && d.phase === 'regles' && d.jeuEnCours) {
     e = demarrerJeu(d.jeuEnCours);
-  } else if (valeur === 'forcer' && ['missions', 'miPartie', 'detective'].includes(d.phase)) {
+  } else if (valeur === 'forcer' && ['missions', 'detective'].includes(d.phase)) {
     // L'hôte peut avancer sans attendre un joueur absent ou trop lent.
     e = d.phase === 'detective' ? entrerRevelation() : entrerChoixJeu(d.phase === 'missions' ? 1 : d.numeroJeu + 1);
   }
