@@ -295,3 +295,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 20/11/2026 · Barème : simulation de 20 000 soirées (4 joueurs, 6 jeux). Pistes notées (missions 9 / 12 / 15 pour que
   facile, difficile et longue restent équitables si les missions réussissent souvent), mais Kilyan attend la soirée de
   test pour décider : les vrais taux de réussite trancheront. Barème actuel inchangé.
+- 20/11/2026 · Missions flash : au moins un porteur par jeu (1 ou 2), tiré parmi les joueurs présents au moment du
+  tirage (`flashTirage.joueurs`) : un téléphone déconnecté ne peut plus être le seul porteur. Présentation du concept :
+  « Dessin à la chaîne ».
