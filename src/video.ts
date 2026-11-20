@@ -270,7 +270,7 @@ async function videoRecap(d: DonneesRecap): Promise<Video> {
       // Fin.
       a = opaciteScene(t, tF, 3.5);
       dessinerAvec(c, a, pop(t, tF), L / 2, H * 0.36, () => c.drawImage(flambe, L / 2 - 75 * K, H * 0.36 - 94 * K, 150 * K, 188 * K));
-      dessinerAvec(c, a, pop(t, tF + 0.3), L / 2, H * 0.58, () => texte(c, 'Qui sera grillé la prochaine fois ?', L / 2, H * 0.58, { taille: 36, couleur: '#FFD84A', lueur: '#FFD84A88', largeur: 360 }));
+      dessinerAvec(c, a, pop(t, tF + 0.3), L / 2, H * 0.58, () => texte(c, 'Qui va se faire griller ?', L / 2, H * 0.58, { taille: 36, couleur: '#FFD84A', lueur: '#FFD84A88', largeur: 360 }));
       dessinerAvec(c, a * montee(t, tF + 0.7), 1, L / 2, H * 0.68, () => texte(c, 'Grillé ! · le jeu de soirée à missions secrètes', L / 2, H * 0.68, { taille: 15, police: 'corps', couleur: '#BDB3E6' }));
     },
   };

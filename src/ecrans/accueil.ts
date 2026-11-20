@@ -23,6 +23,7 @@ export function ecranAccueil(codeLien: string | null): string {
     <div class="titre">
       <div class="flotte">${mallow({ taille: 132 })}</div>
       ${logo()}
+      <p class="slogan">Qui va se faire griller ?</p>
     </div>
     ${CARTES}
     <button class="bouton-liste" data-action="vueAccueil" data-valeur="jeux">

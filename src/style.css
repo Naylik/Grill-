@@ -887,3 +887,6 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .vert-texte { color: #5CF2C2; font-weight: 800; }
 .loupe-mine { position: absolute; top: 2px; right: 3px; font-size: 12px; filter: drop-shadow(0 0 4px #000); }
 .detecteur-mines.arme { color: var(--jaune); border-color: var(--jaune); box-shadow: 0 0 16px #FFD84A55; }
+
+/* Le slogan, sous le logo de l'accueil */
+.slogan { margin: 4px 0 0; text-align: center; font-family: var(--titre); font-weight: 800; font-size: 18px; color: var(--texte); opacity: .9; letter-spacing: .02em; }

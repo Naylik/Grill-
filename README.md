@@ -247,3 +247,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 19/11/2026 · Champ de mines : le Détecteur devient secret (choix de Kilyan : un bon joueur de démineur gagnait trop
   facilement). 2 détecteurs par joueur et par jeu ; activé avant d'ouvrir un colis, le chiffre n'apparaît que sur
   l'écran de ce joueur (publié brouillé avec une clé que seul son téléphone connaît) ; les autres voient une loupe 🔍.
+- 20/11/2026 · Slogan choisi par Kilyan : « Qui va se faire griller ? » (accueil sous le logo, description du lien
+  partagé, fin de la vidéo récap, présentation du concept).
