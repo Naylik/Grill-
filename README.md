@@ -308,3 +308,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 20/11/2026 · Missions flash : 13 nouvelles validées par Kilyan (103 au total). Il en manque 17 pour atteindre 10 par
   mini-jeu (combien, justeprix, parieur, imposteur, reflexe, quitte, mines, telepathie) : 2e série proposée dans le
   tableau « Missions à vérifier ».
+- 20/11/2026 · Missions flash : 8 de plus validées (2e série), 111 au total. Il en manque 9 (combien 3, justeprix 2,
+  parieur, imposteur, quitte, telepathie 1 chacun) : 3e série proposée dans le tableau.

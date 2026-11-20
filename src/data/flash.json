@@ -513,5 +513,45 @@
     "id": "f-telepathie-08",
     "jeu": "telepathie",
     "texte": "Faites un check avec ton coéquipier après chaque manche où vous vous connectez."
+  },
+  {
+    "id": "f-combien-07",
+    "jeu": "combien",
+    "texte": "Après chaque total, applaudis lentement, comme au théâtre."
+  },
+  {
+    "id": "f-parieur-09",
+    "jeu": "parieur",
+    "texte": "Pendant chaque défi des autres, fais un roulement de tambour sur la table."
+  },
+  {
+    "id": "f-imposteur-09",
+    "jeu": "imposteur",
+    "texte": "Commence chacun de tes indices par « Alors, figurez-vous… »."
+  },
+  {
+    "id": "f-reflexe-10",
+    "jeu": "reflexe",
+    "texte": "Fais semblant de dormir entre les manches, et réveille-toi d’un coup quand une manche commence."
+  },
+  {
+    "id": "f-quitte-08",
+    "jeu": "quitte",
+    "texte": "Encaisse au moins 3 fois pendant le jeu."
+  },
+  {
+    "id": "f-quitte-09",
+    "jeu": "quitte",
+    "texte": "Fais un bruit de caisse enregistreuse (« ka-tching ! ») chaque fois que tu encaisses."
+  },
+  {
+    "id": "f-mines-10",
+    "jeu": "mines",
+    "texte": "Fais un bruit d’explosion avec la bouche chaque fois qu’un autre joueur ouvre un colis."
+  },
+  {
+    "id": "f-telepathie-09",
+    "jeu": "telepathie",
+    "texte": "Avant chaque manche, pose tes doigts sur tes tempes comme un voyant qui se concentre."
   }
 ]
