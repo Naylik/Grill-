@@ -23,7 +23,10 @@ describe('Champ de mines', () => {
     expect(e.detections[10].u).toBe(j1);
     expect(lireDetection(e.detections[10].v, 'ma-cle-secrete', 10)).toBe(minesAutour(10, { 0: ['a'], 1: ['b'], 2: ['c'] }));
     expect(e.detecteurs[j1]).toBe(1);
-    av({ [j1]: { etape: e.etape, case: 11 } });
+    // Un seul détecteur par jeu : une 2e tentative ouvre le colis sans rien détecter.
+    av({ [j1]: { etape: e.etape, case: 11, detecteur: 'ma-cle-secrete' } });
+    expect(e.detections[11]).toBeUndefined();
+    expect(e.detecteurs[j1]).toBe(1);
     expect(e.pot).toBe(3);
     av({ [j1]: { etape: e.etape, stop: true } });
     expect(e.banque[j1]).toBe(3);

@@ -3,7 +3,7 @@
 // encaisser, ou continuer. Tomber sur une mine fait perdre les points du tour, et c'est le poseur de la mine qui gagne.
 // Bluff : à voix haute, chacun peut « conseiller » le joueur… et l'envoyer sur sa propre mine.
 // Les mines ne sont connues que de l'hôte (prive/mines) jusqu'à ce qu'elles sautent.
-// Détecteur secret : chaque joueur a 2 détecteurs par jeu. Activé avant d'ouvrir un colis, il donne le nombre de mines
+// Détecteur secret : chaque joueur a 1 détecteur par jeu. Activé avant d'ouvrir un colis, il donne le nombre de mines
 // dans les 8 cases autour… sur l'écran de ce joueur seulement. Il peut ensuite dire la vérité ou mentir à voix haute.
 // Secret : le téléphone envoie une clé (lisible par l'hôte seul) ; l'hôte publie le chiffre brouillé avec cette clé.
 // Les autres voient juste une loupe sur la case.
@@ -16,7 +16,7 @@ import { classementBarres, hud } from './arene';
 
 const NB_CASES = 20; // grille de 4 × 5
 const COLONNES = 5;
-export const DETECTEURS = 2; // par joueur et par jeu
+export const DETECTEURS = 1; // par joueur et par jeu : un seul, à utiliser au bon moment
 const TOURS_PAR_JOUEUR: [number, number, number] = [2, 2, 3]; // Courte, Normale, Longue
 const DUREE_POSE = 30_000;
 const DUREE_ACTION = 20_000;
@@ -95,7 +95,7 @@ export const champDeMines: MiniJeu<Etat> = {
   explication: {
     comment: 'Chacun pose d’abord une mine en secret sur la grille. Puis, chacun son tour, on ouvre des colis : chaque colis sûr rapporte plus que le précédent (1, 2, 3 pts…). Tu peux t’arrêter pour encaisser, ou continuer. Si tu tombes sur une mine, tu perds les points du tour et le poseur de la mine gagne !',
     gagner: 'Le plus de points gagne : ceux encaissés et ceux gagnés quand quelqu’un saute sur ta mine.',
-    note: 'Détecteur secret : 2 par joueur. Activé avant d’ouvrir un colis, il te montre (à toi seul) le nombre de mines dans les 8 cases autour. Les autres voient juste une loupe. Tu vois aussi ta propre mine. Conseiller à voix haute est autorisé… et pas forcément honnête.',
+    note: 'Détecteur secret : 1 seul par joueur, à garder pour le bon moment. Activé avant d’ouvrir un colis, il te montre (à toi seul) le nombre de mines dans les 8 cases autour. Les autres voient juste une loupe. Tu vois aussi ta propre mine. Conseiller à voix haute est autorisé… et pas forcément honnête.',
   },
   icone: '<rect x="4" y="9" width="16" height="11" rx="2" fill="currentColor"/><path d="M12 9c1-3 3-5 6-5" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="19" cy="4" r="2" fill="currentColor"/>',
   couleur: '#E0A060',

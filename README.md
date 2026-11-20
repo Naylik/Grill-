@@ -312,3 +312,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   parieur, imposteur, quitte, telepathie 1 chacun) : 3e série proposée dans le tableau.
 - 20/11/2026 · Missions flash : 1 de plus validée (3e série), 112 au total. Manquent : combien 3, justeprix 2, imposteur 1,
   quitte 1, telepathie 1 (quand elles sont toutes jouées, le jeu les reprend en commençant par les plus anciennes).
+- 20/11/2026 · Champ de mines (validé par Kilyan) : 1 seul détecteur par joueur et par jeu (au lieu de 2), pour qu'il
+  reste un vrai choix avec 2 tours par joueur. Mission flash mines-08 adaptée (« Utilise ton détecteur… »).
