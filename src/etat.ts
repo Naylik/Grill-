@@ -1,5 +1,6 @@
 // L'état de l'appli sur ce téléphone : ce qu'on lit dans Firebase + ce qui est propre à l'écran.
 import { ref, onValue, type Unsubscribe } from 'firebase/database';
+import { memoireDuSalon } from './memoireJeu';
 import { db } from './firebase';
 import { DELAI_REPRISE_HOTE, quiDoitReprendre, reprendreLaMain, signalerPresence } from './salon';
 import type { Deroule, Infos, Joueur, Pari, Score, Secrets } from './types';
@@ -106,10 +107,11 @@ let abonnementReponses: Unsubscribe[] | null = null;
 let minuterieReprise: ReturnType<typeof setTimeout> | null = null;
 
 export function ecouterSalon(code: string): void {
-  quitterEcoute();
+  quitterEcoute(false);
   S.code = code;
   S.charge = false;
   localStorage.setItem('grille:salon', code);
+  memoireDuSalon(code);
   const ecoute = <K extends keyof Etat>(chemin: string, cle: K, vide: Etat[K]) =>
     abonnements.push(
       onValue(
@@ -145,7 +147,8 @@ export function ecouterSalon(code: string): void {
   abonnements.push(signalerPresence(S.uid, code));
 }
 
-export function quitterEcoute(): void {
+/** Arrête d'écouter le salon. `definitif` : on quitte vraiment la partie (sinon on change juste d'écoute). */
+export function quitterEcoute(definitif = true): void {
   abonnements.forEach((f) => f());
   abonnements = [];
   charges.clear();
@@ -160,6 +163,7 @@ export function quitterEcoute(): void {
     revelation: {}, votes: {}, attente: null, maReponse: null, monPari: null, secrets: {}, monMot: null, reponses: {}, paris: {}, prive: {}, accusations: {}, saison: null, offreVengeance: null, annonceVengeance: null, onglet: 'partie', confirmerQuitter: false, accuser: false, menuSaison: false,
   });
   localStorage.removeItem('grille:salon');
+  if (definitif) memoireDuSalon(null);
 }
 
 // La saison du salon : on la suit dès que l'hôte en choisit une (et on la retient sur ce téléphone).

@@ -13,12 +13,11 @@ import { brouillons } from '../ui';
 import { attenteDes, bulle, chrono, pastille } from './commun';
 import { carteMission } from './missions';
 import { blocFlash } from './flash';
+import { localJeu } from '../memoireJeu';
 import { boutonsVideo } from './video';
 import { mallow, sequenceGrille } from '../mallow';
 import { missionsGrillees, PENALITE_MENSONGE } from '../accusations';
 
-/** Mémoire locale des jeux sur ce téléphone (ex. « j'ai répondu oui »). */
-export const localJeu: Record<string, unknown> = {};
 
 const uids = () => Object.entries(S.joueurs).sort((a, b) => a[1].rejointLe - b[1].rejointLe).map(([u]) => u);
 const nom = (u: string) => esc(S.joueurs[u]?.prenom ?? '?');
