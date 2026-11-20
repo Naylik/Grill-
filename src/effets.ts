@@ -135,7 +135,7 @@ export function momentsForts(): void {
     const t = S.jeu as { phase?: string; manche?: number; spin?: { gagnant: string } };
     if (t.phase === 'gain') moment(`roue-gain-${d.numeroJeu}-${t.manche}`, () => { if (t.spin?.gagnant === S.uid) { sons.reussi(); confettis(60); vibrer([80, 40, 160]); } else sons.ding(); });
   }
-  // Dessin téléphone arabe : les réactions (😂 🔥 💀 👏) s'envolent chez tout le monde quand quelqu'un réagit.
+  // Dessin à la chaîne : les réactions (😂 🔥 💀 👏) s'envolent chez tout le monde quand quelqu'un réagit.
   for (const [cle, n] of Object.entries(S.compteurs ?? {})) {
     if (!cle.startsWith('reac-')) continue;
     const avant = reactionsVues.get(cle);
@@ -172,7 +172,7 @@ export function momentsForts(): void {
     if (m.phase === 'tour' && (m.sures ?? 0) > 0) moment(`mines-${d.numeroJeu}-${m.tour}-${m.sures}`, () => sons.ding());
     if (m.phase === 'boum') moment(`mines-boum-${d.numeroJeu}-${m.tour}`, () => { sons.boum(); vibrer(m.dernier?.joueur === S.uid ? [400, 100, 400] : 200); });
   }
-  // Dessin téléphone arabe : un petit son à chaque étape dévoilée.
+  // Dessin à la chaîne : un petit son à chaque étape dévoilée.
   if (d.phase === 'jeu' && d.jeuEnCours === 'telephone' && S.jeu) {
     const t = S.jeu as { phase?: string; revue?: number; affiches?: number };
     if (t.phase === 'revue') moment(`tel-${d.numeroJeu}-${t.revue}-${t.affiches}`, () => sons.ding());

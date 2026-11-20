@@ -1,8 +1,8 @@
-// Dessin téléphone arabe : chacun passe par toutes les chaînes sans voir la sienne, et le score suit les votes.
+// Dessin à la chaîne : chacun passe par toutes les chaînes sans voir la sienne, et le score suit les votes.
 import { describe, expect, it } from 'vitest';
 import { chaineDe, scoreTelephone, telephone } from '../src/games/telephone';
 
-describe('Dessin téléphone arabe', () => {
+describe('Dessin à la chaîne', () => {
   it('à chaque étape, chacun a une chaîne différente, et jamais la même deux fois', () => {
     for (const n of [3, 4, 6]) {
       for (let s = 0; s < n; s++) expect(new Set(Array.from({ length: n }, (_, p) => chaineDe(p, s, n))).size).toBe(n);

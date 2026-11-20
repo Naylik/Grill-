@@ -353,23 +353,25 @@ async function videoMoment(d: DonneesMoment): Promise<Video> {
  * Fabrique la vidéo en la jouant sur la toile donnée (elle s'affiche pendant l'enregistrement).
  * « progres » reçoit le temps écoulé (0 → 1).
  */
-export async function fabriquerVideo(toile: HTMLCanvasElement, sorte: 'recap' | 'moment', donnees: DonneesRecap | DonneesMoment, progres: (p: number) => void): Promise<File> {
-  const format = formatVideo();
-  if (!format) throw new Error('Vidéo impossible sur ce téléphone');
+export async function fabriquerVideo(toile: HTMLCanvasElement, sorte: 'recap' | 'moment', donnees: DonneesRecap | DonneesMoment, progres: (p: number) => void): Promise<File | null> {
+  // Sans enregistreur vidéo (vieux téléphone) : la vidéo est seulement jouée, sans fichier à partager.
+  const format = formatVideo() && typeof toile.captureStream === 'function' ? formatVideo() : null;
   await Promise.all(['900 20px Unbounded', '800 20px "Plus Jakarta Sans"'].map((f) => document.fonts?.load(f).catch(() => undefined)));
   const video = sorte === 'recap' ? await videoRecap(donnees as DonneesRecap) : await videoMoment(donnees as DonneesMoment);
   toile.width = L;
   toile.height = H;
   const c = toile.getContext('2d')!;
   video.dessiner(c, 0);
-  const flux = toile.captureStream(30);
-  const audio = ouvrirSortieVideo();
-  const pistes = [...flux.getVideoTracks(), ...(audio?.getAudioTracks() ?? [])];
-  const enregistreur = new MediaRecorder(new MediaStream(pistes), { mimeType: format.mime, videoBitsPerSecond: 4_000_000 });
+  const flux = format ? toile.captureStream(30) : null;
+  const audio = format ? ouvrirSortieVideo() : null;
+  const enregistreur = format && flux ? new MediaRecorder(new MediaStream([...flux.getVideoTracks(), ...(audio?.getAudioTracks() ?? [])]), { mimeType: format.mime, videoBitsPerSecond: 4_000_000 }) : null;
   const morceaux: Blob[] = [];
-  enregistreur.ondataavailable = (e) => e.data.size && morceaux.push(e.data);
-  const fini = new Promise<void>((ok) => (enregistreur.onstop = () => ok()));
-  enregistreur.start(250);
+  const fini = new Promise<void>((ok) => {
+    if (!enregistreur) return ok();
+    enregistreur.ondataavailable = (e) => e.data.size && morceaux.push(e.data);
+    enregistreur.onstop = () => ok();
+  });
+  enregistreur?.start(250);
   const debut = performance.now();
   const aJouer = [...video.sons].sort((x, y) => x[0] - y[0]);
   await new Promise<void>((ok) => {
@@ -383,8 +385,9 @@ export async function fabriquerVideo(toile: HTMLCanvasElement, sorte: 'recap' | 
     };
     requestAnimationFrame(image);
   });
-  enregistreur.stop();
+  enregistreur?.stop();
   await fini;
+  if (!format || !flux) return null;
   fermerSortieVideo();
   flux.getTracks().forEach((p) => p.stop());
   const nom = sorte === 'recap' ? 'grille-recap' : 'grille-moment';

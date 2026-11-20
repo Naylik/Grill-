@@ -1,7 +1,8 @@
 // Boutons et « studio » des vidéos Grillé ! : récap de la soirée (écran de fin) et moments GRILLÉ ! (classement, fin).
 import { S } from '../etat';
 import { esc } from '../outils';
-import { liste as listeAccusations, type AccusationListee } from '../accusations';
+import { liste as listeAccusations, mancheAction, type AccusationListee } from '../accusations';
+import { localJeu } from '../memoireJeu';
 import { VOL_FLASH } from '../flash';
 import { totalFinal, VOL_DETECTIVE } from '../score';
 import { videoPossible } from '../formatVideo';
@@ -53,19 +54,24 @@ function donneesMoment(a: AccusationListee): DonneesMoment {
 
 let ouvert = false;
 
-/** Ouvre le « studio » par-dessus l'appli : la vidéo se joue pendant qu'elle s'enregistre, puis on la partage. */
-export async function ouvrirStudio(valeur: string): Promise<void> {
+/**
+ * Ouvre le « studio » par-dessus l'appli : la vidéo se joue (et s'enregistre si le téléphone sait le faire),
+ * puis on la partage. `auto` : lancée toute seule (moment GRILLÉ !, générique de fin), chez tout le monde.
+ */
+export async function ouvrirStudio(valeur: string, auto = false): Promise<void> {
   if (ouvert) return;
   const recap = valeur === 'recap';
   const a = recap ? undefined : grilles().find((x) => `moment:${x.cle}` === valeur);
   if (!recap && !a) return;
   ouvert = true;
+  const titre = recap ? '🎬 Le récap de la soirée' : `🔥 ${esc(joueur(a!.de).prenom)} a grillé ${esc(joueur(a!.cible).prenom)} !`;
   const fond = document.createElement('div');
   fond.className = 'studio-video';
   fond.innerHTML = `<div class="studio-carte">
-    <canvas class="studio-toile" aria-label="Aperçu de la vidéo"></canvas>
+    ${auto ? `<p class="studio-titre">${titre}</p>` : ''}
+    <canvas class="studio-toile" aria-label="Vidéo"></canvas>
     <div class="studio-barre"><span></span></div>
-    <p class="studio-etat">Fabrication de la vidéo… laisse l’appli ouverte.</p>
+    <p class="studio-etat">${auto ? '' : 'Fabrication de la vidéo… laisse l’appli ouverte.'}</p>
     <div class="studio-boutons"></div></div>`;
   document.body.append(fond);
   const toile = fond.querySelector('canvas')!;
@@ -77,19 +83,54 @@ export async function ouvrirStudio(valeur: string): Promise<void> {
     ouvert = false;
   };
   try {
-    // Le module vidéo n'est chargé qu'ici, au premier clic : l'appli s'ouvre plus vite.
+    // Le module vidéo n'est chargé qu'ici : l'appli s'ouvre plus vite.
     const { fabriquerVideo, partagerVideo } = await import('../video');
     const fichier = await fabriquerVideo(toile, recap ? 'recap' : 'moment', recap ? donneesRecap() : donneesMoment(a!), (p) => (barre.style.width = `${Math.round(p * 100)}%`));
-    etat.textContent = 'Ta vidéo est prête !';
-    boutons.innerHTML = '<button class="bouton jaune" data-studio="partager">Partager</button><button class="bouton discret" data-studio="fermer">Fermer</button>';
-    boutons.querySelector('[data-studio="partager"]')!.addEventListener('click', async () => {
-      const r = await partagerVideo(fichier);
-      if (r === 'telecharge') etat.textContent = 'Vidéo enregistrée dans tes téléchargements.';
-    });
+    if (fichier) {
+      etat.textContent = 'La vidéo est prête à partager !';
+      boutons.innerHTML = '<button class="bouton jaune" data-studio="partager">Partager</button><button class="bouton discret" data-studio="fermer">Fermer</button>';
+      boutons.querySelector('[data-studio="partager"]')!.addEventListener('click', async () => {
+        const r = await partagerVideo(fichier);
+        if (r === 'telecharge') etat.textContent = 'Vidéo enregistrée dans tes téléchargements.';
+      });
+    } else {
+      etat.textContent = 'Ce téléphone ne sait pas enregistrer la vidéo : un autre joueur pourra la partager.';
+      boutons.innerHTML = '<button class="bouton jaune" data-studio="fermer">Fermer</button>';
+    }
   } catch (e) {
     console.warn('vidéo', e);
-    etat.textContent = 'Ce téléphone ne sait pas fabriquer la vidéo. Essaie depuis un autre téléphone.';
+    etat.textContent = 'La vidéo n’a pas pu se lancer sur ce téléphone.';
     boutons.innerHTML = '<button class="bouton discret" data-studio="fermer">Fermer</button>';
   }
   boutons.querySelector('[data-studio="fermer"]')?.addEventListener('click', fermer);
+}
+
+/** Petite pause avant le générique de fin : le temps de voir le podium. */
+const ATTENTE_RECAP = 10_000;
+let finVueLe = 0;
+
+/**
+ * Vidéos automatiques, sur chaque téléphone :
+ * - « Moment GRILLÉ ! » dès que le verdict d'une accusation réussie est tombé (après la manche si un jeu d'action est en cours) ;
+ * - le récap, comme un générique, 10 s après l'arrivée sur le podium.
+ * Chaque vidéo n'est jouée qu'une fois par téléphone (mémoire de la partie).
+ */
+export function videosAutomatiques(): void {
+  const d = S.deroule;
+  if (ouvert || !S.code || !d) return;
+  if (d.phase === 'fin' && d.bilan) {
+    finVueLe ||= Date.now();
+    if (!localJeu['video-recap'] && Date.now() - finVueLe >= ATTENTE_RECAP) {
+      localJeu['video-recap'] = true;
+      void ouvrirStudio('recap', true);
+    }
+    return;
+  }
+  finVueLe = 0;
+  const ctx = { phase: d.phase, numeroJeu: d.numeroJeu, jeuEnCours: d.jeuEnCours, phaseJeu: d.phase === 'flash' ? d.flash?.etape : (S.jeu as { phase?: string } | null)?.phase };
+  if (mancheAction(ctx)) return;
+  const a = listeAccusations(S.accusations).find((x) => x.mission && x.verdict === 'grille' && x.numeroJeu === d.numeroJeu && !localJeu[`video-${x.cle}`]);
+  if (!a) return;
+  localJeu[`video-${a.cle}`] = true;
+  void ouvrirStudio(`moment:${a.cle}`, true);
 }

@@ -1,4 +1,4 @@
-// Dessin au doigt (Dessin téléphone arabe). Un dessin = une liste de traits, chacun une couleur, une épaisseur
+// Dessin au doigt (Dessin à la chaîne). Un dessin = une liste de traits, chacun une couleur, une épaisseur
 // et des points (coordonnées entières de 0 à 999 sur un carré). C'est très léger à envoyer dans Firebase,
 // et le dessin se redessine à l'identique sur tous les téléphones.
 
@@ -70,7 +70,7 @@ const replays = new WeakMap<HTMLCanvasElement, { cle: string; debut: number }>()
 
 /**
  * Une toile qui affichera ces traits (dessinée juste après l'affichage).
- * replay : le dessin se redessine trait par trait, en accéléré (révélation du Dessin téléphone arabe).
+ * replay : le dessin se redessine trait par trait, en accéléré (révélation du Dessin à la chaîne).
  */
 export function toileAVoir(cle: string, traits: Trait[] | undefined, classe = '', replay = false): string {
   aVoir.set(cle, { traits: traits ?? [], replay });

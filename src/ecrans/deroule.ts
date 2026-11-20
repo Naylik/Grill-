@@ -7,7 +7,6 @@ import { esc, auHasard } from '../outils';
 import { majoriteOui, missionTrouvee, places, pointsMission, scoreVide, totalFinal, totalProvisoire } from '../score';
 import { avantPalierSuivant, classementSaison, niveauCuisson } from '../saison';
 import { NOMS_CUISSON } from '../mallow';
-import { DUREE_RECIT } from '../hote';
 import { RAPPELS_MISSION } from '../narrateur';
 import { brouillons } from '../ui';
 import { attenteDes, bulle, chrono, pastille } from './commun';
@@ -202,12 +201,18 @@ export function ecranRevelation(): string {
   }
   const grillees = missionsGrillees(S.accusations, sujet);
   const marqueGrillee = (n: number) => `<div class="verdict grille"><strong>Grillée en direct par ${nom(grillees[n])}</strong><span>ratée</span></div>`;
-  const cartes = missions.map((m, i) => `<p class="intitule">Mission ${i + 1}</p>${carteMission({ ...m, id: '', type: m.type as 'vie' | 'jeu' })}${grillees[i + 1] ? marqueGrillee(i + 1) : ''}`);
+  const cartes = missions.map((m, i) => `<p class="intitule">${missions.length > 1 ? `Mission ${i + 1}` : 'Sa grosse mission'}</p>${carteMission({ ...m, id: '', type: m.type as 'vie' | 'jeu' })}${grillees[i + 1] ? marqueGrillee(i + 1) : ''}`);
 
   if (r.etape === 'recit') {
-    return `${entete}${chrono(r.fin)}
-      ${bulle(moiSujet ? `À toi ! Tu as ${DUREE_RECIT / 1000} secondes pour raconter comment tu t’y es pris.` : `${nom(sujet)} a ${DUREE_RECIT / 1000} secondes pour se justifier. Écoutez bien.`)}
-      ${cartes.join('')}`;
+    // Pas de chrono : on raconte, on rit, on débat… puis le joueur révélé lance le vote (l'hôte peut aussi).
+    const bouton = moiSujet
+      ? '<button class="bouton jaune" data-action="finRecit">J’ai fini, on passe au vote</button>'
+      : estHote() ? boutonHote('auVote', 'Passer au vote', 'discret') : '';
+    return `${entete}
+      ${bulle(moiSujet ? 'À toi ! Raconte comment tu t’y es pris. Prends ton temps.' : `${nom(sujet)} raconte comment il ou elle s’y est pris. Écoutez bien.`)}
+      ${cartes.join('')}
+      ${moiSujet ? '' : `<p class="attente">Quand ${nom(sujet)} a fini, on passe au vote.</p>`}
+      <div class="pile bas">${bouton}</div>`;
   }
   if (r.etape === 'vote') {
     const blocs = missions.map((_, i) => `${cartes[i]}${moiSujet || grillees[i + 1] ? '' : boutonsVote(`m${i + 1}-${sujet}`, [{ valeur: 'true', texte: 'Réussi', couleur: 'vert' }, { valeur: 'false', texte: 'Raté', couleur: 'rose' }])}`);

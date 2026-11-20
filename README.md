@@ -153,7 +153,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   (5 / 6 / 7 selon le format). Bonne réponse : la cagnotte passe à 1 puis double ; erreur : tout perdu. Après chaque
   bonne réponse, choix secret : encaisser ou doubler (sans réponse : on encaisse). La bonne réponse reste chez l'hôte
   (`prive/quitte`) jusqu'au résultat. 40 questions (10 par niveau), avec la mémoire du groupe.
-- 18/11/2026 · Nouveau jeu « Dessin téléphone arabe » (`src/games/telephone.ts`, dessin au doigt dans `src/dessin.ts`,
+- 18/11/2026 · Nouveau jeu « Dessin à la chaîne » (`src/games/telephone.ts`, dessin au doigt dans `src/dessin.ts`,
   40 phrases dans `src/data/dessins.json`), façon Gartic Phone : phrase → dessin (60 s) → devinette (35 s) → dessin…,
   chacun passe sur une chaîne différente à chaque étape et ne voit jamais la sienne (3 / 4 / 5 étapes selon le format,
   jamais plus que de joueurs). 6 couleurs, gomme, annuler, effacer, 3 épaisseurs ; envoi automatique à la fin du temps.
@@ -164,12 +164,12 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   avec des points et jamais d'argent. Courbe qui grimpe avec la cagnotte (×1, ×2, ×4…) et vire du vert au rouge avec
   le risque. Au résultat : elle monte (bonne réponse, petit arpège) ou « CRASH ! » (courbe qui s'effondre, écran qui
   tremble, vibration). Au choix secret : la fusée en grand ; encaisser = « +X PTS » et pluie de jetons.
-- 18/11/2026 · Dessin téléphone arabe : chacun écrit d'abord sa propre phrase (40 s, bouton « Une idée au hasard » ;
+- 18/11/2026 · Dessin à la chaîne : chacun écrit d'abord sa propre phrase (40 s, bouton « Une idée au hasard » ;
   sans phrase, le jeu en met une), comme Gartic Phone ; on dessine/devine ensuite sur n − 1 étapes au plus, donc
   personne ne retombe sur sa phrase. À la révélation, chaque dessin se redessine trait par trait en accéléré
   (1,5 à 4 s). Seules les phrases du jeu vont dans la mémoire du groupe. Le saboteur est gardé pour plus tard
   (intéressant surtout à 5-6 joueurs).
-- 18/11/2026 · Dessin téléphone arabe, refonte visuelle « atelier papier » : feuille texturée scotchée qui arrive en
+- 18/11/2026 · Dessin à la chaîne, refonte visuelle « atelier papier » : feuille texturée scotchée qui arrive en
   glissant, feuille de cahier pour écrire la phrase, trousse de 12 feutres, sablier qui se vide ; quand on envoie, la
   feuille s'envole « chez Kilyan ». Révélation façon album : chaque chaîne défile comme une conversation (avatar à la
   couleur du joueur, bulles, dessins encadrés rejoués trait par trait), réactions 😂 🔥 💀 👏 qui s'envolent chez tout

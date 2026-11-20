@@ -16,7 +16,6 @@ import { flashReussie, nbPorteurs, POINTS_FLASH } from './flash';
 
 const DUREE_ROUE = 5_500;
 const DUREE_VOTE_JEU = 20_000;
-export const DUREE_RECIT = 15_000;
 const DUREE_VOTE = 45_000;
 const DUREE_GRILLAGE = 25_000; // « Dernière chance » : le temps d'appuyer sur GRILLÉ ! avant la révélation
 const DUREE_COLLECTE_FLASH = 6_000; // le temps que les porteurs révèlent leur mission flash
@@ -195,7 +194,7 @@ function etapeFlash(f: EtatFlash): Ecritures | null {
 // ——— Révélation ———
 
 function entrerRevelation(): Ecritures {
-  const r: EtatRevelation = { ordre: melanger(uids()), index: 0, etape: 'recit', fin: maintenant() + DUREE_RECIT };
+  const r: EtatRevelation = { ordre: melanger(uids()), index: 0, etape: 'recit' };
   return { 'deroule/phase': 'revelation', 'deroule/revelation': r, votes: null, attente: null };
 }
 
@@ -220,7 +219,8 @@ function etapeRevelation(r: EtatRevelation): Ecritures | null {
   const now = maintenant();
   if (r.etape === 'recit') {
     if (!missionsDe(sujet).length) return null; // on attend que son téléphone publie ses missions (ou que l'hôte passe)
-    if (now < (r.fin ?? 0)) return null;
+    // Pas de chrono : on laisse rire et débattre. Le joueur révélé lance le vote quand le groupe est prêt (ou l'hôte).
+    if (S.reponses[sujet]?.etape !== `recit-${r.index}`) return null;
     return { 'deroule/revelation/etape': 'vote', 'deroule/revelation/fin': now + DUREE_VOTE };
   }
   if (r.etape === 'vote') {
@@ -405,13 +405,15 @@ export async function commandeHote(valeur: string): Promise<void> {
     const r = d.revelation;
     if (valeur === 'suivant' && r.etape === 'resultat') {
       e = r.index + 1 < r.ordre.length
-        ? { 'deroule/revelation': { ordre: r.ordre, index: r.index + 1, etape: 'recit', fin: maintenant() + DUREE_RECIT } }
+        ? { 'deroule/revelation': { ordre: r.ordre, index: r.index + 1, etape: 'recit' } }
         : bilanFinal();
       if (r.index + 1 >= r.ordre.length) {
         await ecrire(e);
         await enregistrerSaison(e);
         return;
       }
+    } else if (valeur === 'auVote' && r.etape === 'recit') {
+      e = { 'deroule/revelation/etape': 'vote', 'deroule/revelation/fin': maintenant() + DUREE_VOTE };
     } else if (valeur === 'passer') {
       e = { 'deroule/revelation/etape': 'resultat', 'deroule/revelation/fin': null };
     } else if (valeur === 'cloreVote') {

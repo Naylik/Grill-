@@ -1,4 +1,4 @@
-// « Dessin téléphone arabe » : chaque joueur reçoit une phrase et la dessine au doigt. Le dessin passe au suivant,
+// « Dessin à la chaîne » : chaque joueur reçoit une phrase et la dessine au doigt. Le dessin passe au suivant,
 // qui devine ce que c'est ; sa réponse passe au suivant, qui la dessine… Personne ne voit sa propre chaîne.
 // À la fin, on déroule chaque chaîne : chacun vote pour le dessin le plus drôle et dit si le sens est resté.
 // Points internes : 3 au dessin le plus drôle de la partie, 1 à chaque joueur d'une chaîne qui a gardé le sens.
@@ -77,7 +77,7 @@ export function scoreTelephone(e: Pick<Etat, 'ordre' | 'chaines' | 'favoris' | '
 
 export const telephone: MiniJeu<Etat> = {
   id: 'telephone',
-  nom: 'Dessin téléphone arabe',
+  nom: 'Dessin à la chaîne',
   accroche: 'Dessine, devine, dessine… et regarde le sens partir en fumée.',
   explication: {
     comment: 'Chacun reçoit une phrase et la dessine au doigt. Le dessin passe au joueur suivant, qui devine ce que c’est ; sa réponse passe au suivant, qui la dessine, et ainsi de suite. À la fin, on déroule chaque chaîne sur tous les écrans.',

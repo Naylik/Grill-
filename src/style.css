@@ -634,7 +634,7 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .choix-quiz.bonne b { background: var(--vert); color: var(--fond); }
 .choix-quiz.fausse { border-color: var(--rose); background: color-mix(in srgb, var(--rose) 10%, transparent); opacity: .85; }
 
-/* ——— Dessin téléphone arabe (façon Gartic Phone) ——— */
+/* ——— Dessin à la chaîne (façon Gartic Phone) ——— */
 .atelier { display: grid; gap: 10px; padding: 10px; border-radius: var(--r-xl); background: var(--voile-1); border: 1px solid var(--bord); }
 .toile-dessin, .toile-voir { display: block; width: 100%; max-width: 100%; aspect-ratio: 1; height: auto; border-radius: var(--r-m); background: #fff; box-shadow: 0 10px 30px -12px #000a; }
 .toile-dessin { touch-action: none; cursor: crosshair; }
@@ -668,7 +668,7 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 @keyframes jeton-fusee { from { transform: translate(0, 0) scale(.4); opacity: 1; } to { transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; } }
 .question.petite { font-size: var(--txt-m); }
 
-/* ——— Dessin téléphone arabe : l'atelier papier ——— */
+/* ——— Dessin à la chaîne : l'atelier papier ——— */
 .atelier-papier { display: grid; gap: 12px; }
 .entete-atelier { display: flex; align-items: center; gap: 12px; }
 .consigne-atelier { display: grid; gap: 2px; min-width: 0; }
@@ -964,3 +964,4 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .points-tuto { display: flex; gap: 8px; }
 .points-tuto i { width: 8px; height: 8px; border-radius: var(--r-rond); background: #ffffff30; transition: width var(--t-normal) var(--doux), background var(--t-normal); }
 .points-tuto i.on { width: 26px; background: var(--jaune); }
+.studio-titre { margin: 0; text-align: center; font-family: var(--titre); font-weight: 900; font-size: var(--txt-l); color: var(--jaune); animation: arrive var(--t-lent) var(--rebond); }

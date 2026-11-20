@@ -16,7 +16,7 @@ import { commandeHote, commandeJeu, piloter } from './hote';
 import { effetsJoueur, momentsForts, repondre } from './effets';
 import { basculerSon, debloquer, sons } from './son';
 import { choisirMission, prendreMissionVengeance } from './missions';
-import { ouvrirStudio } from './ecrans/video';
+import { ouvrirStudio, videosAutomatiques } from './ecrans/video';
 import { vengeancesVues } from './ecrans/missions';
 import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from './saison';
 import { jeuParId } from './games';
@@ -273,7 +273,7 @@ action('choisirMission', async (el) => {
   }
 });
 
-// Dessin téléphone arabe : couleur, épaisseur, gomme, annuler, effacer.
+// Dessin à la chaîne : couleur, épaisseur, gomme, annuler, effacer.
 action('outil', (el) => {
   const d = el.dataset;
   if (d.couleur) outil.couleur = d.couleur;
@@ -325,6 +325,10 @@ action('jeu', async (el) => {
 });
 
 action('hote', (el) => commandeHote(el.dataset.valeur!));
+action('finRecit', () => {
+  const r = S.deroule?.revelation;
+  if (r?.etape === 'recit' && r.ordre[r.index] === S.uid) void repondre(`recit-${r.index}`);
+});
 action('hote-jeu', (el) => commandeJeu(el.dataset.valeur!));
 
 action('choisirCible', (el) => {
@@ -544,6 +548,8 @@ quandCaChange(() => {
   void piloter();
 });
 setInterval(() => void piloter(), 500);
+// Vidéos automatiques (moment GRILLÉ !, générique de fin) : chaque téléphone vérifie chaque seconde.
+setInterval(videosAutomatiques, 1000);
 
 // Horloge des jeux d'action (Réflexe Mallow, Le bon timing) : le feu, les éternuements et le décompte
 // apparaissent à l'heure du serveur, donc au même instant sur tous les téléphones.
