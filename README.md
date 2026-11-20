@@ -280,3 +280,9 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   supprimés, vérificateur ESLint ajouté (`npm run lint`, à passer avec les tests après chaque changement).
 - 20/11/2026 · Règles Firebase vérifiées par Kilyan dans la console : la version en ligne contient bien `accusations`,
   `vengeance` et `saisons` (dernière modification des règles : 18/11).
+- 20/11/2026 · Salon « feu de camp » (validé par Kilyan) : les Mallow des joueurs arrivent autour du feu (qui grandit
+  avec le groupe), réglages repliés derrière « Réglages · Modifier ». Cuisson de chaque Mallow = missions réussies dans
+  la saison (sans saison, tout le monde est cru : avec un autre groupe, on repart de zéro). Couronne au premier du
+  classement de la saison, s'il est là et a des points (plus à l'hôte).
+- 20/11/2026 · Tutoriel « Comment jouer » (validé par Kilyan) : 3 écrans (mission secrète, mini-jeux, bouton GRILLÉ),
+  montrés une fois sur chaque téléphone à la première arrivée sur le site (`grille:tuto-vu`), avec « Passer ».
