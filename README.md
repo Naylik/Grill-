@@ -405,3 +405,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   droite). Il sort maintenant plus loin, s'efface en fondu et devient invisible à la fin.
 - 23/11/2026 · Podium des mini-jeux : le 1er en grand à gauche (bordure dorée, grande pastille, médaille, points en
   gros), le 2e et le 3e plus petits, l'un sur l'autre à droite.
+- 23/11/2026 · Colis piégé, animation du lancer : un rafraîchissement de l'écran pendant qu'on fait glisser le colis le
+  remettait au centre en plein geste (le style du colis est maintenant protégé : `data-style-libre` dans
+  `harmoniser`). Après le lancer, le colis ne réapparaît plus au milieu de l'écran du lanceur. Geste trop court :
+  le colis revient en douceur.

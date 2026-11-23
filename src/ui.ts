@@ -102,8 +102,11 @@ export function harmoniser(cible: Node, source: Node): void {
     const oe = o as Element;
     const ne = n as Element;
     const enTransition = oe.classList.contains('entree-ecran'); // ne pas couper la transition d'écran en cours
-    for (const attr of Array.from(oe.attributes)) if (!ne.hasAttribute(attr.name)) oe.removeAttribute(attr.name);
-    for (const attr of Array.from(ne.attributes)) if (oe.getAttribute(attr.name) !== attr.value) oe.setAttribute(attr.name, attr.value);
+    // data-style-libre : le style de cet élément est piloté par le code pendant un geste (colis qu'on fait glisser,
+    // puis qui s'envole). Un rafraîchissement de l'écran ne doit pas le remettre à sa place en plein mouvement.
+    const styleLibre = oe.hasAttribute('data-style-libre') && ne.hasAttribute('data-style-libre');
+    for (const attr of Array.from(oe.attributes)) if (!ne.hasAttribute(attr.name) && !(styleLibre && attr.name === 'style')) oe.removeAttribute(attr.name);
+    for (const attr of Array.from(ne.attributes)) if (oe.getAttribute(attr.name) !== attr.value && !(styleLibre && attr.name === 'style')) oe.setAttribute(attr.name, attr.value);
     if (enTransition) oe.classList.add('entree-ecran');
     if (oe instanceof HTMLInputElement && document.activeElement !== oe) {
       const v = ne.getAttribute('value') ?? '';

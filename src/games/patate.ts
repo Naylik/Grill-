@@ -250,11 +250,11 @@ export const patate: MiniJeu<Etat> = {
       return `${tete}
         <div class="consigne-patate" data-depart="${e.depart}"><span>C’EST TOI ! Dis à voix haute :</span><strong>${esc(e.consigne)}</strong></div>
         <div class="cibles-patate">${cibles.map((u) => `<button class="cible-patate" style="--c:${v.joueurs[u].couleur}" data-action="jeu" data-geste="lancer" data-valeur="${u}" data-depart="${e.depart}">${nom(u)}</button>`).join('')}</div>
-        <div class="zone-patate ${fausseAlerte(e)}"><div class="patate-a-lancer" data-glisser-patate>${dessinColis(190, tensionDe(e.passe))}</div></div>
+        <div class="zone-patate ${fausseAlerte(e)}"><div class="patate-a-lancer" data-glisser-patate data-style-libre>${dessinColis(190, tensionDe(e.passe))}</div></div>
         <p class="aide">Fais glisser le colis vers un joueur (ou touche son nom).</p>`;
     }
     return `${tete}
-      <div class="zone-patate spectateur ${fausseAlerte(e)}"><div class="patate-chez">${dessinColis(170, tensionDe(e.passe))}</div></div>
+      <div class="zone-patate spectateur ${lanceVers ? 'parti' : ''} ${fausseAlerte(e)}"><div class="patate-chez">${dessinColis(170, tensionDe(e.passe))}</div></div>
       <h2 class="question centre-texte">${lanceVers ? `Renvoyé à ${nom(lanceVers)} !` : `Le colis est chez <span style="color:${v.joueurs[e.porteur]?.couleur}">${nom(e.porteur)}</span>`}</h2>
       ${lanceVers ? '' : `<p class="consigne-spectateur">« ${esc(e.consigne)} »</p>`}
       ${elimine ? '<p class="aide">Tu es éliminé : profite du spectacle.</p>' : ''}

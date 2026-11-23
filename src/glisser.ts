@@ -13,6 +13,7 @@ export function installerGlisser(): void {
     x0 = e.clientX;
     y0 = e.clientY;
     el.setPointerCapture?.(e.pointerId);
+    el.style.transition = 'none'; // le colis suit le doigt sans retard (un lancer raté précédent a pu laisser une transition)
     el.classList.add('tenue');
   });
   document.addEventListener('pointermove', (e) => {
@@ -29,6 +30,7 @@ export function installerGlisser(): void {
     const longueur = Math.hypot(dx, dy);
     const cibles = Array.from(document.querySelectorAll<HTMLElement>('.cible-patate:not(.pas-encore)'));
     if (longueur < 50 || !cibles.length) {
+      patate.style.transition = 'transform .2s ease-out'; // geste trop court : le colis revient en douceur
       patate.style.transform = '';
       return;
     }
