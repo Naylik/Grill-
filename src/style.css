@@ -998,6 +998,11 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .marche-jeu:not(.p1) strong { min-width: 0; max-width: 100%; overflow-wrap: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .marche-jeu.p3 { animation-delay: .3s; }
 .marche-jeu.p1:only-child { grid-column: 1 / -1; }
+/* Égalité pour la 1re place : les gagnants côte à côte en grand, les autres en dessous sur toute la largeur. */
+.podium-jeu.egalite { grid-template-columns: repeat(min(var(--premiers), 3), minmax(0, 1fr)); }
+.podium-jeu.egalite .marche-jeu.p1 strong { font-size: var(--txt-m); }
+.podium-jeu.egalite .marche-jeu.p1 { grid-column: auto; grid-row: auto; }
+.podium-jeu.egalite .marche-jeu:not(.p1) { grid-column: 1 / -1; grid-row: auto; }
 /* Combien ont dit oui ? : résultat d'une question, en toutes lettres. */
 .ligne-combien { grid-template-columns: auto 1fr; }
 .ligne-combien > div { display: grid; gap: 2px; min-width: 0; }

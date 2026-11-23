@@ -419,3 +419,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   arrondie vers le haut). Marge supprimée.
 - 23/11/2026 · Le Parieur : plus de chrono pour miser. Le défi démarre dès que tous les joueurs connectés ont misé ;
   l'hôte a un bouton « Lancer le défi sans attendre » si quelqu'un bloque.
+- 23/11/2026 · Podium des mini-jeux, égalité pour la 1re place : les gagnants côte à côte en grand (jusqu'à 3 par
+  ligne), les suivants en dessous sur toute la largeur (avant : gagnants empilés à gauche, 3e seul en haut à droite).
