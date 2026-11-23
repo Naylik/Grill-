@@ -990,3 +990,8 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .marche-jeu em { font-style: normal; font-family: var(--titre); font-weight: 900; color: var(--vert); }
 .marche-jeu.p1 { order: 2; padding-top: 18px; border-color: var(--jaune); box-shadow: 0 0 20px -8px var(--jaune); }
 .marche-jeu.p2 { order: 1; } .marche-jeu.p3 { order: 3; animation-delay: .1s; }
+/* Combien ont dit oui ? : résultat d'une question, en toutes lettres. */
+.ligne-combien { grid-template-columns: auto 1fr; }
+.ligne-combien > div { display: grid; gap: 2px; min-width: 0; }
+.detail-combien { font-size: var(--txt-s); color: var(--texte-2); }
+.detail-combien.gagne { color: var(--vert); }

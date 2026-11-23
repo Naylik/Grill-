@@ -102,7 +102,10 @@ export const combien: MiniJeu<Etat> = {
         const j = v.joueurs[u];
         const est = e.estimations?.[u];
         const pts = e.gagnes?.[u] ?? 0;
-        return `<div class="ligne-resultat"><span class="pastille" style="--c:${j.couleur};width:26px;height:26px"></span><strong>${esc(j.prenom)}</strong><span class="petit">${est !== undefined ? `a dit ${est}` : 'pas de réponse'}</span><span class="pts ${pts ? 'gagne' : ''}">${pts ? `+${pts}` : '+0'} · ${e.cumul?.[u] ?? 0} pts</span></div>`;
+        // En toutes lettres : « a deviné 2 oui · ✔ exact : +3 · total : 5 pts ».
+        const verdict = est === undefined ? 'pas de réponse' : pts >= 3 ? `✔ exact : +${pts}` : pts > 0 ? `à un près : +${pts}` : 'raté : +0';
+        const detail = `${est !== undefined ? `a deviné ${est} oui · ` : ''}${verdict} · total : ${e.cumul?.[u] ?? 0} pt${(e.cumul?.[u] ?? 0) > 1 ? "s" : ""}`;
+        return `<div class="ligne-resultat ligne-combien"><span class="pastille" style="--c:${j.couleur};width:26px;height:26px"></span><div><strong>${esc(j.prenom)}</strong><span class="detail-combien ${pts ? 'gagne' : ''}">${detail}</span></div></div>`;
       })
       .join('');
     const total = e.totalOui ?? 0;

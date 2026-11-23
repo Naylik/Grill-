@@ -339,3 +339,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   - Champ de mines : 2 manches, grille neuve et nouvelle mine à chaque manche ;
   - Dessin à la chaîne : on attend tous les joueurs jusqu'au bout du chrono (un téléphone en veille n'est plus sauté) ;
     message clair : c'est l'hôte qui tourne les pages de l'album.
+- 23/11/2026 · Combien ont dit oui ? : résultat de chaque question en toutes lettres (« a deviné 2 oui · ✔ exact : +3 ·
+  total : 5 pts »).
