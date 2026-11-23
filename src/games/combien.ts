@@ -3,23 +3,39 @@
 import questions from '../data/combien.json';
 import { fraisDabord } from '../outils';
 import { esc, parmi } from '../outils';
+import { hacher, hasardDe } from '../flash';
 import { pointsCombien, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
+export type Feinte = 'hesite' | 'fauxPlein' | 'clignote' | 'fausseFin' | 'aucune';
+
 /**
- * Minutage de la jauge de suspense (en ms depuis l'affichage) : un cran par « oui », de plus en plus lent,
- * puis le cran suivant qui hésite (s'il en reste un), puis le chiffre. Le même sur tous les téléphones.
+ * Minutage de la jauge de suspense (en ms depuis l'affichage) : un cran par « oui », de plus en plus lent, avec une
+ * feinte différente à chaque question (le cran suivant qui hésite, qui se remplit puis se vide, qui clignote, ou un
+ * long silence avant le dernier cran…). Tiré à partir de l'étape : le même sur tous les téléphones.
  */
-export function minutageJauge(total: number, nbJoueurs: number): { crans: number[]; hesite: number | null; fin: number } {
-  let t = 600;
+export function minutageJauge(total: number, nbJoueurs: number, graine = ''): { crans: number[]; feinte: { type: Feinte; cran: number; t: number } | null; fin: number } {
+  const hasard = hasardDe(hacher(`jauge:${graine}`));
+  const reste = total < nbJoueurs;
+  const possibles: Feinte[] = reste ? ['hesite', 'fauxPlein', 'clignote', ...(total > 0 ? (['fausseFin', 'aucune'] as Feinte[]) : [])] : ['fausseFin', 'aucune'];
+  const type = graine ? possibles[Math.floor(hasard() * possibles.length)] : reste ? 'hesite' : 'aucune';
+  // Rythme variable : départ, pas et ralentissement tirés au hasard.
+  let t = graine ? 400 + Math.round(hasard() * 500) : 600;
+  const pas = graine ? 450 + Math.round(hasard() * 350) : 700;
+  const frein = graine ? 150 + Math.round(hasard() * 300) : 400;
   const crans: number[] = [];
   for (let k = 0; k < total; k++) {
+    // Fausse fin : un long silence juste avant le dernier cran… on croit que c'est fini.
+    if (type === 'fausseFin' && k === total - 1) t += 1400 + Math.round(hasard() * 700);
     crans.push(t);
-    t += 700 + 400 * k;
+    t += pas + frein * k;
   }
-  const hesite = total < nbJoueurs ? t : null;
-  return { crans, hesite, fin: hesite !== null ? t + 1500 : t + 200 };
+  if (type === 'hesite' || type === 'fauxPlein' || type === 'clignote') {
+    const duree = { hesite: 1500, fauxPlein: 1700, clignote: 1300 }[type];
+    return { crans, feinte: { type, cran: total, t }, fin: t + duree };
+  }
+  return { crans, feinte: type === 'fausseFin' ? { type, cran: total - 1, t: crans[total - 1] } : null, fin: t + 200 };
 }
 
 // Le narrateur réagit au total (taquin, jamais méchant ; la même phrase sur tous les téléphones).
@@ -125,10 +141,10 @@ export const combien: MiniJeu<Etat> = {
       .join('');
     const total = e.totalOui ?? 0;
     // Suspense : la jauge se remplit cran par cran (un cran par joueur), le cran suivant hésite… puis le chiffre tombe.
-    const m = minutageJauge(total, n);
+    const m = minutageJauge(total, n, e.etape);
     const crans = Array.from({ length: n }, (_, k) => {
       if (k < total) return `<div class="cran-oui on" style="--d:${m.crans[k]}ms"><i></i></div>`;
-      if (k === total && m.hesite !== null) return `<div class="cran-oui hesite" style="--d:${m.hesite}ms"><i></i></div>`;
+      if (m.feinte && k === m.feinte.cran && m.feinte.type !== 'fausseFin') return `<div class="cran-oui ${m.feinte.type}" style="--d:${m.feinte.t}ms"><i></i></div>`;
       return '<div class="cran-oui"><i></i></div>';
     }).join('');
     return `${titre}

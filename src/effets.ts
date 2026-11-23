@@ -186,9 +186,9 @@ export function momentsForts(): void {
     const c = S.jeu as { phase?: string; etape?: string; totalOui?: number; cumul?: Record<string, number> };
     if (c.phase === 'resultat' && c.etape) {
       moment(`combien-jauge-${c.etape}`, () => {
-        const m = minutageJauge(c.totalOui ?? 0, Object.keys(c.cumul ?? S.joueurs).length);
+        const m = minutageJauge(c.totalOui ?? 0, Object.keys(c.cumul ?? S.joueurs).length, c.etape);
         for (const t of m.crans) setTimeout(() => sons.tic(), t);
-        if (m.hesite !== null) setTimeout(() => sons.tic(true), m.hesite + 500);
+        if (m.feinte && m.feinte.type !== 'fausseFin') setTimeout(() => sons.tic(true), m.feinte.t + 500);
         setTimeout(() => { sons.reussi(); vibrer(120); }, m.fin);
       });
     }

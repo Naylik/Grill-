@@ -344,3 +344,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · Combien ont dit oui ? : jauge de suspense (version A choisie par Kilyan). Un cran par joueur, qui se
   remplissent un par un de plus en plus lentement, le cran suivant hésite puis s'éteint, puis le chiffre tombe
   (3 à 4 s ; `minutageJauge`). Un « tic » par cran, un son et une vibration sur tous les téléphones au chiffre final.
+- 23/11/2026 · Jauge de suspense variée : à chaque question, un rythme différent (départ, vitesse, ralentissement) et une
+  feinte tirée au hasard (cran suivant qui hésite, qui se remplit puis se vide, qui clignote, long silence avant le
+  dernier cran, ou pas de feinte). Tirage à partir de l'étape : la même jauge sur tous les téléphones.

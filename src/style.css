@@ -1001,6 +1001,10 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .cran-oui i { position: absolute; inset: 0; border-radius: var(--r-s); background: linear-gradient(var(--vert-clair), var(--vert-fort)); box-shadow: 0 0 18px var(--vert); transform: scaleX(0); transform-origin: left; }
 .cran-oui.on i { animation: cran-rempli .35s var(--doux) var(--d) both; }
 .cran-oui.hesite i { animation: cran-hesite 1.4s ease-in-out var(--d) both; }
+.cran-oui.fauxPlein i { animation: cran-faux-plein 1.6s ease-in-out var(--d) both; }
+.cran-oui.clignote i { animation: cran-clignote 1.2s steps(1) var(--d) both; }
+@keyframes cran-faux-plein { 0% { transform: scaleX(0); } 25% { transform: scaleX(1); } 55% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+@keyframes cran-clignote { 0% { transform: scaleX(0); } 15% { transform: scaleX(1); } 30% { transform: scaleX(0); } 50% { transform: scaleX(1); } 62% { transform: scaleX(0); } 80% { transform: scaleX(1); } 88%, 100% { transform: scaleX(0); } }
 @keyframes cran-rempli { to { transform: scaleX(1); } }
 @keyframes cran-hesite { 0% { transform: scaleX(0); } 40% { transform: scaleX(.75); } 70% { transform: scaleX(.6); } 100% { transform: scaleX(0); } }
 .apres-jauge { display: grid; gap: 14px; animation: apres-jauge var(--t-lent) var(--rebond) var(--d) both; }
