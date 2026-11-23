@@ -5,6 +5,7 @@ import { db } from './firebase';
 import { S, charges, memoireDuGroupe } from './etat';
 import { preparerPropositions } from './missions';
 import { delaiCarteFlash, DEVOILE_DEBUT, porteursFlash, tirerFlash } from './flash';
+import { minutageJauge } from './games/combien';
 import { vibrer } from './ui';
 import { maintenant } from './firebase';
 import { majoriteOui, missionTrouvee } from './score';
@@ -179,6 +180,18 @@ export function momentsForts(): void {
     const m = S.jeu as { phase?: string; dernierSur?: { action: number }; dernier?: { joueur: string; case: number } };
     if (m.phase === 'tour' && m.dernierSur) moment(`mines-${d.numeroJeu}-sur-${m.dernierSur.action}`, () => sons.ding());
     if (m.phase === 'boum' && m.dernier) moment(`mines-boum-${d.numeroJeu}-${m.dernier.case}`, () => { sons.boum(); vibrer(m.dernier?.joueur === S.uid ? [400, 100, 400] : 200); });
+  }
+  // Combien ont dit oui ? : un « tic » à chaque cran de la jauge, puis le chiffre tombe (son + vibration pour tous).
+  if (d.phase === 'jeu' && d.jeuEnCours === 'combien' && S.jeu) {
+    const c = S.jeu as { phase?: string; etape?: string; totalOui?: number; cumul?: Record<string, number> };
+    if (c.phase === 'resultat' && c.etape) {
+      moment(`combien-jauge-${c.etape}`, () => {
+        const m = minutageJauge(c.totalOui ?? 0, Object.keys(c.cumul ?? S.joueurs).length);
+        for (const t of m.crans) setTimeout(() => sons.tic(), t);
+        if (m.hesite !== null) setTimeout(() => sons.tic(true), m.hesite + 500);
+        setTimeout(() => { sons.reussi(); vibrer(120); }, m.fin);
+      });
+    }
   }
   // Dessin à la chaîne : un petit son à chaque étape dévoilée.
   if (d.phase === 'jeu' && d.jeuEnCours === 'telephone' && S.jeu) {

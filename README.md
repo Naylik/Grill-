@@ -341,3 +341,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
     message clair : c'est l'hôte qui tourne les pages de l'album.
 - 23/11/2026 · Combien ont dit oui ? : résultat de chaque question en toutes lettres (« a deviné 2 oui · ✔ exact : +3 ·
   total : 5 pts »).
+- 23/11/2026 · Combien ont dit oui ? : jauge de suspense (version A choisie par Kilyan). Un cran par joueur, qui se
+  remplissent un par un de plus en plus lentement, le cran suivant hésite puis s'éteint, puis le chiffre tombe
+  (3 à 4 s ; `minutageJauge`). Un « tic » par cran, un son et une vibration sur tous les téléphones au chiffre final.

@@ -7,6 +7,21 @@ import { pointsCombien, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
+/**
+ * Minutage de la jauge de suspense (en ms depuis l'affichage) : un cran par « oui », de plus en plus lent,
+ * puis le cran suivant qui hésite (s'il en reste un), puis le chiffre. Le même sur tous les téléphones.
+ */
+export function minutageJauge(total: number, nbJoueurs: number): { crans: number[]; hesite: number | null; fin: number } {
+  let t = 600;
+  const crans: number[] = [];
+  for (let k = 0; k < total; k++) {
+    crans.push(t);
+    t += 700 + 400 * k;
+  }
+  const hesite = total < nbJoueurs ? t : null;
+  return { crans, hesite, fin: hesite !== null ? t + 1500 : t + 200 };
+}
+
 // Le narrateur réagit au total (taquin, jamais méchant ; la même phrase sur tous les téléphones).
 const PHRASES_ZERO = ['Zéro ! Soit vous êtes des anges, soit vous êtes très organisés.', 'Personne ? La table la plus sage de France.', 'Aucun oui. Je note, je ne crois pas, mais je note.'];
 const PHRASES_TOUS = ['Tout le monde ! Cette table n’a plus aucun secret.', 'Unanimité. Je propose qu’on n’en parle plus jamais.', '100 % de oui. Au moins, vous êtes honnêtes.'];
@@ -109,10 +124,20 @@ export const combien: MiniJeu<Etat> = {
       })
       .join('');
     const total = e.totalOui ?? 0;
+    // Suspense : la jauge se remplit cran par cran (un cran par joueur), le cran suivant hésite… puis le chiffre tombe.
+    const m = minutageJauge(total, n);
+    const crans = Array.from({ length: n }, (_, k) => {
+      if (k < total) return `<div class="cran-oui on" style="--d:${m.crans[k]}ms"><i></i></div>`;
+      if (k === total && m.hesite !== null) return `<div class="cran-oui hesite" style="--d:${m.hesite}ms"><i></i></div>`;
+      return '<div class="cran-oui"><i></i></div>';
+    }).join('');
     return `${titre}
-      <div class="gros-chiffre"><strong>${total}</strong><span>sur ${n} ont dit oui</span></div>
-      ${bulle(parmi(total === 0 ? PHRASES_ZERO : total === n ? PHRASES_TOUS : PHRASES_CERTAINS, v.etat.etape))}
-      <div class="pile">${lignes}</div>
+      <div class="jauge-oui" style="grid-template-columns: repeat(${n}, 1fr)" aria-hidden="true">${crans}</div>
+      <div class="apres-jauge" style="--d:${m.fin}ms">
+        <div class="gros-chiffre"><strong>${total}</strong><span>sur ${n} ont dit oui</span></div>
+        ${bulle(parmi(total === 0 ? PHRASES_ZERO : total === n ? PHRASES_TOUS : PHRASES_CERTAINS, v.etat.etape))}
+        <div class="pile">${lignes}</div>
+      </div>
       ${v.estHote ? `<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="suivant">${e.index + 1 < e.questions.length ? 'Question suivante' : 'Voir le classement'}</button>` : `<p class="attente bas">L’hôte passe à la suite.</p>`}`;
   },
 

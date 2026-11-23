@@ -995,3 +995,14 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .ligne-combien > div { display: grid; gap: 2px; min-width: 0; }
 .detail-combien { font-size: var(--txt-s); color: var(--texte-2); }
 .detail-combien.gagne { color: var(--vert); }
+/* Combien ont dit oui ? : jauge de suspense, un cran par joueur. */
+.jauge-oui { display: grid; gap: 6px; height: 64px; padding: 6px; border-radius: var(--r-l); background: var(--fond-2); border: 2px solid var(--bord); }
+.cran-oui { position: relative; overflow: hidden; border-radius: var(--r-s); background: var(--fond-3); }
+.cran-oui i { position: absolute; inset: 0; border-radius: var(--r-s); background: linear-gradient(var(--vert-clair), var(--vert-fort)); box-shadow: 0 0 18px var(--vert); transform: scaleX(0); transform-origin: left; }
+.cran-oui.on i { animation: cran-rempli .35s var(--doux) var(--d) both; }
+.cran-oui.hesite i { animation: cran-hesite 1.4s ease-in-out var(--d) both; }
+@keyframes cran-rempli { to { transform: scaleX(1); } }
+@keyframes cran-hesite { 0% { transform: scaleX(0); } 40% { transform: scaleX(.75); } 70% { transform: scaleX(.6); } 100% { transform: scaleX(0); } }
+.apres-jauge { display: grid; gap: 14px; animation: apres-jauge var(--t-lent) var(--rebond) var(--d) both; }
+@keyframes apres-jauge { from { opacity: 0; transform: scale(.6); } }
+.apres-jauge .gros-chiffre strong { animation-delay: var(--d); }
