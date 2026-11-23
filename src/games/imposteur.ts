@@ -157,7 +157,7 @@ export const imposteur: MiniJeu<Etat> = {
       <div class="cartes-imp" style="--dt:${m.tampon}ms">${[...innocents.map((u, i) => carte(u, m.cartes[i], false)), carte(imp, m.derniere, true)].join('')}</div>
       <p class="suspens-imp" style="--d:${m.suspens}ms">Plus qu’une carte… 🥁</p>
       <div class="apres-jauge" style="--d:${m.fin}ms">
-        <div class="gros-verdict ${survit ? 'ko' : 'ok'}">${survit ? `${prenom(imp)} vous a tous bernés !` : `${prenom(imp)} ne s’en sort pas !`}</div>
+        <div class="gros-verdict ${survit ? 'ko' : 'ok'}">${survit ? `${prenom(imp)} vous a tous bernés\u00a0!` : `${prenom(imp)} ne s’en sort pas\u00a0!`}</div>
         <div class="pile">${lignes}</div>
         ${bulle(parmi(survit ? PHRASES_SURVIT : PHRASES_DEMASQUE, e.etape).replace('{p}', prenom(imp)))}
       </div>
