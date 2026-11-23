@@ -390,3 +390,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   scotch se posent. Champ de mines : à la pose, la bombe tombe dans le colis, qui tressaute avec un peu de poussière.
 - 23/11/2026 · Télépathie : pendant qu'on tape son mot, le duo s'affiche, l'étoile pulse et une onde rose/bleue fait la
   navette sous les prénoms. Roue des territoires : anneaux de cible rouges sur la pastille des joueurs visés.
+- 23/11/2026 · Au lancement de chaque mini-jeu, sa carte (icône, numéro, nom, « C'est parti ! ») arrive en grand puis
+  s'envole (2,4 s). À chaque nouvelle manche, un rideau de la couleur du jeu traverse l'écran (« Manche 2 » ;
+  « Question 2 » pour Combien ont dit oui ?). Une seule fois par téléphone, même après un rechargement.
+  Toutes les idées d'animation de la liste (1 à 17) ont été passées en revue.
