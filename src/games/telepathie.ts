@@ -13,12 +13,9 @@ import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './inte
 import { classementBarres, hud } from './arene';
 
 export const MAX_MANCHES = 8;
-const DUREE_PARI = 25_000;
 export const DUREE_DECOMPTE = 4_500; // 3, 2, 1 puis « CRIEZ ! »
 const DUREE_MOT = 12_000;
 const DUREE_REVELE = 7_500;
-const DUREE_VOTE = 15_000;
-const DUREE_SABOTAGE = 15_000;
 const DUREE_BILAN = 9_000;
 
 interface Interdit {
@@ -113,7 +110,7 @@ export const telepathie: MiniJeu<Etat> = {
     const { equipes, arbitre } = formerEquipes(ctx.uids, ctx.hasard);
     const base = { numeroJeu: ctx.numeroJeu, equipes, ...(arbitre ? { arbitre } : {}), manche: 0, mots: {}, trouve: {} };
     return arbitre
-      ? { etat: { ...base, etape: etapeDe(ctx.numeroJeu, 'pari'), phase: 'pari', fin: ctx.maintenant + DUREE_PARI } }
+      ? { etat: { ...base, etape: etapeDe(ctx.numeroJeu, 'pari'), phase: 'pari', fin: undefined } }
       : { etat: { ...base, etape: etapeDe(ctx.numeroJeu, 'd0'), phase: 'decompte', fin: ctx.maintenant + DUREE_DECOMPTE } };
   },
 
@@ -127,7 +124,7 @@ export const telepathie: MiniJeu<Etat> = {
     const apres = (x: Etat) => {
       const fini = x.equipes.every((_, t) => !enJeu(x, t)) || x.manche + 1 >= MAX_MANCHES;
       if (fini) return { etat: { ...x, phase: 'bilan' as const, score: scoreTelepathie(x), fin: now + DUREE_BILAN } };
-      if (sabotagesPossibles(x).length) return { etat: { ...x, phase: 'sabotage' as const, interdits: {}, etape: etapeDe(x.numeroJeu, `s${x.manche}`), fin: now + DUREE_SABOTAGE } };
+      if (sabotagesPossibles(x).length) return { etat: { ...x, phase: 'sabotage' as const, interdits: {}, etape: etapeDe(x.numeroJeu, `s${x.manche}`), fin: undefined } };
       return { etat: decompte(x, x.manche + 1) };
     };
 
@@ -162,7 +159,7 @@ export const telepathie: MiniJeu<Etat> = {
       const contestes = e.equipes
         .map((_, t) => t)
         .filter((t) => enJeu(e, t) && !e.rates?.[t] && e.equipes[t].some((u) => recues[u]?.conteste));
-      if (contestes.length) return { etat: { ...e, phase: 'vote', contestes, etape: etapeDe(e.numeroJeu, `v${e.manche}`), fin: now + DUREE_VOTE } };
+      if (contestes.length) return { etat: { ...e, phase: 'vote', contestes, etape: etapeDe(e.numeroJeu, `v${e.manche}`), fin: undefined } };
       return apres(e);
     }
     if (e.phase === 'vote') {
@@ -190,7 +187,7 @@ export const telepathie: MiniJeu<Etat> = {
       };
       // Une équipe a fini quand un des deux a saboté, ou quand les deux ont passé (les absents ne comptent pas).
       const finie = (t: number) => e.equipes[t].some((u) => valide(u, t)) || e.equipes[t].every((u) => recues[u] || !ctx.connectes.includes(u));
-      if (!possibles.every(finie) && now < (e.fin ?? 0)) return null;
+      if (!possibles.every(finie) && now < (e.fin ?? Infinity)) return null;
       const interdits: Record<string, Interdit[]> = {};
       const sabotes = { ...e.sabotes };
       for (const t of possibles) {
@@ -425,3 +422,11 @@ export const telepathie: MiniJeu<Etat> = {
     },
   },
 };
+
+// Pas de chrono pour pari, vote, sabotage : on attend tout le monde. L'hôte peut lancer la suite si quelqu'un bloque.
+const PHASES_SANS_CHRONO: string[] = ['pari', 'vote', 'sabotage'];
+const ecranDeBase = telepathie.ecran;
+telepathie.ecran = (v) => ecranDeBase(v) + (v.estHote && PHASES_SANS_CHRONO.includes(v.etat.phase) ? '<button class="bouton discret" data-action="hote-jeu" data-valeur="forcerEtape">Passer à la suite sans attendre</button>' : '');
+const commandeDeBase = telepathie.commande;
+telepathie.commande = (ctx, etat, valeur) =>
+  valeur === 'forcerEtape' && PHASES_SANS_CHRONO.includes(etat.phase) ? { etat: { ...etat, fin: ctx.maintenant } } : commandeDeBase ? commandeDeBase(ctx, etat, valeur) : null;

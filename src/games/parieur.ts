@@ -6,7 +6,6 @@ import { borneParieur, majoriteOui, pariMutuel, PARIEUR_MAX, PARIEUR_MIN, type M
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
 
-const DUREE_VOTE = 30_000;
 const DUREE_LECTURE = 5_000; // le défié lit son défi (et tout le monde avec lui) avant que le chrono parte
 
 interface Etat extends EtatDeBase {
@@ -63,7 +62,7 @@ export const parieur: MiniJeu<Etat> = {
       return { etat: { ...etat, phase: 'defi', etape: etapeDe(etat, 'defi'), fin: ctx.maintenant + etat.defis[etat.tour].duree * 1000 } }; // pile la durée annoncée
     }
     if (etat.phase === 'defi' && ctx.maintenant >= (etat.fin ?? 0)) {
-      return { etat: { ...etat, phase: 'vote', etape: etapeDe(etat, 'vote'), fin: ctx.maintenant + DUREE_VOTE } };
+      return { etat: { ...etat, phase: 'vote', etape: etapeDe(etat, 'vote'), fin: undefined } };
     }
     if (etat.phase === 'vote' && etapeTerminee(ctx, etat.etape, etat.fin, autres)) {
       const votes = Object.values(reponsesDe<{ reussi: boolean }>(ctx, etat.etape)).map((r) => r.reussi === true);
@@ -190,3 +189,11 @@ export const parieur: MiniJeu<Etat> = {
     },
   },
 };
+
+// Pas de chrono pour vote : on attend tout le monde. L'hôte peut lancer la suite si quelqu'un bloque.
+const PHASES_SANS_CHRONO: string[] = ['vote'];
+const ecranDeBase = parieur.ecran;
+parieur.ecran = (v) => ecranDeBase(v) + (v.estHote && PHASES_SANS_CHRONO.includes(v.etat.phase) ? '<button class="bouton discret" data-action="hote-jeu" data-valeur="forcerEtape">Voir le résultat sans attendre</button>' : '');
+const commandeDeBase = parieur.commande;
+parieur.commande = (ctx, etat, valeur) =>
+  valeur === 'forcerEtape' && PHASES_SANS_CHRONO.includes(etat.phase) ? { etat: { ...etat, fin: ctx.maintenant } } : commandeDeBase ? commandeDeBase(ctx, etat, valeur) : null;

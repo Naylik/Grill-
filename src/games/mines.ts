@@ -20,7 +20,6 @@ const NB_CASES = 20; // grille de 4 × 5
 const COLONNES = 5;
 export const DETECTEURS = 1; // par joueur et par jeu : un seul, à utiliser au bon moment
 const MANCHES: [number, number, number] = [2, 2, 2]; // Courte, Normale, Longue : 2 manches, une grille neuve à chaque fois
-const DUREE_POSE = 30_000;
 const DUREE_ACTION = 20_000;
 const DUREE_BOUM = 4_000;
 const DUREE_BILAN = 6_500;
@@ -89,7 +88,7 @@ function finDeManche(ctx: ContexteHote, e: Etat): { etat: Etat; ecritures?: Reco
   return {
     etat: {
       ...e, phase: 'pose', manche, enLice: [], actif: 0, pots: zero, sures: { ...zero }, ouvertes: {}, poseurs: {}, detections: {}, dernier: undefined, dernierSur: undefined,
-      etape: `mines-${e.numeroJeu}-pose-${manche}`, fin: ctx.maintenant + DUREE_POSE,
+      etape: `mines-${e.numeroJeu}-pose-${manche}`, fin: undefined,
     },
     ecritures: { 'prive/mines': null },
   };
@@ -147,7 +146,7 @@ export const champDeMines: MiniJeu<Etat> = {
     const zero = Object.fromEntries(ctx.uids.map((u) => [u, 0]));
     const e: Etat = {
       etape: `mines-${ctx.numeroJeu}-pose-0`, phase: 'pose', numeroJeu: ctx.numeroJeu, ordre, nbManches: selonFormat(ctx.duree, MANCHES),
-      manche: 0, action: 0, enLice: [], actif: 0, pots: { ...zero }, sures: { ...zero }, ouvertes: {}, banque: zero, bonus: { ...zero }, fin: ctx.maintenant + DUREE_POSE,
+      manche: 0, action: 0, enLice: [], actif: 0, pots: { ...zero }, sures: { ...zero }, ouvertes: {}, banque: zero, bonus: { ...zero }, fin: undefined,
     };
     return { etat: e };
   },
@@ -341,3 +340,11 @@ export const champDeMines: MiniJeu<Etat> = {
     },
   },
 };
+
+// Pas de chrono pour pose : on attend tout le monde. L'hôte peut lancer la suite si quelqu'un bloque.
+const PHASES_SANS_CHRONO: string[] = ['pose'];
+const ecranDeBase = champDeMines.ecran;
+champDeMines.ecran = (v) => ecranDeBase(v) + (v.estHote && PHASES_SANS_CHRONO.includes(v.etat.phase) ? '<button class="bouton discret" data-action="hote-jeu" data-valeur="forcerEtape">Commencer sans attendre</button>' : '');
+const commandeDeBase = champDeMines.commande;
+champDeMines.commande = (ctx, etat, valeur) =>
+  valeur === 'forcerEtape' && PHASES_SANS_CHRONO.includes(etat.phase) ? { etat: { ...etat, fin: ctx.maintenant } } : commandeDeBase ? commandeDeBase(ctx, etat, valeur) : null;

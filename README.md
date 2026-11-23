@@ -441,3 +441,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   devinette sauf son devineur (le dessinateur d'avant vote aussi), et l'égalité compte comme juste. À 4 joueurs :
   3 juges au lieu de 2. Sur sa propre devinette : « Ta devinette : les autres jugent ». L'hôte lit que les votes
   s'ouvrent à la dernière page.
+- 23/11/2026 · Chronos retirés là où c'est un choix tranquille (on attend tous les joueurs connectés, l'hôte a un bouton
+  pour forcer la suite, `forcerEtape`) : Combien ont dit oui ? (réponse et estimation), Parieur (vote réussi/raté),
+  Champ de mines (pose de la mine), Télépathie (pari de l'arbitre, vote « ça compte ? », sabotage). Gardés : Juste Prix,
+  défi et lecture du Parieur, Quitte ou Double, ouverture des colis, Dessin, « CRIEZ ! » et mot de la Télépathie.

@@ -44,7 +44,6 @@ const PHRASES_ZERO = ['Zéro ! Soit vous êtes des anges, soit vous êtes très 
 const PHRASES_TOUS = ['Tout le monde ! Cette table n’a plus aucun secret.', 'Unanimité. Je propose qu’on n’en parle plus jamais.', '100 % de oui. Au moins, vous êtes honnêtes.'];
 const PHRASES_CERTAINS = ['Les regards se croisent… et personne ne dit rien.', 'Hmm. Il y a des coupables autour de cette table.', 'Je ne dirai pas qui. Mais quelqu’un rougit.', 'Intéressant… Les suspects sont parmi nous.']
 const NB_QUESTIONS: [number, number, number] = [4, 6, 8]; // Courte, Normale, Longue
-const DUREE_QUESTION = 45_000;
 
 interface Etat extends EtatDeBase {
   phase: 'question' | 'resultat';
@@ -78,7 +77,7 @@ export const combien: MiniJeu<Etat> = {
     const tirees = fraisDabord(questions.filter((q) => q.niveau !== 'hot'), ctx.dejaVus, ctx.hasard).slice(0, selonFormat(ctx.duree, NB_QUESTIONS));
     const choix = tirees.map((q) => q.texte);
     return {
-      etat: { etape: etapeDe(ctx.numeroJeu, 0), numeroJeu: ctx.numeroJeu, phase: 'question', index: 0, questions: choix, ids: tirees.map((q) => q.id), fin: ctx.maintenant + DUREE_QUESTION, cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])) },
+      etat: { etape: etapeDe(ctx.numeroJeu, 0), numeroJeu: ctx.numeroJeu, phase: 'question', index: 0, questions: choix, ids: tirees.map((q) => q.id), fin: undefined, cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])) },
       ecritures: { [`compteurs/${etapeDe(ctx.numeroJeu, 0)}`]: 0 },
     };
   },
@@ -93,7 +92,7 @@ export const combien: MiniJeu<Etat> = {
     return { etat: { ...etat, phase: 'resultat', totalOui, estimations, gagnes, cumul, fin: undefined } as Etat };
   },
 
-  commande(ctx, etat, valeur) {
+  commande(_ctx, etat, valeur) {
     if (valeur !== 'suivant' || etat.phase !== 'resultat') return null;
     const index = etat.index + 1;
     if (index >= etat.questions.length) {
@@ -101,7 +100,7 @@ export const combien: MiniJeu<Etat> = {
     }
     const etape = etapeDe(etat.numeroJeu, index);
     return {
-      etat: { ...etat, etape, index, phase: 'question', fin: ctx.maintenant + DUREE_QUESTION, totalOui: undefined, estimations: undefined, gagnes: undefined },
+      etat: { ...etat, etape, index, phase: 'question', fin: undefined, totalOui: undefined, estimations: undefined, gagnes: undefined },
       ecritures: { [`compteurs/${etape}`]: 0 },
     };
   },
@@ -190,3 +189,11 @@ export const combien: MiniJeu<Etat> = {
     },
   },
 };
+
+// Pas de chrono pour question : on attend tout le monde. L'hôte peut lancer la suite si quelqu'un bloque.
+const PHASES_SANS_CHRONO: string[] = ['question'];
+const ecranDeBase = combien.ecran;
+combien.ecran = (v) => ecranDeBase(v) + (v.estHote && PHASES_SANS_CHRONO.includes(v.etat.phase) ? '<button class="bouton discret" data-action="hote-jeu" data-valeur="forcerEtape">Voir le résultat sans attendre</button>' : '');
+const commandeDeBase = combien.commande;
+combien.commande = (ctx, etat, valeur) =>
+  valeur === 'forcerEtape' && PHASES_SANS_CHRONO.includes(etat.phase) ? { etat: { ...etat, fin: ctx.maintenant } } : commandeDeBase ? commandeDeBase(ctx, etat, valeur) : null;
