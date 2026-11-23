@@ -1240,3 +1240,6 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .boite.defi.defi-cache { border-style: dashed; opacity: .8; }
 .boite.defi.defi-revele { animation: apres-jauge var(--t-lent) var(--rebond) both; }
 .lecture-defi { display: grid; justify-items: center; gap: 6px; font-size: var(--txt-s); color: var(--texte-2); }
+
+/* Dessin à la chaîne : sur sa propre devinette, pas de bouton de vote, mais on dit pourquoi. */
+.pas-de-vote { justify-self: start; padding: 3px 10px; border-radius: var(--r-rond); background: var(--voile-1); color: var(--texte-3); font-size: var(--txt-xs); font-weight: 700; }

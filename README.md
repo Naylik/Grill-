@@ -437,3 +437,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · Quitte ou Double : les 3 dernières missions flash d'encaissement (16 points en jeu, plus gros montant,
   3 encaissements) sont supprimées, et une seule est ajoutée : « Mets la main sur ton cœur chaque fois que tu doubles »
   (f-quitte-10). Le jeu a 7 missions flash.
+- 23/11/2026 · Dessin à la chaîne, vote « Bien deviné » (option C validée par Kilyan) : tout le monde juge une
+  devinette sauf son devineur (le dessinateur d'avant vote aussi), et l'égalité compte comme juste. À 4 joueurs :
+  3 juges au lieu de 2. Sur sa propre devinette : « Ta devinette : les autres jugent ». L'hôte lit que les votes
+  s'ouvrent à la dernière page.

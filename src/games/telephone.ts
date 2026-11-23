@@ -4,7 +4,7 @@
 // Points internes : devinette juste = 1 pt au dessinateur et 1 pt au devineur ; 1 pt au dessin le plus drôle de chaque chaîne.
 import phrases from '../data/dessins.json';
 import { esc, fraisDabord, melanger } from '../outils';
-import { majoriteOui, pointsDePlace } from '../score';
+import { pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
 import { brouillons } from '../ui';
 import { COULEURS, GOMME, outil, sablier, toileAVoir, traitsDe, type Trait } from '../dessin';
@@ -59,9 +59,15 @@ function consigne(e: Etat, uid: string): { c: number; texte?: string; dessin?: T
   return estDessin(e.etapeN) ? { c, texte: avant?.texte || '…' } : { c, dessin: avant?.dessin ?? [] };
 }
 
-/** Une devinette (étape impaire) et le dessin juste avant : ces deux joueurs ne jugent pas cette devinette. */
+/**
+ * Une devinette (étape impaire) : tout le monde la juge, sauf celui qui l'a écrite (le dessinateur d'avant vote aussi :
+ * à 4 joueurs, il resterait sinon 2 juges seulement ; décision de Kilyan du 23/11).
+ */
 export const jugesDe = (chaine: Maillon[], s: number, votants: string[]): string[] =>
-  votants.filter((u) => u !== chaine[s]?.auteur && u !== chaine[s - 1]?.auteur);
+  votants.filter((u) => u !== chaine[s]?.auteur);
+
+/** Devinette jugée juste : au moins la moitié des juges disent oui (égalité = juste). */
+export const devinetteJuste = (votes: boolean[]): boolean => votes.length > 0 && votes.filter(Boolean).length * 2 >= votes.length;
 
 /**
  * Points internes : chaque devinette jugée juste rapporte 1 pt au devineur et 1 pt au dessinateur d'avant ;
@@ -163,12 +169,12 @@ export const telephone: MiniJeu<Etat> = {
       const recues = reponsesDe<{ favori?: string; bons?: number[] }>(ctx, etat.etape);
       const favoris = { ...(etat.favoris ?? {}) };
       for (const r of Object.values(recues)) if (r.favori) favoris[r.favori] = (favoris[r.favori] ?? 0) + 1;
-      // Chaque devinette : la majorité de ceux qui la jugent (ni son devineur, ni le dessinateur d'avant) dit si elle est juste.
+      // Chaque devinette : au moins la moitié de ceux qui la jugent (tous sauf son devineur) dit qu'elle est juste.
       const reussis = { ...(etat.reussis ?? {}) };
       const chaine = etat.chaines[c] ?? [];
       for (let s = 1; s < chaine.length; s += 2) {
         const juges = jugesDe(chaine, s, Object.keys(recues));
-        reussis[`${c}-${s}`] = juges.length > 0 && majoriteOui(juges.map((u) => (recues[u]?.bons ?? []).includes(s)));
+        reussis[`${c}-${s}`] = devinetteJuste(juges.map((u) => (recues[u]?.bons ?? []).includes(s)));
       }
       if (c + 1 < n) return { etat: { ...etat, favoris, reussis, revue: c + 1, affiches: 1, etape: etapeDe(etat.numeroJeu, `v${c + 1}`), fin: undefined } };
       const fini = { ...etat, favoris, reussis };
@@ -236,7 +242,8 @@ export const telephone: MiniJeu<Etat> = {
             <div class="contenu-album"><span class="qui-album">${nom(m.auteur)} ${m.dessin ? 'a dessiné' : 'a deviné'}</span>
             ${m.dessin ? `<div class="cadre-album">${toileAVoir(`tel-${e.numeroJeu}-${cle}`, m.dessin, '', true)}</div>` : `<p class="texte-album">« ${esc(m.texte ?? '')} »</p>`}
             ${peutVoter ? `<button class="vote-drole ${choix.favori === cle ? 'actif' : ''}" data-action="jeu" data-geste="favori" data-valeur="${cle}">${choix.favori === cle ? '★ Le plus drôle' : '☆ Le plus drôle'}</button>` : ''}
-            ${peutJuger(s) ? `<button class="vote-bien ${(choix.bons ?? []).includes(s) ? 'actif' : ''}" data-action="jeu" data-geste="bien" data-valeur="${s}">${(choix.bons ?? []).includes(s) ? '👍 Bien deviné !' : '👍 Bien deviné ?'}</button>` : ''}</div></div>`;
+            ${peutJuger(s) ? `<button class="vote-bien ${(choix.bons ?? []).includes(s) ? 'actif' : ''}" data-action="jeu" data-geste="bien" data-valeur="${s}">${(choix.bons ?? []).includes(s) ? '👍 Bien deviné !' : '👍 Bien deviné ?'}</button>` : ''}
+            ${complet && !m.dessin && m.auteur === v.uid ? '<span class="pas-de-vote">Ta devinette : les autres jugent</span>' : ''}</div></div>`;
         }).join('')}
       </div>`;
       const reactions = `<div class="reactions" aria-label="Réagir">${REACTIONS.map((r, i) => `<button class="reaction" data-action="jeu" data-geste="reagir" data-valeur="${i}" aria-label="Réagir ${r}">${r}</button>`).join('')}</div>`;
@@ -245,7 +252,7 @@ export const telephone: MiniJeu<Etat> = {
           <p class="petit centre-texte">L’ALBUM · CHAÎNE ${c + 1}/${n}</p>
           ${album}${reactions}
           <div class="pile bas">${v.estHote
-            ? `<p class="aide">C’est toi qui tournes les pages de l’album, pour tout le monde.</p><button class="bouton jaune" data-action="hote-jeu" data-valeur="suivant">Montrer la suite (${devoile + 1}/${chaine.length})</button>`
+            ? `<p class="aide">C’est toi qui tournes les pages de l’album, pour tout le monde. Les votes s’ouvrent à la dernière page.</p><button class="bouton jaune" data-action="hote-jeu" data-valeur="suivant">Montrer la suite (${devoile + 1}/${chaine.length})</button>`
             : `<p class="attente">C’est l’hôte qui tourne les pages de l’album (${devoile}/${chaine.length})… Le vote arrive à la fin de la chaîne.</p>`}</div>`;
       }
       return `${hud('DESSIN À LA CHAÎNE', c, n, true)}${chrono(e.fin)}

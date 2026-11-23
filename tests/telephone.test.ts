@@ -1,6 +1,6 @@
 // Dessin à la chaîne : chacun passe par toutes les chaînes sans voir la sienne, et le score suit les votes.
 import { describe, expect, it } from 'vitest';
-import { chaineDe, jugesDe, scoreTelephone, telephone } from '../src/games/telephone';
+import { chaineDe, devinetteJuste, jugesDe, scoreTelephone, telephone } from '../src/games/telephone';
 
 describe('Dessin à la chaîne', () => {
   it('à chaque étape, chacun a une chaîne différente, et jamais la même deux fois', () => {
@@ -52,7 +52,16 @@ describe('Dessin à la chaîne', () => {
     expect(e.score[dessinateur]).toBeGreaterThanOrEqual(2);
     expect(e.score[devineur]).toBeGreaterThanOrEqual(1);
     // Le devineur et le dessinateur ne jugent pas leur propre devinette.
-    expect(jugesDe(e.chaines[0], 1, uids)).toEqual(uids.filter((u) => u !== dessinateur && u !== devineur));
+    expect(jugesDe(e.chaines[0], 1, uids)).toEqual(uids.filter((u) => u !== devineur)); // le dessinateur vote aussi (23/11)
     expect(scoreTelephone({ ordre: uids, chaines: [], favoris: {}, reussis: {} })).toEqual({ a: 0, b: 0, c: 0 });
+  });
+});
+
+describe('Dessin à la chaîne : devinette jugée juste', () => {
+  it('égalité = juste ; aucun juge = ratée', () => {
+    expect(devinetteJuste([true, false])).toBe(true);
+    expect(devinetteJuste([true, false, false])).toBe(false);
+    expect(devinetteJuste([true, true, false])).toBe(true);
+    expect(devinetteJuste([])).toBe(false);
   });
 });
