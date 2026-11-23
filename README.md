@@ -379,3 +379,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · Le Juste Prix : une étiquette de magasin se balance au-dessus du champ, recopie chaque chiffre tapé et
   sursaute (ui.ts, `data-etiquette-de`). Le Parieur : tapis de casino, un jeton tombe par point misé ; une fois la mise
   envoyée, la pile file vers le camp choisi et un badge « +N » s'y pose.
+- 23/11/2026 · L'Imposteur : le mot est caché sous une carte « TOP SECRET » qu'on soulève du doigt (elle suit le doigt,
+  retombe dès qu'on lâche ; remplace le flou à appui long). Pendant le vote, une loupe passe d'un joueur à l'autre
+  tant qu'on n'a pas voté, puis se pose sur son choix (`animerLoupes`, seulement sur son téléphone).

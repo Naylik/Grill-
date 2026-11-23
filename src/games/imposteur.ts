@@ -124,7 +124,10 @@ export const imposteur: MiniJeu<Etat> = {
     const entete = `<p class="petit">Manche ${e.manche + 1}/${e.total ?? NB_MANCHES[0]} · thème : <strong>${esc(e.theme)}</strong></p>`;
     if (e.phase === 'indices') {
       return `${chrono(e.fin)}${entete}
-        <div class="mission"><p class="petit">Ton mot (appui long pour le lire)</p><p class="texte-secret gros-mot" data-appui>${esc(v.monMot ?? '…')}</p></div>
+        <div class="mot-sous-carte" data-carte-secrete>
+          <span class="mot-cache">${esc(v.monMot ?? '…')}</span>
+          <div class="carte-secrete" aria-hidden="true"><b>TOP SECRET</b><small>Glisse vers le haut pour lire ton mot</small></div>
+        </div>
         ${bulle('Un indice chacun, à voix haute, dans l’ordre. Ni trop clair, ni trop flou. L’un de vous n’a pas le même mot…')}
         <ol class="ordre">${e.ordre.map((u) => `<li style="--c:${v.joueurs[u].couleur}">${prenom(u)}</li>`).join('')}</ol>
         ${v.estHote ? '<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="voter">Passer au vote</button>' : '<p class="attente bas">Quand tout le monde a parlé, l’hôte lance le vote.</p>'}`;
@@ -132,7 +135,7 @@ export const imposteur: MiniJeu<Etat> = {
     if (e.phase === 'vote') {
       const monVote = v.maReponse?.etape === e.etape ? (v.maReponse.cible as string) : null;
       return `${chrono(e.fin)}${entete}<h2 class="question">Qui est l’imposteur ?</h2>
-        <div class="options deux">${v.uids.filter((u) => u !== v.uid).map((u) => `<button class="option ${monVote === u ? 'actif rose' : ''}" data-action="jeu" data-geste="voter" data-valeur="${u}">${prenom(u)}</button>`).join('')}</div>
+        <div class="options deux vote-loupe" data-loupe>${v.uids.filter((u) => u !== v.uid).map((u) => `<button class="option ${monVote === u ? 'actif rose' : ''}" data-action="jeu" data-geste="voter" data-valeur="${u}">${prenom(u)}</button>`).join('')}<span class="loupe-vote" aria-hidden="true"></span></div>
         <p class="aide">Vote secret. Tu peux changer d’avis jusqu’à la fin.</p>
         ${attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && !!monVote))}`;
     }

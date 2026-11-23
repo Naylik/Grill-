@@ -48,3 +48,37 @@ export function animerCourses(): void {
     });
   });
 }
+
+/**
+ * L'Imposteur : tant que je n'ai pas voté, la loupe passe d'un joueur à l'autre (une seconde chacun, au hasard) ;
+ * dès que je vote, elle se pose sur mon choix. Seulement sur mon téléphone.
+ */
+const loupes = new WeakMap<HTMLElement, { cible: number; depuis: number }>();
+export function animerLoupes(): void {
+  const maintenant = performance.now();
+  document.querySelectorAll<HTMLElement>('[data-loupe]').forEach((zone) => {
+    const loupe = zone.querySelector<HTMLElement>('.loupe-vote');
+    const choix = [...zone.querySelectorAll<HTMLElement>('.option')];
+    if (!loupe || !choix.length) return;
+    const vote = choix.findIndex((c) => c.classList.contains('actif'));
+    let etat = loupes.get(zone);
+    if (!etat) loupes.set(zone, (etat = { cible: Math.floor(Math.random() * choix.length), depuis: maintenant }));
+    if (vote >= 0) {
+      if (etat.cible !== vote) { etat.cible = vote; loupe.classList.remove('posee'); void loupe.offsetWidth; }
+      loupe.classList.add('posee');
+    } else {
+      loupe.classList.remove('posee');
+      if (maintenant - etat.depuis > 1000 && choix.length > 1) {
+        let suivant = Math.floor(Math.random() * (choix.length - 1));
+        if (suivant >= etat.cible) suivant++;
+        etat.cible = suivant;
+        etat.depuis = maintenant;
+      }
+    }
+    const c = choix[Math.min(etat.cible, choix.length - 1)];
+    const x = `${c.offsetLeft + c.offsetWidth - 46}px`;
+    const y = `${c.offsetTop - 14}px`;
+    if (loupe.style.left !== x) loupe.style.left = x;
+    if (loupe.style.top !== y) loupe.style.top = y;
+  });
+}

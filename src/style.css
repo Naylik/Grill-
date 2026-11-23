@@ -1144,3 +1144,17 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 @keyframes part-jetons { to { opacity: 0; transform: translate(var(--vers), -150px) scale(.4); } }
 .camp-pari { position: relative; }
 .recu-pari { position: absolute; right: 8px; top: -10px; padding: 2px 8px; border-radius: var(--r-rond); background: var(--jaune); color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-xs); animation: apres-jauge var(--t-normal) var(--rebond) .8s both; }
+
+/* L'Imposteur : le mot sous la carte « TOP SECRET » (on la soulève du doigt, main.ts). */
+.mot-sous-carte { position: relative; height: 170px; border-radius: var(--r-l); background: var(--fond-2, #1A1532); border: 2px solid var(--bord); display: grid; place-items: center; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.mot-cache { font-family: var(--titre); font-weight: 900; font-size: var(--txt-2xl); color: var(--jaune); text-shadow: 0 0 20px color-mix(in srgb, var(--jaune) 55%, transparent); text-align: center; padding: 0 12px; }
+.carte-secrete { position: absolute; inset: 10px; display: grid; place-items: center; align-content: center; gap: 8px; border-radius: var(--r-m); background: repeating-linear-gradient(45deg, #3A2A8A 0 12px, #2A1F66 12px 24px); border: 3px solid var(--rose); box-shadow: 0 10px 20px #0008; transform: translateY(calc(-1 * var(--leve, 0px))); transition: transform .45s var(--rebond); cursor: grab; }
+.mot-sous-carte.tenue .carte-secrete { transition: none; }
+.carte-secrete b { padding: 6px 12px; border: 3px solid var(--rose); border-radius: var(--r-xs); background: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-l); rotate: -6deg; }
+.carte-secrete small { font-size: var(--txt-xs); color: var(--texte-2); }
+/* L'Imposteur : la loupe qui hésite pendant le vote (animations.ts › animerLoupes). */
+.vote-loupe { position: relative; }
+.loupe-vote { position: absolute; left: 0; top: 0; z-index: 2; width: 44px; height: 44px; border-radius: 50%; border: 5px solid var(--jaune); background: #ffffff14; box-shadow: 0 0 0 3px var(--fond), 0 6px 14px #0009; pointer-events: none; transition: left .8s cubic-bezier(.45, 0, .3, 1), top .8s cubic-bezier(.45, 0, .3, 1); }
+.loupe-vote::after { content: ''; position: absolute; right: -14px; bottom: -14px; width: 9px; height: 26px; border-radius: 3px; background: var(--jaune); rotate: -45deg; }
+.loupe-vote.posee { animation: pose-loupe .4s var(--rebond) .7s; }
+@keyframes pose-loupe { 40% { transform: scale(1.3); } }
