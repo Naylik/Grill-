@@ -100,8 +100,6 @@ const KABOOM = `<svg class="bulle-kaboom" viewBox="0 0 240 200" aria-hidden="tru
   <path d="M120 40 L134 70 L168 56 L158 88 L194 96 L162 112 L184 140 L148 134 L142 162 L120 140 L98 162 L92 134 L56 140 L78 112 L46 96 L82 88 L72 56 L106 70 Z" fill="#FF8A3D"/>
   <text x="120" y="112" text-anchor="middle" font-family="Bungee, Unbounded, Arial Black, sans-serif" font-weight="900" font-size="34" fill="#FFF6EA" stroke="${T}" stroke-width="5" paint-order="stroke">KABOOM</text>
 </svg>`;
-const REVEIL = `<svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="32" r="24" fill="#FFF6EA" stroke="${T}" stroke-width="4.5"/><path d="M30 32 L30 16 M30 32 L40 38" stroke="${T}" stroke-width="4" stroke-linecap="round"/><path d="M12 10 l-6 -6 M48 10 l6 -6" stroke="${T}" stroke-width="5" stroke-linecap="round"/></svg>`;
-const FUMEE = `<svg class="fumee-kaboom" viewBox="0 0 200 120" aria-hidden="true"><g fill="#B9B3C7"><circle cx="70" cy="80" r="18"/><circle cx="100" cy="70" r="22"/><circle cx="130" cy="82" r="16"/></g></svg>`;
 const PANNEAUX = ['-130px,-150px,-200deg', '130px,-140px,220deg', '-140px,110px,-260deg', '140px,120px,280deg', '0px,-170px,160deg']
   .map((v) => { const [dx, dy, r] = v.split(','); return `<span class="panneau" style="--dx:${dx};--dy:${dy};--r:${r}"></span>`; }).join('');
 
@@ -235,8 +233,7 @@ export const patate: MiniJeu<Etat> = {
       return `${tete}
         <div class="boum-colis" aria-live="assertive">
           ${PANNEAUX}
-          <span class="reveil-vole">${REVEIL}</span>
-          ${KABOOM}${FUMEE}
+          ${KABOOM}
           <div class="colis-charge">${dessinColis(190, 1)}</div>
           <div class="flash-blanc"></div>
         </div>

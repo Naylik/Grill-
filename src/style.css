@@ -590,12 +590,6 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .boum-colis .panneau { position: absolute; z-index: 1; width: 70px; height: 54px; border-radius: 4px; background: #C8925A; border: 3px solid #24123A; opacity: 0; animation: vol-carton 1.3s var(--doux) .7s forwards; }
 .boum-colis .panneau::after { content: ''; position: absolute; inset: 0 38%; background: #E7C089; }
 @keyframes vol-carton { from { opacity: 1; transform: translate(0, 0) rotate(0); } to { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)); } }
-.reveil-vole { position: absolute; z-index: 3; width: 56px; line-height: 0; opacity: 0; animation: reveil-vole 1.6s var(--doux) .7s forwards; }
-@keyframes reveil-vole { 0% { opacity: 1; transform: translate(0, 0) rotate(0); } 55% { transform: translate(-30px, -170px) rotate(-400deg); } 100% { opacity: 1; transform: translate(-70px, -110px) rotate(-720deg) scale(.8); } }
-.fumee-kaboom { position: absolute; z-index: 1; width: 70%; top: -10px; overflow: visible; }
-.fumee-kaboom circle { opacity: 0; animation: fumee-colis 2.4s ease-out 1s infinite; }
-.fumee-kaboom circle:nth-child(2) { animation-delay: 1.4s; } .fumee-kaboom circle:nth-child(3) { animation-delay: 1.8s; }
-@keyframes fumee-colis { 0% { opacity: 0; translate: 0 0; scale: .6; } 25% { opacity: .5; } 100% { opacity: 0; translate: 8px -60px; scale: 1.6; } }
 .flash-blanc { position: fixed; inset: 0; z-index: 30; pointer-events: none; background: #fff; opacity: 0; animation: flash-blanc var(--t-lent) ease-out .7s; }
 @keyframes flash-blanc { from { opacity: .85; } to { opacity: 0; } }
 

@@ -368,3 +368,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   temps du joueur (un « tic »), le premier arrêté gagne la couronne. Arrivée serrée (≤ 40 ms) : badge RALENTI entre les
   deux premiers, puis « 📸 X ms d'écart ! ». Couloirs dans l'ordre des joueurs, rien de dévoilé avant l'arrêt. Le flash
   blanc est supprimé (`src/course.ts`, `animerCourses`). Le Bon timing : la piste zoome autour de la cible.
+- 23/11/2026 · Colis piégé (validé par Kilyan) : à l'explosion, il ne reste que le KABOOM (le réveil qui s'envolait
+  et la fumée sont supprimés). Texte, fausse alerte et taille du colis inchangés.
