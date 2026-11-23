@@ -6,6 +6,7 @@ import { esc, parmi } from '../outils';
 import { hacher, hasardDe } from '../flash';
 import { pointsCombien, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
+import { vibrer } from '../ui';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
 export type Feinte = 'hesite' | 'fauxPlein' | 'clignote' | 'fausseFin' | 'aucune';
@@ -112,17 +113,19 @@ export const combien: MiniJeu<Etat> = {
     if (e.phase === 'question') {
       const dejaRepondu = v.maReponse?.etape === e.etape;
       const monOui = v.local[e.etape] as 'oui' | 'non' | undefined;
+      const tampon = v.local[`${e.etape}:tampon`] as string | undefined;
+      const etatBouton = (valeur: string) => (tampon ? (tampon === valeur ? 'tamponne' : 'eteint') : '');
       let corps: string;
       if (dejaRepondu) corps = `<p class="attente">C’est noté. On attend les autres…</p>`;
       else if (!monOui) {
         corps = `<p class="aide">Ta réponse reste anonyme : seul le total sera affiché.</p>
           <div class="options deux grosses">
-            <button class="bouton vert" data-action="jeu" data-geste="ouiNon" data-valeur="oui">Oui</button>
-            <button class="bouton rose" data-action="jeu" data-geste="ouiNon" data-valeur="non">Non</button>
+            <button class="bouton vert bouton-tampon ${etatBouton('oui')}" data-action="jeu" data-geste="ouiNon" data-valeur="oui"><span class="txt">Oui</span><span class="tampon-rep" aria-hidden="true">OUI ✔</span></button>
+            <button class="bouton rose bouton-tampon ${etatBouton('non')}" data-action="jeu" data-geste="ouiNon" data-valeur="non"><span class="txt">Non</span><span class="tampon-rep" aria-hidden="true">NON ✘</span></button>
           </div>`;
       } else {
         corps = `<p class="intitule">Combien ont dit oui, à ton avis ? <span class="petit">(toi compris)</span></p>
-          <div class="grille-nombres">${Array.from({ length: n + 1 }, (_, i) => `<button class="option" data-action="jeu" data-geste="estimer" data-valeur="${i}">${i}</button>`).join('')}</div>
+          <div class="grille-nombres arrive-estimation">${Array.from({ length: n + 1 }, (_, i) => `<button class="option" data-action="jeu" data-geste="estimer" data-valeur="${i}">${i}</button>`).join('')}</div>
           <button class="bouton discret" data-action="jeu" data-geste="annulerOuiNon">Changer ma réponse (${monOui})</button>`;
       }
       return `${chrono(e.fin)}${titre}${corps}${attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && dejaRepondu))}`;
@@ -159,11 +162,22 @@ export const combien: MiniJeu<Etat> = {
 
   gestes: {
     ouiNon(el, o, v) {
-      o.local[v.etat.etape] = el.dataset.valeur;
+      // Un tampon « OUI ✔ » / « NON ✘ » s'écrase sur le bouton (sur mon téléphone seulement), puis la suite arrive.
+      // Gardé dans la mémoire locale (et pas seulement sur le bouton) : si l'écran se redessine pendant le tampon,
+      // il reste affiché.
+      const etape = v.etat.etape;
+      if (o.local[`${etape}:tampon`]) return;
+      o.local[`${etape}:tampon`] = el.dataset.valeur;
       o.rafraichir();
+      vibrer(30);
+      setTimeout(() => {
+        o.local[etape] = el.dataset.valeur;
+        o.rafraichir();
+      }, 750);
     },
     annulerOuiNon(_el, o, v) {
       delete o.local[v.etat.etape];
+      delete o.local[`${v.etat.etape}:tampon`];
       o.rafraichir();
     },
     async estimer(el, o, v) {

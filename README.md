@@ -372,3 +372,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   et la fumée sont supprimés). Texte, fausse alerte et taille du colis inchangés.
 - 23/11/2026 · Dessin à la chaîne et Champ de mines validés par Kilyan. Champ de mines : « KABOOM ! » ne touche plus
   les bords de l'écran, et l'encadré « Ta manche / Prochain colis » ne coupe plus les points sur deux lignes.
+- 23/11/2026 · Télépathie validée : toutes les animations de résultat sont faites. Animations pendant le jeu : Kilyan
+  valide idée par idée (chaque jeu peut avoir son univers). Écartées : chrono du Juste Prix qui rougit, chrono brouillé du
+  Bon timing, cagnotte de Quitte ou Double. Combien ont dit oui ? : tampon « OUI ✔ / NON ✘ » sur le bouton touché (sur
+  son téléphone seulement, petite vibration), puis la question suivante glisse. Silhouettes d'attente : refusées.
