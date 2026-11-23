@@ -423,3 +423,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   ligne), les suivants en dessous sur toute la largeur (avant : gagnants empilés à gauche, 3e seul en haut à droite).
 - 23/11/2026 · Roue des territoires : plus de chrono pour choisir son action. La roue tourne dès que tous les joueurs
   connectés ont choisi ; l'hôte a un bouton « Lancer la roue sans attendre » si quelqu'un bloque.
+- 23/11/2026 · L'Imposteur : plus de chrono. Indices : l'hôte passe au vote avec son bouton. Vote : le résultat tombe dès
+  que tout le monde a voté ; l'hôte a « Voir le résultat sans attendre » si quelqu'un bloque. Égalité en tête :
+  règle inchangée (l'imposteur s'en sort et prend +3), choix de Kilyan.

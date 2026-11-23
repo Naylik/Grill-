@@ -4,7 +4,7 @@
 import paires from '../data/imposteur.json';
 import { auHasard, esc, melanger, parmi } from '../outils';
 import { pointsDePlace, resultatImposteur } from '../score';
-import { attenteDes, bulle, chrono } from '../ecrans/commun';
+import { attenteDes, bulle } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type ContexteHote, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
 /** Minutage de la révélation (ms) : une carte par seconde, un suspens, puis la carte de l'imposteur et son tampon. */
@@ -19,8 +19,6 @@ export function minutageImposteur(nbInnocents: number): { cartes: number[]; susp
 const PHRASES_SURVIT = ['{p} a bluffé toute la table. Chapeau l’artiste !', 'Personne n’a rien vu… {p}, tu nous fais peur.', '{p} s’en sort. Un vrai caméléon.'];
 const PHRASES_DEMASQUE = ['Démasqué ! {p} n’a pas tenu longtemps.', 'Bien vu les détectives : {p} est grillé !', '{p} pensait passer inaperçu. Raté !']
 const NB_MANCHES: [number, number, number] = [2, 3, 4]; // Courte, Normale, Longue
-const DUREE_INDICES = 150_000;
-const DUREE_VOTE = 45_000;
 
 interface Etat extends EtatDeBase {
   phase: 'indices' | 'vote' | 'resultat';
@@ -60,7 +58,7 @@ function nouvelleManche(ctx: ContexteHote, base: Omit<Etat, 'etape' | 'phase' | 
     ordre: melanger(ctx.uids, ctx.hasard),
     pairesJouees: [...(base.pairesJouees ?? []), paire.id],
     dejaImposteurs: [...base.dejaImposteurs, imposteur],
-    fin: ctx.maintenant + DUREE_INDICES,
+    fin: undefined, // pas de chrono : l'hôte passe au vote avec le bouton
   };
   return { etat, ecritures };
 }
@@ -88,8 +86,9 @@ export const imposteur: MiniJeu<Etat> = {
   },
 
   piloter(ctx, etat) {
-    if (etat.phase === 'indices' && ctx.maintenant >= (etat.fin ?? 0)) {
-      return { etat: { ...etat, phase: 'vote', etape: etapeDe(etat, 'vote'), fin: ctx.maintenant + DUREE_VOTE } };
+    if (etat.phase === 'indices' && etat.fin !== undefined && ctx.maintenant >= etat.fin) {
+      // Pas de chrono pour voter non plus : on attend tout le monde (l'hôte peut forcer).
+      return { etat: { ...etat, phase: 'vote', etape: etapeDe(etat, 'vote'), fin: undefined } };
     }
     if (etat.phase === 'vote' && etapeTerminee(ctx, etat.etape, etat.fin)) {
       const secret = ctx.prive.imposteur as { uid: string; groupe: string; imposteur: string } | undefined;
@@ -109,6 +108,7 @@ export const imposteur: MiniJeu<Etat> = {
 
   commande(ctx, etat, valeur) {
     if (valeur === 'voter' && etat.phase === 'indices') return { etat: { ...etat, fin: ctx.maintenant } };
+    if (valeur === 'forcerVote' && etat.phase === 'vote') return { etat: { ...etat, fin: ctx.maintenant } };
     if (valeur !== 'suivant' || etat.phase !== 'resultat') return null;
     if (etat.manche + 1 >= (etat.total ?? NB_MANCHES[0])) {
       const nettoyage = Object.fromEntries([...ctx.uids.map((u) => [`motsImposteur/${u}`, null]), ['prive/imposteur', null]]);
@@ -123,7 +123,7 @@ export const imposteur: MiniJeu<Etat> = {
     const prenom = (u: string) => esc(v.joueurs[u]?.prenom ?? '?');
     const entete = `<p class="petit">Manche ${e.manche + 1}/${e.total ?? NB_MANCHES[0]} · thème : <strong>${esc(e.theme)}</strong></p>`;
     if (e.phase === 'indices') {
-      return `${chrono(e.fin)}${entete}
+      return `${entete}
         <div class="mot-sous-carte" data-carte-secrete>
           <span class="mot-cache">${esc(v.monMot ?? '…')}</span>
           <div class="carte-secrete" aria-hidden="true"><b>TOP SECRET</b><small>Glisse vers le haut pour lire ton mot</small></div>
@@ -134,10 +134,11 @@ export const imposteur: MiniJeu<Etat> = {
     }
     if (e.phase === 'vote') {
       const monVote = v.maReponse?.etape === e.etape ? (v.maReponse.cible as string) : null;
-      return `${chrono(e.fin)}${entete}<h2 class="question">Qui est l’imposteur ?</h2>
+      return `${entete}<h2 class="question">Qui est l’imposteur ?</h2>
         <div class="options deux vote-loupe" data-loupe>${v.uids.filter((u) => u !== v.uid).map((u) => `<button class="option ${monVote === u ? 'actif rose' : ''}" data-action="jeu" data-geste="voter" data-valeur="${u}">${prenom(u)}</button>`).join('')}<span class="loupe-vote" aria-hidden="true"></span></div>
         <p class="aide">Vote secret. Tu peux changer d’avis jusqu’à la fin.</p>
-        ${attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && !!monVote))}`;
+        ${attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && !!monVote))}
+        ${v.estHote ? '<button class="bouton discret" data-action="hote-jeu" data-valeur="forcerVote">Voir le résultat sans attendre</button>' : ''}`;
     }
     const imp = e.imposteur!;
     const compte: Record<string, number> = {};
