@@ -363,3 +363,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   sur tout l'écran avec un « clic », puis le bandeau, puis le gagnant. Résultat de manche allongé à 6 s.
 - 23/11/2026 · Le Bon timing : « PILE ! » tombe comme un tampon (avec son son) une fois la glissade finie, et « X est le
   plus proche » n'apparaît qu'après, pour ne pas gâcher le suspens.
+- 23/11/2026 · Réflexe Mallow (validé par Kilyan, version « même vitesse ») : le résultat devient une course rejouée au
+  ralenti. Tout le monde part quand Mallow prend feu et avance au rythme du chrono ; chaque pastille s'arrête net au
+  temps du joueur (un « tic »), le premier arrêté gagne la couronne. Arrivée serrée (≤ 40 ms) : badge RALENTI entre les
+  deux premiers, puis « 📸 X ms d'écart ! ». Couloirs dans l'ordre des joueurs, rien de dévoilé avant l'arrêt. Le flash
+  blanc est supprimé (`src/course.ts`, `animerCourses`). Le Bon timing : la piste zoome autour de la cible.

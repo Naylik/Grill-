@@ -22,7 +22,7 @@ import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from '.
 import { jeuParId } from './games';
 import { vueJeu } from './ecrans/deroule';
 import { localJeu } from './memoireJeu';
-import { animerCompteurs } from './animations';
+import { animerCompteurs, animerCourses } from './animations';
 import { ecranTuto, marquerTutoVu, tutoDejaVu } from './ecrans/tuto';
 import { action, afficher, brouillons, installer, vibrer } from './ui';
 import { garderEcranAllume } from './veille';
@@ -596,10 +596,11 @@ function horloge(): void {
   animerFusees();
   animerRoues();
   animerCompteurs();
+  animerCourses();
 }
 // Économie de batterie : l'horloge ne tourne à chaque image (60 fois par seconde) que si l'écran montre
 // quelque chose qui bouge avec elle. Sinon, elle vérifie seulement toutes les 150 ms.
-const ELEMENTS_ANIMES = '[data-compteur], [data-feu], .cadran-timing[data-depart], .stop-timing[data-depart], .cible-patate[data-depart], .consigne-patate[data-depart], canvas[data-voir], [data-fusee], canvas[data-roue]';
+const ELEMENTS_ANIMES = '[data-compteur], [data-course], [data-feu], .cadran-timing[data-depart], .stop-timing[data-depart], .cible-patate[data-depart], .consigne-patate[data-depart], canvas[data-voir], [data-fusee], canvas[data-roue]';
 function boucleHorloge(): void {
   if (document.querySelector(ELEMENTS_ANIMES)) {
     horloge();

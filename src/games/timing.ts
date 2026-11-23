@@ -138,7 +138,9 @@ export const timing: MiniJeu<Etat> = {
     const temps = e.temps ?? {};
     const cibleMs = e.cible * 1000;
     const presents = v.uids.filter((u) => temps[u] !== undefined);
-    const max = Math.max(cibleMs * 1.6, ...presents.map((u) => temps[u] + 400));
+    // Zoom autour de la cible : la piste va de « cible − écart » à « cible + écart » (le plus grand écart, avec
+    // une marge), pour qu'on voie bien la différence même quand tout le monde est à quelques centièmes.
+    const zoom = Math.max(250, ...presents.map((u) => Math.abs(temps[u] - cibleMs))) * 1.3;
     const points = presents.map((u) => ({ joueur: v.joueurs[u], valeur: temps[u], texte: formaterSecondes(temps[u]), moi: u === v.uid }));
     const absents = v.uids.filter((u) => temps[u] === undefined);
     const mien = temps[v.uid];
@@ -148,7 +150,7 @@ export const timing: MiniJeu<Etat> = {
     return `${entete}
       ${piles.length ? `<div class="pile-timing" role="status" style="--d:${(finPiste(presents.length) + 0.1).toFixed(2)}s"><b>PILE !</b><span>${piles.map((u) => esc(v.joueurs[u].prenom)).join(' et ')} : écart compté zéro</span></div>` : ''}
       <div class="mon-ecart"><span class="note-arene" style="--c:${couleur}">${note}</span>${mien !== undefined ? `<strong style="color:${couleur}">${ecartSigne(mien - cibleMs)}</strong>` : ''}</div>
-      ${piste(points, max, { valeur: cibleMs, libelle: `${e.cible} s` })}
+      ${piste(points, cibleMs + zoom, { valeur: cibleMs, libelle: `${e.cible} s` }, cibleMs - zoom)}
       ${premier ? `<p class="aide gauche gagnant-piste" style="--d:${(finPiste(presents.length) + (piles.length ? 0.9 : 0.2)).toFixed(2)}s"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> est le plus proche (${ecartSigne(temps[premier] - cibleMs)}).</p>` : ''}
       ${absents.length ? `<p class="hors-piste">Pas de STOP : ${absents.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       <p class="attente">${e.manche + 1 < N ? 'Manche suivante dans un instant…' : 'Classement dans un instant…'}</p>`;

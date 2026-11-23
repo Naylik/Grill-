@@ -1,4 +1,5 @@
 // Petites animations pilotées par l'horloge des jeux (main.ts) : ce que le CSS seul ne sait pas faire.
+import { minutageCourse } from './course';
 
 const debuts = new WeakMap<HTMLElement, number>();
 
@@ -19,3 +20,31 @@ export function animerCompteurs(): void {
 }
 
 export const DUREE_COMPTEUR = 2200;
+
+/**
+ * Réflexe Mallow : la course rejouée (<div data-course>). Le HTML contient l'état final (tout le monde arrêté) ;
+ * à chaque image on recalcule l'état à partir du temps écoulé, donc un rafraîchissement de l'écran ne casse rien.
+ */
+export function animerCourses(): void {
+  const maintenant = performance.now();
+  document.querySelectorAll<HTMLElement>('[data-course]').forEach((el) => {
+    if (!debuts.has(el)) debuts.set(el, maintenant);
+    const ecoule = maintenant - debuts.get(el)!;
+    const couloirs = [...el.querySelectorAll<HTMLElement>('[data-t]')];
+    const temps = couloirs.map((c) => Number(c.dataset.t));
+    const m = minutageCourse(temps);
+    const fini = ecoule >= m.fin + 250;
+    el.classList.toggle('en-course', !fini);
+    el.classList.toggle('fini', fini);
+    el.classList.toggle('au-ralenti', !!m.ralenti && ecoule >= m.ralenti[0] && ecoule < m.ralenti[1]);
+    const chrono = Math.min(Math.max(...temps), m.chrono(ecoule));
+    const affiche = el.querySelector<HTMLElement>('[data-chrono]');
+    const texte = String(Math.round(chrono));
+    if (affiche && affiche.textContent !== texte) affiche.textContent = texte;
+    const max = Math.max(1, ...temps);
+    couloirs.forEach((c, i) => {
+      c.style.setProperty('--v', (Math.min(chrono, temps[i]) / max).toFixed(4));
+      c.classList.toggle('stop', ecoule >= m.arrets[i]);
+    });
+  });
+}

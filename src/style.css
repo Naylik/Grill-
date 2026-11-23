@@ -1024,13 +1024,38 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .piece .ko { background: radial-gradient(circle at 35% 30%, var(--rose-clair), var(--rose-fort)); color: var(--fond); transform: rotateY(180deg); box-shadow: 0 0 30px var(--rose); }
 @keyframes piece-tourne { 0% { transform: translateY(0) rotateY(0); } 40% { transform: translateY(-40px) rotateY(1080deg); } 100% { transform: translateY(0) rotateY(1800deg); } }
 @keyframes piece-tourne-ko { 0% { transform: translateY(0) rotateY(0); } 40% { transform: translateY(-40px) rotateY(1080deg); } 100% { transform: translateY(0) rotateY(1980deg); } }
-/* Réflexe Mallow : photo-finish quand les deux premiers sont collés. */
-.photo-finish { position: absolute; top: -6px; left: 50%; translate: -50% 0; z-index: 2; padding: 6px 14px; border-radius: var(--r-rond); background: #fff; color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-s); white-space: nowrap; box-shadow: 0 0 0 4px var(--jaune), 0 0 40px #fff; animation: flash-photo .6s ease-out var(--fin) both; }
-@keyframes flash-photo { 0% { opacity: 0; transform: scale(2.4); filter: brightness(3); } 100% { opacity: 1; transform: none; } }
-/* Le flash de l'appareil photo : tout l'écran blanchit un instant, puis le bandeau tombe. */
-.piste-arene.serre::after { content: ''; position: fixed; inset: 0; z-index: 50; background: #fff; pointer-events: none; opacity: 0; animation: flash-ecran .7s ease-out var(--fin) both; }
-@keyframes flash-ecran { 0% { opacity: 0; } 12% { opacity: .95; } 100% { opacity: 0; } }
-.piste-arene.serre .photo-finish { animation-delay: calc(var(--fin) + .35s); }
+/* Réflexe Mallow : la course rejouée au ralenti (animations.ts › animerCourses). */
+.course-reflexe { display: grid; gap: 10px; }
+.chrono-course { position: relative; display: flex; align-items: baseline; justify-content: center; gap: 6px; font-family: var(--titre); font-weight: 900; font-size: var(--txt-3xl); line-height: 1; color: var(--jaune); text-shadow: 0 4px 0 var(--jaune-ombre); font-variant-numeric: tabular-nums; }
+.chrono-course small { font-size: var(--txt-m); }
+.badge-ralenti { position: absolute; right: 0; top: 50%; translate: 0 -50%; padding: 4px 10px; border-radius: var(--r-rond); background: var(--violet); color: #fff; font-style: normal; font-size: var(--txt-xs); text-shadow: none; opacity: 0; transition: opacity var(--t-rapide); }
+.au-ralenti .badge-ralenti { opacity: 1; }
+.reperes-course { display: flex; justify-content: space-between; font-size: var(--txt-xs); font-weight: 700; color: var(--texte-2); margin-bottom: -4px; }
+.couloirs-course { position: relative; display: grid; gap: 8px; }
+.couloirs-course::before { content: ''; position: absolute; left: 22px; top: 0; bottom: 0; width: 2px; border-radius: 2px; background: color-mix(in srgb, var(--feu) 60%, transparent); }
+.couloir-course { position: relative; container-type: inline-size; height: 48px; border-radius: var(--r-rond); background: var(--voile-1); border: 1px solid var(--bord); }
+.couloir-course.moi { border-color: var(--violet); }
+.coureur { position: absolute; top: 4px; left: calc(4px + (100% - 48px) * var(--v, var(--p))); width: 40px; height: 40px; }
+.coureur .point { position: relative; z-index: 2; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-m); box-shadow: 0 0 0 3px var(--fond), 0 0 16px var(--c); }
+.couloir-course.moi .point { box-shadow: 0 0 0 3px #fff, 0 0 20px var(--c); }
+.coureur .trainee { position: absolute; right: 28px; top: 10px; height: 20px; width: min(110px, calc((100cqw - 48px) * var(--v, var(--p)))); border-radius: var(--r-rond); background: linear-gradient(90deg, transparent, var(--c)); opacity: .8; }
+.coureur .onde { position: absolute; inset: 0; border-radius: 50%; border: 3px solid var(--c); opacity: 0; z-index: 1; }
+.coureur .etiquette-piste { left: 48px; opacity: 1; transition: opacity var(--t-rapide); }
+.couloir-course.a-gauche .etiquette-piste { left: auto; right: 48px; }
+.couronne-course { margin-right: 4px; }
+.couloir-course.premier .point { box-shadow: 0 0 0 3px var(--jaune), 0 0 24px var(--jaune); }
+.couloir-course.stop .trainee, .course-reflexe.fini .trainee { opacity: .3; transition: opacity var(--t-normal); }
+/* Pendant la course : rien n'est dévoilé avant l'arrêt de chaque pastille. */
+.course-reflexe.en-course .couloir-course:not(.stop) .etiquette-piste { opacity: 0; }
+.course-reflexe.en-course .couloir-course:not(.stop).premier .point { box-shadow: 0 0 0 3px var(--fond), 0 0 16px var(--c); }
+.course-reflexe.en-course .couloir-course.stop .point { animation: tape-course .5s var(--rebond); }
+.course-reflexe.en-course .couloir-course.stop .onde { animation: onde-course .7s ease-out; }
+@keyframes tape-course { 30% { transform: scale(1.45); } }
+@keyframes onde-course { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(2.4); } }
+.ecart-course { justify-self: center; margin: 0; padding: 6px 14px; border-radius: var(--r-rond); background: var(--jaune); color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-s); }
+.course-reflexe.en-course .ecart-course, .course-reflexe.en-course .gagnant-course { visibility: hidden; }
+.course-reflexe.fini .ecart-course { animation: apres-jauge var(--t-lent) var(--rebond) both; }
+.course-reflexe.fini .gagnant-course { animation: apres-jauge var(--t-lent) var(--rebond) .4s both; }
 /* Le nom du gagnant n'arrive qu'une fois la course finie. */
 .gagnant-piste { animation: apres-jauge var(--t-lent) var(--rebond) var(--d) both; }
 /* Le bon timing : les pastilles partent de la ligne cible. */

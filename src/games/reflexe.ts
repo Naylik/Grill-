@@ -9,16 +9,16 @@ import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
-import { arriveeSerree, classementBarres, finPiste, hud, introArene, noteReflexe, piste } from './arene';
+import { classementBarres, hud, introArene, noteReflexe } from './arene';
+import { minutageCourse } from '../course';
 
 const NB_MANCHES: [number, number, number] = [3, 4, 5]; // Courte, Normale, Longue (au-delà, c'est épuisant)
 const PENALITE = 1000; // faux départ
 const ABSENT = 1500; // pas de réponse
 const DUREE_INTRO = 7000;
-const DUREE_PISTE = 6000; // laisse le temps de lire le gagnant après la course (et la photo-finish)
+const DUREE_PISTE = 8500; // la course rejouée (jusqu'à ~6 s avec le ralenti), puis le temps de lire le gagnant
 const DUREE_PISTE_CHOIX = 15_000; // le gagnant choisit sa victime : on attend son choix (15 s au plus)
 const DUREE_BILAN = 6500;
-export const PHOTO_FINISH = 40; // ms : en dessous, les deux premiers sont départagés à la photo-finish
 
 interface Etat extends EtatDeBase {
   phase: 'intro' | 'attente' | 'resultat' | 'bilan';
@@ -184,18 +184,33 @@ export const reflexe: MiniJeu<Etat> = {
         }).join('')}</div>`;
     }
 
-    // Résultat de la manche : la piste montre qui a touché avant qui.
+    // Résultat de la manche : la course rejouée au ralenti (animations.ts). Tout le monde part quand Mallow
+    // prend feu, au même rythme que le chrono ; chaque pastille s'arrête au temps du joueur. Le premier arrêté gagne.
+    // Les couloirs restent dans l'ordre des joueurs (pas du classement) pour ne rien dévoiler avant la course.
     const temps = e.temps ?? {};
     const valides = v.uids.filter((u) => temps[u] !== undefined && temps[u] >= 0);
-    const max = Math.max(600, ...valides.map((u) => temps[u] + 80));
-    const points = valides.map((u) => ({ joueur: v.joueurs[u], valeur: temps[u], texte: `${temps[u]} ms`, moi: u === v.uid }));
     const fauxDeparts = v.uids.filter((u) => temps[u] !== undefined && temps[u] < 0);
     const absents = v.uids.filter((u) => temps[u] === undefined);
     const premier = [...valides].sort((a, b) => temps[a] - temps[b])[0];
+    const second = [...valides].sort((a, b) => temps[a] - temps[b])[1];
+    const max = Math.max(1, ...valides.map((u) => temps[u]));
+    const serre = minutageCourse(valides.map((u) => temps[u])).serre;
+    const couloirs = valides.map((u) => {
+      const p = temps[u] / max;
+      return `<div class="couloir-course ${u === v.uid ? 'moi' : ''} ${u === premier ? 'premier' : ''} ${p > 0.55 ? 'a-gauche' : ''}" style="--c:${v.joueurs[u].couleur};--p:${p.toFixed(4)}" data-t="${temps[u]}">
+          <div class="coureur"><span class="trainee"></span><span class="onde"></span><span class="point">${esc(v.joueurs[u].prenom.slice(0, 1))}</span>
+          <span class="etiquette-piste">${u === premier ? '<span class="couronne-course">👑</span>' : ''}<strong>${esc(v.joueurs[u].prenom)}</strong> ${temps[u]} ms</span></div>
+        </div>`;
+    }).join('');
     return `${entete}
       <h2 class="question">Qui a touché en premier ?</h2>
-      ${piste(points, max, undefined, { photoFinish: PHOTO_FINISH })}
-      ${premier ? `<p class="aide gauche gagnant-piste" style="--d:${(finPiste(valides.length) + (arriveeSerree(valides.map((u) => temps[u]), PHOTO_FINISH) ? 1.3 : 0.2)).toFixed(2)}s"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> gagne la manche en ${temps[premier]} ms.</p>` : ''}
+      ${valides.length ? `<div class="course-reflexe en-course" data-course role="img" aria-label="${esc([...valides].sort((a, b) => temps[a] - temps[b]).map((u, i) => `${i + 1}. ${v.joueurs[u].prenom} ${temps[u]} ms`).join(', '))}">
+        <div class="chrono-course"><span data-chrono>${max}</span><small>ms</small><em class="badge-ralenti">⏱ RALENTI</em></div>
+        <div class="reperes-course"><span>🔥 Mallow prend feu</span><span>le temps passe →</span></div>
+        <div class="couloirs-course">${couloirs}</div>
+        ${serre && premier && second ? `<p class="ecart-course">📸 ${temps[second] - temps[premier]} ms d’écart !</p>` : ''}
+        ${premier ? `<p class="aide gauche gagnant-course"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> gagne la manche en ${temps[premier]} ms.</p>` : ''}
+      </div>` : ''}
       ${fauxDeparts.length ? `<p class="hors-piste rouge">Faux départ : ${fauxDeparts.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       ${absents.length ? `<p class="hors-piste">Trop tard : ${absents.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       ${choixPiege(e, v)}
