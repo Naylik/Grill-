@@ -359,7 +359,7 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 
 /* Le Parieur : l'écran des mises tient sans défiler, le bouton reste visible en bas */
 .texte-defi { margin: 0; font-size: var(--txt-m); line-height: 1.35; font-weight: 700; }
-.mise-zone { position: sticky; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 3; display: flex; flex-direction: column; gap: 10px; padding: 12px; margin: 0 -8px; border-radius: var(--r-l); background: #140F2ACC; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--bord); }
+.mise-zone { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; padding: 12px; margin: 0 -8px; border-radius: var(--r-l); background: #140F2ACC; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--bord); }
 .mise-zone .option { min-height: 54px; }
 
 /* Partage */
@@ -1230,3 +1230,8 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 /* Colis piégé : je viens de lancer le colis, il est parti chez l'autre (il ne réapparaît pas au milieu de mon écran). */
 .zone-patate.parti .patate-chez { visibility: hidden; }
 .zone-patate.parti::before { animation: none; opacity: .3; }
+
+/* Le Parieur : défi caché au défié pendant les mises, puis révélé avec quelques secondes de lecture. */
+.boite.defi.defi-cache { border-style: dashed; opacity: .8; }
+.boite.defi.defi-revele { animation: apres-jauge var(--t-lent) var(--rebond) both; }
+.lecture-defi { display: grid; justify-items: center; gap: 6px; font-size: var(--txt-s); color: var(--texte-2); }

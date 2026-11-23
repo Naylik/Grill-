@@ -409,3 +409,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   remettait au centre en plein geste (le style du colis est maintenant protégé : `data-style-libre` dans
   `harmoniser`). Après le lancer, le colis ne réapparaît plus au milieu de l'écran du lanceur. Geste trop court :
   le colis revient en douceur.
+- 23/11/2026 · Le Parieur : la zone de mise ne flotte plus par-dessus le défi (elle était « collante » en bas d'écran).
+  Le défié ne voit plus son défi pendant les mises (« 🔒 Encore secret »). Nouvelle étape « lecture » de 8 s : le défi
+  est révélé à tous, « Le chrono démarre dans… », puis le chrono du défi part.

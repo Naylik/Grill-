@@ -8,9 +8,10 @@ import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './inte
 
 const DUREE_MISES = 30_000;
 const DUREE_VOTE = 30_000;
+const DUREE_LECTURE = 8_000; // le défié lit son défi (et tout le monde avec lui) avant que le chrono parte
 
 interface Etat extends EtatDeBase {
-  phase: 'mises' | 'defi' | 'vote' | 'resultat';
+  phase: 'mises' | 'lecture' | 'defi' | 'vote' | 'resultat';
   numeroJeu: number;
   ordre: string[];
   tour: number;
@@ -55,9 +56,12 @@ export const parieur: MiniJeu<Etat> = {
         .filter(([u, r]) => autres.includes(u) && (r.cote === 'reussite' || r.cote === 'echec'))
         .map(([uid, r]) => ({ uid, cote: r.cote as Mise['cote'], mise: Math.min(3, Math.max(1, Math.round(Number(r.mise) || 1))) }));
       return {
-        etat: { ...etat, phase: 'defi', etape: etapeDe(etat, 'defi'), fin: ctx.maintenant + etat.defis[etat.tour].duree * 1000 + 3000 },
+        etat: { ...etat, phase: 'lecture', etape: etapeDe(etat, 'lecture'), fin: ctx.maintenant + DUREE_LECTURE },
         ecritures: { 'prive/mises': mises },
       };
+    }
+    if (etat.phase === 'lecture' && ctx.maintenant >= (etat.fin ?? 0)) {
+      return { etat: { ...etat, phase: 'defi', etape: etapeDe(etat, 'defi'), fin: ctx.maintenant + etat.defis[etat.tour].duree * 1000 + 1500 } };
     }
     if (etat.phase === 'defi' && ctx.maintenant >= (etat.fin ?? 0)) {
       return { etat: { ...etat, phase: 'vote', etape: etapeDe(etat, 'vote'), fin: ctx.maintenant + DUREE_VOTE } };
@@ -93,9 +97,13 @@ export const parieur: MiniJeu<Etat> = {
     const moiDefie = defie === v.uid;
     const autres = v.uids.filter((u) => u !== defie);
     const defi = e.defis[e.tour];
+    // Pendant les mises, le défié ne voit pas encore son défi : sinon il réfléchit pendant que les autres parient.
+    const cache = moiDefie && e.phase === 'mises';
     const entete = `<p class="petit">Défi ${e.tour + 1}/${e.ordre.length}</p>
       <h2 class="question">${moiDefie ? 'À toi' : nomDefie}${moiDefie ? ' ! Ton défi' : ' doit…'}</h2>
-      <div class="boite defi"><p class="texte-defi">${esc(defi.texte)}</p><span class="petit">${defi.duree} secondes</span></div>`;
+      ${cache
+        ? '<div class="boite defi defi-cache"><p class="texte-defi">🔒 Encore secret</p><span class="petit">Tu le découvres dès que tout le monde a parié.</span></div>'
+        : `<div class="boite defi ${e.phase === 'lecture' ? 'defi-revele' : ''}"><p class="texte-defi">${esc(defi.texte)}</p><span class="petit">${defi.duree} secondes</span></div>`}`;
     const attente = (u: string) => v.ontRepondu.includes(u) || (u === v.uid && v.maReponse?.etape === e.etape);
 
     if (e.phase === 'mises') {
@@ -121,6 +129,10 @@ export const parieur: MiniJeu<Etat> = {
           <button class="bouton jaune" data-action="jeu" data-geste="miser" ${cote && mise ? '' : 'disabled'}>${cote && mise ? `Miser ${mise} pt${mise > 1 ? 's' : ''}` : 'Choisis ton camp et ta mise'}</button>
           </div>`;
       return `${chrono(e.fin)}${entete}${choix}${attenteDes(autres, v.joueurs, attente)}`;
+    }
+    if (e.phase === 'lecture') {
+      return `${entete}<div class="lecture-defi"><span>Le chrono démarre dans</span>${chrono(e.fin)}</div>
+        ${bulle(moiDefie ? 'Lis bien ton défi. Respire. Ça part dans quelques secondes.' : `${nomDefie} découvre son défi… Les paris sont faits.`)}`;
     }
     if (e.phase === 'defi') {
       return `${chrono(e.fin)}${entete}${bulle(moiDefie ? 'Go ! À voix haute, tout le monde t’écoute.' : `Silence, ${nomDefie} se concentre. Ou panique.`)}
