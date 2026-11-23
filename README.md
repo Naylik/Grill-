@@ -403,3 +403,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Vérifié sur la table virtuelle : 6 joueurs, 12 propositions toutes différentes, missions gardées enregistrées.
 - 23/11/2026 · Rideau de manche : il sortait juste au bord de l'écran (penché, un coin et sa lueur restaient visibles à
   droite). Il sort maintenant plus loin, s'efface en fondu et devient invisible à la fin.
+- 23/11/2026 · Podium des mini-jeux : le 1er en grand à gauche (bordure dorée, grande pastille, médaille, points en
+  gros), le 2e et le 3e plus petits, l'un sur l'autre à droite.

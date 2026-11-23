@@ -177,7 +177,7 @@ export function ecranClassement(): string {
   // Podium du mini-jeu qui vient de finir : qui l'a gagné, avec les points gagnés.
   const podiumJeu = Object.keys(placesJeu).length
     ? `<div class="podium-jeu">${uids().filter((u) => placesJeu[u] && placesJeu[u] <= 3).sort((a, b) => placesJeu[a] - placesJeu[b])
-      .map((u) => `<div class="marche-jeu p${placesJeu[u]}"><span>${['🥇', '🥈', '🥉'][placesJeu[u] - 1]}</span>${pastille(S.joueurs[u], 34)}<strong>${nom(u)}</strong><em>+${d.dernierJeu?.points?.[u] ?? 0}</em></div>`).join('')}</div>`
+      .map((u) => `<div class="marche-jeu p${placesJeu[u]}"><span>${['🥇', '🥈', '🥉'][placesJeu[u] - 1]}</span>${pastille(S.joueurs[u], placesJeu[u] === 1 ? 60 : 30)}<strong>${nom(u)}</strong><em>+${d.dernierJeu?.points?.[u] ?? 0}</em></div>`).join('')}</div>`
     : '';
   const suivant = d.numeroJeu >= total ? 'Passer au pari détective' : `Jeu suivant (${d.numeroJeu + 1}/${total})`;
   return `<p class="petit centre-texte">${jeu ? `Fin de « ${esc(jeu.nom)} »` : ''} · ${d.numeroJeu}/${total}</p>
