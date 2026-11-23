@@ -8,7 +8,7 @@
 // L'hôte tire le gagnant avant que la roue tourne ; tous les téléphones l'animent à la même heure (serveur).
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
-import { attenteDes, chrono } from '../ecrans/commun';
+import { attenteDes } from '../ecrans/commun';
 import { roueHtml, tirerArret } from '../roue';
 import { etapeTerminee, reponsesDe, selonFormat, type EtatDeBase, type MiniJeu } from './interface';
 import { classementBarres, hud } from './arene';
@@ -17,7 +17,6 @@ const NB_MANCHES: [number, number, number] = [4, 6, 8]; // Courte, Normale, Long
 const PARTS_DEPART = 3;
 const POINTS_DEPART = 5;
 const POT_DEPART = 6;
-const DUREE_CHOIX = 25_000;
 const DUREE_REVELATION = 4_500;
 const DUREE_ROUE = 6_000;
 const DUREE_GAIN = 3_500;
@@ -153,7 +152,7 @@ export const territoires: MiniJeu<Etat> = {
       etat: {
         etape: etapeDe(ctx.numeroJeu, 0), phase: 'choix', numeroJeu: ctx.numeroJeu, ordre, manche: 0, total: selonFormat(ctx.duree, NB_MANCHES),
         parts: Object.fromEntries(ordre.map((u) => [u, PARTS_DEPART])), points: Object.fromEntries(ordre.map((u) => [u, POINTS_DEPART])),
-        pot: POT_DEPART, rotation: 0, fin: ctx.maintenant + DUREE_CHOIX,
+        pot: POT_DEPART, rotation: 0, fin: undefined, // pas de chrono : on attend le choix de chacun
       },
     };
   },
@@ -185,11 +184,17 @@ export const territoires: MiniJeu<Etat> = {
     if (etat.phase === 'gain' && now >= (etat.fin ?? 0)) {
       if (etat.manche + 1 >= etat.total) return { etat: { ...etat, phase: 'bilan', fin: now + DUREE_BILAN } };
       const manche = etat.manche + 1;
-      return { etat: { ...etat, phase: 'choix', manche, etape: etapeDe(etat.numeroJeu, manche), pot: POT_DEPART, badges: undefined, journal: undefined, partsAvant: undefined, spin: undefined, pactes: undefined, fin: now + DUREE_CHOIX } };
+      return { etat: { ...etat, phase: 'choix', manche, etape: etapeDe(etat.numeroJeu, manche), pot: POT_DEPART, badges: undefined, journal: undefined, partsAvant: undefined, spin: undefined, pactes: undefined, fin: undefined } };
     }
     if (etat.phase === 'bilan' && now >= (etat.fin ?? 0)) {
       return { etat, fin: { points: pointsDePlace(etat.points), sorte: 'place' } };
     }
+    return null;
+  },
+
+  // Pas de chrono pour choisir : si quelqu'un ne choisit jamais, l'hôte lance la roue quand même.
+  commande(ctx, etat, valeur) {
+    if (valeur === 'forcerChoix' && etat.phase === 'choix') return { etat: { ...etat, fin: ctx.maintenant } };
     return null;
   },
 
@@ -234,7 +239,7 @@ export const territoires: MiniJeu<Etat> = {
       const choix = (v.local[`${e.etape}-choix`] as { a?: Action; c?: string }) ?? {};
       const pret = choix.a && ((choix.a !== 'voler' && choix.a !== 'pacte') || choix.c);
       const mesPoints = e.points[v.uid] ?? 0;
-      return `${tete}${chrono(e.fin)}
+      return `${tete}
         <div class="scene-roue">${roue}</div>${cartes}
         ${fait
           ? '<p class="attente">Action secrète enregistrée. Négocie… ou fais semblant.</p>'
@@ -247,7 +252,8 @@ export const territoires: MiniJeu<Etat> = {
             ${choix.a === 'voler' || choix.a === 'pacte' ? `<div class="cibles-roue">${e.ordre.filter((u) => u !== v.uid).map((u) => `<button class="${choix.c === u ? 'actif' : ''}" style="--k:${v.joueurs[u]?.couleur}" data-action="jeu" data-geste="cibler" data-valeur="${u}">${choix.a === 'pacte' ? '🤝 Pacte avec' : 'Voler'} ${nom(u)}</button>`).join('')}</div>` : ''}
             ${choix.a === 'pacte' ? '<p class="aide gauche">S’il choisit aussi « Pacte avec toi » : une seule part pour vous deux, cagnotte partagée. S’il te vole : trahison, il te prend 2 parts.</p>' : ''}
             <button class="bouton jaune ${pret ? '' : 'pas-pret'}" data-action="jeu" data-geste="valider">${!choix.a ? '① Choisis ton action' : (choix.a === 'voler' || choix.a === 'pacte') && !choix.c ? `② Choisis ${choix.a === 'voler' ? 'qui voler' : 'ton allié'}` : 'Valider en secret'}</button>`}
-        ${attenteDes(e.ordre, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && fait))}`;
+        ${attenteDes(e.ordre, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && fait))}
+        ${v.estHote ? '<button class="bouton discret" data-action="hote-jeu" data-valeur="forcerChoix">Lancer la roue sans attendre</button>' : ''}`;
     }
 
     const bandeau = e.phase === 'gain' && spin

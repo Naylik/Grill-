@@ -421,3 +421,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   l'hôte a un bouton « Lancer le défi sans attendre » si quelqu'un bloque.
 - 23/11/2026 · Podium des mini-jeux, égalité pour la 1re place : les gagnants côte à côte en grand (jusqu'à 3 par
   ligne), les suivants en dessous sur toute la largeur (avant : gagnants empilés à gauche, 3e seul en haut à droite).
+- 23/11/2026 · Roue des territoires : plus de chrono pour choisir son action. La roue tourne dès que tous les joueurs
+  connectés ont choisi ; l'hôte a un bouton « Lancer la roue sans attendre » si quelqu'un bloque.
