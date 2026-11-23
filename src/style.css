@@ -896,7 +896,9 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .badge-action.trahi { background: var(--rose); color: #fff; box-shadow: 0 0 14px var(--rose); }
 
 /* Le bon timing : « PILE ! » (bonus de fierté) */
-.pile-timing { display: grid; justify-items: center; gap: 2px; padding: 10px; border-radius: var(--r-m); background: color-mix(in srgb, var(--jaune) 10%, transparent); border: 1px solid var(--jaune); animation: tele-ok var(--t-lent) var(--rebond); }
+.pile-timing { display: grid; justify-items: center; gap: 2px; padding: 10px; border-radius: var(--r-m); background: color-mix(in srgb, var(--jaune) 10%, transparent); border: 1px solid var(--jaune); animation: tampon-pile .45s var(--rebond) var(--d, 0s) both; }
+/* « PILE ! » tombe comme un tampon, une fois la glissade finie (pas avant : ça gâcherait le suspens). */
+@keyframes tampon-pile { 0% { opacity: 0; transform: scale(2.6) rotate(-8deg); } 60% { opacity: 1; transform: scale(.92) rotate(1deg); } 100% { opacity: 1; transform: none; } }
 .pile-timing b { font-family: var(--titre); font-weight: 900; font-size: var(--txt-2xl); color: var(--jaune); text-shadow: 0 0 20px var(--jaune); }
 .pile-timing span { font-weight: 800; font-size: var(--txt-s); }
 .vert-texte { color: var(--vert); font-weight: 800; }

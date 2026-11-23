@@ -361,3 +361,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · Juste Prix et Parieur validés tels quels par Kilyan. Réflexe Mallow : la phrase « X gagne la manche »
   n'apparaît qu'une fois la course finie ; en photo-finish (moins de 40 ms d'écart), flash blanc d'appareil photo
   sur tout l'écran avec un « clic », puis le bandeau, puis le gagnant. Résultat de manche allongé à 6 s.
+- 23/11/2026 · Le Bon timing : « PILE ! » tombe comme un tampon (avec son son) une fois la glissade finie, et « X est le
+  plus proche » n'apparaît qu'après, pour ne pas gâcher le suspens.

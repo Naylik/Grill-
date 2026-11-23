@@ -7,7 +7,7 @@ import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
-import { classementBarres, hud, introArene, noteTiming, piste } from './arene';
+import { classementBarres, finPiste, hud, introArene, noteTiming, piste } from './arene';
 
 const CIBLES = [5, 7, 10, 6, 12, 15]; // secondes, une par manche
 const NB_MANCHES: [number, number, number] = [2, 3, 4]; // Courte, Normale, Longue (au-delà, c'est épuisant)
@@ -146,10 +146,10 @@ export const timing: MiniJeu<Etat> = {
     const premier = [...presents].sort((a, b) => ecartCompte(temps[a], e.cible) - ecartCompte(temps[b], e.cible))[0];
     const piles = presents.filter((u) => pile(temps[u], e.cible));
     return `${entete}
-      ${piles.length ? `<div class="pile-timing" role="status"><b>PILE !</b><span>${piles.map((u) => esc(v.joueurs[u].prenom)).join(' et ')} : écart compté zéro</span></div>` : ''}
+      ${piles.length ? `<div class="pile-timing" role="status" style="--d:${(finPiste(presents.length) + 0.1).toFixed(2)}s"><b>PILE !</b><span>${piles.map((u) => esc(v.joueurs[u].prenom)).join(' et ')} : écart compté zéro</span></div>` : ''}
       <div class="mon-ecart"><span class="note-arene" style="--c:${couleur}">${note}</span>${mien !== undefined ? `<strong style="color:${couleur}">${ecartSigne(mien - cibleMs)}</strong>` : ''}</div>
       ${piste(points, max, { valeur: cibleMs, libelle: `${e.cible} s` })}
-      ${premier ? `<p class="aide gauche"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> est le plus proche (${ecartSigne(temps[premier] - cibleMs)}).</p>` : ''}
+      ${premier ? `<p class="aide gauche gagnant-piste" style="--d:${(finPiste(presents.length) + (piles.length ? 0.9 : 0.2)).toFixed(2)}s"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> est le plus proche (${ecartSigne(temps[premier] - cibleMs)}).</p>` : ''}
       ${absents.length ? `<p class="hors-piste">Pas de STOP : ${absents.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       <p class="attente">${e.manche + 1 < N ? 'Manche suivante dans un instant…' : 'Classement dans un instant…'}</p>`;
   },
