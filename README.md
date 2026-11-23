@@ -382,3 +382,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · L'Imposteur : le mot est caché sous une carte « TOP SECRET » qu'on soulève du doigt (elle suit le doigt,
   retombe dès qu'on lâche ; remplace le flou à appui long). Pendant le vote, une loupe passe d'un joueur à l'autre
   tant qu'on n'a pas voté, puis se pose sur son choix (`animerLoupes`, seulement sur son téléphone).
+- 23/11/2026 · Réflexe Mallow : pendant l'attente, le vrai Mallow cligne des yeux, puis tremble et transpire (dès 3 s),
+  de plus en plus (dès 6 s). Le stress suit le temps d'attente, jamais l'heure du feu. Colis piégé : toucher un nom
+  fait voler le colis en tournoyant vers ce nom ; chez celui qui le reçoit, il tombe du haut et rebondit.
+  (Première maquette refusée : Mallow et colis redessinés hors DA. Règle : toujours partir des dessins du jeu.)

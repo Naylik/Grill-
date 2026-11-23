@@ -267,6 +267,16 @@ export const patate: MiniJeu<Etat> = {
       const vers = el.dataset.valeur!;
       if (e.phase !== 'jeu' || e.porteur !== v.uid || o.local[e.etape] !== undefined || !e.vivants.includes(vers)) return;
       if (maintenant() < e.depart) return; // pas avant « Partez ! »
+      // Le colis part en tournoyant vers le nom choisi (s'il a été glissé du doigt, il est déjà en vol).
+      const colis = document.querySelector<HTMLElement>('.patate-a-lancer');
+      if (colis && !colis.style.transform.includes('scale')) {
+        const a = colis.getBoundingClientRect();
+        const b = el.getBoundingClientRect();
+        colis.style.transition = 'transform .45s cubic-bezier(.5, 0, .8, .5)';
+        colis.style.transform = `translate(${b.left + b.width / 2 - (a.left + a.width / 2)}px, ${b.top + b.height / 2 - (a.top + a.height / 2)}px) scale(.3) rotate(540deg)`;
+      }
+      if (colis) await new Promise((r) => setTimeout(r, 400));
+      if (o.local[e.etape] !== undefined) return;
       o.local[e.etape] = vers;
       o.rafraichir();
       await o.repondre({ vers });

@@ -1158,3 +1158,22 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .loupe-vote::after { content: ''; position: absolute; right: -14px; bottom: -14px; width: 9px; height: 26px; border-radius: 3px; background: var(--jaune); rotate: -45deg; }
 .loupe-vote.posee { animation: pose-loupe .4s var(--rebond) .7s; }
 @keyframes pose-loupe { 40% { transform: scale(1.3); } }
+
+/* Réflexe Mallow : Mallow stressé pendant l'attente (main.ts › horloge : stress-1 dès 3 s, stress-2 dès 6 s). */
+.visage.cligne { opacity: 0; }
+.arene-reflexe:not(.en-feu):not(.eternue):not(.chauffe) .visage.normal { animation: cligne-ouvert 3.2s steps(1) infinite; }
+.arene-reflexe:not(.en-feu):not(.eternue):not(.chauffe) .visage.cligne { animation: cligne-ferme 3.2s steps(1) infinite; }
+@keyframes cligne-ouvert { 0%, 93% { opacity: 1; } 95% { opacity: 0; } 98% { opacity: 1; } }
+@keyframes cligne-ferme { 0%, 93% { opacity: 0; } 95% { opacity: 1; } 98% { opacity: 0; } }
+.arene-reflexe.stress-1:not(.eternue):not(.chauffe) .visage.normal, .arene-reflexe.stress-1:not(.eternue):not(.chauffe) .visage.cligne { animation-duration: 1.5s; }
+.arene-reflexe.stress-2:not(.eternue):not(.chauffe) .visage.normal, .arene-reflexe.stress-2:not(.eternue):not(.chauffe) .visage.cligne { animation-duration: .8s; }
+.arene-reflexe.stress-1:not(.eternue):not(.chauffe) .visage.normal svg, .arene-reflexe.stress-1:not(.eternue):not(.chauffe) .visage.cligne svg { animation: tremble-stress .22s linear infinite; }
+.arene-reflexe.stress-2:not(.eternue):not(.chauffe) .visage.normal svg, .arene-reflexe.stress-2:not(.eternue):not(.chauffe) .visage.cligne svg { animation: tremble-stress .1s linear infinite; }
+@keyframes tremble-stress { 25% { transform: translateX(-2px) rotate(-1deg); } 75% { transform: translateX(2px) rotate(1deg); } }
+.sueur { position: absolute; left: calc(50% + 46px); top: calc(52% - 60px); width: 16px; opacity: 0; pointer-events: none; z-index: 2; }
+.arene-reflexe.stress-1:not(.eternue):not(.chauffe) .sueur { animation: coule-sueur 1.4s ease-in infinite; }
+.arene-reflexe.stress-2:not(.eternue):not(.chauffe) .sueur { animation: coule-sueur .8s ease-in infinite; }
+@keyframes coule-sueur { 0% { opacity: 0; transform: translateY(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(46px); } }
+/* Colis piégé : chez celui qui le reçoit, le colis tombe du haut de l'écran et rebondit. */
+.patate-a-lancer { animation: arrive-colis .8s var(--rebond) backwards; }
+@keyframes arrive-colis { 0% { transform: translate(60px, -320px) rotate(360deg) scale(.4); opacity: 0; } 55% { transform: none; opacity: 1; } 70% { transform: translateY(-22px) scale(.96, 1.04); } 85% { transform: scale(1.06, .94); } 100% { transform: none; } }

@@ -558,12 +558,19 @@ setInterval(videosAutomatiques, 1000);
 // Horloge des jeux d'action (Réflexe Mallow, Le bon timing) : le feu, les éternuements et le décompte
 // apparaissent à l'heure du serveur, donc au même instant sur tous les téléphones.
 const sonsJoues = new Set<string>();
+const debutsAttente = new WeakMap<HTMLElement, number>();
 function horloge(): void {
   const t = maintenant();
   document.querySelectorAll<HTMLElement>('[data-feu]').forEach((el) => {
     const feu = Number(el.dataset.feu);
     const enFeu = t >= feu;
     el.classList.toggle('en-feu', enFeu);
+    // Mallow stressé : il cligne, puis tremble et transpire de plus en plus. Le stress suit le temps passé à attendre
+    // (depuis l'arrivée de l'écran), jamais l'heure du feu : le regarder ne donne aucun indice.
+    if (!debutsAttente.has(el)) debutsAttente.set(el, performance.now());
+    const attente = performance.now() - debutsAttente.get(el)!;
+    el.classList.toggle('stress-1', !enFeu && attente >= 3000 && attente < 6000);
+    el.classList.toggle('stress-2', !enFeu && attente >= 6000);
     const leurre = el.dataset.leurre ? Number(el.dataset.leurre) : NaN;
     el.classList.toggle('eternue', !Number.isNaN(leurre) && t >= leurre && t < leurre + 700);
     // Leurre du vainqueur : chez la victime seulement, Mallow « chauffe » comme s'il allait prendre feu.

@@ -174,6 +174,8 @@ export const reflexe: MiniJeu<Etat> = {
           ${moi !== undefined && moi >= 0 ? '<span class="onde-arene" aria-hidden="true"></span>' : ''}
           ${FLAMMES}
           <span class="visage normal">${mallow({ taille: 150 })}</span>
+          <span class="visage cligne">${mallow({ taille: 150, expression: 'yeuxFermes' })}</span>
+          <svg class="sueur" viewBox="0 0 20 28" aria-hidden="true"><path d="M10 2 Q18 14 18 19 A8 8 0 0 1 2 19 Q2 14 10 2 Z" fill="#9FE3FF" stroke="#24123A" stroke-width="3" stroke-linejoin="round"/></svg>
           <span class="visage surprise">${mallow({ taille: 150, expression: 'surprise' })}</span>
           <span class="visage atchoum">${mallow({ taille: 150, expression: 'yeuxFermes' })}</span>
         </button>
