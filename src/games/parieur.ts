@@ -103,13 +103,20 @@ export const parieur: MiniJeu<Etat> = {
       const deja = v.maReponse?.etape === e.etape;
       const cote = v.local[`${e.etape}:cote`] as string | undefined;
       const mise = v.local[`${e.etape}:mise`] as number | undefined;
+      // Le tapis : un jeton par point misé ; une fois la mise envoyée, la pile file vers le camp choisi.
+      const jetons = (n: number) => Array.from({ length: n }, (_, i) => `<span class="jeton" style="--i:${i}"></span>`).join('');
+      const envoye = deja ? { mise: Number(v.maReponse!.mise), cote: String(v.maReponse!.cote) } : null;
+      const camp = (valeur: string, texte: string, couleur: string) => {
+        const actif = (envoye?.cote ?? cote) === valeur;
+        return `<button class="option camp-pari ${actif ? `actif ${couleur}` : ''}" ${envoye ? 'disabled' : `data-action="jeu" data-geste="cote" data-valeur="${valeur}"`}>${texte}${envoye && actif ? `<span class="recu-pari">+${envoye.mise}</span>` : ''}</button>`;
+      };
+      const tapis = `<div class="tapis-pari" aria-hidden="true"><div class="pile-jetons ${envoye ? `part ${envoye.cote === 'reussite' ? 'vers-gauche' : 'vers-droite'}` : ''}">${jetons(envoye?.mise ?? mise ?? 0)}</div></div>`;
       const choix = deja
-        ? `<p class="attente">Mise enregistrée : ${v.maReponse!.mise} pt${Number(v.maReponse!.mise) > 1 ? 's' : ''} sur ${v.maReponse!.cote === 'reussite' ? 'la réussite' : 'l’échec'}.</p>`
+        ? `<div class="mise-zone"><div class="options deux">${camp('reussite', 'Il ou elle réussit', 'vert')}${camp('echec', 'Il ou elle rate', 'rose')}</div>${tapis}
+          <p class="attente">Mise enregistrée : ${envoye!.mise} pt${envoye!.mise > 1 ? 's' : ''} sur ${envoye!.cote === 'reussite' ? 'la réussite' : 'l’échec'}.</p></div>`
         : `<div class="mise-zone">
-          <div class="options deux">
-            <button class="option ${cote === 'reussite' ? 'actif vert' : ''}" data-action="jeu" data-geste="cote" data-valeur="reussite">Il ou elle réussit</button>
-            <button class="option ${cote === 'echec' ? 'actif rose' : ''}" data-action="jeu" data-geste="cote" data-valeur="echec">Il ou elle rate</button>
-          </div>
+          <div class="options deux">${camp('reussite', 'Il ou elle réussit', 'vert')}${camp('echec', 'Il ou elle rate', 'rose')}</div>
+          ${tapis}
           <div class="options trois">${[1, 2, 3].map((n) => `<button class="option ${mise === n ? 'actif jaune' : ''}" data-action="jeu" data-geste="mise" data-valeur="${n}">${n} pt${n > 1 ? 's' : ''}</button>`).join('')}</div>
           <button class="bouton jaune" data-action="jeu" data-geste="miser" ${cote && mise ? '' : 'disabled'}>${cote && mise ? `Miser ${mise} pt${mise > 1 ? 's' : ''}` : 'Choisis ton camp et ta mise'}</button>
           </div>`;

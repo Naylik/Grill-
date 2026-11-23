@@ -34,6 +34,15 @@ export function installer(el: HTMLElement): void {
   document.addEventListener('input', (e) => {
     const champ = e.target as HTMLInputElement;
     if (champ.name) brouillons[champ.name] = champ.value;
+    // Le Juste Prix : l'étiquette de prix recopie ce qu'on tape et sursaute à chaque chiffre.
+    const etiquette = champ.name ? document.querySelector<HTMLElement>(`[data-etiquette-de="${CSS.escape(champ.name)}"]`) : null;
+    if (etiquette) {
+      const valeur = etiquette.querySelector('b');
+      if (valeur) valeur.textContent = champ.value.trim() || '?';
+      etiquette.classList.remove('secoue');
+      void etiquette.offsetWidth; // relance l'animation
+      etiquette.classList.add('secoue');
+    }
   });
   // « Entrée » dans un champ = cliquer sur le bouton indiqué par data-entree.
   document.addEventListener('keydown', (e) => {

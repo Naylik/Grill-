@@ -1121,3 +1121,26 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 @keyframes secousse-rep { 30% { translate: -4px 0; } 70% { translate: 4px 0; } }
 .arrive-estimation { animation: arrive-estimation var(--t-normal) var(--doux) both; }
 @keyframes arrive-estimation { from { opacity: 0; transform: translateY(20px); } }
+
+/* Le Juste Prix : l'étiquette de magasin qui se balance et sursaute à chaque chiffre tapé (ui.ts). */
+.ficelle-prix { position: relative; display: flex; justify-content: center; height: 118px; }
+.etiquette-prix { position: relative; align-self: start; min-width: 170px; margin-top: 30px; padding: 14px 22px 12px 38px; border-radius: var(--r-xs); background: var(--jaune); color: var(--fond); text-align: center; clip-path: polygon(18px 0, 100% 0, 100% 100%, 18px 100%, 0 50%); filter: drop-shadow(0 5px 0 var(--jaune-ombre)); transform-origin: 50% -30px; animation: balance-prix 2.4s ease-in-out infinite; }
+.etiquette-prix::before { content: ''; position: absolute; left: 13px; top: 50%; width: 11px; height: 11px; translate: 0 -50%; border-radius: 50%; background: var(--fond); }
+.etiquette-prix b { display: block; font-family: var(--titre); font-weight: 900; font-size: var(--txt-2xl); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.etiquette-prix small { display: block; font-size: var(--txt-xs); font-weight: 800; }
+.ficelle-prix::after { content: ''; position: absolute; left: 50%; top: 0; width: 2px; height: 32px; background: var(--texte-2); }
+.etiquette-prix.secoue { animation: secoue-prix .5s var(--rebond), balance-prix 2.4s ease-in-out .5s infinite; }
+@keyframes balance-prix { 0%, 100% { rotate: -6deg; } 50% { rotate: 6deg; } }
+@keyframes secoue-prix { 0% { rotate: -18deg; } 60% { rotate: 10deg; } 100% { rotate: -6deg; } }
+/* Le Parieur : le tapis de casino, un jeton par point misé, puis la pile file vers le camp choisi. */
+.tapis-pari { position: relative; height: 104px; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 18px; border-radius: var(--r-l); background: radial-gradient(ellipse at 50% 40%, #1E6B49, #0F3A28); border: 3px solid #6B4A1E; }
+.tapis-pari::after { content: 'TA MISE'; position: absolute; top: 8px; left: 0; right: 0; text-align: center; font-family: var(--titre); font-weight: 900; font-size: var(--txt-xs); letter-spacing: 2px; color: #ffffff55; }
+.pile-jetons { position: relative; width: 60px; height: 48px; }
+.pile-jetons .jeton { position: absolute; left: 0; bottom: calc(var(--i) * 10px); width: 60px; height: 18px; border-radius: 50%; background: radial-gradient(ellipse at 50% 40%, var(--jaune-clair), var(--jaune) 55%, var(--jaune-fort)); border: 3px dashed #fff; box-shadow: 0 4px 0 var(--jaune-ombre); animation: tombe-jeton .45s var(--rebond) both; }
+@keyframes tombe-jeton { from { opacity: 0; transform: translateY(-110px) rotate(-40deg); } }
+.pile-jetons.part .jeton { animation: none; }
+.pile-jetons.part { animation: part-jetons .6s cubic-bezier(.5, 0, .7, .4) .2s forwards; }
+.pile-jetons.vers-gauche { --vers: -90px; } .pile-jetons.vers-droite { --vers: 90px; }
+@keyframes part-jetons { to { opacity: 0; transform: translate(var(--vers), -150px) scale(.4); } }
+.camp-pari { position: relative; }
+.recu-pari { position: absolute; right: 8px; top: -10px; padding: 2px 8px; border-radius: var(--r-rond); background: var(--jaune); color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-xs); animation: apres-jauge var(--t-normal) var(--rebond) .8s both; }

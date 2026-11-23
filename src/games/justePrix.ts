@@ -90,7 +90,8 @@ export const justePrix: MiniJeu<Etat> = {
       return `${chrono(e.fin)}${titre}
         ${deja
           ? `<p class="attente">Estimation envoyée : <strong>${formater(Number(v.maReponse!.estimation))}</strong> ${esc(q.unite)}</p>`
-          : `<label class="champ"><span>Ton estimation ${q.unite ? `(${esc(q.unite)})` : ''}</span>
+          : `<div class="ficelle-prix" aria-hidden="true"><div class="etiquette-prix" data-etiquette-de="${champ}"><b>${esc((brouillons[champ] ?? '').trim() || '?')}</b>${q.unite ? `<small>${esc(q.unite)}</small>` : ''}</div></div>
+             <label class="champ"><span>Ton estimation ${q.unite ? `(${esc(q.unite)})` : ''}</span>
               <input name="${champ}" inputmode="decimal" autocomplete="off" value="${esc(brouillons[champ] ?? '')}" placeholder="?" data-entree="jeu" class="code nombre"></label>
              <button class="bouton jaune" data-action="jeu" data-geste="estimer">Valider</button>`}
         ${attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && deja))}`;

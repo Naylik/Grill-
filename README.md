@@ -376,3 +376,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   valide idée par idée (chaque jeu peut avoir son univers). Écartées : chrono du Juste Prix qui rougit, chrono brouillé du
   Bon timing, cagnotte de Quitte ou Double. Combien ont dit oui ? : tampon « OUI ✔ / NON ✘ » sur le bouton touché (sur
   son téléphone seulement, petite vibration), puis la question suivante glisse. Silhouettes d'attente : refusées.
+- 23/11/2026 · Le Juste Prix : une étiquette de magasin se balance au-dessus du champ, recopie chaque chiffre tapé et
+  sursaute (ui.ts, `data-etiquette-de`). Le Parieur : tapis de casino, un jeton tombe par point misé ; une fois la mise
+  envoyée, la pile file vers le camp choisi et un badge « +N » s'y pose.
