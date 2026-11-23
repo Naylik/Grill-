@@ -431,3 +431,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · L'Imposteur : 6 paires trop proches (impossible de démasquer l'imposteur) remplacées : Mario/Rayman,
   Carton rouge/Hors-jeu, Game of Thrones/Narnia, Mercredi/Chair de poule, PlayStation/Nintendo Switch, Penalty/Corner.
   Clash Royale/Brawl Stars gardé (choix de Kilyan).
+- 23/11/2026 · Quitte ou Double, missions flash : « Encaisse exactement à 4 points » (impossible à juger par le groupe)
+  remplacée par « Hésite à voix haute pendant au moins 5 secondes avant chacun de tes choix… ». Trois autres missions
+  « d'encaissement » (f-quitte-03, 04, 08) restent à remplacer.
