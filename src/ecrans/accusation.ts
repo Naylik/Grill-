@@ -52,9 +52,9 @@ function fenetreAccuser(): string {
   const autres = uids().filter((u) => u !== S.uid);
   return `<div class="proces" role="dialog" aria-label="Accuser quelqu’un"><div class="proces-carte">
     <p class="proces-titre">GRILLÉ ?</p>
-    <p class="aide gauche">Qui est en train de faire une mission ? Écris ce que tu crois qu’il ou elle fait. Seul l’accusé verra si tu as raison.</p>
+    <p class="aide gauche">Qui est en train de faire une mission ? Sa <strong>grosse mission</strong> ou sa <strong>mission flash</strong> du jeu en cours : les deux comptent. Écris ce que tu crois qu’il ou elle fait ; seul l’accusé verra si tu as raison.</p>
     <div class="options deux">${autres.map((u) => `<button class="option ${cible === u ? 'actif rose' : ''}" data-action="choisirAccuse" data-valeur="${u}">${nom(u)}</button>`).join('')}</div>
-    <label class="champ"><span>Sa mission, à ton avis</span>
+    <label class="champ"><span>Sa mission (grosse ou flash), à ton avis</span>
       <textarea name="accusation" rows="3" maxlength="160" placeholder="Il essaie de me faire dire « franchement »…">${esc(brouillons.accusation ?? '')}</textarea></label>
     <p class="aide gauche"><strong>Vu juste</strong> : tu lui voles des points (${VOL_FLASH} pour une mission flash, 3 à 8 pour sa grosse mission) et sa mission est ratée. <strong>Raté</strong> : −${PENALITE_ACCUSATION} pts. Une accusation par manche.</p>
     <div class="options deux"><button class="option" data-action="fermerAccuser">Annuler</button><button class="option actif rose" data-action="accuser" ${cible ? '' : 'disabled'}>Accuser !</button></div>

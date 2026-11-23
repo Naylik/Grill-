@@ -12,6 +12,7 @@ import { brouillons } from '../ui';
 import { attenteDes, bulle, chrono, pastille } from './commun';
 import { carteMission } from './missions';
 import { blocFlash } from './flash';
+import { POINTS_FLASH } from '../flash';
 import { localJeu } from '../memoireJeu';
 import { boutonsVideo } from './video';
 import { mallow, sequenceGrille } from '../mallow';
@@ -24,6 +25,9 @@ const boutonHote = (valeur: string, texte: string, couleur = 'jaune') =>
   estHote() ? `<button class="bouton ${couleur}" data-action="hote" data-valeur="${valeur}">${texte}</button>` : '';
 
 // ——— Choix du jeu ———
+
+/** Noms courts pour la roue (les noms complets dépassent des parts). */
+const NOMS_ROUE: Record<string, string> = { combien: 'Combien ?', justeprix: 'Juste Prix', parieur: 'Parieur', imposteur: 'Imposteur', reflexe: 'Réflexe', timing: 'Timing', patate: 'Colis', quitte: 'Quitte/Double', telephone: 'Dessin', mines: 'Mines', territoires: 'Territoires', telepathie: 'Télépathie' };
 
 export function ecranChoixJeu(): string {
   const d = S.deroule!;
@@ -40,7 +44,7 @@ export function ecranChoixJeu(): string {
     return `${entete}<h2 class="centre-texte">La roue tourne…</h2>
       <div class="roue-cadre"><div class="pointeur" aria-hidden="true"></div>
         <div class="roue" style="background: conic-gradient(${segments}); --fin: ${fin}deg; animation-delay: -${ecoule}ms">
-          ${options.map((id, i) => `<span style="transform: rotate(${(i + 0.5) * (360 / k)}deg)"><b>${esc(jeuParId(id)?.nom ?? id)}</b></span>`).join('')}
+          ${options.map((id, i) => `<span style="transform: rotate(${(i + 0.5) * (360 / k)}deg)"><b>${esc(NOMS_ROUE[id] ?? jeuParId(id)?.nom ?? id)}</b></span>`).join('')}
         </div>
       </div>
       <div class="revele-jeu" style="animation-delay: ${4600 - ecoule}ms"><h3 style="color:${gagnant.couleur}">${esc(gagnant.nom)}</h3><p class="aide">${esc(gagnant.accroche)}</p></div>`;
@@ -133,20 +137,29 @@ export function ecranClassement(): string {
   // Place de chacun au jeu qui vient de se terminer (au Parieur : selon les points gagnés),
   // pour pouvoir juger les missions du type « termine 2e » ou « finis dernier ».
   const placesJeu = d.dernierJeu?.points ? places(d.dernierJeu.points) : {};
+  // Mission flash réussie à ce jeu : +3, affiché à côté des points du jeu.
+  const flashOk = (u: string) => d.flash?.numero === d.numeroJeu && !!d.flash.resultats?.[u];
   const lignes = liste.map((u, i) => {
     const gagne = d.dernierJeu?.points?.[u] ?? 0;
     const p = placesJeu[u];
     const place = p ? `<span class="place-jeu">${p === 1 ? '1er' : `${p}e`} au jeu</span>` : '';
+    const gains = [gagne > 0 ? `+${gagne}` : gagne < 0 ? `${gagne}` : '', flashOk(u) ? `⚡+${POINTS_FLASH}` : ''].filter(Boolean).join(' · ');
     return `<div class="ligne-classement ${u === S.uid ? 'moi' : ''}">
       <span class="rang">${i + 1}</span>${pastille(S.joueurs[u], 30)}<strong>${nom(u)}${place}</strong>
-      <span class="gain">${gagne > 0 ? `+${gagne}` : gagne < 0 ? gagne : ''}</span><span class="total">${totalProvisoire(S.scores[u])}</span></div>`;
+      <span class="gain">${gains}</span><span class="total">${totalProvisoire(S.scores[u])}</span></div>`;
   }).join('');
+  // Podium du mini-jeu qui vient de finir : qui l'a gagné, avec les points gagnés.
+  const podiumJeu = Object.keys(placesJeu).length
+    ? `<div class="podium-jeu">${uids().filter((u) => placesJeu[u] && placesJeu[u] <= 3).sort((a, b) => placesJeu[a] - placesJeu[b])
+      .map((u) => `<div class="marche-jeu p${placesJeu[u]}"><span>${['🥇', '🥈', '🥉'][placesJeu[u] - 1]}</span>${pastille(S.joueurs[u], 34)}<strong>${nom(u)}</strong><em>+${d.dernierJeu?.points?.[u] ?? 0}</em></div>`).join('')}</div>`
+    : '';
   const suivant = d.numeroJeu >= total ? 'Passer au pari détective' : `Jeu suivant (${d.numeroJeu + 1}/${total})`;
   return `<p class="petit centre-texte">${jeu ? `Fin de « ${esc(jeu.nom)} »` : ''} · ${d.numeroJeu}/${total}</p>
-    <h2>Classement provisoire</h2>
+    ${podiumJeu ? `<h2>${jeu ? `Podium · ${esc(jeu.nom)}` : 'Podium du jeu'}</h2>${podiumJeu}` : ''}
     ${d.dernierJeu?.resume ? `<p class="aide gauche">${esc(d.dernierJeu.resume)}</p>` : ''}
+    <h2>Classement provisoire</h2>
     <div class="pile">${lignes}</div>
-    <p class="aide">Sans les points de mission : ils tombent à la fin.</p>
+    <p class="aide">⚡ = mission flash réussie. Les points des grosses missions tombent à la fin.</p>
     ${d.vanne ? bulle(esc(d.vanne)) : ''}
     <button class="rappel" data-action="onglet" data-valeur="missions">${rappel.texte}</button>
     ${boutonsVideo({ numeroJeu: d.numeroJeu })}
@@ -263,7 +276,8 @@ export function ecranRevelation(): string {
   });
   const grillages = (r.paris ?? []).map((p) => {
     const n = missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number));
-    return `<div class="verdict ${n ? 'grille' : 'ko'}"><strong>${nom(p.de)} : ${n ? `grillé, mission ${n} !` : 'pari raté'}</strong><span>${n ? 'vol de points' : '−2 pts'}</span></div>`;
+    const vol = n ? VOL_DETECTIVE[missions[n - 1]?.difficulte ?? 'facile'] : 0;
+    return `<div class="verdict ${n ? 'grille' : 'ko'}"><strong>${nom(p.de)} : ${n ? 'mission grillée !' : 'pari raté'}</strong><span>${n ? `+${vol} pts pour ${nom(p.de)}, −${vol} pts pour ${nom(sujet)}` : `${PARI_RATE} pts pour ${nom(p.de)}`}</span></div>`;
   });
   const menteur = (r.mensonges ?? []).map((m) => {
     const n = missionTrouvee(Object.values(S.votes[`l-${m.cle}`] ?? {}).map(Number));

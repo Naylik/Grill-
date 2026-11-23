@@ -27,8 +27,6 @@ export const VOL_FLASH = 2;
 export const DEVOILE_DEBUT = 2200;
 export const DEVOILE_PAS = 1800;
 export const delaiCarteFlash = (rang: number): number => DEVOILE_DEBUT + rang * DEVOILE_PAS;
-/** Durée totale du dévoilement : le chrono du vote démarre après la dernière carte. */
-export const dureeDevoilement = (nbCartes: number): number => delaiCarteFlash(Math.max(0, nbCartes - 1)) + 800;
 /** 1 ou 2 porteurs, au hasard à chaque jeu (2 plus souvent quand on est nombreux). */
 export const nbPorteurs = (nbJoueurs: number, hasard: () => number = Math.random): number =>
   nbJoueurs < 3 ? 1 : hasard() < (nbJoueurs >= 5 ? 0.6 : 0.4) ? 2 : 1;
@@ -82,9 +80,10 @@ export function tirerFlash(opts: {
   return { id: m.id, jeu: m.jeu, texte: m.texte.replaceAll('{cible}', cible.prenom), cible: cible.uid };
 }
 
-/** Une mission flash est-elle réussie ? Grillée = ratée ; sinon la majorité des votes (pas de vote = réussie). */
+/** Une mission flash est-elle réussie ? Grillée = ratée ; sinon la majorité des votes exprimés (un vote manquant compte
+ *  comme vote blanc). Aucun vote exprimé : ratée, il faut que le groupe la valide. */
 export function flashReussie(votes: boolean[], grillee: boolean): boolean {
   if (grillee) return false;
-  if (!votes.length) return true;
+  if (!votes.length) return false;
   return votes.filter(Boolean).length * 2 > votes.length;
 }

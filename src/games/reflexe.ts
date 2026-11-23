@@ -16,7 +16,7 @@ const PENALITE = 1000; // faux départ
 const ABSENT = 1500; // pas de réponse
 const DUREE_INTRO = 7000;
 const DUREE_PISTE = 4800;
-const DUREE_PISTE_CHOIX = 8000; // quand le gagnant peut choisir sa victime
+const DUREE_PISTE_CHOIX = 15_000; // le gagnant choisit sa victime : on attend son choix (15 s au plus)
 const DUREE_BILAN = 6500;
 
 interface Etat extends EtatDeBase {
@@ -38,7 +38,9 @@ const etapeDe = (n: number, m: number) => `reflexe-${n}-${m}`;
 const etapePiege = (n: number, m: number) => `reflexe-${n}-${m}-piege`;
 
 function nouvelleManche(ctx: { maintenant: number; hasard: () => number }, base: Etat, manche: number, cible?: string): Etat {
-  const feu = ctx.maintenant + 2500 + 1500 + ctx.hasard() * 2500;
+  // Environ une manche sur trois, Mallow se fait attendre (9 à 14 s) : la tension monte.
+  const tard = ctx.hasard() < 0.3;
+  const feu = ctx.maintenant + 2500 + (tard ? 6500 + ctx.hasard() * 5000 : 1500 + ctx.hasard() * 2500);
   const leurre = ctx.hasard() < 0.45 ? ctx.maintenant + 2500 + (feu - ctx.maintenant - 2500) * (0.35 + ctx.hasard() * 0.3) : null;
   // Le piège tombe entre 1,2 s après le début et 0,7 s avant le vrai feu.
   const piege = cible ? { cible, heure: ctx.maintenant + 2500 + 1200 + (feu - ctx.maintenant - 2500 - 1900) * ctx.hasard() } : undefined;

@@ -8,18 +8,17 @@ import { S, cheminMemoire, estHote, memoireDuGroupe } from './etat';
 import { JEUX, jeuParId, jeuxPossibles, jeuxPourVote } from './games';
 import type { Avancee, ContexteHote } from './games/interface';
 import { auHasard, melanger } from './outils';
-import { majoriteOui, missionTrouvee, pointsDeFin, scoreVide, titres, totalFinal, totalProvisoire, VOL_DETECTIVE, type ResultatMission, type ResultatPari } from './score';
+import { attribuerTitres, majoriteOui, missionTrouvee, pointsDeFin, scoreVide, totalFinal, totalProvisoire, VOL_DETECTIVE, type CandidatTitre, type ResultatMission, type ResultatPari } from './score';
 import { accusationEnCours, accusationsADoubler, liste as listeAccusations, mancheAction, missionsGrillees, PENALITE_ACCUSATION, PENALITE_MENSONGE, piloterAccusations } from './accusations';
 import { vanneDuClassement } from './narrateur';
 import type { Bilan, Deroule, EtatFlash, EtatRevelation, Score } from './types';
-import { flashReussie, nbPorteurs, POINTS_FLASH, dureeDevoilement } from './flash';
+import { flashReussie, nbPorteurs, POINTS_FLASH } from './flash';
 
 const DUREE_ROUE = 5_500;
 const DUREE_VOTE_JEU = 20_000;
 const DUREE_VOTE = 45_000;
 const DUREE_GRILLAGE = 25_000; // « Dernière chance » : le temps d'appuyer sur GRILLÉ ! avant la révélation
 const DUREE_COLLECTE_FLASH = 6_000; // le temps que les porteurs révèlent leur mission flash
-const DUREE_VOTE_FLASH = 30_000;
 const DUREE_RESULTAT_FLASH = 5_000;
 
 type Ecritures = Record<string, unknown>;
@@ -170,13 +169,14 @@ function etapeFlash(f: EtatFlash): Ecritures | null {
     const attendus = S.deroule?.flashTirage?.numero === n ? S.deroule.flashTirage.nb : 0;
     if (revelees.length < attendus && now < (f.fin ?? 0)) return null;
     if (!revelees.length) return { 'deroule/phase': 'classement', 'deroule/flash': null };
-    return { 'deroule/flash': { numero: n, etape: 'vote', fin: now + dureeDevoilement(revelees.length) + DUREE_VOTE_FLASH, porteurs: revelees } };
+    // Pas de chrono : on débat et on vote tranquillement ; on passe quand tout le monde a voté (ou si l'hôte force).
+    return { 'deroule/flash': { numero: n, etape: 'vote', porteurs: revelees } };
   }
   if (f.etape === 'vote') {
     const porteurs = f.porteurs ?? [];
     const aVoter = porteurs.filter((u) => !flashGrillee(u, n));
     const fini = aVoter.every((u) => votantsFlash(u).every((v) => S.votes[`f${n}-${u}`]?.[v] !== undefined));
-    if (!fini && now < (f.fin ?? 0)) return null;
+    if (!fini && now < (f.fin ?? Infinity)) return null;
     const resultats: Record<string, boolean> = {};
     const e: Ecritures = {};
     for (const u of porteurs) {
@@ -275,7 +275,7 @@ function bilanFinal(): Ecritures {
   const pts = pointsDeFin(missions, paris, S.infos?.duree ?? 6);
   // Bouton GRILLÉ ! : les menteurs démasqués (« Raté » alors que l'accusation était juste).
   const ajustes: Record<string, number> = {};
-  const enPlus: Bilan['titres'] = [];
+  const enPlus: CandidatTitre[] = [];
   bilan.mensonges = [];
   for (const u of uids()) {
     for (const a of accusationsADoubler(S.accusations, u)) {
@@ -286,15 +286,10 @@ function bilanFinal(): Ecritures {
       ajustes[a.de] = (ajustes[a.de] ?? 0) + PENALITE_ACCUSATION + vol; // il récupère ses 2 points et vole son dû
       ajustes[u] = (ajustes[u] ?? 0) - PENALITE_MENSONGE - vol;
       bilan.mensonges.push({ de: a.de, cible: u, texte: a.texte });
-      enPlus.push({ uid: u, titre: 'Menteur démasqué', pourquoi: 'a répondu « Raté » à une accusation juste' });
+      enPlus.push({ uid: u, titre: 'Menteur démasqué', pourquoi: 'a répondu « Raté » à une accusation juste', force: 1 });
     }
   }
-  for (const a of listeAccusations(S.accusations)) {
-    if (a.statut === 'grille' || a.verdict === 'grille') {
-      enPlus.push({ uid: a.de, titre: 'Sherlock', pourquoi: 'a grillé quelqu’un en direct' });
-      enPlus.push({ uid: a.cible, titre: 'Grillé', pourquoi: 'mission découverte en direct' });
-    }
-  }
+
   const scores: Record<string, Score> = {};
   for (const u of uids()) {
     const avant = { ...scoreVide(), ...S.scores[u] };
@@ -308,14 +303,26 @@ function bilanFinal(): Ecritures {
   for (const a of listeAccusations(S.accusations)) if (a.statut === 'grille' || a.verdict === 'grille') ajouter(a.cible, a.de);
   bilan.grilleurs = grilleurs;
   // Missions flash : le roi de l'éclair (au moins 2 réussies).
-  const flashs = uids().map((u) => ({ u, n: Math.round((scores[u].flash ?? 0) / POINTS_FLASH) }));
-  const maxFlash = Math.max(0, ...flashs.map((x) => x.n));
-  if (maxFlash >= 2) for (const x of flashs) if (x.n === maxFlash) enPlus.push({ uid: x.u, titre: 'Éclair', pourquoi: `${x.n} missions flash réussies` });
-  for (const [u, liste] of Object.entries(missions)) {
-    if (liste.some((m) => m.vengeance && m.reussie)) enPlus.push({ uid: u, titre: 'Vengeur', pourquoi: 'mission de vengeance réussie' });
+  // Titres de fin : des candidats par catégorie, puis un seul gagnant par titre et un seul titre par joueur.
+  const accs = listeAccusations(S.accusations);
+  const compte = (f: (u: string) => number) => uids().map((u) => ({ u, n: f(u) }));
+  for (const u of uids()) {
+    const reussies = missions[u].filter((m) => m.reussie);
+    if (reussies.length) enPlus.push({ uid: u, titre: 'Agent secret', pourquoi: 'grosse mission réussie', force: pts.missions[u] ?? 0 });
+    if (reussies.some((m) => m.vengeance)) enPlus.push({ uid: u, titre: 'Vengeur', pourquoi: 'mission de vengeance réussie', force: 1 });
   }
-  const tous = [...titres(scores, missions, paris), ...enPlus];
-  bilan.titres = tous.filter((t, i) => tous.findIndex((x) => x.uid === t.uid && x.titre === t.titre) === i);
+  const meilleurJeux = Math.max(...uids().map((u) => scores[u].jeux ?? 0));
+  for (const u of uids()) if (meilleurJeux > 0) enPlus.push({ uid: u, titre: 'Champion des mini-jeux', pourquoi: `${scores[u].jeux} pts de mini-jeux`, force: scores[u].jeux ?? 0 });
+  for (const { u, n } of compte((u) => accs.filter((a) => a.de === u && (a.statut === 'grille' || a.verdict === 'grille')).length + paris.filter((p) => p.de === u && p.trouvee).length)) {
+    if (n) enPlus.push({ uid: u, titre: 'Sherlock', pourquoi: `${n} mission${n > 1 ? 's' : ''} découverte${n > 1 ? 's' : ''}`, force: n });
+  }
+  for (const { u, n } of compte((u) => Math.round((scores[u].flash ?? 0) / POINTS_FLASH))) if (n >= 2) enPlus.push({ uid: u, titre: 'Éclair', pourquoi: `${n} missions flash réussies`, force: n });
+  const grilles = compte((u) => (grilleurs[u] ?? []).length);
+  for (const { u, n } of grilles) if (n) enPlus.push({ uid: u, titre: 'Grillé', pourquoi: `découvert ${n} fois`, force: n });
+  for (const { u, n } of compte((u) => accs.filter((a) => a.de === u).length)) if (n >= 2) enPlus.push({ uid: u, titre: 'Le Parano', pourquoi: `${n} accusations lancées`, force: n });
+  for (const { u, n } of grilles) if (!n && missions[u].some((m) => m.reussie)) enPlus.push({ uid: u, titre: 'L’Intouchable', pourquoi: 'jamais démasqué de la soirée', force: totalFinal(scores[u]) });
+  for (const u of uids()) enPlus.push({ uid: u, titre: 'La Poisse', pourquoi: 'la chance n’était pas au rendez-vous', force: -totalFinal(scores[u]) });
+  bilan.titres = attribuerTitres(enPlus, uids());
   return { scores, 'deroule/phase': 'fin', 'deroule/bilan': bilan, 'deroule/revelation': null, attente: null };
 }
 

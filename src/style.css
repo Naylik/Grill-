@@ -153,7 +153,7 @@ textarea:focus { outline: none; border-color: var(--cyan); }
 .roue-cadre { contain: paint; padding: 18px 0 0; position: relative; width: min(78vw, 320px); margin: 8px auto; }
 .roue { width: 100%; aspect-ratio: 1; border-radius: 50%; border: 6px solid var(--texte); box-shadow: 0 8px 0 #0008; animation: tourne 4.5s var(--doux) both; position: relative; overflow: hidden; }
 .roue span { position: absolute; left: 50%; top: 0; height: 50%; transform-origin: 50% 100%; display: flex; justify-content: center; padding-top: 18px; }
-.roue b { writing-mode: vertical-rl; font-family: var(--titre); font-size: var(--txt-s); color: var(--fond); max-height: 100%; }
+.roue b { writing-mode: vertical-rl; font-family: var(--titre); font-size: var(--txt-xs); color: var(--fond); max-height: calc(100% - 26px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @keyframes tourne { from { transform: rotate(0); } to { transform: rotate(var(--fin)); } }
 .pointeur { position: absolute; top: 2px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-top: 30px solid var(--jaune); z-index: 2; filter: drop-shadow(0 3px 0 #0006); }
 .revele-jeu { text-align: center; animation: apparait var(--t-normal) both; }
@@ -976,3 +976,17 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 @keyframes sort-tambour { to { opacity: 0; height: 0; margin: 0; overflow: hidden; } }
 .carte-flash.devoile { animation: devoile-flash .8s var(--rebond) both; animation-delay: var(--delai, 0ms); }
 @keyframes devoile-flash { 0% { opacity: 0; transform: perspective(600px) rotateY(90deg) scale(.85); } 60% { opacity: 1; transform: perspective(600px) rotateY(-8deg) scale(1.04); } 100% { transform: none; } }
+/* Mission flash cachée : même texte flou pour tous, cadre de taille fixe ; le vrai texte seulement à l'appui long. */
+.texte-flash-cache { display: grid; min-height: 5.6em; align-content: center; }
+.texte-flash-cache > span { grid-area: 1 / 1; }
+.texte-flash-cache .vrai-texte { display: none; } /* hors mise en page : sa longueur ne change pas la taille du cadre */
+.texte-flash-cache.revele .vrai-texte { display: block; }
+.texte-flash-cache.revele .flou-commun { display: none; }
+/* Podium du mini-jeu qui vient de finir. */
+.podium-jeu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; align-items: end; }
+.marche-jeu { display: grid; justify-items: center; gap: 4px; padding: 10px 6px; border-radius: var(--r-l); background: var(--voile-1); border: 1px solid var(--bord); text-align: center; min-width: 0; animation: arrive var(--t-lent) var(--rebond) both; }
+.marche-jeu span { font-size: var(--txt-xl); }
+.marche-jeu strong { font-size: var(--txt-s); overflow-wrap: anywhere; }
+.marche-jeu em { font-style: normal; font-family: var(--titre); font-weight: 900; color: var(--vert); }
+.marche-jeu.p1 { order: 2; padding-top: 18px; border-color: var(--jaune); box-shadow: 0 0 20px -8px var(--jaune); }
+.marche-jeu.p2 { order: 1; } .marche-jeu.p3 { order: 3; animation-delay: .1s; }

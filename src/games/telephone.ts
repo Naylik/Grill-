@@ -8,7 +8,7 @@ import { majoriteOui, pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
 import { brouillons } from '../ui';
 import { COULEURS, GOMME, outil, sablier, toileAVoir, traitsDe, type Trait } from '../dessin';
-import { etapeTerminee, reponsesDe, selonFormat, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu } from './interface';
 import { classementBarres, hud } from './arene';
 
 const NB_ETAPES: [number, number, number] = [3, 4, 5]; // Courte, Normale, Longue (jamais plus que de joueurs)
@@ -41,6 +41,9 @@ interface Etat extends EtatDeBase {
 }
 
 const etapeDe = (n: number, quoi: string) => `tel-${n}-${quoi}`;
+/** On attend tout le monde jusqu'au bout du chrono, même un téléphone qui décroche un instant (mise en veille,
+ *  appli en arrière-plan) : sinon sa phrase ou son dessin serait sauté. */
+const tousAttendus = (ctx: ContexteHote): ContexteHote => ({ ...ctx, connectes: ctx.uids });
 const estDessin = (s: number) => s % 2 === 0;
 /** Chaîne sur laquelle travaille le joueur n° p à l'étape s (chacun avance d'une chaîne à chaque étape). */
 export const chaineDe = (p: number, s: number, n: number): number => (((p - s) % n) + n) % n;
@@ -115,7 +118,7 @@ export const telephone: MiniJeu<Etat> = {
   piloter(ctx, etat) {
     const now = ctx.maintenant;
     const n = etat.ordre.length;
-    if (etat.phase === 'phrase' && etapeTerminee(ctx, etat.etape, etat.fin)) {
+    if (etat.phase === 'phrase' && etapeTerminee(tousAttendus(ctx), etat.etape, etat.fin)) {
       // Le joueur n° p a écrit la phrase de la chaîne p+1 (celle qu'il ne dessinera jamais).
       const recues = reponsesDe<{ texte?: string }>(ctx, etat.etape);
       const phrasesFinales = etat.phrases.map((secours, c) => {
@@ -125,7 +128,7 @@ export const telephone: MiniJeu<Etat> = {
       });
       return { etat: { ...etat, phrases: phrasesFinales, phase: 'etape', etapeN: 0, etape: etapeDe(etat.numeroJeu, 's0'), fin: now + DUREE_DESSIN } };
     }
-    if (etat.phase === 'etape' && etapeTerminee(ctx, etat.etape, etat.fin)) {
+    if (etat.phase === 'etape' && etapeTerminee(tousAttendus(ctx), etat.etape, etat.fin)) {
       // Chacun a rendu son dessin ou sa devinette : on l'ajoute à sa chaîne.
       const recues = reponsesDe<{ dessin?: Trait[]; texte?: string }>(ctx, etat.etape);
       const chaines = etat.ordre.map((_, c) => [...(etat.chaines?.[c] ?? [])]);
@@ -143,7 +146,7 @@ export const telephone: MiniJeu<Etat> = {
       return { etat: { ...etat, chaines, phase: 'revue', revue: 0, affiches: 1, favoris: {}, reussis: {}, etape: etapeDe(etat.numeroJeu, 'v0'), fin: undefined } };
     }
     // On ne vote qu'une fois toute la chaîne dévoilée (l'hôte la déroule étape par étape).
-    if (etat.phase === 'revue' && toutDevoile(etat) && etapeTerminee(ctx, etat.etape, etat.fin)) {
+    if (etat.phase === 'revue' && toutDevoile(etat) && etapeTerminee(tousAttendus(ctx), etat.etape, etat.fin)) {
       const c = etat.revue ?? 0;
       const recues = reponsesDe<{ favori?: string; bons?: number[] }>(ctx, etat.etape);
       const favoris = { ...(etat.favoris ?? {}) };
@@ -228,7 +231,9 @@ export const telephone: MiniJeu<Etat> = {
         return `${hud('DESSIN À LA CHAÎNE', c, n, true)}
           <p class="petit centre-texte">L’ALBUM · CHAÎNE ${c + 1}/${n}</p>
           ${album}${reactions}
-          <div class="pile bas">${v.estHote ? '<button class="bouton jaune" data-action="hote-jeu" data-valeur="suivant">Suivant</button>' : '<p class="attente">L’hôte tourne la page…</p>'}</div>`;
+          <div class="pile bas">${v.estHote
+            ? `<p class="aide">C’est toi qui tournes les pages de l’album, pour tout le monde.</p><button class="bouton jaune" data-action="hote-jeu" data-valeur="suivant">Montrer la suite (${devoile + 1}/${chaine.length})</button>`
+            : `<p class="attente">C’est l’hôte qui tourne les pages de l’album (${devoile}/${chaine.length})… Le vote arrive à la fin de la chaîne.</p>`}</div>`;
       }
       return `${hud('DESSIN À LA CHAÎNE', c, n, true)}${chrono(e.fin)}
         <p class="petit centre-texte">L’ALBUM · CHAÎNE ${c + 1}/${n} · À VOUS DE VOTER</p>

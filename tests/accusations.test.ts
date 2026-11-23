@@ -1,12 +1,12 @@
 // Bouton GRILLÉ ! : qui peut accuser, et comment l'hôte tranche.
 import { describe, expect, it } from 'vitest';
-import { accusationEnCours, missionsGrillees, peutAccuser, piloterAccusations, type Accusations } from '../src/accusations';
+import { accusationEnCours, liste, missionsGrillees, peutAccuser, piloterAccusations, type Accusations } from '../src/accusations';
 
 const ctx = { phase: 'classement' as const, numeroJeu: 2 };
 const base = { cible: 'b', texte: 'Il me fait dire franchement', le: 1000 };
 
 describe('bouton GRILLÉ !', () => {
-  it('une accusation par manche, pas avant le 1er jeu, pas pendant une autre accusation', () => {
+  it('accusations sans limite (une à la fois), pas avant le 1er jeu, pas pendant une autre accusation', () => {
     expect(peutAccuser('a', ctx, {}, 3)).toBe(true);
     expect(peutAccuser('a', { ...ctx, numeroJeu: 0, phase: 'missions' }, {}, 3)).toBe(false);
     // Après un jeu : seulement pendant la « dernière chance », pas pendant le vote des missions flash.
@@ -14,8 +14,10 @@ describe('bouton GRILLÉ !', () => {
     expect(peutAccuser('a', { ...ctx, phase: 'flash', phaseJeu: 'vote' }, {}, 3)).toBe(false);
     expect(peutAccuser('a', { ...ctx, phase: 'detective' }, {}, 3)).toBe(false);
     const deja: Accusations = { 2: { a: { ...base, statut: 'close', verdict: 'rate' } } };
-    expect(peutAccuser('a', ctx, deja, 3)).toBe(false); // déjà accusé à cette manche
-    expect(peutAccuser('a', { ...ctx, numeroJeu: 3 }, deja, 3)).toBe(true); // manche suivante
+    expect(peutAccuser('a', ctx, deja, 3)).toBe(true); // déjà accusé à ce jeu : on peut recommencer
+    // Les accusations suivantes du même jeu vivent dans « 2_2 », « 2_3 »… et gardent leur n° de jeu.
+    const deux: Accusations = { ...deja, '2_2': { a: { ...base, statut: 'close', verdict: 'grille' } } };
+    expect(liste(deux).map((x) => `${x.slot}:${x.numeroJeu}:${x.cle}`)).toEqual(['2:2:2-a', '2_2:2:2_2-a']);
     const enCours: Accusations = { 2: { c: { ...base } } };
     expect(peutAccuser('a', ctx, enCours, 3)).toBe(false);
   });

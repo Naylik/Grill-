@@ -99,28 +99,33 @@ export interface Titre {
   pourquoi: string;
 }
 
-/** Titres fun de l'écran final. */
-export function titres(
-  scores: Record<string, Score>,
-  missions: Record<string, ResultatMission[]>,
-  paris: ResultatPari[],
-): Titre[] {
+/** Un titre possible pour un joueur, avec sa « force » (le meilleur dans la catégorie l'emporte). */
+export interface CandidatTitre extends Titre {
+  force: number;
+}
+
+/** Ordre de priorité des titres : un joueur reçoit le premier titre qu'il mérite le plus. */
+export const ORDRE_TITRES = ['Agent secret', 'Vengeur', 'Champion des mini-jeux', 'Sherlock', 'Éclair', 'Menteur démasqué', 'Grillé', 'Le Parano', 'L’Intouchable', 'La Poisse'];
+
+/**
+ * Titres de l'écran final : chaque titre va à UN seul joueur (le meilleur de sa catégorie), et chaque joueur en a
+ * au plus un. Si le meilleur d'une catégorie a déjà un titre, la catégorie passe (on ne la donne pas au 2e).
+ * Ceux qui n'ont rien reçu deviennent « Le Mystérieux ».
+ */
+export function attribuerTitres(candidats: CandidatTitre[], uids: string[]): Titre[] {
   const res: Titre[] = [];
-  for (const [uid, liste] of Object.entries(missions)) {
-    if (liste.some((m) => m.reussie && m.difficulte !== 'facile')) res.push({ uid, titre: 'Agent secret', pourquoi: 'grosse mission réussie' });
+  const pris = new Set<string>();
+  for (const titre of ORDRE_TITRES) {
+    const liste = candidats.filter((c) => c.titre === titre && uids.includes(c.uid));
+    if (!liste.length) continue;
+    const max = Math.max(...liste.map((c) => c.force));
+    const gagnant = liste.find((c) => c.force === max && !pris.has(c.uid));
+    if (!gagnant) continue;
+    pris.add(gagnant.uid);
+    res.push({ uid: gagnant.uid, titre: gagnant.titre, pourquoi: gagnant.pourquoi });
   }
-  for (const p of paris) {
-    if (p.trouvee) {
-      res.push({ uid: p.de, titre: 'Sherlock', pourquoi: 'pari détective juste' });
-      res.push({ uid: p.cible, titre: 'Grillé', pourquoi: 'mission devinée' });
-    }
-  }
-  const meilleurJeux = Math.max(...Object.values(scores).map((s) => s.jeux));
-  for (const [uid, s] of Object.entries(scores)) {
-    if (s.jeux === meilleurJeux && meilleurJeux > 0) res.push({ uid, titre: 'Champion des mini-jeux', pourquoi: `${s.jeux} pts de place` });
-  }
-  // Pas de doublon (deux paris justes contre la même personne → un seul « Grillé »).
-  return res.filter((t, i) => res.findIndex((u) => u.uid === t.uid && u.titre === t.titre) === i);
+  for (const u of uids) if (!pris.has(u)) res.push({ uid: u, titre: 'Le Mystérieux', pourquoi: 'personne n’a rien vu venir…' });
+  return res;
 }
 
 /** Résultat d'un pari détective selon le vote du groupe : 1 ou 2 = mission trouvée, 0 = raté. */

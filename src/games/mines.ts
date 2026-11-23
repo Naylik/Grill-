@@ -19,7 +19,7 @@ import { classementBarres, hud } from './arene';
 const NB_CASES = 20; // grille de 4 × 5
 const COLONNES = 5;
 export const DETECTEURS = 1; // par joueur et par jeu : un seul, à utiliser au bon moment
-const MANCHES: [number, number, number] = [2, 2, 3]; // Courte, Normale, Longue
+const MANCHES: [number, number, number] = [2, 2, 2]; // Courte, Normale, Longue : 2 manches, une grille neuve à chaque fois
 const DUREE_POSE = 30_000;
 const DUREE_ACTION = 20_000;
 const DUREE_BOUM = 4_000;
@@ -81,27 +81,40 @@ export function minesAutour(i: number, mines: Record<string, string[]>): number 
 const restentSures = (e: Etat, mines: Record<string, string[]>) =>
   Array.from({ length: NB_CASES }, (_, i) => i).some((i) => !e.ouvertes[i] && !mines[i]?.length);
 
-/** Une manche (re)commence : tout le monde est en lice, le 1er joueur avance d'un cran. */
-function nouvelleManche(ctx: ContexteHote, e: Etat, manche: number, mines: Record<string, string[]>): { etat: Etat } {
-  if (manche >= e.nbManches || !restentSures(e, mines)) return { etat: { ...e, phase: 'bilan', enLice: [], fin: ctx.maintenant + DUREE_BILAN } };
-  const n = e.ordre.length;
-  const enLice = e.ordre.map((_, i) => e.ordre[(i + manche) % n]).filter((u) => ctx.connectes.includes(u));
+/** Fin d'une manche : une grille neuve et une nouvelle pose de mines, ou le bilan après la dernière manche. */
+function finDeManche(ctx: ContexteHote, e: Etat): { etat: Etat; ecritures?: Record<string, unknown> } {
+  const manche = e.manche + 1;
+  if (manche >= e.nbManches) return { etat: { ...e, phase: 'bilan', enLice: [], fin: ctx.maintenant + DUREE_BILAN } };
   const zero = Object.fromEntries(e.ordre.map((u) => [u, 0]));
-  const suite: Etat = { ...e, phase: 'tour', manche, enLice, actif: 0, pots: zero, sures: { ...zero }, action: e.action + 1, fin: ctx.maintenant + DUREE_ACTION };
+  return {
+    etat: {
+      ...e, phase: 'pose', manche, enLice: [], actif: 0, pots: zero, sures: { ...zero }, ouvertes: {}, poseurs: {}, detections: {}, dernier: undefined, dernierSur: undefined,
+      etape: `mines-${e.numeroJeu}-pose-${manche}`, fin: ctx.maintenant + DUREE_POSE,
+    },
+    ecritures: { 'prive/mines': null },
+  };
+}
+
+/** Les mines sont posées : les tours commencent, le 1er joueur avance d'un cran à chaque manche. */
+function debutTours(ctx: ContexteHote, e: Etat): { etat: Etat } {
+  const n = e.ordre.length;
+  const enLice = e.ordre.map((_, i) => e.ordre[(i + e.manche) % n]).filter((u) => ctx.connectes.includes(u));
   if (!enLice.length) return { etat: { ...e, phase: 'bilan', fin: ctx.maintenant + DUREE_BILAN } };
+  const zero = Object.fromEntries(e.ordre.map((u) => [u, 0]));
+  const suite: Etat = { ...e, phase: 'tour', enLice, actif: 0, pots: zero, sures: { ...zero }, action: e.action + 1, fin: ctx.maintenant + DUREE_ACTION };
   return { etat: { ...suite, etape: etapeDe(suite) } };
 }
 
 /** Au suivant : `sort` = le joueur actif quitte la manche (il a encaissé ou sauté). */
-function auSuivant(ctx: ContexteHote, e: Etat, mines: Record<string, string[]>, sort: boolean): { etat: Etat } {
+function auSuivant(ctx: ContexteHote, e: Etat, mines: Record<string, string[]>, sort: boolean): { etat: Etat; ecritures?: Record<string, unknown> } {
   const joueur = joueurDu(e);
   const enLice = sort ? e.enLice.filter((u) => u !== joueur) : e.enLice;
-  if (!enLice.length) return nouvelleManche(ctx, { ...e, enLice }, e.manche + 1, mines);
+  if (!enLice.length) return finDeManche(ctx, { ...e, enLice });
   // Plus aucun colis sûr fermé : ceux qui restent encaissent d'office, et la manche se termine.
   if (!restentSures(e, mines)) {
     const banque = { ...e.banque };
     for (const u of enLice) banque[u] = (banque[u] ?? 0) + (e.pots[u] ?? 0);
-    return nouvelleManche(ctx, { ...e, banque, enLice: [] }, e.manche + 1, mines);
+    return finDeManche(ctx, { ...e, banque, enLice: [] });
   }
   const actif = sort ? e.actif % enLice.length : (e.actif + 1) % enLice.length;
   const suite: Etat = { ...e, phase: 'tour', enLice, actif, action: e.action + 1, fin: ctx.maintenant + DUREE_ACTION };
@@ -120,7 +133,7 @@ export const champDeMines: MiniJeu<Etat> = {
   nom: 'Champ de mines',
   accroche: 'Pose ta mine en secret, puis ouvre des colis… sans sauter.',
   explication: {
-    comment: 'Chacun pose d’abord une mine en secret sur la grille commune. Puis, à chaque manche, on ouvre UN colis chacun son tour : chaque colis sûr te rapporte plus que ton précédent (1, 2, 3 pts…). À ton tour, tu peux encaisser et sortir de la manche, ou tenter un colis de plus. Si tu tombes sur une mine, tu perds les points de la manche et le poseur de la mine gagne !',
+    comment: '2 manches, avec une grille neuve à chaque fois. Au début de chaque manche, chacun pose une mine en secret sur la grille commune. Puis on ouvre UN colis chacun son tour : chaque colis sûr te rapporte plus que ton précédent (1, 2, 3 pts…). À ton tour, tu peux encaisser et sortir de la manche, ou tenter un colis de plus. Si tu tombes sur une mine, tu perds les points de la manche et le poseur de la mine gagne !',
     gagner: 'Le plus de points gagne : ceux encaissés et ceux gagnés quand quelqu’un saute sur ta mine.',
     note: 'Détecteur secret : 1 seul par joueur, à garder pour le bon moment. Activé avant d’ouvrir un colis, il te montre (à toi seul) le nombre de mines dans les 8 cases autour. Les autres voient juste une loupe. Tu vois aussi ta propre mine. Conseiller à voix haute est autorisé… et pas forcément honnête.',
   },
@@ -133,7 +146,7 @@ export const champDeMines: MiniJeu<Etat> = {
     const ordre = [...ctx.uids].sort(() => ctx.hasard() - 0.5);
     const zero = Object.fromEntries(ctx.uids.map((u) => [u, 0]));
     const e: Etat = {
-      etape: `mines-${ctx.numeroJeu}-pose`, phase: 'pose', numeroJeu: ctx.numeroJeu, ordre, nbManches: selonFormat(ctx.duree, MANCHES),
+      etape: `mines-${ctx.numeroJeu}-pose-0`, phase: 'pose', numeroJeu: ctx.numeroJeu, ordre, nbManches: selonFormat(ctx.duree, MANCHES),
       manche: 0, action: 0, enLice: [], actif: 0, pots: { ...zero }, sures: { ...zero }, ouvertes: {}, banque: zero, bonus: { ...zero }, fin: ctx.maintenant + DUREE_POSE,
     };
     return { etat: e };
@@ -151,12 +164,12 @@ export const champDeMines: MiniJeu<Etat> = {
         const c = Number.isInteger(recues[u]?.case) ? Number(recues[u].case) : Math.floor(ctx.hasard() * NB_CASES); // pas de choix : au hasard
         poses[c] = [...(poses[c] ?? []), u];
       }
-      return { ...nouvelleManche(ctx, e, 0, poses), ecritures: { 'prive/mines': poses } };
+      return { ...debutTours(ctx, e), ecritures: { 'prive/mines': poses } };
     }
 
     if (e.phase === 'tour') {
       const joueur = joueurDu(e);
-      if (!joueur) return nouvelleManche(ctx, e, e.manche + 1, mines);
+      if (!joueur) return finDeManche(ctx, e);
       const r = reponsesDe<{ case?: number; stop?: boolean; detecteur?: string }>(ctx, e.etape)[joueur];
       const encaisser = () => auSuivant(ctx, { ...e, banque: { ...e.banque, [joueur]: (e.banque[joueur] ?? 0) + (e.pots[joueur] ?? 0) } }, mines, true);
       // Pas de réponse à temps (ou joueur parti) : il encaisse ce qu'il a et sort de la manche.
@@ -203,7 +216,7 @@ export const champDeMines: MiniJeu<Etat> = {
     const e = { ...v.etat, ouvertes: v.etat.ouvertes ?? {}, poseurs: v.etat.poseurs ?? {}, detections: v.etat.detections ?? {}, enLice: v.etat.enLice ?? [], pots: v.etat.pots ?? {}, sures: v.etat.sures ?? {} };
     const maCle = v.local[`mines-${e.numeroJeu}-cle`] as string | undefined;
     const nom = (u: string) => esc(v.joueurs[u]?.prenom ?? '?');
-    const maMine = v.local[`mines-${e.numeroJeu}-ma-mine`] as number | undefined;
+    const maMine = v.local[`mines-${e.numeroJeu}-${e.manche}-ma-mine`] as number | undefined;
     const tete = hud('CHAMP DE MINES', Math.min(e.manche, e.nbManches), Math.max(1, e.nbManches), e.phase !== 'bilan');
     const score = (u: string) => (e.banque[u] ?? 0) + (e.bonus[u] ?? 0);
     const pts = (n: number) => `${n} pt${n > 1 ? 's' : ''}`;
@@ -236,6 +249,7 @@ export const champDeMines: MiniJeu<Etat> = {
       const fait = v.maReponse?.etape === e.etape || v.local[e.etape] !== undefined;
       const choisie = v.local[`${e.etape}-choix`] as number | undefined;
       return `${tete}${chrono(e.fin)}
+        <p class="petit centre-texte">MANCHE ${e.manche + 1}/${e.nbManches}${e.manche ? ' · GRILLE NEUVE' : ''}</p>
         <h2 class="question">${fait ? 'Ta mine est posée' : 'Pose ta mine en secret'}</h2>
         <p class="aide gauche">${fait ? 'Personne ne sait où elle est. Pendant le jeu, à toi d’y attirer les autres…' : 'Choisis un colis. Si quelqu’un l’ouvre, c’est toi qui gagnes ses points.'}</p>
         ${grille(!fait, 'choisirMine', choisie ?? maMine)}
@@ -292,7 +306,7 @@ export const champDeMines: MiniJeu<Etat> = {
       const c = o.local[`${e.etape}-choix`] as number | undefined;
       if (e.phase !== 'pose' || c === undefined || o.local[e.etape] !== undefined) return;
       o.local[e.etape] = true;
-      o.local[`mines-${e.numeroJeu}-ma-mine`] = c; // seul ce téléphone sait où est ma mine
+      o.local[`mines-${e.numeroJeu}-${e.manche}-ma-mine`] = c; // seul ce téléphone sait où est ma mine
       o.rafraichir();
       await o.repondre({ case: c });
     },

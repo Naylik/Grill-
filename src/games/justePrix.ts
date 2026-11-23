@@ -1,12 +1,14 @@
 // « Le Juste Prix » : chacun estime en secret. Le plus proche gagne la manche ;
 // classement au nombre de manches gagnées.
 import questions from '../data/justeprix.json';
-import { esc, fraisDabord, melanger } from '../outils';
+import { esc, fraisDabord, melanger, parmi } from '../outils';
 import { plusProches, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { brouillons } from '../ui';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
+// Le narrateur salue l'estimation la plus éloignée (taquin, jamais méchant).
+const PHRASES_PIRE = ['{n} pour {p} ! On appelle ça voir grand.', 'Personne n’avait osé {n}… sauf {p}. Respect.', '{p} a tenté {n}. L’audace, ça ne s’apprend pas.', '{n} ? {p} joue clairement dans une autre catégorie.']
 const NB_MANCHES: [number, number, number] = [4, 6, 8]; // Courte, Normale, Longue
 const DUREE = 40_000;
 
@@ -105,7 +107,7 @@ export const justePrix: MiniJeu<Etat> = {
     return `${titre}
       <div class="gros-chiffre"><strong>${formater(q.reponse)}</strong><span>${esc(q.unite)}</span></div>
       <div class="pile">${lignes || '<p class="attente">Personne n’a répondu…</p>'}</div>
-      ${pire && v.uids.length > 2 ? bulle(`${esc(v.joueurs[pire].prenom)}, ${formater(e.estimations![pire])} ? Tu étais sérieux ?`) : ''}
+      ${pire && v.uids.length > 2 ? bulle(parmi(PHRASES_PIRE, e.etape).replace('{p}', esc(v.joueurs[pire].prenom)).replace('{n}', formater(e.estimations![pire]))) : ''}
       ${v.estHote ? `<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="suivant">${e.index + 1 < e.questions.length ? 'Manche suivante' : 'Voir le classement'}</button>` : `<p class="attente bas">L’hôte passe à la suite.</p>`}`;
   },
 

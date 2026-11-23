@@ -39,7 +39,9 @@ export interface Accusation {
 export type Accusations = Record<string, Record<string, Accusation>>;
 
 export interface AccusationListee extends Accusation {
-  cle: string; // « numeroJeu-uid » : sert aussi de sujet de vote
+  cle: string; // « emplacement-uid » : sert aussi de sujet de vote
+  /** Emplacement dans accusations/ : « 3 » pour la 1re accusation de ce joueur au jeu 3, puis « 3_2 », « 3_3 »… */
+  slot: string;
   numeroJeu: number;
   de: string;
 }
@@ -48,7 +50,7 @@ export function liste(accs: Accusations | null | undefined): AccusationListee[] 
   const res: AccusationListee[] = [];
   for (const [n, parAccuseur] of Object.entries(accs ?? {})) {
     for (const [de, a] of Object.entries(parAccuseur ?? {})) {
-      if (a?.cible) res.push({ ...a, cle: `${n}-${de}`, numeroJeu: Number(n), de });
+      if (a?.cible) res.push({ ...a, cle: `${n}-${de}`, slot: n, numeroJeu: parseInt(n, 10), de });
     }
   }
   return res.sort((a, b) => a.le - b.le);
@@ -94,7 +96,8 @@ export function peutAccuser(uid: string, ctx: Contexte, accs: Accusations | null
   if (ctx.phase === 'flash' && ctx.phaseJeu !== 'grillage') return false;
   if (mancheAction(ctx)) return false;
   if (accusationEnCours(accs)) return false;
-  return !accs?.[ctx.numeroJeu]?.[uid];
+  // Pas de limite : on peut accuser autant qu'on veut (une accusation à la fois), chaque erreur coûte des points.
+  return !!uid;
 }
 
 /**
@@ -112,7 +115,7 @@ export function piloterAccusations(opts: {
 }): Record<string, unknown> | null {
   const a = accusationEnCours(opts.accs);
   if (!a) return null;
-  const chemin = `accusations/${a.numeroJeu}/${a.de}`;
+  const chemin = `accusations/${a.slot}/${a.de}`;
   const grille = (u: string) => opts.scores[u]?.grille ?? 0;
   const now = opts.maintenant;
   if (opts.pause) {

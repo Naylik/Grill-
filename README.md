@@ -322,3 +322,20 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   joueurs encore en lice ouvrent UN colis chacun à tour de rôle ; à son tour on peut encaisser et sortir de la manche ;
   une mine fait perdre la manche (le poseur gagne). Le 1er joueur tourne à chaque manche. Avant : le 1er à jouer gagnait
   42 % des parties à 4 ; maintenant 30 / 30 / 27 / 24 %. 2 manches (3 en Longue). Missions flash mines-02/03/04 adaptées.
+- 23/11/2026 · Retours de la 1re partie de test (validés par Kilyan) :
+  - narrateur : nouvelles phrases taquines mais jamais méchantes (Juste Prix, Combien, Imposteur), la même sur tous les
+    téléphones (`parmi()` dans outils.ts) ;
+  - roue des jeux : noms courts qui tiennent dans les parts ;
+  - mission flash sur l'écran des règles : le même texte flou chez tous (sa longueur ne trahit plus le porteur) ;
+  - vote des missions flash sans chrono : on passe quand tout le monde a voté ; si l'hôte force, les votes manquants
+    sont des votes blancs ; aucun vote exprimé = ratée ;
+  - Colis piégé : explosion entre 10 et 55 s ; Combien : « a dit 2 · +3 · total » ;
+  - fin de mini-jeu : podium du jeu, et la mission flash réussie (⚡+3) affichée dans le classement provisoire ;
+  - Réflexe Mallow : le gagnant a 15 s pour choisir sa victime ; une manche sur trois, Mallow prend feu tard (9-14 s) ;
+  - pari détective : points volés affichés ; titres de fin : un titre par joueur et un joueur par titre (nouveaux :
+    Le Parano, L'Intouchable, La Poisse, Le Mystérieux) ;
+  - GRILLÉ : grosse mission ou mission flash ; accusations sans limite (une à la fois, −2 si erreur), stockées dans
+    accusations/3, puis 3_2, 3_3… (règles Firebase inchangées) ;
+  - Champ de mines : 2 manches, grille neuve et nouvelle mine à chaque manche ;
+  - Dessin à la chaîne : on attend tous les joueurs jusqu'au bout du chrono (un téléphone en veille n'est plus sauté) ;
+    message clair : c'est l'hôte qui tourne les pages de l'album.

@@ -2,11 +2,15 @@
 // puis devine combien ont dit oui. Seul le total est révélé. 3 pts si exact, 1 pt à un près.
 import questions from '../data/combien.json';
 import { fraisDabord } from '../outils';
-import { esc } from '../outils';
+import { esc, parmi } from '../outils';
 import { pointsCombien, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
+// Le narrateur réagit au total (taquin, jamais méchant ; la même phrase sur tous les téléphones).
+const PHRASES_ZERO = ['Zéro ! Soit vous êtes des anges, soit vous êtes très organisés.', 'Personne ? La table la plus sage de France.', 'Aucun oui. Je note, je ne crois pas, mais je note.'];
+const PHRASES_TOUS = ['Tout le monde ! Cette table n’a plus aucun secret.', 'Unanimité. Je propose qu’on n’en parle plus jamais.', '100 % de oui. Au moins, vous êtes honnêtes.'];
+const PHRASES_CERTAINS = ['Les regards se croisent… et personne ne dit rien.', 'Hmm. Il y a des coupables autour de cette table.', 'Je ne dirai pas qui. Mais quelqu’un rougit.', 'Intéressant… Les suspects sont parmi nous.']
 const NB_QUESTIONS: [number, number, number] = [4, 6, 8]; // Courte, Normale, Longue
 const DUREE_QUESTION = 45_000;
 
@@ -98,13 +102,13 @@ export const combien: MiniJeu<Etat> = {
         const j = v.joueurs[u];
         const est = e.estimations?.[u];
         const pts = e.gagnes?.[u] ?? 0;
-        return `<div class="ligne-resultat"><span class="pastille" style="--c:${j.couleur};width:26px;height:26px"></span><strong>${esc(j.prenom)}</strong><span>${est ?? '—'}</span><span class="pts ${pts ? 'gagne' : ''}">${pts ? `+${pts}` : '0'}</span></div>`;
+        return `<div class="ligne-resultat"><span class="pastille" style="--c:${j.couleur};width:26px;height:26px"></span><strong>${esc(j.prenom)}</strong><span class="petit">${est !== undefined ? `a dit ${est}` : 'pas de réponse'}</span><span class="pts ${pts ? 'gagne' : ''}">${pts ? `+${pts}` : '+0'} · ${e.cumul?.[u] ?? 0} pts</span></div>`;
       })
       .join('');
     const total = e.totalOui ?? 0;
     return `${titre}
       <div class="gros-chiffre"><strong>${total}</strong><span>sur ${n} ont dit oui</span></div>
-      ${bulle(total === 0 ? 'Personne ? Vous mentez tous, c’est mignon.' : total === n ? 'Tout le monde. Je ne vous juge pas. Si, un peu.' : 'Intéressant… Très intéressant.')}
+      ${bulle(parmi(total === 0 ? PHRASES_ZERO : total === n ? PHRASES_TOUS : PHRASES_CERTAINS, v.etat.etape))}
       <div class="pile">${lignes}</div>
       ${v.estHote ? `<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="suivant">${e.index + 1 < e.questions.length ? 'Question suivante' : 'Voir le classement'}</button>` : `<p class="attente bas">L’hôte passe à la suite.</p>`}`;
   },

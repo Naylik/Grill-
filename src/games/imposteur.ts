@@ -2,11 +2,14 @@
 // Indices à l'oral, puis vote secret. 3 pts à l'imposteur s'il survit, sinon 1 pt à chaque bon vote.
 // 2 à 4 manches selon le format. Retiré automatiquement à 3 joueurs.
 import paires from '../data/imposteur.json';
-import { auHasard, esc, melanger } from '../outils';
+import { auHasard, esc, melanger, parmi } from '../outils';
 import { pointsDePlace, resultatImposteur } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type ContexteHote, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
+// Le narrateur après le vote (la même phrase sur tous les téléphones).
+const PHRASES_SURVIT = ['{p} a bluffé toute la table. Chapeau l’artiste !', 'Personne n’a rien vu… {p}, tu nous fais peur.', '{p} s’en sort. Un vrai caméléon.'];
+const PHRASES_DEMASQUE = ['Démasqué ! {p} n’a pas tenu longtemps.', 'Bien vu les détectives : {p} est grillé !', '{p} pensait passer inaperçu. Raté !']
 const NB_MANCHES: [number, number, number] = [2, 3, 4]; // Courte, Normale, Longue
 const DUREE_INDICES = 150_000;
 const DUREE_VOTE = 45_000;
@@ -137,7 +140,7 @@ export const imposteur: MiniJeu<Etat> = {
       <div class="gros-verdict ${survit ? 'ko' : 'ok'}">${prenom(imp)} était l’imposteur${survit ? ' et s’en sort !' : ', démasqué !'}</div>
       <div class="mots"><div><span class="petit">Le groupe</span><strong>${esc(e.mots?.groupe)}</strong></div><div><span class="petit">L’imposteur</span><strong>${esc(e.mots?.imposteur)}</strong></div></div>
       <div class="pile">${lignes}</div>
-      ${bulle(survit ? `Bravo ${prenom(imp)}. Menteur professionnel, c’est noté.` : 'Bien joué les détectives. Pour une fois.')}
+      ${bulle(parmi(survit ? PHRASES_SURVIT : PHRASES_DEMASQUE, e.etape).replace('{p}', prenom(imp)))}
       ${v.estHote ? `<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="suivant">${e.manche + 1 < (e.total ?? NB_MANCHES[0]) ? 'Manche suivante' : 'Voir le classement'}</button>` : '<p class="attente bas">L’hôte passe à la suite.</p>'}`;
   },
 

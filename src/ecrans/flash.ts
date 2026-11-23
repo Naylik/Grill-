@@ -1,4 +1,5 @@
 // Missions flash : la fenêtre « MISSION FLASH » quand on en reçoit une, et l'étape de vote après chaque jeu.
+import { liste as listeAccusations } from '../accusations';
 import { S, estHote } from '../etat';
 import { esc } from '../outils';
 import { POINTS_FLASH, delaiCarteFlash } from '../flash';
@@ -16,7 +17,8 @@ export function maFlashEnCours(): { numero: number; texte: string } | null {
   return m ? { numero: t.numero, texte: m.texte } : null;
 }
 
-/** Encart de l'écran des règles, identique pour tout le monde : flouté, on appuie longtemps pour lire.
+/** Encart de l'écran des règles, identique pour tout le monde : le même texte flou chez tous (sa longueur ne trahit rien),
+ *  le vrai texte n'apparaît qu'en appuyant longtemps, dans un cadre de taille fixe.
  *  Le porteur y lit sa mission ; les autres lisent qu'ils n'en ont pas. Personne ne peut savoir qui en a une. */
 export function blocFlash(): string {
   const d = S.deroule;
@@ -24,7 +26,7 @@ export function blocFlash(): string {
   const f = maFlashEnCours();
   const texte = f ? f.texte : 'Pas de mission flash pour toi ce coup-ci. Ouvre l’œil : quelqu’un en a peut-être une…';
   return `<article class="mission flash bloc-flash"><div class="tags"><span class="tag eclair">⚡ Mission flash</span></div>
-    <p class="texte-secret" data-appui>${esc(texte)}</p><p class="aide">Cache ton écran et appuie longtemps pour lire</p></article>`;
+    <p class="texte-secret texte-flash-cache" data-appui><span class="flou-commun" aria-hidden="true">Mission flash secrète : cache ton écran avant de la lire, personne ne doit voir</span><span class="vrai-texte">${esc(texte)}</span></p><p class="aide">Cache ton écran et appuie longtemps pour lire</p></article>`;
 }
 
 /** Après chaque jeu : les missions flash révélées, le vote du groupe, puis le verdict. */
@@ -57,7 +59,7 @@ export function ecranFlash(): string {
     const m = S.revelation[u]?.flash?.[`j${f.numero}`];
     const sujet = `f${f.numero}-${u}`;
     const mon = S.votes[sujet]?.[S.uid];
-    const grillee = Object.values(S.accusations?.[f.numero] ?? {}).some((a) => a?.cible === u && a.mission?.numero === 100 + f.numero && (a.statut === 'grille' || a.verdict === 'grille'));
+    const grillee = listeAccusations(S.accusations).some((a) => a.numeroJeu === f.numero && a.cible === u && a.mission?.numero === 100 + f.numero && (a.statut === 'grille' || a.verdict === 'grille'));
     let bas = '';
     if (f.etape === 'resultat') {
       const ok = f.resultats?.[u];
@@ -79,7 +81,7 @@ export function ecranFlash(): string {
     </article>`;
   }).join('');
   return `<h2 class="titre-flash">⚡ Missions flash</h2>
-    ${f.etape === 'vote' ? chrono(f.fin) : ''}
+    ${f.etape === 'vote' ? '<p class="aide">Pas de chrono : débattez, puis votez. On continue quand tout le monde a voté.</p>' : ''}
     ${devoile ? '<p class="tambour-flash" aria-hidden="true">🥁 Qui avait une mission flash ?…</p>' : ''}
     <div class="pile">${cartes}</div>
     ${f.etape === 'vote' ? `<div class="pile bas">${forcer}</div>` : ''}`;

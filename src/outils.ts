@@ -51,3 +51,10 @@ export async function empreinte(texte: string): Promise<string> {
   const octets = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texte));
   return Array.from(new Uint8Array(octets).slice(0, 12), (o) => o.toString(16).padStart(2, '0')).join('');
 }
+
+/** Une phrase au hasard… mais la même sur tous les téléphones (tirée à partir d'une graine commune, ex. l'étape du jeu). */
+export function parmi<T>(liste: readonly T[], graine: string): T {
+  let h = 0;
+  for (let i = 0; i < graine.length; i++) h = (h * 31 + graine.charCodeAt(i)) >>> 0;
+  return liste[h % liste.length];
+}

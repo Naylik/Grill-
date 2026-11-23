@@ -8,7 +8,7 @@ import '@fontsource/plus-jakarta-sans/latin-800.css';
 import './style.css';
 import { registerSW } from 'virtual:pwa-register';
 import { ref, runTransaction, set, update } from 'firebase/database';
-import { accusationEnCours } from './accusations';
+import { accusationEnCours, liste as listeAccusations } from './accusations';
 import { accusationPossible } from './ecrans/accusation';
 import { connexion, configManquante, db, maintenant } from './firebase';
 import { S, brancherAffichage, demanderAffichage, ecouterSalon, estHote, memoireDuGroupe, quandCaChange, quitterEcoute } from './etat';
@@ -466,7 +466,10 @@ action('accuser', async (el) => {
   }
   (el as HTMLButtonElement).disabled = true;
   try {
-    await set(ref(db, `salons/${S.code}/accusations/${S.deroule!.numeroJeu}/${S.uid}`), { cible, texte: texte.slice(0, 160), le: maintenant() });
+    // Plusieurs accusations par jeu : la 1re dans « 3 », les suivantes dans « 3_2 », « 3_3 »…
+    const n = S.deroule!.numeroJeu;
+    const deja = listeAccusations(S.accusations).filter((x) => x.de === S.uid && x.numeroJeu === n).length;
+    await set(ref(db, `salons/${S.code}/accusations/${deja ? `${n}_${deja + 1}` : n}/${S.uid}`), { cible, texte: texte.slice(0, 160), le: maintenant() });
     S.accuser = false;
     brouillons.accusation = '';
   } catch (e) {
@@ -480,7 +483,7 @@ action('accuser', async (el) => {
 action('repondreAccusation', async (el) => {
   const a = accusationEnCours(S.accusations);
   if (!a || a.cible !== S.uid || a.reponse) return;
-  const chemin = `salons/${S.code}/accusations/${a.numeroJeu}/${a.de}`;
+  const chemin = `salons/${S.code}/accusations/${a.slot}/${a.de}`;
   if (el.dataset.valeur === 'eu') {
     const numero = Number(el.dataset.numero);
     const flash = numero >= 100 ? S.secrets.flash?.[`j${numero - 100}`] : undefined;

@@ -11,7 +11,7 @@ describe('Champ de mines', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let e: any = champDeMines.demarrer(ctx()).etat;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const av = (rep = {}): any => { const r = champDeMines.piloter(ctx(rep), e); if (r?.ecritures) prive = { ...prive, mines: (r.ecritures as Record<string, unknown>)['prive/mines'] }; if (r && !r.fin) e = r.etat; return r; };
+    const av = (rep = {}): any => { const r = champDeMines.piloter(ctx(rep), e); if (r?.ecritures && 'prive/mines' in r.ecritures) prive = { ...prive, mines: (r.ecritures as Record<string, unknown>)['prive/mines'] }; if (r && !r.fin) e = r.etat; return r; };
     const actif = () => e.enLice[e.actif];
     // Pose : a en 0, b en 1, c en 2.
     av({ a: { etape: e.etape, case: 0 }, b: { etape: e.etape, case: 1 }, c: { etape: e.etape, case: 2 } });
@@ -54,7 +54,12 @@ describe('Champ de mines', () => {
     // j1 encaisse : tout le monde est sorti, manche 2… et c'est j2 qui commence.
     av({ [j1]: { etape: e.etape, stop: true } });
     expect(e.banque[j1]).toBe(3);
+    // Manche 2 : grille neuve, chacun repose une mine… puis c'est j2 qui commence.
     expect(e.manche).toBe(1);
+    expect(e.phase).toBe('pose');
+    expect(e.ouvertes).toEqual({});
+    av({ a: { etape: e.etape, case: 5 }, b: { etape: e.etape, case: 6 }, c: { etape: e.etape, case: 7 } });
+    expect(e.phase).toBe('tour');
     expect(actif()).toBe(j2);
     expect(e.enLice).toEqual([j2, j3, j1]);
     expect([0, 1, 2].map(gainSur)).toEqual([1, 2, 3]);

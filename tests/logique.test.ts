@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { codeAleatoire, esc, melanger, normaliserCode, nettoyerPrenom } from '../src/outils';
-import { majoriteOui, missionTrouvee, places, pointsCombien, pointsDeFin, pointsDePlace, titres, scoreVide } from '../src/score';
+import { majoriteOui, missionTrouvee, places, pointsCombien, pointsDeFin, pointsDePlace, attribuerTitres } from '../src/score';
 import { BANQUE, choisirPropositions } from '../src/missions';
 import { vanneDuClassement } from '../src/narrateur';
 import { tirerIdentite, COULEURS } from '../src/identite';
@@ -56,10 +56,13 @@ describe('barème', () => {
     expect(r.missions).toEqual({ a: 16, b: 0, c: 0 }); // facile 6 + difficile 10 (format normal)
     expect(r.detective).toEqual({ a: -5, b: 5, c: -2 }); // vol d'une difficile : 5
   });
-  it('titres fun', () => {
-    const scores = { a: { ...scoreVide(), jeux: 10 }, b: { ...scoreVide(), jeux: 4 } };
-    const t = titres(scores, { a: [{ difficulte: 'difficile', reussie: true }, { difficulte: 'difficile', reussie: true }], b: [] }, [{ de: 'b', cible: 'a', trouvee: 'difficile' }]);
-    expect(t.map((x) => `${x.uid}:${x.titre}`).sort()).toEqual(['a:Agent secret', 'a:Champion des mini-jeux', 'a:Grillé', 'b:Sherlock'].sort());
+  it('titres : un seul joueur par titre, un seul titre par joueur', () => {
+    const c = (uid: string, titre: string, force: number) => ({ uid, titre, pourquoi: '', force });
+    // Tout le monde a réussi sa mission : un seul « Agent secret » (le plus de points), les autres ont autre chose.
+    const t = attribuerTitres([c('a', 'Agent secret', 15), c('b', 'Agent secret', 10), c('c', 'Agent secret', 6), c('a', 'Champion des mini-jeux', 20), c('b', 'Champion des mini-jeux', 12), c('c', 'La Poisse', -8)], ['a', 'b', 'c']);
+    expect(t.map((x) => `${x.uid}:${x.titre}`).sort()).toEqual(['a:Agent secret', 'b:Le Mystérieux', 'c:La Poisse'].sort());
+    // Le meilleur d'une catégorie a déjà un titre : la catégorie passe (pas donnée au 2e).
+    expect(new Set(t.map((x) => x.titre)).size).toBe(t.length);
   });
 });
 

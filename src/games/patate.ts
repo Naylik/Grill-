@@ -1,7 +1,7 @@
 // « Colis piégé » (identifiant interne « patate », son premier nom) : un colis piégé passe de téléphone en
 // téléphone. Celui qui l'a dit à voix haute un mot qui répond à la consigne (« Un animal en B »), puis le renvoie
 // (glisser vers un joueur, ou toucher son nom). Le colis tremble un peu plus à chaque passe. Il « explose » à un
-// moment caché (entre 15 s et 1 min) : KABOOM, celui qui l'a est éliminé. On continue jusqu'au dernier.
+// moment caché (entre 10 et 55 s) : KABOOM, celui qui l'a est éliminé. On continue jusqu'au dernier.
 // Le moment de l'explosion n'est connu que de l'hôte (prive/patate) : personne ne peut tricher en le lisant.
 import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
@@ -12,8 +12,8 @@ import { classementBarres, hud, introArene } from './arene';
 
 const DUREE_INTRO = 7000;
 const PRETS = 3000; // « La patate arrive… »
-const EXPLOSION_MIN = 15_000;
-const EXPLOSION_MAX = 60_000;
+const EXPLOSION_MIN = 10_000;
+const EXPLOSION_MAX = 55_000;
 const DUREE_BOUM = 4500;
 const DUREE_BILAN = 6500;
 
@@ -112,7 +112,7 @@ export const patate: MiniJeu<Etat> = {
   nom: 'Colis piégé',
   accroche: 'Dis un mot, renvoie le colis. Il va sauter…',
   explication: {
-    comment: 'Le colis piégé arrive sur le téléphone de quelqu’un avec une consigne (« Un animal en B »). Il dit un mot à voix haute, puis renvoie le colis au joueur de son choix en le faisant glisser. Le colis tremble de plus en plus. Il saute à un moment caché, entre 15 secondes et 1 minute : celui qui l’a est éliminé.',
+    comment: 'Le colis piégé arrive sur le téléphone de quelqu’un avec une consigne (« Un animal en B »). Il dit un mot à voix haute, puis renvoie le colis au joueur de son choix en le faisant glisser. Le colis tremble de plus en plus. Il saute à un moment caché, entre 10 et 55 secondes : celui qui l’a est éliminé.',
     gagner: 'On joue 2 tours : à chaque tour, on élimine jusqu’au dernier survivant, puis tout le monde repart en vie. Le classement additionne les places des 2 tours.',
     note: 'Le groupe juge le mot dit à voix haute : pas de mot, pas de lancer !',
   },
@@ -133,7 +133,7 @@ export const patate: MiniJeu<Etat> = {
     return introArene('COLIS PIÉGÉ', `${NB_TOURS} TOURS`, dessinColis(150), [
       ['1', 'Quand le colis arrive chez toi, dis à voix haute un mot qui répond à la consigne.'],
       ['2', 'Puis fais-le glisser vers un joueur pour le lui renvoyer.'],
-      ['!', 'Il saute entre 15 s et 1 min. Celui qui l’a est éliminé. 2 tours : tout le monde repart en vie au 2e.'],
+      ['!', 'Il saute entre 10 et 55 s. Celui qui l’a est éliminé. 2 tours : tout le monde repart en vie au 2e.'],
     ]);
   },
 
@@ -190,7 +190,7 @@ export const patate: MiniJeu<Etat> = {
       return introArene('COLIS PIÉGÉ', `${NB_TOURS} TOURS`, dessinColis(150), [
         ['1', 'Quand le colis arrive chez toi, dis à voix haute un mot qui répond à la consigne.'],
         ['2', 'Puis fais-le glisser vers un joueur pour le lui renvoyer.'],
-        ['!', 'Il saute entre 15 s et 1 min. Celui qui l’a est éliminé. 2 tours : tout le monde repart en vie au 2e.'],
+        ['!', 'Il saute entre 10 et 55 s. Celui qui l’a est éliminé. 2 tours : tout le monde repart en vie au 2e.'],
       ], e.fin);
     }
     const bandeJoueurs = `<div class="joueurs-arene">${v.uids.map((u) => {
