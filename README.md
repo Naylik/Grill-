@@ -394,3 +394,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   s'envole (2,4 s). À chaque nouvelle manche, un rideau de la couleur du jeu traverse l'écran (« Manche 2 » ;
   « Question 2 » pour Combien ont dit oui ?). Une seule fois par téléphone, même après un rechargement.
   Toutes les idées d'animation de la liste (1 à 17) ont été passées en revue.
+- 23/11/2026 · Table virtuelle (`table.html`, en ligne) : 2 à 8 téléphones de test dans une seule page, pour tester sans
+  vrais téléphones. Chaque cadre charge le vrai jeu avec `?joueur=N` : mémoire séparée (localStorage préfixé,
+  `src/joueurTest.ts`) et connexion Firebase séparée (une appli Firebase nommée par joueur). Dès que le 1er téléphone a
+  un salon, les autres le rejoignent par le lien d'invitation. Son seulement sur le 1er. Sans `?joueur`, rien ne change.

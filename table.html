@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="./icone.svg" type="image/svg+xml">
+  <title>Table virtuelle · Grillé !</title>
+  <style>
+    /* Table virtuelle : plusieurs téléphones de test dans une seule page (outil de test, pas pour les joueurs). */
+    :root { --fond: #07050F; --carte: #1A1532; --bord: #ffffff24; --texte: #F4F1FF; --texte-2: #C8C0EA; --jaune: #FFD84A; --zoom: .75; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--fond); color: var(--texte); font: 600 14px system-ui, sans-serif; }
+    header { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 12px 16px; background: #0D0A1Eee; border-bottom: 1px solid var(--bord); backdrop-filter: blur(8px); }
+    h1 { margin: 0; font-size: 18px; color: var(--jaune); }
+    .groupe { display: flex; align-items: center; gap: 6px; }
+    button { font: inherit; color: var(--texte); background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 7px 12px; cursor: pointer; }
+    button:hover { border-color: var(--jaune); }
+    .salon { padding: 6px 10px; border-radius: 10px; background: var(--carte); color: var(--texte-2); }
+    .salon b { color: var(--jaune); letter-spacing: 2px; }
+    .aide { flex-basis: 100%; margin: 0; color: var(--texte-2); font-weight: 500; }
+    main { display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; align-items: flex-start; }
+    .tel { display: grid; gap: 6px; }
+    .nom { display: flex; align-items: center; gap: 8px; }
+    .nom i { width: 12px; height: 12px; border-radius: 50%; background: var(--c); }
+    .nom small { color: var(--texte-2); font-weight: 500; }
+    .nom button { margin-left: auto; padding: 2px 8px; font-size: 12px; }
+    .ecran { width: calc(390px * var(--zoom)); height: calc(844px * var(--zoom)); border-radius: calc(36px * var(--zoom)); overflow: hidden; border: 2px solid var(--bord); background: #0D0A1E; }
+    .ecran iframe { width: 390px; height: 844px; border: 0; transform: scale(var(--zoom)); transform-origin: 0 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Table virtuelle</h1>
+    <div class="groupe"><button id="moins" aria-label="Retirer un joueur">− joueur</button><span id="nb"></span><button id="plus" aria-label="Ajouter un joueur">+ joueur</button></div>
+    <div class="groupe"><button id="petit">Plus petit</button><button id="grand">Plus grand</button></div>
+    <div class="groupe"><button id="recharger">Tout recharger</button><button id="nouvelle">Nouvelle partie</button></div>
+    <span class="salon" id="salon">Pas encore de salon</span>
+    <p class="aide">1. Sur le téléphone de Kilyan, crée une partie. 2. Les autres téléphones rejoignent le salon tout seuls. 3. Joue à la place de chacun en cliquant dans son écran. Seul le 1er téléphone a le son.</p>
+  </header>
+  <main id="table"></main>
+  <script>
+    // Chaque cadre charge le vrai jeu avec ?joueur=N : mémoire et connexion séparées (src/joueurTest.ts).
+    const JOUEURS = [['Kilyan', '#FFD84A'], ['Manon', '#FF5A6E'], ['Cassie', '#4FC8F5'], ['Yanis', '#5CF2C2'], ['Lou', '#C792FF'], ['Sacha', '#FF9F43'], ['Nina', '#FF8FC8'], ['Tom', '#9CE36B']];
+    const memoire = (cle, defaut) => { try { return localStorage.getItem(cle) ?? defaut; } catch { return defaut; } };
+    const retenir = (cle, valeur) => { try { localStorage.setItem(cle, valeur); } catch { /* rien */ } };
+    let nombre = Math.min(8, Math.max(2, Number(memoire('table:nombre', '4')) || 4));
+    let zoom = Math.min(1, Math.max(.4, Number(memoire('table:zoom', '.75')) || .75));
+    const table = document.getElementById('table');
+    const salonDe = (k) => memoire(`table${k}:grille:salon`, null);
+    const adresse = (k, code) => `./?joueur=${k}&t=${Date.now()}${code ? `#${code}` : ''}`;
+
+    function dessiner() {
+      document.documentElement.style.setProperty('--zoom', zoom);
+      document.getElementById('nb').textContent = `${nombre} joueurs`;
+      while (table.children.length > nombre) table.lastElementChild.remove();
+      for (let k = table.children.length + 1; k <= nombre; k++) {
+        const [prenom, couleur] = JOUEURS[k - 1];
+        const tel = document.createElement('section');
+        tel.className = 'tel';
+        tel.innerHTML = `<div class="nom" style="--c:${couleur}"><i></i>${prenom}<small>${k === 1 ? 'hôte' : ''}</small><button>Recharger</button></div>
+          <div class="ecran"><iframe title="Téléphone de ${prenom}" allow="autoplay; vibrate; screen-wake-lock; clipboard-write"></iframe></div>`;
+        const cadre = tel.querySelector('iframe');
+        cadre.src = adresse(k, k > 1 ? salonDe(1) : null);
+        tel.querySelector('button').onclick = () => { cadre.src = adresse(k, k > 1 ? salonDe(1) : null); };
+        table.appendChild(tel);
+      }
+    }
+
+    // Dès que Kilyan a un salon, les autres téléphones le rejoignent (lien d'invitation #CODE, comme un vrai joueur).
+    const envoyes = {};
+    setInterval(() => {
+      const code = salonDe(1);
+      document.getElementById('salon').innerHTML = code ? `Salon : <b>${code}</b>` : 'Pas encore de salon';
+      if (!code) return;
+      [...table.children].forEach((tel, i) => {
+        const k = i + 1;
+        if (k === 1 || salonDe(k) === code || envoyes[k] === code) return;
+        envoyes[k] = code;
+        tel.querySelector('iframe').src = adresse(k, code);
+      });
+    }, 1000);
+
+    document.getElementById('plus').onclick = () => { nombre = Math.min(8, nombre + 1); retenir('table:nombre', nombre); dessiner(); };
+    document.getElementById('moins').onclick = () => { nombre = Math.max(2, nombre - 1); retenir('table:nombre', nombre); dessiner(); };
+    document.getElementById('petit').onclick = () => { zoom = Math.max(.4, +(zoom - .1).toFixed(2)); retenir('table:zoom', zoom); dessiner(); };
+    document.getElementById('grand').onclick = () => { zoom = Math.min(1, +(zoom + .1).toFixed(2)); retenir('table:zoom', zoom); dessiner(); };
+    document.getElementById('recharger').onclick = () => { [...table.querySelectorAll('iframe')].forEach((c, i) => { c.src = adresse(i + 1, i > 0 ? salonDe(1) : null); }); };
+    document.getElementById('nouvelle').onclick = () => {
+      // Chaque téléphone oublie son salon (sur ce navigateur seulement), puis tout repart de l'accueil.
+      for (let k = 1; k <= 8; k++) { try { localStorage.removeItem(`table${k}:grille:salon`); } catch { /* rien */ } }
+      for (const k in envoyes) delete envoyes[k];
+      [...table.querySelectorAll('iframe')].forEach((c, i) => { c.src = adresse(i + 1, null); });
+    };
+    dessiner();
+  </script>
+</body>
+</html>

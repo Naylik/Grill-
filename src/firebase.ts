@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app';
 import { initializeAuth, indexedDBLocalPersistence, browserLocalPersistence, signInAnonymously, onAuthStateChanged, connectAuthEmulator, type User } from 'firebase/auth';
 import { getDatabase, connectDatabaseEmulator, ref, onValue } from 'firebase/database';
 import { configFirebase } from './firebase-config';
+import { joueurTest } from './joueurTest';
 
 // Mode « émulateur » (tests locaux, sans vrai projet Firebase) : VITE_EMULATEUR=1 au lancement.
 const emulateur = import.meta.env.VITE_EMULATEUR === '1';
@@ -13,6 +14,8 @@ const app = initializeApp(
   emulateur
     ? { apiKey: 'demo', projectId: 'demo-grille', databaseURL: `http://${location.hostname}:9000?ns=demo-grille` }
     : configFirebase,
+  // Table virtuelle : un nom d'appli par téléphone de test = une connexion (donc un joueur) différente.
+  joueurTest !== null ? `table-${joueurTest}` : undefined,
 );
 // Connexion anonyme seulement : sans le code des fenêtres de connexion Google/Facebook (plus léger).
 // Même mémoire que d'habitude, pour que chacun garde son identité après un rechargement.

@@ -31,5 +31,7 @@ export default defineConfig({
       workbox: { globPatterns: ['**/*.{js,css,html,svg,png,woff2}'] },
     }),
   ],
+  // Deux pages : le jeu, et la table virtuelle (plusieurs téléphones de test dans une page).
+  build: { rollupOptions: { input: { main: 'index.html', table: 'table.html' } } },
   test: { include: ['tests/**/*.test.ts'] },
 });

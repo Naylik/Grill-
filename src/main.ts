@@ -1,3 +1,5 @@
+// Table virtuelle : doit passer avant tout le reste (mémoire séparée pour chaque téléphone de test).
+import './joueurTest';
 // Polices hébergées avec l'appli (alphabet latin seulement) : pas d'appel à Google, et elles marchent hors connexion.
 import '@fontsource/unbounded/latin-600.css';
 import '@fontsource/unbounded/latin-800.css';
