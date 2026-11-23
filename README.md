@@ -415,3 +415,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · Le Parieur, arrondi (option A validée par Kilyan) : un perdant ne perd jamais plus que sa mise. Cas
   vu en test : 2 gagnants à 3 contre 1 perdant à 3, pot de 3 partagé (1,5 arrondi à 2 chacun) ; la perdante payait −4.
   Maintenant −3 ; le point en trop est offert par le jeu.
+- 23/11/2026 · Le Parieur : le chrono du défi dure pile la durée annoncée (15 s affichait 17 : 1,5 s de marge cachée,
+  arrondie vers le haut). Marge supprimée.

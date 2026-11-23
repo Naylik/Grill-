@@ -61,7 +61,7 @@ export const parieur: MiniJeu<Etat> = {
       };
     }
     if (etat.phase === 'lecture' && ctx.maintenant >= (etat.fin ?? 0)) {
-      return { etat: { ...etat, phase: 'defi', etape: etapeDe(etat, 'defi'), fin: ctx.maintenant + etat.defis[etat.tour].duree * 1000 + 1500 } };
+      return { etat: { ...etat, phase: 'defi', etape: etapeDe(etat, 'defi'), fin: ctx.maintenant + etat.defis[etat.tour].duree * 1000 } }; // pile la durée annoncée
     }
     if (etat.phase === 'defi' && ctx.maintenant >= (etat.fin ?? 0)) {
       return { etat: { ...etat, phase: 'vote', etape: etapeDe(etat, 'vote'), fin: ctx.maintenant + DUREE_VOTE } };
