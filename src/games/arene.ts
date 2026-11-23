@@ -33,6 +33,15 @@ export interface PointPiste {
  * avant qui, même quand deux temps sont très proches. Avec une cible (Le bon timing), une ligne dorée
  * marque le temps à viser sur tous les couloirs.
  */
+/** Moment (en secondes) où la dernière pastille est arrivée sur la piste. */
+export const finPiste = (nb: number): number => nb * 0.3 + 0.8;
+
+/** Les deux premiers sont-ils à moins de `ecart` l'un de l'autre ? (photo-finish) */
+export function arriveeSerree(valeurs: number[], ecart: number): boolean {
+  const t = [...valeurs].sort((a, b) => a - b);
+  return t.length >= 2 && t[1] - t[0] <= ecart;
+}
+
 export function piste(points: PointPiste[], max: number, cible?: { valeur: number; libelle: string }, opts: { photoFinish?: number } = {}): string {
   const pos = (v: number) => Math.max(3, Math.min(97, (v / max) * 100));
   const tries = [...points].sort((a, b) => a.valeur - b.valeur);
@@ -49,10 +58,10 @@ export function piste(points: PointPiste[], max: number, cible?: { valeur: numbe
     })
     .join('');
   // Photo-finish : les deux premiers sont à moins de `photoFinish` d'écart (ms).
-  const serre = opts.photoFinish !== undefined && tries.length >= 2 && tries[1].valeur - tries[0].valeur <= opts.photoFinish;
+  const serre = opts.photoFinish !== undefined && arriveeSerree(tries.map((p) => p.valeur), opts.photoFinish);
   // Le bon timing : chaque pastille part de la ligne cible et glisse jusqu'à son temps (on voit l'écart se creuser).
   const depart = cible ? `--x0:${pos(cible.valeur)}%;` : '';
-  return `<div class="piste-arene ${cible ? 'depuis-cible' : ''}" style="${depart}--fin:${(tries.length * 0.3 + 0.8).toFixed(2)}s" role="img" aria-label="${esc(tries.map((p, i) => `${i + 1}. ${p.joueur.prenom} ${p.texte}`).join(', '))}">
+  return `<div class="piste-arene ${cible ? 'depuis-cible' : ''} ${serre ? 'serre' : ''}" style="${depart}--fin:${finPiste(tries.length).toFixed(2)}s" role="img" aria-label="${esc(tries.map((p, i) => `${i + 1}. ${p.joueur.prenom} ${p.texte}`).join(', '))}">
     ${serre ? `<div class="photo-finish">📸 PHOTO-FINISH · ${tries[1].valeur - tries[0].valeur} ms d’écart</div>` : ''}
     ${cible ? `<div class="ligne-cible" style="--xn:${(pos(cible.valeur) / 100).toFixed(4)}"><span>${esc(cible.libelle)}</span></div>` : ''}
     ${couloirs}

@@ -1025,6 +1025,12 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 /* Réflexe Mallow : photo-finish quand les deux premiers sont collés. */
 .photo-finish { position: absolute; top: -6px; left: 50%; translate: -50% 0; z-index: 2; padding: 6px 14px; border-radius: var(--r-rond); background: #fff; color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-s); white-space: nowrap; box-shadow: 0 0 0 4px var(--jaune), 0 0 40px #fff; animation: flash-photo .6s ease-out var(--fin) both; }
 @keyframes flash-photo { 0% { opacity: 0; transform: scale(2.4); filter: brightness(3); } 100% { opacity: 1; transform: none; } }
+/* Le flash de l'appareil photo : tout l'écran blanchit un instant, puis le bandeau tombe. */
+.piste-arene.serre::after { content: ''; position: fixed; inset: 0; z-index: 50; background: #fff; pointer-events: none; opacity: 0; animation: flash-ecran .7s ease-out var(--fin) both; }
+@keyframes flash-ecran { 0% { opacity: 0; } 12% { opacity: .95; } 100% { opacity: 0; } }
+.piste-arene.serre .photo-finish { animation-delay: calc(var(--fin) + .35s); }
+/* Le nom du gagnant n'arrive qu'une fois la course finie. */
+.gagnant-piste { animation: apres-jauge var(--t-lent) var(--rebond) var(--d) both; }
 /* Le bon timing : les pastilles partent de la ligne cible. */
 .piste-arene.depuis-cible .marqueur { animation-name: glisse-cible; animation-duration: 1s; }
 @keyframes glisse-cible { from { left: var(--x0); } }

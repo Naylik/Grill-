@@ -7,6 +7,8 @@ import { preparerPropositions } from './missions';
 import { delaiCarteFlash, DEVOILE_DEBUT, porteursFlash, tirerFlash } from './flash';
 import { minutageJauge } from './games/combien';
 import { minutageImposteur } from './games/imposteur';
+import { PHOTO_FINISH } from './games/reflexe';
+import { arriveeSerree, finPiste } from './games/arene';
 import { vibrer } from './ui';
 import { maintenant } from './firebase';
 import { majoriteOui, missionTrouvee } from './score';
@@ -164,6 +166,14 @@ export function momentsForts(): void {
     const t = S.jeu as { phase?: string; etape?: string; cible?: number; temps?: Record<string, number> };
     if (t.phase === 'resultat' && t.cible && Object.values(t.temps ?? {}).some((x) => Math.abs(x - t.cible! * 1000) <= 50)) {
       moment(`pile-${t.etape}`, () => { sons.reussi(); if (Math.abs((t.temps?.[S.uid] ?? -1e9) - t.cible! * 1000) <= 50) { confettis(90); vibrer([80, 40, 160]); } });
+    }
+  }
+  // Réflexe Mallow : photo-finish, le « clic » de l'appareil photo tombe avec le flash blanc.
+  if (d.phase === 'jeu' && d.jeuEnCours === 'reflexe' && S.jeu) {
+    const r = S.jeu as { phase?: string; etape?: string; temps?: Record<string, number> };
+    const valides = Object.values(r.temps ?? {}).filter((x) => x >= 0);
+    if (r.phase === 'resultat' && r.etape && arriveeSerree(valides, PHOTO_FINISH)) {
+      moment(`photo-${r.etape}`, () => setTimeout(() => { sons.tic(true); vibrer(60); }, finPiste(valides.length) * 1000));
     }
   }
   // Mission flash : roulement de tambour, puis un « ding » à chaque carte qui se retourne.

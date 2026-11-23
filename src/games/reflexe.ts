@@ -9,15 +9,16 @@ import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
-import { classementBarres, hud, introArene, noteReflexe, piste } from './arene';
+import { arriveeSerree, classementBarres, finPiste, hud, introArene, noteReflexe, piste } from './arene';
 
 const NB_MANCHES: [number, number, number] = [3, 4, 5]; // Courte, Normale, Longue (au-delà, c'est épuisant)
 const PENALITE = 1000; // faux départ
 const ABSENT = 1500; // pas de réponse
 const DUREE_INTRO = 7000;
-const DUREE_PISTE = 4800;
+const DUREE_PISTE = 6000; // laisse le temps de lire le gagnant après la course (et la photo-finish)
 const DUREE_PISTE_CHOIX = 15_000; // le gagnant choisit sa victime : on attend son choix (15 s au plus)
 const DUREE_BILAN = 6500;
+export const PHOTO_FINISH = 40; // ms : en dessous, les deux premiers sont départagés à la photo-finish
 
 interface Etat extends EtatDeBase {
   phase: 'intro' | 'attente' | 'resultat' | 'bilan';
@@ -193,8 +194,8 @@ export const reflexe: MiniJeu<Etat> = {
     const premier = [...valides].sort((a, b) => temps[a] - temps[b])[0];
     return `${entete}
       <h2 class="question">Qui a touché en premier ?</h2>
-      ${premier ? `<p class="aide gauche"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> gagne la manche en ${temps[premier]} ms.</p>` : ''}
-      ${piste(points, max, undefined, { photoFinish: 40 })}
+      ${piste(points, max, undefined, { photoFinish: PHOTO_FINISH })}
+      ${premier ? `<p class="aide gauche gagnant-piste" style="--d:${(finPiste(valides.length) + (arriveeSerree(valides.map((u) => temps[u]), PHOTO_FINISH) ? 1.3 : 0.2)).toFixed(2)}s"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> gagne la manche en ${temps[premier]} ms.</p>` : ''}
       ${fauxDeparts.length ? `<p class="hors-piste rouge">Faux départ : ${fauxDeparts.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       ${absents.length ? `<p class="hors-piste">Trop tard : ${absents.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       ${choixPiege(e, v)}
