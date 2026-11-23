@@ -428,3 +428,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   règle inchangée (l'imposteur s'en sort et prend +3), choix de Kilyan.
 - 23/11/2026 · L'Imposteur : 23 paires de mots trop pointues remplacées par des mots connus de tous (ex. Apex Legends,
   eFootball, Digimon, Soulier d'or, Lewandowski, Ancelotti/Guardiola, Dark, Brooklyn Nine-Nine…). Mêmes thèmes.
+- 23/11/2026 · L'Imposteur : 6 paires trop proches (impossible de démasquer l'imposteur) remplacées : Mario/Rayman,
+  Carton rouge/Hors-jeu, Game of Thrones/Narnia, Mercredi/Chair de poule, PlayStation/Nintendo Switch, Penalty/Corner.
+  Clash Royale/Brawl Stars gardé (choix de Kilyan).
