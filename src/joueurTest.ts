@@ -6,6 +6,7 @@
 const PRENOMS = ['Kilyan', 'Manon', 'Cassie', 'Yanis', 'Lou', 'Sacha', 'Nina', 'Tom'];
 
 function lireNumero(): number | null {
+  if (typeof location === 'undefined' || typeof Storage === 'undefined') return null; // tests (Node) : pas de page
   const n = Number(new URLSearchParams(location.search).get('joueur'));
   return Number.isInteger(n) && n >= 1 && n <= PRENOMS.length ? n : null;
 }
