@@ -745,11 +745,13 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .ma-mine { position: absolute; inset: 0; display: grid; place-items: center; }
 .ma-mine svg { width: 55%; height: 55%; opacity: .35; }
 .pot-mines { display: flex; justify-content: space-between; gap: 10px; padding: 10px 14px; border-radius: var(--r-m); background: #0F1B24; border: 1px solid #22394A; font-family: var(--titre); font-size: var(--txt-s); color: #9FB3C2; }
-.pot-mines b { color: #3DF58A; font-size: var(--txt-l); }
+.pot-mines span { display: grid; gap: 2px; }
+.pot-mines span:last-child { text-align: right; }
+.pot-mines b { color: #3DF58A; font-size: var(--txt-l); white-space: nowrap; }
 .boum-mine { position: relative; display: grid; place-items: center; height: 120px; }
 .eclat-mine { position: absolute; width: 180px; height: 180px; border-radius: 50%; background: radial-gradient(circle, #FFF6EA, #FFB547 30%, var(--feu) 55%, transparent 70%); animation: eclat-mine .6s var(--doux) both; }
 @keyframes eclat-mine { from { transform: scale(.1); opacity: 1; } to { transform: scale(1.5); opacity: .2; } }
-.boum-mine .mot-boum { position: relative; margin: 0; font-family: var(--titre); font-weight: 900; font-size: 56px; color: #FFF6EA; text-shadow: 0 4px 0 #B32A12, 0 0 30px var(--feu); animation: tampon var(--t-normal) var(--rebond) .1s both; }
+.boum-mine .mot-boum { position: relative; margin: 0; font-family: var(--titre); font-weight: 900; font-size: clamp(30px, 11vw, 48px); white-space: nowrap; color: #FFF6EA; text-shadow: 0 4px 0 #B32A12, 0 0 30px var(--feu); animation: tampon var(--t-normal) var(--rebond) .1s both; }
 
 /* ——— Roue des territoires (roue de la fortune néon) ——— */
 .scene-roue { position: relative; display: grid; place-items: center; }

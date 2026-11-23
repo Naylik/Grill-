@@ -370,3 +370,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   blanc est supprimé (`src/course.ts`, `animerCourses`). Le Bon timing : la piste zoome autour de la cible.
 - 23/11/2026 · Colis piégé (validé par Kilyan) : à l'explosion, il ne reste que le KABOOM (le réveil qui s'envolait
   et la fumée sont supprimés). Texte, fausse alerte et taille du colis inchangés.
+- 23/11/2026 · Dessin à la chaîne et Champ de mines validés par Kilyan. Champ de mines : « KABOOM ! » ne touche plus
+  les bords de l'écran, et l'encadré « Ta manche / Prochain colis » ne coupe plus les points sur deux lignes.
