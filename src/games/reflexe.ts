@@ -194,7 +194,7 @@ export const reflexe: MiniJeu<Etat> = {
     return `${entete}
       <h2 class="question">Qui a touché en premier ?</h2>
       ${premier ? `<p class="aide gauche"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> gagne la manche en ${temps[premier]} ms.</p>` : ''}
-      ${piste(points, max)}
+      ${piste(points, max, undefined, { photoFinish: 40 })}
       ${fauxDeparts.length ? `<p class="hors-piste rouge">Faux départ : ${fauxDeparts.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       ${absents.length ? `<p class="hors-piste">Trop tard : ${absents.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       ${choixPiege(e, v)}

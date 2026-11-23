@@ -221,7 +221,11 @@ export const champDeMines: MiniJeu<Etat> = {
     const score = (u: string) => (e.banque[u] ?? 0) + (e.bonus[u] ?? 0);
     const pts = (n: number) => `${n} pt${n > 1 ? 's' : ''}`;
 
-    const grille = (cliquable: boolean, geste: string, choisie?: number) => `<div class="champ-mines">${Array.from({ length: NB_CASES }, (_, i) => {
+    // Il reste peu de colis fermés par rapport aux mines encore cachées : la grille pulse en rouge.
+    const fermes = Array.from({ length: NB_CASES }, (_, i) => i).filter((i) => !e.ouvertes[i]).length;
+    const minesCachees = Math.max(0, e.ordre.length - Object.values(e.ouvertes).filter((o) => o === 'mine').length);
+    const tendue = e.phase === 'tour' && minesCachees > 0 && fermes <= minesCachees * 2 + 1;
+    const grille = (cliquable: boolean, geste: string, choisie?: number) => `<div class="champ-mines ${tendue ? 'tendue' : ''}">${Array.from({ length: NB_CASES }, (_, i) => {
       const o = e.ouvertes[i];
       const marque = maMine === i && !o ? `<span class="ma-mine">${BOMBE}<em>ta mine</em></span>` : '';
       const d = e.detections[i];
@@ -230,7 +234,8 @@ export const champDeMines: MiniJeu<Etat> = {
       const info = k !== undefined
         ? `<span class="chiffre-mine n${Math.min(3, k)}" aria-label="${k} mine${k > 1 ? 's' : ''} autour (toi seul le vois)">${k}</span>`
         : d ? '<span class="loupe-mine" aria-label="détecteur utilisé ici">🔍</span>' : '';
-      if (o === 'sur') return `<div class="case-champ sure">${GEMME}${info}</div>`;
+      // Suspens court : le colis qui vient d'être ouvert tremble 0,4 s avant de montrer ce qu'il cachait.
+      if (o === 'sur') return `<div class="case-champ sure ${e.dernierSur?.case === i && e.phase === 'tour' ? 'recente' : ''}">${GEMME}${info}</div>`;
       if (o === 'mine') return `<div class="case-champ minee ${e.dernier?.case === i && e.phase === 'boum' ? 'vient' : ''}">${BOMBE}<small>${(e.poseurs[i] ?? []).map(nom).join(', ')}</small></div>`;
       return cliquable
         ? `<button class="case-champ fermee ${choisie === i ? 'choisie' : ''}" data-action="jeu" data-geste="${geste}" data-valeur="${i}" aria-label="Colis ${i + 1}">${marque}</button>`

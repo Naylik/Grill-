@@ -711,7 +711,8 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 /* L'album : chaque chaîne défile comme une conversation. */
 .album { display: grid; gap: 14px; }
 .bulle-album { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 10px; align-items: start; }
-.bulle-album.nouveau { animation: arrive var(--t-lent) var(--rebond); }
+.bulle-album.nouveau { animation: feuille-tourne .7s var(--rebond); transform-origin: 50% 0; }
+@keyframes feuille-tourne { from { opacity: 0; transform: perspective(700px) rotateX(-95deg); } 60% { opacity: 1; } }
 .avatar-album { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-m); box-shadow: 0 0 0 3px var(--fond), 0 0 0 5px color-mix(in srgb, var(--c) 50%, transparent); }
 .avatar-album.jeu { --c: var(--texte-3); }
 .contenu-album { display: grid; gap: 6px; padding: 10px 12px 12px; border-radius: 4px 20px 20px 20px; background: var(--voile-1); border: 1px solid var(--bord); min-width: 0; }
@@ -1010,3 +1011,54 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .apres-jauge { display: grid; gap: 14px; animation: apres-jauge var(--t-lent) var(--rebond) var(--d) both; }
 @keyframes apres-jauge { from { opacity: 0; transform: scale(.6); } }
 .apres-jauge .gros-chiffre strong { animation-delay: var(--d); }
+/* Le Juste Prix : le prix défile (data-compteur), les résultats arrivent ensuite. */
+.compteur-prix strong { font-variant-numeric: tabular-nums; }
+/* Le Parieur : la pièce tourne, puis tombe sur ✔ ou ✘. */
+.piece-parieur { display: grid; place-items: center; perspective: 600px; height: 120px; }
+.piece { position: relative; width: 104px; height: 104px; transform-style: preserve-3d; animation: piece-tourne 1.7s cubic-bezier(.15, .6, .3, 1) both; }
+.piece-parieur.rate .piece { animation-name: piece-tourne-ko; }
+.piece .face { position: absolute; inset: 0; border-radius: 50%; display: grid; place-items: center; font-family: var(--titre); font-weight: 900; font-size: 52px; backface-visibility: hidden; border: 5px solid #ffffff60; }
+.piece .ok { background: radial-gradient(circle at 35% 30%, var(--vert-clair), var(--vert-fort)); color: var(--fond); box-shadow: 0 0 30px var(--vert); }
+.piece .ko { background: radial-gradient(circle at 35% 30%, var(--rose-clair), var(--rose-fort)); color: var(--fond); transform: rotateY(180deg); box-shadow: 0 0 30px var(--rose); }
+@keyframes piece-tourne { 0% { transform: translateY(0) rotateY(0); } 40% { transform: translateY(-40px) rotateY(1080deg); } 100% { transform: translateY(0) rotateY(1800deg); } }
+@keyframes piece-tourne-ko { 0% { transform: translateY(0) rotateY(0); } 40% { transform: translateY(-40px) rotateY(1080deg); } 100% { transform: translateY(0) rotateY(1980deg); } }
+/* Réflexe Mallow : photo-finish quand les deux premiers sont collés. */
+.photo-finish { position: absolute; top: -6px; left: 50%; translate: -50% 0; z-index: 2; padding: 6px 14px; border-radius: var(--r-rond); background: #fff; color: var(--fond); font-family: var(--titre); font-weight: 900; font-size: var(--txt-s); white-space: nowrap; box-shadow: 0 0 0 4px var(--jaune), 0 0 40px #fff; animation: flash-photo .6s ease-out var(--fin) both; }
+@keyframes flash-photo { 0% { opacity: 0; transform: scale(2.4); filter: brightness(3); } 100% { opacity: 1; transform: none; } }
+/* Le bon timing : les pastilles partent de la ligne cible. */
+.piste-arene.depuis-cible .marqueur { animation-name: glisse-cible; animation-duration: 1s; }
+@keyframes glisse-cible { from { left: var(--x0); } }
+/* Colis piégé : il gonfle avec la tension, et fait parfois une fausse alerte (gros tremblement… puis rien). */
+.dessin-colis { scale: calc(1 + var(--t) * .14); transition: scale var(--t-lent) var(--rebond); }
+.zone-patate.alerte-a .dessin-colis, .zone-patate.alerte-b .dessin-colis { animation: tremble-colis .14s linear infinite, alerte-colis-a 1.2s ease-in-out var(--da) 1; }
+.zone-patate.alerte-b .dessin-colis { animation-name: tremble-colis, alerte-colis-b; }
+@keyframes alerte-colis-a { 0%, 100% { filter: drop-shadow(0 12px 20px #0009); } 15%, 45% { translate: -9px 2px; rotate: -7deg; filter: drop-shadow(0 0 30px var(--rose)); } 30%, 60% { translate: 9px -2px; rotate: 7deg; filter: drop-shadow(0 0 40px var(--feu)); } }
+@keyframes alerte-colis-b { 0%, 100% { filter: drop-shadow(0 12px 20px #0009); } 15%, 45% { translate: -9px 2px; rotate: -7deg; filter: drop-shadow(0 0 30px var(--rose)); } 30%, 60% { translate: 9px -2px; rotate: 7deg; filter: drop-shadow(0 0 40px var(--feu)); } }
+
+/* Dessin à la chaîne : le chef-d'œuvre de la partie, avec son tampon. */
+.chef-doeuvre { position: relative; display: grid; justify-items: center; gap: 8px; }
+.chef-doeuvre .cadre-album { width: min(70%, 240px); animation: arrive var(--t-lent) var(--rebond); }
+.tampon-chef { position: absolute; top: 34%; left: 50%; translate: -50% 0; padding: 6px 14px; border: 4px solid var(--rose); border-radius: var(--r-xs); color: var(--rose); background: color-mix(in srgb, #fff 70%, transparent); font-family: var(--titre); font-weight: 900; font-size: var(--txt-l); letter-spacing: .04em; rotate: -12deg; animation: tampon-chef .5s cubic-bezier(.3, 1.6, .5, 1) 1.2s both; }
+@keyframes tampon-chef { from { opacity: 0; transform: scale(2.6); } }
+/* Champ de mines : le colis ouvert tremble 0,4 s (suspens), puis montre sa gemme ; grille tendue = peu de colis sûrs. */
+.case-champ.sure.recente { animation: suspense-colis .4s linear, gemme var(--t-normal) var(--rebond) .4s both; }
+.case-champ.sure.recente svg { animation: apparait-gemme .01s .4s both; }
+@keyframes suspense-colis { 0%, 100% { background: linear-gradient(180deg, #3E5E70, #31495A); } 25% { transform: translateX(-3px) rotate(-3deg); } 75% { transform: translateX(3px) rotate(3deg); } }
+@keyframes apparait-gemme { from { opacity: 0; } }
+.case-champ.minee.vient { animation: suspense-colis .4s linear, mine-saute .6s ease-out .4s; }
+.champ-mines.tendue { animation: grille-tendue 1.2s ease-in-out infinite; }
+@keyframes grille-tendue { 50% { border-color: var(--rose); box-shadow: 0 0 26px -6px var(--rose); } }
+/* Télépathie : les deux cartes arrivent de chaque côté et se rencontrent au milieu ; connectés = éclair, sinon elles rebondissent. */
+.tarots { position: relative; }
+.tarots .tarot:nth-child(1) { animation: vient-gauche .5s var(--doux) both, rebond-gauche .45s ease-out calc(var(--d, 0ms) + 900ms) both; }
+.tarots .tarot:nth-child(2) { animation: vient-droite .5s var(--doux) both, rebond-droite .45s ease-out calc(var(--d, 0ms) + 900ms) both; }
+@keyframes vient-gauche { from { opacity: 0; transform: translateX(-70%) rotate(-8deg); } }
+@keyframes vient-droite { from { opacity: 0; transform: translateX(70%) rotate(8deg); } }
+@keyframes rebond-gauche { 40% { transform: translateX(-10px) rotate(-3deg); } }
+@keyframes rebond-droite { 40% { transform: translateX(10px) rotate(3deg); } }
+.rangee-tele.connectee .tarots .tarot:nth-child(1) { animation: vient-gauche .5s var(--doux) both, colle-gauche .5s var(--rebond) calc(var(--d, 0ms) + 900ms) both; }
+.rangee-tele.connectee .tarots .tarot:nth-child(2) { animation: vient-droite .5s var(--doux) both, colle-droite .5s var(--rebond) calc(var(--d, 0ms) + 900ms) both; }
+@keyframes colle-gauche { 50% { transform: translateX(8px) scale(1.05); } }
+@keyframes colle-droite { 50% { transform: translateX(-8px) scale(1.05); } }
+.rangee-tele.connectee .tarots::after { content: '⚡'; position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 2; font-size: 48px; filter: drop-shadow(0 0 14px #FF5FD2) drop-shadow(0 0 28px #00E5FF); animation: eclair-tele .6s cubic-bezier(.3, 1.6, .5, 1) 1.5s both; }
+@keyframes eclair-tele { from { opacity: 0; transform: scale(3) rotate(-25deg); } }

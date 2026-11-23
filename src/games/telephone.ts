@@ -86,6 +86,18 @@ export function scoreTelephone(e: Pick<Etat, 'ordre' | 'chaines' | 'favoris' | '
   return score;
 }
 
+/** Le dessin qui a reçu le plus de votes « le plus drôle » de toute la partie, avec son tampon. */
+function chefDoeuvre(e: Etat, joueurs: Record<string, { prenom: string }>): string {
+  const [cle, votes] = Object.entries(e.favoris ?? {}).sort((a, b) => b[1] - a[1])[0] ?? [];
+  if (!cle || !votes) return '';
+  const [c, s] = cle.split('-').map(Number);
+  const m = e.chaines[c]?.[s];
+  if (!m?.dessin) return '';
+  return `<div class="chef-doeuvre"><div class="cadre-album">${toileAVoir(`tel-${e.numeroJeu}-chef`, m.dessin, '', true)}</div>
+    <span class="tampon-chef">CHEF-D’ŒUVRE</span>
+    <p class="aide">par <strong>${esc(joueurs[m.auteur]?.prenom ?? '?')}</strong> · ${votes} vote${votes > 1 ? 's' : ''} « le plus drôle »</p></div>`;
+}
+
 export const telephone: MiniJeu<Etat> = {
   id: 'telephone',
   nom: 'Dessin à la chaîne',
@@ -187,6 +199,7 @@ export const telephone: MiniJeu<Etat> = {
       const ordre = [...v.uids].sort((a, b) => (score[b] ?? 0) - (score[a] ?? 0));
       const max = Math.max(1, ...ordre.map((u) => score[u] ?? 0));
       return `${hud('DESSIN À LA CHAÎNE', e.total, e.total, false)}
+        ${chefDoeuvre(e, v.joueurs)}
         <h2 class="question centre-texte">Les meilleurs artistes</h2>
         <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${score[u] ?? 0} pts`, part: (score[u] ?? 0) / max, moi: u === v.uid })))}</div>
         <p class="aide">Devinette juste : 1 pt au devineur et 1 pt au dessinateur. Dessin le plus drôle de chaque chaîne : 1 pt.</p>`;

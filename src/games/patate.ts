@@ -3,6 +3,7 @@
 // (glisser vers un joueur, ou toucher son nom). Le colis tremble un peu plus à chaque passe. Il « explose » à un
 // moment caché (entre 10 et 55 s) : KABOOM, celui qui l'a est éliminé. On continue jusqu'au dernier.
 // Le moment de l'explosion n'est connu que de l'hôte (prive/patate) : personne ne peut tricher en le lisant.
+import { hacher, hasardDe } from '../flash';
 import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
 import { esc } from '../outils';
@@ -106,6 +107,15 @@ const PANNEAUX = ['-130px,-150px,-200deg', '130px,-140px,220deg', '-140px,110px,
 
 /** Tension du colis : elle monte avec le nombre de passes de la manche (0 à 1). */
 const tensionDe = (passe: number) => Math.min(1, passe / 8);
+/**
+ * Fausse alerte : environ une passe sur trois, le colis se met à trembler très fort un instant… puis se calme.
+ * Tirée à partir de la passe : la même sur tous les téléphones. Elle ne dit rien du vrai moment de l'explosion.
+ */
+function fausseAlerte(e: { etape: string; passe: number }): string {
+  const h = hasardDe(hacher(`alerte:${e.etape}:${e.passe}`));
+  if (h() > 0.35) return '';
+  return `alerte-${e.passe % 2 ? 'a' : 'b'}" style="--da:${(1.5 + h() * 4).toFixed(1)}s`;
+}
 
 export const patate: MiniJeu<Etat> = {
   id: 'patate',
@@ -243,11 +253,11 @@ export const patate: MiniJeu<Etat> = {
       return `${tete}
         <div class="consigne-patate" data-depart="${e.depart}"><span>C’EST TOI ! Dis à voix haute :</span><strong>${esc(e.consigne)}</strong></div>
         <div class="cibles-patate">${cibles.map((u) => `<button class="cible-patate" style="--c:${v.joueurs[u].couleur}" data-action="jeu" data-geste="lancer" data-valeur="${u}" data-depart="${e.depart}">${nom(u)}</button>`).join('')}</div>
-        <div class="zone-patate"><div class="patate-a-lancer" data-glisser-patate>${dessinColis(190, tensionDe(e.passe))}</div></div>
+        <div class="zone-patate ${fausseAlerte(e)}"><div class="patate-a-lancer" data-glisser-patate>${dessinColis(190, tensionDe(e.passe))}</div></div>
         <p class="aide">Fais glisser le colis vers un joueur (ou touche son nom).</p>`;
     }
     return `${tete}
-      <div class="zone-patate spectateur"><div class="patate-chez">${dessinColis(170, tensionDe(e.passe))}</div></div>
+      <div class="zone-patate spectateur ${fausseAlerte(e)}"><div class="patate-chez">${dessinColis(170, tensionDe(e.passe))}</div></div>
       <h2 class="question centre-texte">${lanceVers ? `Renvoyé à ${nom(lanceVers)} !` : `Le colis est chez <span style="color:${v.joueurs[e.porteur]?.couleur}">${nom(e.porteur)}</span>`}</h2>
       ${lanceVers ? '' : `<p class="consigne-spectateur">« ${esc(e.consigne)} »</p>`}
       ${elimine ? '<p class="aide">Tu es éliminé : profite du spectacle.</p>' : ''}

@@ -33,7 +33,7 @@ export interface PointPiste {
  * avant qui, même quand deux temps sont très proches. Avec une cible (Le bon timing), une ligne dorée
  * marque le temps à viser sur tous les couloirs.
  */
-export function piste(points: PointPiste[], max: number, cible?: { valeur: number; libelle: string }): string {
+export function piste(points: PointPiste[], max: number, cible?: { valeur: number; libelle: string }, opts: { photoFinish?: number } = {}): string {
   const pos = (v: number) => Math.max(3, Math.min(97, (v / max) * 100));
   const tries = [...points].sort((a, b) => a.valeur - b.valeur);
   const couloirs = tries
@@ -48,7 +48,12 @@ export function piste(points: PointPiste[], max: number, cible?: { valeur: numbe
       </div>`;
     })
     .join('');
-  return `<div class="piste-arene" role="img" aria-label="${esc(tries.map((p, i) => `${i + 1}. ${p.joueur.prenom} ${p.texte}`).join(', '))}">
+  // Photo-finish : les deux premiers sont à moins de `photoFinish` d'écart (ms).
+  const serre = opts.photoFinish !== undefined && tries.length >= 2 && tries[1].valeur - tries[0].valeur <= opts.photoFinish;
+  // Le bon timing : chaque pastille part de la ligne cible et glisse jusqu'à son temps (on voit l'écart se creuser).
+  const depart = cible ? `--x0:${pos(cible.valeur)}%;` : '';
+  return `<div class="piste-arene ${cible ? 'depuis-cible' : ''}" style="${depart}--fin:${(tries.length * 0.3 + 0.8).toFixed(2)}s" role="img" aria-label="${esc(tries.map((p, i) => `${i + 1}. ${p.joueur.prenom} ${p.texte}`).join(', '))}">
+    ${serre ? `<div class="photo-finish">📸 PHOTO-FINISH · ${tries[1].valeur - tries[0].valeur} ms d’écart</div>` : ''}
     ${cible ? `<div class="ligne-cible" style="--xn:${(pos(cible.valeur) / 100).toFixed(4)}"><span>${esc(cible.libelle)}</span></div>` : ''}
     ${couloirs}
   </div>`;

@@ -347,3 +347,11 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · Jauge de suspense variée : à chaque question, un rythme différent (départ, vitesse, ralentissement) et une
   feinte tirée au hasard (cran suivant qui hésite, qui se remplit puis se vide, qui clignote, long silence avant le
   dernier cran, ou pas de feinte). Tirage à partir de l'étape : la même jauge sur tous les téléphones.
+- 23/11/2026 · Petites animations de suspens par mini-jeu (validées par Kilyan) : Juste Prix (le prix défile en
+  compteur, `src/animations.ts`, puis les estimations) ; Parieur (une pièce ✔/✘ tourne avant le verdict, sans feinte) ;
+  Réflexe Mallow (« PHOTO-FINISH » quand les 2 premiers sont à moins de 40 ms) ; Bon timing (les pastilles partent de
+  la ligne cible) ; Colis piégé (le colis gonfle avec la tension, la mèche accélère, fausses alertes 1 passe sur 3) ;
+  Dessin à la chaîne (les feuilles de l'album se retournent, tampon « CHEF-D'ŒUVRE » sur le dessin le plus voté) ;
+  Champ de mines (le colis ouvert tremble 0,4 s avant de se dévoiler, grille qui pulse en rouge quand il reste peu de
+  colis) ; Télépathie (les deux cartes se rencontrent au milieu : éclair si connectés, sinon elles rebondissent).
+  L'Imposteur : maquette (cartes qui se retournent, la dernière s'enflamme) en attente de validation.

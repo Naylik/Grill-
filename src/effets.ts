@@ -178,8 +178,8 @@ export function momentsForts(): void {
   // Champ de mines : gemme (ding) ou KABOOM.
   if (d.phase === 'jeu' && d.jeuEnCours === 'mines' && S.jeu) {
     const m = S.jeu as { phase?: string; dernierSur?: { action: number }; dernier?: { joueur: string; case: number } };
-    if (m.phase === 'tour' && m.dernierSur) moment(`mines-${d.numeroJeu}-sur-${m.dernierSur.action}`, () => sons.ding());
-    if (m.phase === 'boum' && m.dernier) moment(`mines-boum-${d.numeroJeu}-${m.dernier.case}`, () => { sons.boum(); vibrer(m.dernier?.joueur === S.uid ? [400, 100, 400] : 200); });
+    if (m.phase === 'tour' && m.dernierSur) moment(`mines-${d.numeroJeu}-sur-${m.dernierSur.action}`, () => setTimeout(() => sons.ding(), 400)); // après le suspens du colis
+    if (m.phase === 'boum' && m.dernier) moment(`mines-boum-${d.numeroJeu}-${m.dernier.case}`, () => setTimeout(() => { sons.boum(); vibrer(m.dernier?.joueur === S.uid ? [400, 100, 400] : 200); }, 400));
   }
   // Combien ont dit oui ? : un « tic » à chaque cran de la jauge, puis le chiffre tombe (son + vibration pour tous).
   if (d.phase === 'jeu' && d.jeuEnCours === 'combien' && S.jeu) {

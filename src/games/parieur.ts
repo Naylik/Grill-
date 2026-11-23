@@ -140,8 +140,11 @@ export const parieur: MiniJeu<Etat> = {
       })
       .join('');
     return `<p class="petit">Défi ${e.tour + 1}/${e.ordre.length}</p>
-      <div class="gros-verdict ${e.reussi ? 'ok' : 'ko'}">${nomDefie} : ${e.reussi ? 'réussi !' : 'raté !'}</div>
-      <div class="pile">${lignes}</div>
+      <div class="piece-parieur ${e.reussi ? 'reussi' : 'rate'}" aria-hidden="true"><div class="piece"><span class="face ok">✔</span><span class="face ko">✘</span></div></div>
+      <div class="apres-jauge" style="--d:1900ms">
+        <div class="gros-verdict ${e.reussi ? 'ok' : 'ko'}">${nomDefie} : ${e.reussi ? 'réussi !' : 'raté !'}</div>
+        <div class="pile">${lignes}</div>
+      </div>
       ${v.estHote ? `<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="suivant">${e.tour + 1 < e.ordre.length ? 'Défi suivant' : 'Voir le classement'}</button>` : '<p class="attente bas">L’hôte passe à la suite.</p>'}`;
   },
 

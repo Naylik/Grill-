@@ -2,6 +2,7 @@
 // classement au nombre de manches gagnées.
 import questions from '../data/justeprix.json';
 import { esc, fraisDabord, melanger, parmi } from '../outils';
+import { DUREE_COMPTEUR } from '../animations';
 import { plusProches, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { brouillons } from '../ui';
@@ -105,9 +106,11 @@ export const justePrix: MiniJeu<Etat> = {
       .join('');
     const pire = v.uids.filter((u) => e.estimations?.[u] !== undefined).sort((a, b) => Math.abs(e.estimations![b] - q.reponse) - Math.abs(e.estimations![a] - q.reponse))[0];
     return `${titre}
-      <div class="gros-chiffre"><strong>${formater(q.reponse)}</strong><span>${esc(q.unite)}</span></div>
-      <div class="pile">${lignes || '<p class="attente">Personne n’a répondu…</p>'}</div>
-      ${pire && v.uids.length > 2 ? bulle(parmi(PHRASES_PIRE, e.etape).replace('{p}', esc(v.joueurs[pire].prenom)).replace('{n}', formater(e.estimations![pire]))) : ''}
+      <div class="gros-chiffre compteur-prix"><strong data-compteur="${q.reponse}" data-final="${esc(formater(q.reponse))}">${formater(q.reponse)}</strong><span>${esc(q.unite)}</span></div>
+      <div class="apres-jauge" style="--d:${DUREE_COMPTEUR + 200}ms">
+        <div class="pile">${lignes || '<p class="attente">Personne n’a répondu…</p>'}</div>
+        ${pire && v.uids.length > 2 ? bulle(parmi(PHRASES_PIRE, e.etape).replace('{p}', esc(v.joueurs[pire].prenom)).replace('{n}', formater(e.estimations![pire]))) : ''}
+      </div>
       ${v.estHote ? `<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="suivant">${e.index + 1 < e.questions.length ? 'Manche suivante' : 'Voir le classement'}</button>` : `<p class="attente bas">L’hôte passe à la suite.</p>`}`;
   },
 
