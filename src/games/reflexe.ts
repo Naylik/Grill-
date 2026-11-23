@@ -116,7 +116,9 @@ export const reflexe: MiniJeu<Etat> = {
       const derniere = etat.manche + 1 >= (etat.total ?? NB_MANCHES[0]);
       const gagnant = derniere ? undefined : gagnantManche(temps);
       const { piege: _p, ...sansPiege } = etat;
-      return { etat: { ...sansPiege, phase: 'resultat', temps, historique, cumul, ...(gagnant ? { gagnant } : {}), fin: ctx.maintenant + (gagnant ? DUREE_PISTE_CHOIX : DUREE_PISTE) } };
+      // Personne n'a touché à temps (ou que des faux départs) : pas de course à rejouer, on enchaîne vite.
+      const personne = !Object.values(temps).some((t) => t >= 0);
+      return { etat: { ...sansPiege, phase: 'resultat', temps, historique, cumul, ...(gagnant ? { gagnant } : {}), fin: ctx.maintenant + (personne ? 3000 : gagnant ? DUREE_PISTE_CHOIX : DUREE_PISTE) } };
     }
     if (etat.phase === 'resultat') {
       // Le gagnant a choisi sa victime : on n'attend pas la fin du chrono.
@@ -127,9 +129,13 @@ export const reflexe: MiniJeu<Etat> = {
       return { etat: nouvelleManche(ctx, etat, etat.manche + 1, cible) };
     }
     if (etat.phase === 'bilan' && ctx.maintenant >= (etat.fin ?? 0)) {
-      const meilleur = Object.entries(etat.cumul).sort((a, b) => a[1] - b[1])[0];
-      const resume = meilleur ? `${ctx.joueurs[meilleur[0]]?.prenom} : ${Math.round(meilleur[1] / (etat.total ?? NB_MANCHES[0]))} ms en moyenne.` : undefined;
-      return { etat, fin: { points: pointsDePlace(etat.cumul, false), sorte: 'place', resume } };
+      // Classement sur la moyenne arrondie (celle qu'on affiche) : deux joueurs à 1500 ms sont vraiment ex æquo.
+      const n = etat.total ?? NB_MANCHES[0];
+      const moyennes = Object.fromEntries(Object.entries(etat.cumul).map(([u, c]) => [u, Math.round(c / n)]));
+      const meilleure = Math.min(...Object.values(moyennes));
+      const premiers = Object.keys(moyennes).filter((u) => moyennes[u] === meilleure).map((u) => ctx.joueurs[u]?.prenom);
+      const resume = premiers.length ? `${premiers.join(' et ')} : ${meilleure} ms en moyenne.` : undefined;
+      return { etat, fin: { points: pointsDePlace(moyennes, false), sorte: 'place', resume } };
     }
     return null;
   },
@@ -151,7 +157,10 @@ export const reflexe: MiniJeu<Etat> = {
         .sort((a, b) => a.moy - b.moy);
       const meilleure = lignes[0]?.moy ?? 1;
       return `${hud('RÉFLEXE MALLOW', N, N, false)}
-        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p><strong>${esc(v.joueurs[lignes[0].u].prenom)}</strong> a les meilleurs réflexes</p></div>
+        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p>${(() => {
+          const premiers = lignes.filter((l) => l.moy === lignes[0].moy).map((l) => `<strong>${esc(v.joueurs[l.u].prenom)}</strong>`);
+          return `${premiers.join(' et ')} ${premiers.length > 1 ? 'ont' : 'a'} les meilleurs réflexes`;
+        })()}</p></div>
         <div class="pile">${classementBarres(lignes.map((l) => ({ joueur: v.joueurs[l.u], texte: `${l.moy} ms`, part: meilleure / l.moy, moi: l.u === v.uid })))}</div>
         <p class="aide">Moyenne sur ${N} manches, faux départs comptés 1&#8239;000 ms.</p>`;
     }
@@ -214,6 +223,7 @@ export const reflexe: MiniJeu<Etat> = {
         ${premier ? `<p class="aide gauche gagnant-course"><strong style="color:${v.joueurs[premier].couleur}">${esc(v.joueurs[premier].prenom)}</strong> gagne la manche en ${temps[premier]} ms.</p>` : ''}
       </div>` : ''}
       ${fauxDeparts.length ? `<p class="hors-piste rouge">Faux départ : ${fauxDeparts.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
+      ${!valides.length ? '<p class="personne-reflexe">😴 Personne n’a touché à temps !</p>' : ''}
       ${absents.length ? `<p class="hors-piste">Trop tard : ${absents.map((u) => esc(v.joueurs[u].prenom)).join(', ')}</p>` : ''}
       ${choixPiege(e, v)}
       <p class="attente">${e.manche + 1 < N ? 'Manche suivante dans un instant…' : 'Classement dans un instant…'}</p>`;

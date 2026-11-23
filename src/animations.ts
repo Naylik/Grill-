@@ -82,3 +82,6 @@ export function animerLoupes(): void {
     if (loupe.style.top !== y) loupe.style.top = y;
   });
 }
+
+/** Carte d'ouverture d'un mini-jeu (deroule.ts) : le jeu ne démarre vraiment qu'après elle (hote.ts › demarrerJeu). */
+export const DUREE_OUVERTURE = 2400;

@@ -1272,3 +1272,11 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 /* Bas d'écran : un fondu sous le bouton collé et GRILLÉ, pour que le texte qui défile derrière s'efface proprement. */
 .bandeau ~ .ecran::after { content: ''; position: fixed; left: 0; right: 0; bottom: 0; z-index: 3; height: 110px; background: linear-gradient(transparent, color-mix(in srgb, var(--fond) 92%, transparent) 55%); pointer-events: none; }
 .bandeau ~ .ecran { padding-bottom: max(115px, env(safe-area-inset-bottom)); }
+/* Dernière chance : combien ont déjà dit « Rien à signaler ». */
+.compte-rien { margin: 0; text-align: center; font-size: var(--txt-s); font-weight: 800; color: var(--texte-2); }
+/* Réflexe Mallow : manche où personne n'a touché. */
+.personne-reflexe { margin: 8px 0; text-align: center; font-family: var(--titre); font-weight: 900; font-size: var(--txt-l); animation: apres-jauge var(--t-lent) var(--rebond) both; }
+/* Colis piégé : joueur éliminé, un petit fantôme qui flotte. */
+.elimine-patate { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0; padding: 10px 14px; border-radius: var(--r-rond); background: var(--voile-1); border: 1px dashed var(--bord); font-weight: 800; color: var(--texte-2); }
+.elimine-patate span { font-size: var(--txt-2xl); animation: flotte-fantome 2.4s ease-in-out infinite; }
+@keyframes flotte-fantome { 50% { transform: translateY(-6px) rotate(-6deg); } }

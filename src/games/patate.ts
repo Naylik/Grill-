@@ -257,7 +257,7 @@ export const patate: MiniJeu<Etat> = {
       <div class="zone-patate spectateur ${lanceVers ? 'parti' : ''} ${fausseAlerte(e)}"><div class="patate-chez">${dessinColis(170, tensionDe(e.passe))}</div></div>
       <h2 class="question centre-texte">${lanceVers ? `Renvoyé à ${nom(lanceVers)} !` : `Le colis est chez <span style="color:${v.joueurs[e.porteur]?.couleur}">${nom(e.porteur)}</span>`}</h2>
       ${lanceVers ? '' : `<p class="consigne-spectateur">« ${esc(e.consigne)} »</p>`}
-      ${elimine ? '<p class="aide">Tu es éliminé : profite du spectacle.</p>' : ''}
+      ${elimine ? '<p class="elimine-patate"><span aria-hidden="true">👻</span>Tu es éliminé : profite du spectacle !</p>' : ''}
       ${bandeJoueurs}`;
   },
 

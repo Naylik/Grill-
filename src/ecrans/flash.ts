@@ -44,6 +44,7 @@ export function ecranFlash(): string {
       <p class="aide">Appuie sur <strong>GRILLÉ !</strong> en bas à droite pour l’accuser. Vu juste : tu lui voles des points. Raté : −2 pts.</p>
       <div class="pile bas">
         ${passe ? '<p class="attente">Rien à signaler. On attend les autres…</p>' : '<button class="bouton discret" data-action="passerGrillage">Rien à signaler</button>'}
+        <p class="compte-rien">${uids.filter((u) => ont.includes(u) || (u === S.uid && passe)).length}/${uids.length} ont dit « Rien à signaler »</p>
         ${attenteDes(uids, S.joueurs, (u) => ont.includes(u) || (u === S.uid && passe))}
         ${forcer}
       </div>`;

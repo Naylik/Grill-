@@ -14,6 +14,7 @@ import { carteMission } from './missions';
 import { blocFlash } from './flash';
 import { POINTS_FLASH } from '../flash';
 import { localJeu } from '../memoireJeu';
+import { DUREE_OUVERTURE } from '../animations';
 import { boutonsVideo } from './video';
 import { mallow, sequenceGrille } from '../mallow';
 import { missionsGrillees, PENALITE_MENSONGE } from '../accusations';
@@ -130,7 +131,6 @@ export function ecranJeu(): string {
  * manche, un rideau de la couleur du jeu traverse l'écran. Chaque moment ne se joue qu'une fois par téléphone
  * (heure gardée dans la mémoire du jeu, même après un rechargement).
  */
-const DUREE_OUVERTURE = 2400;
 const DUREE_RIDEAU = 1100;
 function ouvertureEtRideau(jeu: { id: string; nom: string; couleur: string; icone: string }): string {
   const n = S.deroule!.numeroJeu;

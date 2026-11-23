@@ -52,7 +52,7 @@ describe('missions flash', () => {
   it('verdict : grillée = ratée, majorité, pas de vote = réussie', () => {
     expect(flashReussie([true, true, false], false)).toBe(true);
     expect(flashReussie([true, false], false)).toBe(false);
-    expect(flashReussie([], false)).toBe(false); // aucun vote exprimé (que des votes blancs) : ratée
+    expect(flashReussie([], false)).toBe(true); // aucun vote exprimé : bénéfice du doute (23/11)
     expect(flashReussie([true, true], true)).toBe(false);
   });
 

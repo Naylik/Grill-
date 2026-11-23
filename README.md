@@ -452,3 +452,10 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · Même présentation compacte sur tous les écrans de la partie (pas seulement les mini-jeux) : bandeau fin,
   bouton principal collé en bas (y compris « Je suis prêt », « Jeu suivant »… du bloc du bas, `.pile.bas` en
   `display: contents`), fond opaque, fondu en bas d'écran sous le bouton et GRILLÉ, marge du bas pour ne rien cacher.
+- 23/11/2026 · Après un test complet par robot sur la table virtuelle (partie entière, aucune erreur) :
+  le mini-jeu démarre après la carte d'ouverture (l'hôte décale le départ de 2,4 s, `DUREE_OUVERTURE`) ; Réflexe :
+  ex æquo affichés ensemble et classés sur la moyenne arrondie ; plus de chrono pour les votes des révélations
+  (missions, pari détective, mensonges ; « Clore le vote » reste) ; mission flash sans aucun vote = réussie (bénéfice
+  du doute) ; « Dernière chance » affiche « 2/4 ont dit Rien à signaler » ; Réflexe : manche sans aucun toucher
+  écourtée (« Personne n'a touché à temps ! ») ; Colis piégé : message d'élimination avec un fantôme. La « Dernière
+  chance » garde ses 20 s (choix de Kilyan).

@@ -81,9 +81,10 @@ export function tirerFlash(opts: {
 }
 
 /** Une mission flash est-elle réussie ? Grillée = ratée ; sinon la majorité des votes exprimés (un vote manquant compte
- *  comme vote blanc). Aucun vote exprimé : ratée, il faut que le groupe la valide. */
+ *  comme vote blanc). Aucun vote exprimé (l'hôte a passé avant que quiconque vote) : réussie, bénéfice du doute
+ *  (décision de Kilyan du 23/11 ; avant, elle était ratée). */
 export function flashReussie(votes: boolean[], grillee: boolean): boolean {
   if (grillee) return false;
-  if (!votes.length) return false;
+  if (!votes.length) return true;
   return votes.filter(Boolean).length * 2 > votes.length;
 }

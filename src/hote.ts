@@ -1,6 +1,7 @@
 // Le « chef d'orchestre » : seul le téléphone de l'hôte exécute ce fichier.
 // Il regarde l'état de la partie et décide de l'étape suivante. Tout est recalculé à partir de Firebase :
 // si l'hôte change (départ, coupure), le nouvel hôte reprend exactement là où on en était.
+import { DUREE_OUVERTURE } from './animations';
 import { ref, remove, update } from 'firebase/database';
 import { majSaison } from './saison';
 import { db, maintenant } from './firebase';
@@ -16,7 +17,6 @@ import { flashReussie, nbPorteurs, POINTS_FLASH } from './flash';
 
 const DUREE_ROUE = 5_500;
 const DUREE_VOTE_JEU = 20_000;
-const DUREE_VOTE = 45_000;
 const DUREE_GRILLAGE = 25_000; // « Dernière chance » : le temps d'appuyer sur GRILLÉ ! avant la révélation
 const DUREE_COLLECTE_FLASH = 6_000; // le temps que les porteurs révèlent leur mission flash
 const DUREE_RESULTAT_FLASH = 5_000;
@@ -103,7 +103,9 @@ function entrerRegles(id: string): Ecritures {
 
 function demarrerJeu(id: string): Ecritures {
   const jeu = jeuParId(id)!;
-  const av = jeu.demarrer(contexte());
+  // Le jeu démarre après la carte d'ouverture (2,4 s) : ses premiers chronos et comptes à rebours ne sont pas cachés.
+  const ctx = contexte();
+  const av = jeu.demarrer({ ...ctx, maintenant: ctx.maintenant + DUREE_OUVERTURE });
   return {
     'deroule/phase': 'jeu', 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null,
     'reponses': null, 'attente': null,
@@ -209,9 +211,9 @@ function votantsMissions(sujet: string) {
 const mensongesDe = (sujet: string) => accusationsADoubler(S.accusations, sujet).map((a) => ({ cle: a.cle, de: a.de, texte: a.texte }));
 
 /** Après les votes de missions (et les paris) : les mensonges éventuels, puis le résultat. */
-function apresParis(sujet: string, now: number): Ecritures {
+function apresParis(sujet: string): Ecritures {
   const mensonges = mensongesDe(sujet);
-  if (mensonges.length) return { 'deroule/revelation/etape': 'mensonges', 'deroule/revelation/mensonges': mensonges, 'deroule/revelation/fin': now + DUREE_VOTE };
+  if (mensonges.length) return { 'deroule/revelation/etape': 'mensonges', 'deroule/revelation/mensonges': mensonges, 'deroule/revelation/fin': null };
   return { 'deroule/revelation/etape': 'resultat', 'deroule/revelation/fin': null };
 }
 
@@ -222,7 +224,7 @@ function etapeRevelation(r: EtatRevelation): Ecritures | null {
     if (!missionsDe(sujet).length) return null; // on attend que son téléphone publie ses missions (ou que l'hôte passe)
     // Pas de chrono : on laisse rire et débattre. Le joueur révélé lance le vote quand le groupe est prêt (ou l'hôte).
     if (S.reponses[sujet]?.etape !== `recit-${r.index}`) return null;
-    return { 'deroule/revelation/etape': 'vote', 'deroule/revelation/fin': now + DUREE_VOTE };
+    return { 'deroule/revelation/etape': 'vote', 'deroule/revelation/fin': null }; // pas de chrono : on attend tout le monde (l'hôte peut clore)
   }
   if (r.etape === 'vote') {
     const nb = missionsDe(sujet).length;
@@ -230,21 +232,21 @@ function etapeRevelation(r: EtatRevelation): Ecritures | null {
     const grillees = missionsGrillees(S.accusations, sujet);
     const aVoter = Array.from({ length: nb }, (_, i) => i + 1).filter((n) => !grillees[n]);
     const fini = votantsMissions(sujet).every((v) => aVoter.every((n) => S.votes[`m${n}-${sujet}`]?.[v] !== undefined));
-    if (!fini && now < (r.fin ?? 0)) return null;
+    if (!fini && now < (r.fin ?? Infinity)) return null;
     const paris = Object.entries(S.paris)
       .filter(([de, p]) => !p.passe && p.cible === sujet && p.texte && de !== sujet)
       .map(([de, p]) => ({ de, texte: p.texte! }));
-    if (paris.length) return { 'deroule/revelation/etape': 'detective', 'deroule/revelation/paris': paris, 'deroule/revelation/fin': now + DUREE_VOTE };
-    return apresParis(sujet, now);
+    if (paris.length) return { 'deroule/revelation/etape': 'detective', 'deroule/revelation/paris': paris, 'deroule/revelation/fin': null };
+    return apresParis(sujet);
   }
   if (r.etape === 'detective') {
     const fini = (r.paris ?? []).every((p) => connectes().filter((v) => v !== p.de && v !== sujet).every((v) => S.votes[`d-${p.de}`]?.[v] !== undefined));
-    if (!fini && now < (r.fin ?? 0)) return null;
-    return apresParis(sujet, now);
+    if (!fini && now < (r.fin ?? Infinity)) return null;
+    return apresParis(sujet);
   }
   if (r.etape === 'mensonges') {
     const fini = (r.mensonges ?? []).every((m) => connectes().filter((v) => v !== m.de && v !== sujet).every((v) => S.votes[`l-${m.cle}`]?.[v] !== undefined));
-    if (!fini && now < (r.fin ?? 0)) return null;
+    if (!fini && now < (r.fin ?? Infinity)) return null;
     return { 'deroule/revelation/etape': 'resultat', 'deroule/revelation/fin': null };
   }
   return null;
@@ -421,7 +423,7 @@ export async function commandeHote(valeur: string): Promise<void> {
         return;
       }
     } else if (valeur === 'auVote' && r.etape === 'recit') {
-      e = { 'deroule/revelation/etape': 'vote', 'deroule/revelation/fin': maintenant() + DUREE_VOTE };
+      e = { 'deroule/revelation/etape': 'vote', 'deroule/revelation/fin': null };
     } else if (valeur === 'passer') {
       e = { 'deroule/revelation/etape': 'resultat', 'deroule/revelation/fin': null };
     } else if (valeur === 'cloreVote') {
