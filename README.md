@@ -417,3 +417,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Maintenant −3 ; le point en trop est offert par le jeu.
 - 23/11/2026 · Le Parieur : le chrono du défi dure pile la durée annoncée (15 s affichait 17 : 1,5 s de marge cachée,
   arrondie vers le haut). Marge supprimée.
+- 23/11/2026 · Le Parieur : plus de chrono pour miser. Le défi démarre dès que tous les joueurs connectés ont misé ;
+  l'hôte a un bouton « Lancer le défi sans attendre » si quelqu'un bloque.

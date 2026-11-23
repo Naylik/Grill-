@@ -6,7 +6,6 @@ import { borneParieur, majoriteOui, pariMutuel, PARIEUR_MAX, PARIEUR_MIN, type M
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
 
-const DUREE_MISES = 30_000;
 const DUREE_VOTE = 30_000;
 const DUREE_LECTURE = 5_000; // le défié lit son défi (et tout le monde avec lui) avant que le chrono parte
 
@@ -43,7 +42,7 @@ export const parieur: MiniJeu<Etat> = {
     const choix = fraisDabord(defis.filter((d) => d.niveau !== 'hot'), ctx.dejaVus, ctx.hasard).slice(0, ordre.length).map(({ id, texte, duree }) => ({ id, texte, duree }));
     const base = { numeroJeu: ctx.numeroJeu, tour: 0 };
     return {
-      etat: { ...base, etape: etapeDe(base, 'mises'), phase: 'mises', ordre, defis: choix, fin: ctx.maintenant + DUREE_MISES, cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])) },
+      etat: { ...base, etape: etapeDe(base, 'mises'), phase: 'mises', ordre, defis: choix, fin: undefined, cumul: Object.fromEntries(ctx.uids.map((u) => [u, 0])) },
     };
   },
 
@@ -80,6 +79,8 @@ export const parieur: MiniJeu<Etat> = {
 
   commande(ctx, etat, valeur) {
     if (valeur === 'finDefi' && etat.phase === 'defi') return { etat: { ...etat, fin: ctx.maintenant } };
+    // Pas de chrono pour miser : si quelqu'un ne mise jamais, l'hôte lance le défi quand même.
+    if (valeur === 'forcerMises' && etat.phase === 'mises') return { etat: { ...etat, fin: ctx.maintenant } };
     if (valeur !== 'suivant' || etat.phase !== 'resultat') return null;
     const tour = etat.tour + 1;
     if (tour >= etat.ordre.length) {
@@ -87,7 +88,7 @@ export const parieur: MiniJeu<Etat> = {
       return { etat, fin: { points: Object.fromEntries(Object.entries(etat.cumul).map(([u, n]) => [u, borneParieur(n)])), sorte: 'reels', resume: `Au Parieur, on gagne et on perd de vrais points (entre ${PARIEUR_MIN} et +${PARIEUR_MAX}).` } };
     }
     const suite = { ...etat, tour };
-    return { etat: { ...suite, phase: 'mises', etape: etapeDe(suite, 'mises'), fin: ctx.maintenant + DUREE_MISES, reussi: undefined, gains: undefined, mises: undefined } };
+    return { etat: { ...suite, phase: 'mises', etape: etapeDe(suite, 'mises'), fin: undefined, reussi: undefined, gains: undefined, mises: undefined } };
   },
 
   ecran(v) {
@@ -107,7 +108,9 @@ export const parieur: MiniJeu<Etat> = {
     const attente = (u: string) => v.ontRepondu.includes(u) || (u === v.uid && v.maReponse?.etape === e.etape);
 
     if (e.phase === 'mises') {
-      if (moiDefie) return `${chrono(e.fin)}${entete}${bulle('Les autres parient sur toi en secret. Pas de pression.')}${attenteDes(autres, v.joueurs, attente)}`;
+      // Pas de chrono : on attend que tout le monde ait misé (l'hôte peut forcer en cas de souci).
+      const forcer = v.estHote ? '<button class="bouton discret" data-action="hote-jeu" data-valeur="forcerMises">Lancer le défi sans attendre</button>' : '';
+      if (moiDefie) return `${entete}${bulle('Les autres parient sur toi en secret. Pas de pression.')}${attenteDes(autres, v.joueurs, attente)}${forcer}`;
       const deja = v.maReponse?.etape === e.etape;
       const cote = v.local[`${e.etape}:cote`] as string | undefined;
       const mise = v.local[`${e.etape}:mise`] as number | undefined;
@@ -128,7 +131,7 @@ export const parieur: MiniJeu<Etat> = {
           <div class="options trois">${[1, 2, 3].map((n) => `<button class="option ${mise === n ? 'actif jaune' : ''}" data-action="jeu" data-geste="mise" data-valeur="${n}">${n} pt${n > 1 ? 's' : ''}</button>`).join('')}</div>
           <button class="bouton jaune" data-action="jeu" data-geste="miser" ${cote && mise ? '' : 'disabled'}>${cote && mise ? `Miser ${mise} pt${mise > 1 ? 's' : ''}` : 'Choisis ton camp et ta mise'}</button>
           </div>`;
-      return `${chrono(e.fin)}${entete}${choix}${attenteDes(autres, v.joueurs, attente)}`;
+      return `${entete}${choix}${attenteDes(autres, v.joueurs, attente)}${forcer}`;
     }
     if (e.phase === 'lecture') {
       return `${entete}<div class="lecture-defi"><span>Le chrono démarre dans</span>${chrono(e.fin)}</div>
