@@ -275,16 +275,6 @@
     "texte": "Fais dire à {cible} « bon, je double »."
   },
   {
-    "id": "f-quitte-03",
-    "jeu": "quitte",
-    "texte": "Fais doubler {cible} alors qu’il ou elle voulait encaisser."
-  },
-  {
-    "id": "f-quitte-04",
-    "jeu": "quitte",
-    "texte": "Fais dire « je le sens pas » à quelqu’un juste avant qu’il ou elle double."
-  },
-  {
     "id": "f-quitte-05",
     "jeu": "quitte",
     "texte": "Obtiens une poignée de main franche (demandée, jamais forcée)."
@@ -535,14 +525,14 @@
     "texte": "Fais semblant de dormir entre les manches, et réveille-toi d’un coup quand une manche commence."
   },
   {
-    "id": "f-quitte-08",
-    "jeu": "quitte",
-    "texte": "Fais un compte à rebours à voix haute (« 3, 2, 1… ») avant chacun de tes choix."
-  },
-  {
     "id": "f-quitte-09",
     "jeu": "quitte",
     "texte": "Fais un bruit de caisse enregistreuse (« ka-tching ! ») chaque fois que tu encaisses."
+  },
+  {
+    "id": "f-quitte-10",
+    "jeu": "quitte",
+    "texte": "Mets la main sur ton cœur chaque fois que tu doubles."
   },
   {
     "id": "f-mines-10",

@@ -435,5 +435,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   remplacée par « Hésite à voix haute pendant au moins 5 secondes avant chacun de tes choix… ». Trois autres missions
   « d'encaissement » (f-quitte-03, 04, 08) restent à remplacer.
 - 23/11/2026 · Quitte ou Double : les 3 dernières missions flash d'encaissement (16 points en jeu, plus gros montant,
-  3 encaissements) remplacées par : faire doubler {cible} qui voulait encaisser ; faire dire « je le sens pas » avant
-  un double ; compte à rebours à voix haute avant chaque choix.
+  3 encaissements) sont supprimées, et une seule est ajoutée : « Mets la main sur ton cœur chaque fois que tu doubles »
+  (f-quitte-10). Le jeu a 7 missions flash.
