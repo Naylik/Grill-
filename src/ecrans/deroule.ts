@@ -122,7 +122,7 @@ export function ecranJeu(): string {
       <button class="bouton jaune" data-action="majAppli">Mettre à jour</button>`;
   }
   if (!S.jeu || (S.jeu as { jeuId?: string }).jeuId !== jeu.id) return `<p class="attente">Chargement du jeu…</p>`;
-  return `${ouvertureEtRideau(jeu)}<div class="entete-jeu" style="--c:${jeu.couleur}"><span>Jeu ${S.deroule!.numeroJeu}/${S.infos!.duree}</span><strong>${esc(jeu.nom)}</strong></div>${jeu.ecran(vueJeu())}`;
+  return `${ouvertureEtRideau(jeu)}<div class="entete-jeu ${jeu.nom.length > 16 ? 'nom-long' : ''}" style="--c:${jeu.couleur}"><span>Jeu ${S.deroule!.numeroJeu}/${S.infos!.duree}</span><strong>${esc(jeu.nom)}</strong></div>${jeu.ecran(vueJeu())}`;
 }
 
 /**

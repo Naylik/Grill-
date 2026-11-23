@@ -445,3 +445,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   pour forcer la suite, `forcerEtape`) : Combien ont dit oui ? (réponse et estimation), Parieur (vote réussi/raté),
   Champ de mines (pose de la mine), Télépathie (pari de l'arbitre, vote « ça compte ? », sabotage). Gardés : Juste Prix,
   défi et lecture du Parieur, Quitte ou Double, ouverture des colis, Dessin, « CRIEZ ! » et mot de la Télépathie.
+- 23/11/2026 · Mini-jeux, ergonomie (validé par Kilyan sur captures avant/après) : bandeau du joueur plus fin, en-tête
+  du jeu sur une ligne avec le chrono en petit rond à droite (noms longs en plus petit, jamais coupés), espacements et
+  bulle du narrateur réduits, bouton principal (jaune) collé en bas de l'écran à gauche du bouton GRILLÉ. But : ne
+  plus devoir faire défiler pour atteindre les boutons.
