@@ -122,7 +122,33 @@ export function ecranJeu(): string {
       <button class="bouton jaune" data-action="majAppli">Mettre à jour</button>`;
   }
   if (!S.jeu || (S.jeu as { jeuId?: string }).jeuId !== jeu.id) return `<p class="attente">Chargement du jeu…</p>`;
-  return `<div class="entete-jeu" style="--c:${jeu.couleur}"><span>Jeu ${S.deroule!.numeroJeu}/${S.infos!.duree}</span><strong>${esc(jeu.nom)}</strong></div>${jeu.ecran(vueJeu())}`;
+  return `${ouvertureEtRideau(jeu)}<div class="entete-jeu" style="--c:${jeu.couleur}"><span>Jeu ${S.deroule!.numeroJeu}/${S.infos!.duree}</span><strong>${esc(jeu.nom)}</strong></div>${jeu.ecran(vueJeu())}`;
+}
+
+/**
+ * Au lancement d'un mini-jeu, sa carte arrive en grand (« C'est parti ! ») puis s'envole ; à chaque nouvelle
+ * manche, un rideau de la couleur du jeu traverse l'écran. Chaque moment ne se joue qu'une fois par téléphone
+ * (heure gardée dans la mémoire du jeu, même après un rechargement).
+ */
+const DUREE_OUVERTURE = 2400;
+const DUREE_RIDEAU = 1100;
+function ouvertureEtRideau(jeu: { id: string; nom: string; couleur: string; icone: string }): string {
+  const n = S.deroule!.numeroJeu;
+  const maintenantMs = Date.now();
+  const depuis = (cle: string) => {
+    if (typeof localJeu[cle] !== 'number') localJeu[cle] = maintenantMs;
+    return maintenantMs - (localJeu[cle] as number);
+  };
+  const j = S.jeu as { manche?: number; index?: number; phase?: string };
+  if (depuis(`ouverture-${n}`) < DUREE_OUVERTURE) {
+    return `<div class="ouverture-jeu" style="--c:${jeu.couleur}" aria-hidden="true"><div class="carte-ouverture">
+      <span class="icone-ouverture"><svg viewBox="0 0 24 24">${jeu.icone}</svg></span>
+      <span>Jeu ${n}/${S.infos!.duree}</span><strong>${esc(jeu.nom)}</strong><em>C’est parti !</em></div></div>`;
+  }
+  const m = j.manche ?? j.index;
+  if (typeof m !== 'number' || m <= 0 || j.phase === 'bilan') return '';
+  if (depuis(`rideau-${n}-${m}`) >= DUREE_RIDEAU) return '';
+  return `<div class="rideau-manche" style="--c:${jeu.couleur}" aria-hidden="true"><strong>${jeu.id === 'combien' ? 'Question' : 'Manche'} ${m + 1}</strong></div>`;
 }
 
 // ——— Classement provisoire ———
