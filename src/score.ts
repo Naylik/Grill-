@@ -167,8 +167,9 @@ export function pariMutuel(mises: Mise[], reussi: boolean, defie: string): Recor
     res[g.uid] = gain;
     distribue += gain;
   }
-  // Les perdants ne paient que ce qui a été distribué, au prorata de leur mise.
-  for (const p of perdants) res[p.uid] = -Math.round((distribue * p.mise) / pot);
+  // Les perdants ne paient que ce qui a été distribué, au prorata de leur mise, et jamais plus que leur mise
+  // (si l'arrondi des gains dépasse le pot, le point en trop est offert par le jeu).
+  for (const p of perdants) res[p.uid] = -Math.min(p.mise, Math.round((distribue * p.mise) / pot));
   return res;
 }
 

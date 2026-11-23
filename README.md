@@ -412,3 +412,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · Le Parieur : la zone de mise ne flotte plus par-dessus le défi (elle était « collante » en bas d'écran).
   Le défié ne voit plus son défi pendant les mises (« 🔒 Encore secret »). Nouvelle étape « lecture » de 5 s (8 s au départ, réduit par Kilyan) : le défi
   est révélé à tous, « Le chrono démarre dans… », puis le chrono du défi part.
+- 23/11/2026 · Le Parieur, arrondi (option A validée par Kilyan) : un perdant ne perd jamais plus que sa mise. Cas
+  vu en test : 2 gagnants à 3 contre 1 perdant à 3, pot de 3 partagé (1,5 arrondi à 2 chacun) ; la perdante payait −4.
+  Maintenant −3 ; le point en trop est offert par le jeu.

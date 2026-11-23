@@ -24,6 +24,10 @@ describe('Le Parieur (pari mutuel)', () => {
     const r = pariMutuel([{ uid: 'a', mise: 2, cote: 'reussite' }, { uid: 'b', mise: 1, cote: 'reussite' }], true, 'm');
     expect(r).toEqual({ m: 2, a: 0, b: 0 });
   });
+  it('arrondi : un perdant ne perd jamais plus que sa mise (soirée test du 23/11)', () => {
+    const m = [{ uid: 'k', mise: 3, cote: 'reussite' as const }, { uid: 'c', mise: 3, cote: 'reussite' as const }, { uid: 'm', mise: 3, cote: 'echec' as const }];
+    expect(pariMutuel(m, true, 'y')).toEqual({ y: 2, k: 2, c: 2, m: -3 });
+  });
   it('bonus du défié plafonné à 5', () => {
     const six = Array.from({ length: 6 }, (_, i) => ({ uid: `j${i}`, mise: 1, cote: 'reussite' as const }));
     expect(pariMutuel(six, true, 'm').m).toBe(5);
