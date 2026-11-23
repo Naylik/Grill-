@@ -426,3 +426,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · L'Imposteur : plus de chrono. Indices : l'hôte passe au vote avec son bouton. Vote : le résultat tombe dès
   que tout le monde a voté ; l'hôte a « Voir le résultat sans attendre » si quelqu'un bloque. Égalité en tête :
   règle inchangée (l'imposteur s'en sort et prend +3), choix de Kilyan.
+- 23/11/2026 · L'Imposteur : 23 paires de mots trop pointues remplacées par des mots connus de tous (ex. Apex Legends,
+  eFootball, Digimon, Soulier d'or, Lewandowski, Ancelotti/Guardiola, Dark, Brooklyn Nine-Nine…). Mêmes thèmes.

@@ -5,7 +5,7 @@
   "theme": "jeux vidéo",
   "mots": [
    "Fortnite",
-   "Apex Legends"
+   "Call of Duty"
   ]
  },
  {
@@ -22,8 +22,8 @@
   "niveau": "soft",
   "theme": "jeux vidéo",
   "mots": [
-   "EA Sports FC",
-   "eFootball"
+   "Pac-Man",
+   "Tetris"
   ]
  },
  {
@@ -31,8 +31,8 @@
   "niveau": "soft",
   "theme": "jeux vidéo",
   "mots": [
-   "Mario Kart",
-   "Crash Team Racing"
+   "Mario",
+   "Luigi"
   ]
  },
  {
@@ -49,8 +49,8 @@
   "niveau": "soft",
   "theme": "jeux vidéo",
   "mots": [
-   "Call of Duty",
-   "Battlefield"
+   "Just Dance",
+   "Wii Sports"
   ]
  },
  {
@@ -59,7 +59,7 @@
   "theme": "jeux vidéo",
   "mots": [
    "Pokémon",
-   "Digimon"
+   "Dragon Ball"
   ]
  },
  {
@@ -67,8 +67,8 @@
   "niveau": "soft",
   "theme": "jeux vidéo",
   "mots": [
-   "League of Legends",
-   "Valorant"
+   "Clash of Clans",
+   "Subway Surfers"
   ]
  },
  {
@@ -104,7 +104,7 @@
   "theme": "foot",
   "mots": [
    "Zidane",
-   "Platini"
+   "Deschamps"
   ]
  },
  {
@@ -121,8 +121,8 @@
   "niveau": "soft",
   "theme": "foot",
   "mots": [
-   "Ballon d’or",
-   "Soulier d’or"
+   "Carton jaune",
+   "Carton rouge"
   ]
  },
  {
@@ -176,7 +176,7 @@
   "theme": "cinéma",
   "mots": [
    "Star Wars",
-   "Star Trek"
+   "Retour vers le futur"
   ]
  },
  {
@@ -212,7 +212,7 @@
   "theme": "séries",
   "mots": [
    "Stranger Things",
-   "Dark"
+   "Scooby-Doo"
   ]
  },
  {
@@ -221,7 +221,7 @@
   "theme": "séries",
   "mots": [
    "Squid Game",
-   "Alice in Borderland"
+   "Hunger Games"
   ]
  },
  {
@@ -257,7 +257,7 @@
   "theme": "séries",
   "mots": [
    "Breaking Bad",
-   "Narcos"
+   "Prison Break"
   ]
  },
  {
@@ -292,8 +292,8 @@
   "niveau": "soft",
   "theme": "jeux vidéo",
   "mots": [
-   "Zelda",
-   "Skyrim"
+   "Donkey Kong",
+   "Zelda"
   ]
  },
  {
@@ -310,8 +310,8 @@
   "niveau": "soft",
   "theme": "jeux vidéo",
   "mots": [
-   "Tetris",
-   "Candy Crush"
+   "Candy Crush",
+   "Angry Birds"
   ]
  },
  {
@@ -319,8 +319,8 @@
   "niveau": "soft",
   "theme": "jeux vidéo",
   "mots": [
-   "Street Fighter",
-   "Tekken"
+   "Manette",
+   "Casque"
   ]
  },
  {
@@ -347,7 +347,7 @@
   "theme": "foot",
   "mots": [
    "Neymar",
-   "Vinícius Jr"
+   "Ronaldinho"
   ]
  },
  {
@@ -356,7 +356,7 @@
   "theme": "foot",
   "mots": [
    "Benzema",
-   "Lewandowski"
+   "Thierry Henry"
   ]
  },
  {
@@ -391,8 +391,8 @@
   "niveau": "soft",
   "theme": "foot",
   "mots": [
-   "Ancelotti",
-   "Guardiola"
+   "Arbitre",
+   "Entraîneur"
   ]
  },
  {
@@ -401,7 +401,7 @@
   "theme": "foot",
   "mots": [
    "Euro",
-   "Copa América"
+   "Jeux olympiques"
   ]
  },
  {
@@ -473,7 +473,7 @@
   "theme": "cinéma",
   "mots": [
    "Rocky",
-   "Creed"
+   "Karaté Kid"
   ]
  },
  {
@@ -481,8 +481,8 @@
   "niveau": "soft",
   "theme": "séries",
   "mots": [
-   "The Office",
-   "Brooklyn Nine-Nine"
+   "Kaamelott",
+   "Caméra Café"
   ]
  },
  {
@@ -490,8 +490,8 @@
   "niveau": "soft",
   "theme": "séries",
   "mots": [
-   "Peaky Blinders",
-   "Vikings"
+   "Plus belle la vie",
+   "Les Feux de l’amour"
   ]
  },
  {
@@ -535,8 +535,8 @@
   "niveau": "soft",
   "theme": "séries",
   "mots": [
-   "Emily in Paris",
-   "Gossip Girl"
+   "Koh-Lanta",
+   "Fort Boyard"
   ]
  }
 ]
