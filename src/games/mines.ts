@@ -227,7 +227,7 @@ export const champDeMines: MiniJeu<Etat> = {
     const tendue = e.phase === 'tour' && minesCachees > 0 && fermes <= minesCachees * 2 + 1;
     const grille = (cliquable: boolean, geste: string, choisie?: number) => `<div class="champ-mines ${tendue ? 'tendue' : ''}">${Array.from({ length: NB_CASES }, (_, i) => {
       const o = e.ouvertes[i];
-      const marque = maMine === i && !o ? `<span class="ma-mine">${BOMBE}<em>ta mine</em></span>` : '';
+      const marque = maMine === i && !o ? `<span class="ma-mine ${e.phase === 'pose' ? 'enterre' : ''}">${BOMBE}<em>ta mine</em></span>` : '';
       const d = e.detections[i];
       // Mon détecteur : je lis le chiffre ; celui des autres : une loupe, sans le chiffre.
       const k = d && d.u === v.uid && maCle ? lireDetection(d.v, maCle, i) : undefined;

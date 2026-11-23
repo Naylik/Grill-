@@ -680,8 +680,6 @@ input.code { font-weight: 800; font-size: var(--txt-2xl); letter-spacing: 12px; 
 .feuille { position: relative; padding: 10px; border-radius: var(--r-xs); transform: rotate(-1.2deg);
   background: repeating-linear-gradient(0deg, #00000004 0 2px, transparent 2px 5px), radial-gradient(120% 90% at 30% 20%, #FFFFFF, #F6F0E2); box-shadow: 0 2px 0 #E2D9C4, 0 18px 40px -16px #000c; }
 .feuille .toile-dessin, .feuille .toile-voir { border-radius: 2px; box-shadow: none; background: #FFFDF6; }
-.feuille.arrive { animation: feuille-arrive .55s var(--rebond) both; }
-@keyframes feuille-arrive { from { transform: translateX(110%) rotate(12deg); opacity: 0; } to { transform: rotate(-1.2deg); opacity: 1; } }
 .scotch { position: absolute; top: -10px; width: 70px; height: 22px; background: #FFFFFF99; border: 1px solid #ffffffaa; box-shadow: 0 1px 3px #0002; z-index: 2; }
 .scotch.g { left: 14px; transform: rotate(-8deg); }
 .scotch.d { right: 14px; transform: rotate(7deg); }
@@ -1177,3 +1175,18 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 /* Colis piégé : chez celui qui le reçoit, le colis tombe du haut de l'écran et rebondit. */
 .patate-a-lancer { animation: arrive-colis .8s var(--rebond) backwards; }
 @keyframes arrive-colis { 0% { transform: translate(60px, -320px) rotate(360deg) scale(.4); opacity: 0; } 55% { transform: none; opacity: 1; } 70% { transform: translateY(-22px) scale(.96, 1.04); } 85% { transform: scale(1.06, .94); } 100% { transform: none; } }
+
+/* Dessin à la chaîne : la feuille du voisin glisse comme une page de carnet, puis les deux bouts de scotch se posent. */
+.feuille.arrive { animation: feuille-carnet .7s var(--doux) both; transform-origin: 0 50%; }
+@keyframes feuille-carnet { 0% { transform: translateX(-105%) rotate(-10deg) skewY(4deg); opacity: 0; } 70% { transform: translateX(3%) rotate(.5deg); opacity: 1; } 100% { transform: rotate(-1.2deg); } }
+.feuille.arrive .scotch { animation: pose-scotch .3s var(--rebond) both; }
+.feuille.arrive .scotch.g { animation-delay: .6s; } .feuille.arrive .scotch.d { animation-delay: .8s; }
+@keyframes pose-scotch { from { opacity: 0; scale: 1.6; } }
+/* Champ de mines : ma mine s'enterre dans le colis choisi (elle tombe, le colis tressaute, un peu de poussière). */
+.ma-mine.enterre svg { animation: mine-enterre .7s var(--doux) both; }
+@keyframes mine-enterre { 0% { transform: translateY(-160%) scale(1.5); opacity: 1; } 55% { transform: translateY(0) scale(1); opacity: 1; } 75% { transform: translateY(8%) scale(1.05, .9); opacity: .8; } 100% { opacity: .35; } }
+.case-champ:has(.ma-mine.enterre) { animation: tressaute-case .3s ease-out .4s; }
+@keyframes tressaute-case { 40% { transform: translateY(3px) scale(1.04, .96); } }
+.ma-mine.enterre::before, .ma-mine.enterre::after { content: ''; position: absolute; bottom: 18%; width: 10px; height: 10px; border-radius: 50%; background: #5B7586; opacity: 0; animation: poussiere-mine .6s ease-out .4s; }
+.ma-mine.enterre::before { left: 18%; --dx: -14px; } .ma-mine.enterre::after { right: 18%; --dx: 14px; }
+@keyframes poussiere-mine { 0% { opacity: .9; transform: none; } 100% { opacity: 0; transform: translate(var(--dx), -16px) scale(1.6); } }

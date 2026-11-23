@@ -386,3 +386,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   de plus en plus (dès 6 s). Le stress suit le temps d'attente, jamais l'heure du feu. Colis piégé : toucher un nom
   fait voler le colis en tournoyant vers ce nom ; chez celui qui le reçoit, il tombe du haut et rebondit.
   (Première maquette refusée : Mallow et colis redessinés hors DA. Règle : toujours partir des dessins du jeu.)
+- 23/11/2026 · Dessin à la chaîne : la feuille glisse depuis la gauche comme une page de carnet, puis les deux bouts de
+  scotch se posent. Champ de mines : à la pose, la bombe tombe dans le colis, qui tressaute avec un peu de poussière.
