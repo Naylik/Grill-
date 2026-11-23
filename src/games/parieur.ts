@@ -8,7 +8,7 @@ import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './inte
 
 const DUREE_MISES = 30_000;
 const DUREE_VOTE = 30_000;
-const DUREE_LECTURE = 8_000; // le défié lit son défi (et tout le monde avec lui) avant que le chrono parte
+const DUREE_LECTURE = 5_000; // le défié lit son défi (et tout le monde avec lui) avant que le chrono parte
 
 interface Etat extends EtatDeBase {
   phase: 'mises' | 'lecture' | 'defi' | 'vote' | 'resultat';
