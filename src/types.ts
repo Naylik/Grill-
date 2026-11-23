@@ -113,6 +113,8 @@ export interface MissionTiree {
   cible?: string; // uid
   /** Mission de vengeance (saisons) : vaut ×1,5. */
   vengeance?: boolean;
+  /** Proposition déjà réservée pour ce joueur (personne d'autre ne peut la recevoir). */
+  reservee?: boolean;
 }
 
 /** Ce que seul le joueur peut lire : secrets/{code}/{uid}. */

@@ -398,3 +398,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   vrais téléphones. Chaque cadre charge le vrai jeu avec `?joueur=N` : mémoire séparée (localStorage préfixé,
   `src/joueurTest.ts`) et connexion Firebase séparée (une appli Firebase nommée par joueur). Dès que le 1er téléphone a
   un salon, les autres le rejoignent par le lien d'invitation. Son seulement sur le 1er. Sans `?joueur`, rien ne change.
+- 23/11/2026 · Grosse mission : les 2 propositions sont réservées dès le tirage (avant, seulement au moment de garder),
+  donc deux joueurs ne se voient plus proposer la même. La proposition non gardée sort du jeu pour la soirée.
+  Vérifié sur la table virtuelle : 6 joueurs, 12 propositions toutes différentes, missions gardées enregistrées.

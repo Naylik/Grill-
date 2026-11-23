@@ -63,9 +63,36 @@ export async function preparerPropositions(code: string, uid: string, joueurs: R
   const type: TypeMission = Math.random() < 0.5 ? 'vie' : 'jeu';
   const exclues = [...(secrets.propositions1 ?? []).map((m) => m.id)];
   // Mémoire du groupe : pas de mission déjà jouée par ce groupe… tant qu'il en reste assez de nouvelles.
-  let propositions = choisirPropositions({ type, niveau: 'epice', prises, exclues: [...exclues, ...Object.keys(dejaJouees)], cibles });
-  if (propositions.length < 2) propositions = choisirPropositions({ type, niveau: 'epice', prises, exclues, cibles });
+  // Les deux propositions sont réservées tout de suite : deux joueurs ne se voient jamais proposer la même mission.
+  // (Celle qu'on ne garde pas reste réservée : elle sort du jeu pour cette soirée, il en reste largement assez.)
+  const reservees = new Set<string>();
+  let propositions: MissionTiree[] = [];
+  for (let essai = 0; essai < 6; essai++) {
+    propositions = choisirPropositions({ type, niveau: 'epice', prises, exclues: [...exclues, ...Object.keys(dejaJouees)], cibles });
+    if (propositions.length < 2) propositions = choisirPropositions({ type, niveau: 'epice', prises, exclues, cibles });
+    let toutes = true;
+    for (const m of propositions) {
+      if (reservees.has(m.id)) continue;
+      if (await reserver(code, m.id)) reservees.add(m.id);
+      else {
+        prises.add(m.id); // prise par quelqu'un d'autre entre-temps : on en tire une autre
+        toutes = false;
+      }
+    }
+    if (toutes) break;
+  }
+  propositions = propositions.filter((m) => reservees.has(m.id)).map((m) => ({ ...m, reservee: true }));
   await set(ref(db, `${cheminSecrets(code, uid)}/${cle}`), propositions);
+}
+
+/** Réserve une mission pour ce salon (Firebase refuse si quelqu'un l'a déjà). */
+async function reserver(code: string, id: string): Promise<boolean> {
+  try {
+    await set(ref(db, `salons/${code}/tirage/prises/${await empreinte(`${code}:${id}`)}`), true);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -95,11 +122,11 @@ export async function prendreMissionVengeance(code: string, uid: string, joueurs
  */
 export async function choisirMission(code: string, uid: string, joueurs: Record<string, Joueur>, secrets: Secrets, index: number): Promise<boolean> {
   const cle = 'propositions1';
-  const mission = secrets[cle]?.[index];
-  if (!mission) return false;
-  try {
-    await set(ref(db, `salons/${code}/tirage/prises/${await empreinte(`${code}:${mission.id}`)}`), true);
-  } catch {
+  const proposee = secrets[cle]?.[index];
+  if (!proposee) return false;
+  const { reservee, ...mission } = proposee;
+  // Déjà réservée pour moi au moment de la proposition ; sinon (anciennes propositions), on la réserve maintenant.
+  if (!reservee && !(await reserver(code, mission.id))) {
     // Déjà prise par un autre joueur : nouvelles propositions.
     await set(ref(db, `${cheminSecrets(code, uid)}/${cle}`), null);
     await preparerPropositions(code, uid, joueurs, { ...secrets, [cle]: undefined });
