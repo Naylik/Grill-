@@ -7,7 +7,7 @@ import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
-import { classementBarres, finPiste, hud, introArene, noteTiming, piste } from './arene';
+import { classementBarres, finPiste, hud, introArene, noteTiming, piste, premiersEnGras } from './arene';
 
 const CIBLES = [5, 7, 10, 6, 12, 15]; // secondes, une par manche
 const NB_MANCHES: [number, number, number] = [2, 3, 4]; // Courte, Normale, Longue (au-delà, c'est épuisant)
@@ -85,8 +85,9 @@ export const timing: MiniJeu<Etat> = {
       return { etat: nouvelleManche(ctx, etat, etat.manche + 1) };
     }
     if (etat.phase === 'bilan' && ctx.maintenant >= (etat.fin ?? 0)) {
-      const meilleur = Object.entries(etat.cumul).sort((a, b) => a[1] - b[1])[0];
-      const resume = meilleur ? `${ctx.joueurs[meilleur[0]]?.prenom} : ${formaterSecondes(meilleur[1])} d’écart au total.` : undefined;
+      const meilleur = Math.min(...Object.values(etat.cumul));
+      const premiers = Object.keys(etat.cumul).filter((u) => etat.cumul[u] === meilleur).map((u) => ctx.joueurs[u]?.prenom);
+      const resume = premiers.length ? `${premiers.join(' et ')} : ${formaterSecondes(meilleur)} d’écart au total.` : undefined;
       return { etat, fin: { points: pointsDePlace(etat.cumul, false), sorte: 'place', resume } };
     }
     return null;
@@ -107,7 +108,10 @@ export const timing: MiniJeu<Etat> = {
       const lignes = v.uids.map((u) => ({ u, ecart: e.cumul[u] ?? 0 })).sort((a, b) => a.ecart - b.ecart);
       const meilleur = Math.max(1, lignes[0]?.ecart ?? 1);
       return `${hud('LE BON TIMING', N, N, false)}
-        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p><strong>${esc(v.joueurs[lignes[0].u].prenom)}</strong> a l’horloge dans la tête</p></div>
+        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p>${(() => {
+          const p = premiersEnGras(lignes.filter((l) => l.ecart === lignes[0].ecart).map((l) => v.joueurs[l.u].prenom));
+          return `${p.texte} ${p.pluriel ? 'ont' : 'a'} l’horloge dans la tête`;
+        })()}</p></div>
         <div class="pile">${classementBarres(lignes.map((l) => ({ joueur: v.joueurs[l.u], texte: formaterSecondes(l.ecart), part: meilleur / Math.max(1, l.ecart), moi: l.u === v.uid })))}</div>
         <p class="aide">Écart total sur ${N} manches. Pas de STOP = écart maximum.</p>`;
     }

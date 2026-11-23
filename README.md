@@ -459,3 +459,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   du doute) ; « Dernière chance » affiche « 2/4 ont dit Rien à signaler » ; Réflexe : manche sans aucun toucher
   écourtée (« Personne n'a touché à temps ! ») ; Colis piégé : message d'élimination avec un fantôme. La « Dernière
   chance » garde ses 20 s (choix de Kilyan).
+- 23/11/2026 · 2e partie complète par robot (Réflexe, Bon timing, Colis piégé, Champ de mines, Roue…) : aucune erreur.
+  Corrigé : le Bon timing et le Colis piégé annonçaient un seul vainqueur en cas d'égalité ; tous les ex æquo sont
+  maintenant nommés (« Kilyan, Manon et Cassie ont l'horloge dans la tête »), via `premiersEnGras` (arene.ts).

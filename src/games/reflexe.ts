@@ -9,7 +9,7 @@ import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
-import { classementBarres, hud, introArene, noteReflexe } from './arene';
+import { classementBarres, hud, introArene, noteReflexe, premiersEnGras } from './arene';
 import { minutageCourse } from '../course';
 
 const NB_MANCHES: [number, number, number] = [3, 4, 5]; // Courte, Normale, Longue (au-delà, c'est épuisant)
@@ -158,8 +158,8 @@ export const reflexe: MiniJeu<Etat> = {
       const meilleure = lignes[0]?.moy ?? 1;
       return `${hud('RÉFLEXE MALLOW', N, N, false)}
         <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p>${(() => {
-          const premiers = lignes.filter((l) => l.moy === lignes[0].moy).map((l) => `<strong>${esc(v.joueurs[l.u].prenom)}</strong>`);
-          return `${premiers.join(' et ')} ${premiers.length > 1 ? 'ont' : 'a'} les meilleurs réflexes`;
+          const p = premiersEnGras(lignes.filter((l) => l.moy === lignes[0].moy).map((l) => v.joueurs[l.u].prenom));
+          return `${p.texte} ${p.pluriel ? 'ont' : 'a'} les meilleurs réflexes`;
         })()}</p></div>
         <div class="pile">${classementBarres(lignes.map((l) => ({ joueur: v.joueurs[l.u], texte: `${l.moy} ms`, part: meilleure / l.moy, moi: l.u === v.uid })))}</div>
         <p class="aide">Moyenne sur ${N} manches, faux départs comptés 1&#8239;000 ms.</p>`;

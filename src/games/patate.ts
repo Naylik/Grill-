@@ -9,7 +9,7 @@ import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
 import { reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
-import { classementBarres, hud, introArene } from './arene';
+import { classementBarres, hud, introArene, premiersEnGras } from './arene';
 
 const DUREE_INTRO = 7000;
 const PRETS = 3000; // « La patate arrive… »
@@ -224,7 +224,10 @@ export const patate: MiniJeu<Etat> = {
       const ordre = [...v.uids].sort((a, b) => (cumul[b] ?? 0) - (cumul[a] ?? 0));
       const max = Math.max(1, ...Object.values(cumul));
       return `${tete}
-        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p><strong>${nom(ordre[0])}</strong> survit le mieux au colis piégé</p></div>
+        <div class="vainqueur-arene">${mallow({ taille: 90, couronne: true })}<p>${(() => {
+          const p = premiersEnGras(ordre.filter((u) => (cumul[u] ?? 0) === (cumul[ordre[0]] ?? 0)).map((u) => v.joueurs[u]?.prenom ?? '?'));
+          return `${p.texte} ${p.pluriel ? 'survivent' : 'survit'} le mieux au colis piégé`;
+        })()}</p></div>
         <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: (e.places?.[u] ?? []).map(placeTexte).join(' · '), part: (cumul[u] ?? 0) / max, moi: u === v.uid })))}</div>
         <p class="aide">Place à chaque tour. Le classement additionne les ${NB_TOURS} tours.</p>`;
     }

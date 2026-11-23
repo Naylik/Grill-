@@ -94,3 +94,10 @@ export function noteTiming(ecart: number): [string, string] {
   if (a < 800) return ['PAS LOIN', 'var(--jaune)'];
   return ['À CÔTÉ', 'var(--orange)'];
 }
+
+/** « Kilyan », « Kilyan et Manon » ou « Kilyan, Manon et Cassie » : tous les ex æquo à la 1re place, en gras. */
+export function premiersEnGras(prenoms: string[]): { texte: string; pluriel: boolean } {
+  const g = prenoms.map((p) => `<strong>${esc(p)}</strong>`);
+  const texte = g.length > 1 ? `${g.slice(0, -1).join(', ')} et ${g[g.length - 1]}` : g[0] ?? '';
+  return { texte, pluriel: g.length > 1 };
+}
