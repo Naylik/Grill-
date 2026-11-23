@@ -277,12 +277,12 @@
   {
     "id": "f-quitte-03",
     "jeu": "quitte",
-    "texte": "Atteins 16 points ou plus en jeu, encaissés ou perdus."
+    "texte": "Fais doubler {cible} alors qu’il ou elle voulait encaisser."
   },
   {
     "id": "f-quitte-04",
     "jeu": "quitte",
-    "texte": "Encaisse le plus gros montant du jeu."
+    "texte": "Fais dire « je le sens pas » à quelqu’un juste avant qu’il ou elle double."
   },
   {
     "id": "f-quitte-05",
@@ -537,7 +537,7 @@
   {
     "id": "f-quitte-08",
     "jeu": "quitte",
-    "texte": "Encaisse au moins 3 fois pendant le jeu."
+    "texte": "Fais un compte à rebours à voix haute (« 3, 2, 1… ») avant chacun de tes choix."
   },
   {
     "id": "f-quitte-09",
