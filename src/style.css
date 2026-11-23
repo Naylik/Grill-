@@ -1190,3 +1190,13 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .ma-mine.enterre::before, .ma-mine.enterre::after { content: ''; position: absolute; bottom: 18%; width: 10px; height: 10px; border-radius: 50%; background: #5B7586; opacity: 0; animation: poussiere-mine .6s ease-out .4s; }
 .ma-mine.enterre::before { left: 18%; --dx: -14px; } .ma-mine.enterre::after { right: 18%; --dx: 14px; }
 @keyframes poussiere-mine { 0% { opacity: .9; transform: none; } 100% { opacity: 0; transform: translate(var(--dx), -16px) scale(1.6); } }
+
+/* Télépathie : pendant qu'on tape, une onde fait la navette entre les deux esprits du duo. */
+.connexion-tele { position: relative; }
+.connexion-tele .duo-tele i { display: inline-block; animation: pulse-esprit 1.2s ease-in-out infinite; }
+@keyframes pulse-esprit { 50% { transform: scale(1.5); filter: drop-shadow(0 0 8px #FF5FD2); } }
+.onde-tele { position: absolute; left: 18%; right: 18%; bottom: 5px; height: 3px; border-radius: var(--r-rond); background: linear-gradient(90deg, transparent, #FF5FD2, #00E5FF, transparent) 0 0 / 40% 100% no-repeat; opacity: .8; animation: navette-tele 1.6s ease-in-out infinite alternate; pointer-events: none; }
+@keyframes navette-tele { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+/* Roue des territoires : une cible rouge se pose sur la pastille des joueurs visés. */
+.joueur-roue.vise i { animation: cible-roue 1s ease-in-out infinite; box-shadow: 0 0 0 2px var(--fond-2), 0 0 0 4px var(--rose), 0 0 0 6px var(--fond-2), 0 0 0 8px var(--rose); margin-bottom: 6px; }
+@keyframes cible-roue { 50% { scale: 1.15; } }

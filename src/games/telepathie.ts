@@ -270,6 +270,7 @@ export const telepathie: MiniJeu<Etat> = {
       const champ = `mot-${e.etape}`;
       return `${tete}${chrono(e.fin)}${boule('<b class="mini-boule">✦</b>')}
         <h2 class="question centre-texte">Tape le mot que tu as crié</h2>
+        <div class="connexion-tele" aria-hidden="true">${duo(monEquipe)}<span class="onde-tele"></span></div>
         ${avertissement(monEquipe)}
         ${fait ? '<p class="attente">Mot envoyé… les esprits se concentrent.</p>' : `
           <input class="champ-texte" name="${champ}" maxlength="30" placeholder="Ton mot" autocomplete="off" value="${esc(brouillons[champ] ?? '')}">
