@@ -449,3 +449,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   du jeu sur une ligne avec le chrono en petit rond à droite (noms longs en plus petit, jamais coupés), espacements et
   bulle du narrateur réduits, bouton principal (jaune) collé en bas de l'écran à gauche du bouton GRILLÉ. But : ne
   plus devoir faire défiler pour atteindre les boutons.
+- 23/11/2026 · Même présentation compacte sur tous les écrans de la partie (pas seulement les mini-jeux) : bandeau fin,
+  bouton principal collé en bas (y compris « Je suis prêt », « Jeu suivant »… du bloc du bas, `.pile.bas` en
+  `display: contents`), fond opaque, fondu en bas d'écran sous le bouton et GRILLÉ, marge du bas pour ne rien cacher.

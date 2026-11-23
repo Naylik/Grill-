@@ -1244,21 +1244,31 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 /* Dessin à la chaîne : sur sa propre devinette, pas de bouton de vote, mais on dit pourquoi. */
 .pas-de-vote { justify-self: start; padding: 3px 10px; border-radius: var(--r-rond); background: var(--voile-1); color: var(--texte-3); font-size: var(--txt-xs); font-weight: 700; }
 
-/* Pendant un mini-jeu : haut d'écran compact (bandeau, en-tête + chrono sur une ligne) et bouton principal toujours
-   visible en bas, à gauche du bouton GRILLÉ. Pour ne plus devoir faire défiler pour atteindre les boutons. */
-.bandeau:has(~ .phase-jeu) { padding: max(8px, env(safe-area-inset-top)) 14px 6px; gap: 6px; }
-.bandeau:has(~ .phase-jeu) .qui { font-size: var(--txt-s); }
-.bandeau:has(~ .phase-jeu) .qui .pastille { width: 24px !important; height: 24px !important; }
-.bandeau:has(~ .phase-jeu) .onglets { padding: 3px; }
-.bandeau:has(~ .phase-jeu) .onglets button { min-height: 30px; font-size: var(--txt-xs); }
-.ecran.phase-jeu { position: relative; padding-top: 12px; gap: 12px; }
+/* Pendant toute la partie (mini-jeux, règles, missions flash, classement, révélations, fin…) : haut d'écran compact
+   et bouton principal toujours visible en bas, à gauche du bouton GRILLÉ. Pour ne plus devoir faire défiler.
+   (Le bandeau n'existe que pendant la partie.) */
+.bandeau { padding: max(8px, env(safe-area-inset-top)) 14px 6px; gap: 6px; }
+.bandeau .qui { font-size: var(--txt-s); }
+.bandeau .qui .pastille { width: 24px !important; height: 24px !important; }
+.bandeau .onglets { padding: 3px; }
+.bandeau .onglets button { min-height: 30px; font-size: var(--txt-xs); }
+.bandeau ~ .ecran { position: relative; padding-top: 12px; gap: 12px; }
 .phase-jeu > .entete-jeu { flex-direction: row; justify-content: flex-start; align-items: center; gap: 8px; min-height: 48px; padding: 6px 70px 6px 14px; text-align: left; }
 .phase-jeu > .entete-jeu span { white-space: nowrap; flex: none; }
 .phase-jeu > .entete-jeu strong { font-size: var(--txt-m); line-height: 1.15; }
 .phase-jeu > .entete-jeu.nom-long strong { font-size: var(--txt-s); }
 .phase-jeu > .chrono { position: absolute; top: 12px; right: 20px; min-width: 46px; height: 46px; border-width: 3px; font-size: var(--txt-m); }
-.phase-jeu .narrateur { padding: 6px 10px; gap: 8px; }
-.phase-jeu .narrateur .tete svg { width: 28px; height: auto; }
-.phase-jeu .narrateur p { font-size: var(--txt-s); }
-.phase-jeu > .bouton.jaune, .phase-jeu .mise-zone > .bouton.jaune, .phase-jeu .pile.bas > .bouton.jaune { position: sticky; bottom: max(14px, env(safe-area-inset-bottom)); z-index: 4; box-shadow: 0 6px 24px #000a; }
-.phase-jeu:has(~ .bouton-grille) > .bouton.jaune, .phase-jeu:has(~ .bouton-grille) .mise-zone > .bouton.jaune, .phase-jeu:has(~ .bouton-grille) .pile.bas > .bouton.jaune { margin-right: 96px; }
+.bandeau ~ .ecran .narrateur { padding: 6px 10px; gap: 8px; }
+.bandeau ~ .ecran .narrateur .tete svg { width: 28px; height: auto; }
+.bandeau ~ .ecran .narrateur p { font-size: var(--txt-s); }
+/* Le bloc du bas (.pile.bas) laisse ses éléments se ranger directement dans l'écran : son bouton principal peut alors
+   rester collé en bas même quand le bloc lui-même est encore loin dans la page. */
+.bandeau ~ .ecran > .pile.bas { display: contents; }
+.bandeau ~ .ecran > .pile.bas > :first-child { margin-top: auto; }
+.bandeau ~ .ecran > .bouton.jaune, .bandeau ~ .ecran .mise-zone > .bouton.jaune, .bandeau ~ .ecran > .pile.bas > .bouton:not(.discret) { position: sticky; bottom: max(14px, env(safe-area-inset-bottom)); z-index: 4; box-shadow: 0 6px 24px #000a; }
+.bandeau ~ .ecran:has(~ .bouton-grille) > .bouton.jaune, .bandeau ~ .ecran:has(~ .bouton-grille) .mise-zone > .bouton.jaune, .bandeau ~ .ecran:has(~ .bouton-grille) > .pile.bas > .bouton:not(.discret) { margin-right: 96px; }
+/* Bouton collé en bas : fond opaque, pour que le texte qui défile derrière ne se voie pas à travers. */
+.bandeau ~ .ecran > .pile.bas > .bouton:not(.discret):not(.jaune) { background-color: var(--fond-2); background-image: linear-gradient(var(--fond-3), var(--fond-3)); }
+/* Bas d'écran : un fondu sous le bouton collé et GRILLÉ, pour que le texte qui défile derrière s'efface proprement. */
+.bandeau ~ .ecran::after { content: ''; position: fixed; left: 0; right: 0; bottom: 0; z-index: 3; height: 110px; background: linear-gradient(transparent, color-mix(in srgb, var(--fond) 92%, transparent) 55%); pointer-events: none; }
+.bandeau ~ .ecran { padding-bottom: max(115px, env(safe-area-inset-bottom)); }
