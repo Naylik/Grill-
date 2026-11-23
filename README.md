@@ -355,3 +355,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Champ de mines (le colis ouvert tremble 0,4 s avant de se dévoiler, grille qui pulse en rouge quand il reste peu de
   colis) ; Télépathie (les deux cartes se rencontrent au milieu : éclair si connectés, sinon elles rebondissent).
   L'Imposteur : maquette (cartes qui se retournent, la dernière s'enflamme) en attente de validation.
+- 23/11/2026 · L'Imposteur (validé par Kilyan, sans flamme) : les cartes des joueurs se retournent une à une (les moins
+  soupçonnés d'abord), « Plus qu'une carte… 🥁 », puis la carte de l'imposteur rougit, un tampon « IMPOSTEUR »
+  s'écrase dessus et l'écran tremble ; ensuite le verdict et les points (`minutageImposteur`).

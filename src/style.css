@@ -1062,3 +1062,21 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 @keyframes colle-droite { 50% { transform: translateX(-8px) scale(1.05); } }
 .rangee-tele.connectee .tarots::after { content: '⚡'; position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 2; font-size: 48px; filter: drop-shadow(0 0 14px #FF5FD2) drop-shadow(0 0 28px #00E5FF); animation: eclair-tele .6s cubic-bezier(.3, 1.6, .5, 1) 1.5s both; }
 @keyframes eclair-tele { from { opacity: 0; transform: scale(3) rotate(-25deg); } }
+/* L'Imposteur : les cartes se retournent une à une, la dernière reçoit le tampon « IMPOSTEUR » et l'écran tremble. */
+.cartes-imp { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; animation: secousse-imp .35s linear calc(var(--dt) + 120ms); }
+@keyframes secousse-imp { 20% { transform: translate(-6px, 3px); } 40% { transform: translate(6px, -3px); } 60% { transform: translate(-4px, 2px); } 80% { transform: translate(3px, -1px); } }
+.carte-imp { position: relative; height: 120px; perspective: 800px; }
+.carte-imp .flip { position: relative; height: 100%; transform-style: preserve-3d; animation: retourne-imp .7s var(--rebond) var(--d) both; }
+@keyframes retourne-imp { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
+.carte-imp .dos, .carte-imp .face { position: absolute; inset: 0; border-radius: var(--r-m); backface-visibility: hidden; display: grid; place-items: center; align-content: center; gap: 4px; text-align: center; padding: 6px; }
+.carte-imp .dos { background: repeating-linear-gradient(45deg, var(--fond-3) 0 10px, var(--fond-2) 10px 20px); border: 2px solid var(--bord); font-family: var(--titre); font-weight: 900; font-size: var(--txt-3xl); color: #ffffff40; }
+.carte-imp .face { transform: rotateY(180deg); background: var(--fond-2); border: 2px solid var(--vert); box-shadow: 0 0 18px -6px var(--vert); }
+.carte-imp .face b { font-family: var(--titre); font-size: var(--txt-l); overflow-wrap: anywhere; }
+.carte-imp .face small { font-size: var(--txt-xs); color: var(--vert); }
+.carte-imp .votes { font-size: var(--txt-xs); color: var(--texte-2); }
+.carte-imp.coupable .face { align-content: start; padding-top: 18px; animation: devient-coupable .4s ease var(--dt) both; }
+@keyframes devient-coupable { to { border-color: var(--rose); background: #3A0F1C; box-shadow: 0 0 40px var(--rose); } }
+.tampon-imp { position: absolute; z-index: 3; left: 50%; top: 74%; padding: 3px 8px; border: 3px solid var(--rose); border-radius: var(--r-xs); color: var(--rose); background: color-mix(in srgb, var(--fond) 80%, transparent); font-family: var(--titre); font-weight: 900; font-size: var(--txt-s); letter-spacing: .04em; white-space: nowrap; transform: translate(-50%, -50%) rotate(-14deg); animation: tampon-imp .35s cubic-bezier(.3, 1.6, .5, 1) var(--dt) both; }
+@keyframes tampon-imp { from { opacity: 0; transform: translate(-50%, -50%) rotate(-14deg) scale(3); } }
+.suspens-imp { margin: 0; text-align: center; color: var(--texte-2); animation: suspens-imp 1.9s ease var(--d) both; }
+@keyframes suspens-imp { 0% { opacity: 0; } 15%, 85% { opacity: 1; } 100% { opacity: 0; } }

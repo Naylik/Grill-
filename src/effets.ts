@@ -6,6 +6,7 @@ import { S, charges, memoireDuGroupe } from './etat';
 import { preparerPropositions } from './missions';
 import { delaiCarteFlash, DEVOILE_DEBUT, porteursFlash, tirerFlash } from './flash';
 import { minutageJauge } from './games/combien';
+import { minutageImposteur } from './games/imposteur';
 import { vibrer } from './ui';
 import { maintenant } from './firebase';
 import { majoriteOui, missionTrouvee } from './score';
@@ -180,6 +181,17 @@ export function momentsForts(): void {
     const m = S.jeu as { phase?: string; dernierSur?: { action: number }; dernier?: { joueur: string; case: number } };
     if (m.phase === 'tour' && m.dernierSur) moment(`mines-${d.numeroJeu}-sur-${m.dernierSur.action}`, () => setTimeout(() => sons.ding(), 400)); // après le suspens du colis
     if (m.phase === 'boum' && m.dernier) moment(`mines-boum-${d.numeroJeu}-${m.dernier.case}`, () => setTimeout(() => { sons.boum(); vibrer(m.dernier?.joueur === S.uid ? [400, 100, 400] : 200); }, 400));
+  }
+  // L'Imposteur : un « tic » par carte retournée, puis le tampon (son + vibration pour tous).
+  if (d.phase === 'jeu' && d.jeuEnCours === 'imposteur' && S.jeu) {
+    const im = S.jeu as { phase?: string; etape?: string };
+    if (im.phase === 'resultat' && im.etape) {
+      moment(`imposteur-cartes-${im.etape}`, () => {
+        const m = minutageImposteur(Math.max(0, Object.keys(S.joueurs).length - 1));
+        for (const t of [...m.cartes, m.derniere]) setTimeout(() => sons.tic(), t);
+        setTimeout(() => { sons.grille(); vibrer([120, 60, 200]); }, m.tampon);
+      });
+    }
   }
   // Combien ont dit oui ? : un « tic » à chaque cran de la jauge, puis le chiffre tombe (son + vibration pour tous).
   if (d.phase === 'jeu' && d.jeuEnCours === 'combien' && S.jeu) {

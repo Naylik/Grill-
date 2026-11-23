@@ -7,6 +7,14 @@ import { pointsDePlace, resultatImposteur } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, type ContexteHote, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
 
+/** Minutage de la révélation (ms) : une carte par seconde, un suspens, puis la carte de l'imposteur et son tampon. */
+export function minutageImposteur(nbInnocents: number): { cartes: number[]; suspens: number; derniere: number; tampon: number; fin: number } {
+  const cartes = Array.from({ length: nbInnocents }, (_, i) => 800 + i * 1000);
+  const suspens = 800 + nbInnocents * 1000;
+  const derniere = suspens + 2000;
+  return { cartes, suspens, derniere, tampon: derniere + 700, fin: derniere + 1400 };
+}
+
 // Le narrateur après le vote (la même phrase sur tous les téléphones).
 const PHRASES_SURVIT = ['{p} a bluffé toute la table. Chapeau l’artiste !', 'Personne n’a rien vu… {p}, tu nous fais peur.', '{p} s’en sort. Un vrai caméléon.'];
 const PHRASES_DEMASQUE = ['Démasqué ! {p} n’a pas tenu longtemps.', 'Bien vu les détectives : {p} est grillé !', '{p} pensait passer inaperçu. Raté !']
@@ -136,11 +144,23 @@ export const imposteur: MiniJeu<Etat> = {
       .sort((a, b) => (compte[b] ?? 0) - (compte[a] ?? 0))
       .map((u) => `<div class="ligne-resultat ${u === imp ? 'imposteur' : ''}"><span class="pastille" style="--c:${v.joueurs[u].couleur};width:26px;height:26px"></span><strong>${prenom(u)}${u === imp ? ' · imposteur' : ''}</strong><span>${compte[u] ?? 0} vote${(compte[u] ?? 0) > 1 ? 's' : ''}</span><span class="pts ${e.gagnes?.[u] ? 'gagne' : ''}">${e.gagnes?.[u] ? `+${e.gagnes[u]}` : '0'}</span></div>`)
       .join('');
+    // Suspens : les cartes se retournent une à une (les moins soupçonnés d'abord), l'imposteur en dernier,
+    // puis un tampon « IMPOSTEUR » s'écrase sur sa carte et l'écran tremble.
+    const innocents = v.uids.filter((u) => u !== imp).sort((a, b) => (compte[a] ?? 0) - (compte[b] ?? 0));
+    const m = minutageImposteur(innocents.length);
+    const nbVotes = (u: string) => `${compte[u] ?? 0} vote${(compte[u] ?? 0) > 1 ? 's' : ''}`;
+    const carte = (u: string, d: number, estImp: boolean) => `<div class="carte-imp ${estImp ? 'coupable' : ''}" style="--d:${d}ms;--dt:${m.tampon}ms">
+      <div class="flip"><span class="dos">?</span><span class="face"><b>${prenom(u)}</b>${estImp ? '' : '<small>✔ pas l’imposteur</small>'}<span class="votes">${nbVotes(u)}</span></span></div>
+      ${estImp ? '<span class="tampon-imp">IMPOSTEUR</span>' : ''}</div>`;
     return `${entete}
-      <div class="gros-verdict ${survit ? 'ko' : 'ok'}">${prenom(imp)} était l’imposteur${survit ? ' et s’en sort !' : ', démasqué !'}</div>
       <div class="mots"><div><span class="petit">Le groupe</span><strong>${esc(e.mots?.groupe)}</strong></div><div><span class="petit">L’imposteur</span><strong>${esc(e.mots?.imposteur)}</strong></div></div>
-      <div class="pile">${lignes}</div>
-      ${bulle(parmi(survit ? PHRASES_SURVIT : PHRASES_DEMASQUE, e.etape).replace('{p}', prenom(imp)))}
+      <div class="cartes-imp" style="--dt:${m.tampon}ms">${[...innocents.map((u, i) => carte(u, m.cartes[i], false)), carte(imp, m.derniere, true)].join('')}</div>
+      <p class="suspens-imp" style="--d:${m.suspens}ms">Plus qu’une carte… 🥁</p>
+      <div class="apres-jauge" style="--d:${m.fin}ms">
+        <div class="gros-verdict ${survit ? 'ko' : 'ok'}">${survit ? `${prenom(imp)} vous a tous bernés !` : `${prenom(imp)} ne s’en sort pas !`}</div>
+        <div class="pile">${lignes}</div>
+        ${bulle(parmi(survit ? PHRASES_SURVIT : PHRASES_DEMASQUE, e.etape).replace('{p}', prenom(imp)))}
+      </div>
       ${v.estHote ? `<button class="bouton jaune bas" data-action="hote-jeu" data-valeur="suivant">${e.manche + 1 < (e.total ?? NB_MANCHES[0]) ? 'Manche suivante' : 'Voir le classement'}</button>` : '<p class="attente bas">L’hôte passe à la suite.</p>'}`;
   },
 
