@@ -401,3 +401,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · Grosse mission : les 2 propositions sont réservées dès le tirage (avant, seulement au moment de garder),
   donc deux joueurs ne se voient plus proposer la même. La proposition non gardée sort du jeu pour la soirée.
   Vérifié sur la table virtuelle : 6 joueurs, 12 propositions toutes différentes, missions gardées enregistrées.
+- 23/11/2026 · Rideau de manche : il sortait juste au bord de l'écran (penché, un coin et sa lueur restaient visibles à
+  droite). Il sort maintenant plus loin, s'efface en fondu et devient invisible à la fin.

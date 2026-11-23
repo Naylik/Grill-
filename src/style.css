@@ -1214,4 +1214,4 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 /* Nouvelle manche : un rideau de la couleur du jeu traverse l'écran. */
 .rideau-manche { position: fixed; left: 0; right: 0; top: 38%; z-index: 60; height: 110px; display: grid; place-items: center; background: var(--c); color: var(--fond); pointer-events: none; box-shadow: 0 0 40px color-mix(in srgb, var(--c) 60%, transparent); animation: rideau-manche 1.1s cubic-bezier(.7, 0, .3, 1) forwards; }
 .rideau-manche strong { font-family: var(--titre); font-weight: 900; font-size: var(--txt-2xl); }
-@keyframes rideau-manche { 0% { transform: translateX(-100%) skewX(-12deg); } 30%, 65% { transform: none; } 100% { transform: translateX(100%) skewX(-12deg); } }
+@keyframes rideau-manche { 0% { transform: translateX(-130%) skewX(-12deg); } 30%, 65% { transform: none; opacity: 1; } 95% { opacity: 1; } 100% { transform: translateX(130%) skewX(-12deg); opacity: 0; visibility: hidden; } }
