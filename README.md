@@ -470,3 +470,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   l'autre duo). Imposteur et Télépathie à 10 ; restent Combien 8, Juste Prix 8, Quitte ou Double 8.
 - 24/11/2026 · Missions flash ajoutées : Combien (l'avocat du diable, l'explication scientifique bidon) et Quitte ou
   Double (le coach de boxe, le geste porte-bonheur). Combien et Quitte ou Double à 10 ; reste le Juste Prix (8).
+- 24/11/2026 · Juste Prix : 2 missions flash ajoutées (taper une estimation avec le nez ; mimer son chiffre une fois).
+  Les 12 mini-jeux ont maintenant 10 missions flash chacun (120 au total).

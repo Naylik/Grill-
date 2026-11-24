@@ -65,6 +65,16 @@
     "texte": "Commente chaque révélation comme un présentateur télé."
   },
   {
+    "id": "f-justeprix-09",
+    "jeu": "justeprix",
+    "texte": "Tape une de tes estimations avec le nez, devant au moins un témoin."
+  },
+  {
+    "id": "f-justeprix-10",
+    "jeu": "justeprix",
+    "texte": "À une question, mime ton chiffre avec tes doigts avant de le taper, et fais-le deviner à quelqu’un sans dire un mot."
+  },
+  {
     "id": "f-parieur-01",
     "jeu": "parieur",
     "texte": "Convaincs 2 joueurs de miser sur l’échec du même défi."
