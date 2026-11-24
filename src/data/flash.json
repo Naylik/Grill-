@@ -515,6 +515,16 @@
     "texte": "Après une question, fais avouer à {cible} sa vraie réponse, à voix haute."
   },
   {
+    "id": "f-combien-09",
+    "jeu": "combien",
+    "texte": "Après une question, défends à voix haute la réponse que personne n’assume (« franchement, qui n’a jamais… ? ») jusqu’à ce que quelqu’un dise « bon, ok, moi »."
+  },
+  {
+    "id": "f-combien-10",
+    "jeu": "combien",
+    "texte": "Après chaque total, donne une « explication scientifique » bidon du résultat (« c’est statistique, en France on est 62 %… »)."
+  },
+  {
     "id": "f-parieur-09",
     "jeu": "parieur",
     "texte": "Pendant chaque défi des autres, fais un roulement de tambour sur la table."
@@ -548,6 +558,16 @@
     "id": "f-quitte-11",
     "jeu": "quitte",
     "texte": "Fais un petit discours de victoire (au moins une phrase) chaque fois que tu encaisses."
+  },
+  {
+    "id": "f-quitte-12",
+    "jeu": "quitte",
+    "texte": "À chaque question, fais doubler au moins un autre joueur en l’encourageant comme un coach de boxe."
+  },
+  {
+    "id": "f-quitte-13",
+    "jeu": "quitte",
+    "texte": "Fais un geste porte-bonheur (toucher la table ou ton téléphone) avant chaque réponse, et fais dire à quelqu’un « c’est quoi ce rituel ? »."
   },
   {
     "id": "f-mines-10",

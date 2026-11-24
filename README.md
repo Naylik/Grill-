@@ -468,3 +468,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 24/11/2026 · Missions flash ajoutées (choisies par Kilyan) : Combien (faire avouer sa vraie réponse à {cible}),
   Imposteur (indice qui rime, à chaque manche), Quitte ou Double (discours de victoire en encaissant), Télépathie (high five avec
   l'autre duo). Imposteur et Télépathie à 10 ; restent Combien 8, Juste Prix 8, Quitte ou Double 8.
+- 24/11/2026 · Missions flash ajoutées : Combien (l'avocat du diable, l'explication scientifique bidon) et Quitte ou
+  Double (le coach de boxe, le geste porte-bonheur). Combien et Quitte ou Double à 10 ; reste le Juste Prix (8).
