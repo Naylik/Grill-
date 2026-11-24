@@ -3,7 +3,7 @@
 // À la fin, on déroule chaque chaîne : chacun dit quelles devinettes sont justes et vote pour le dessin le plus drôle.
 // Points internes : devinette juste = 1 pt au dessinateur et 1 pt au devineur ; 1 pt au dessin le plus drôle de chaque chaîne.
 import phrases from '../data/dessins.json';
-import { esc, fraisDabord, melanger } from '../outils';
+import { esc, fraisDabord, melanger, pts } from '../outils';
 import { pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
 import { brouillons } from '../ui';
@@ -207,7 +207,7 @@ export const telephone: MiniJeu<Etat> = {
       return `${hud('DESSIN À LA CHAÎNE', e.total, e.total, false)}
         ${chefDoeuvre(e, v.joueurs)}
         <h2 class="question centre-texte">Les meilleurs artistes</h2>
-        <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${score[u] ?? 0} pts`, part: (score[u] ?? 0) / max, moi: u === v.uid })))}</div>
+        <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${pts(score[u] ?? 0)}`, part: (score[u] ?? 0) / max, moi: u === v.uid })))}</div>
         <p class="aide">Devinette juste : 1 pt au devineur et 1 pt au dessinateur. Dessin le plus drôle de chaque chaîne : 1 pt.</p>`;
     }
 

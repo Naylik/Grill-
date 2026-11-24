@@ -4,7 +4,7 @@
 // banque, à l'abri, et il repart de 0) ou doubler. Tout le monde joue toutes les questions ; la plus grosse banque gagne.
 // La bonne réponse reste chez l'hôte (prive/quitte) jusqu'au résultat : personne ne peut la lire avant.
 import questions from '../data/quiz.json';
-import { esc, fraisDabord, melanger } from '../outils';
+import { esc, fraisDabord, melanger, pts } from '../outils';
 import { pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu } from './interface';
@@ -140,7 +140,7 @@ export const quitteOuDouble: MiniJeu<Etat> = {
       return {
         etat: e0,
         ecritures: { 'prive/quitte': null },
-        fin: { points: pointsDePlace(e0.banque), sorte: 'place', resume: champions.length ? `${champions.join(' et ')} : ${meilleur} pts encaissés au total.` : 'Personne n’a rien encaissé !' },
+        fin: { points: pointsDePlace(e0.banque), sorte: 'place', resume: champions.length ? `${champions.join(' et ')} : ${pts(meilleur)} encaissés au total.` : 'Personne n’a rien encaissé !' },
       };
     }
     return null;
@@ -166,7 +166,7 @@ export const quitteOuDouble: MiniJeu<Etat> = {
       const max = Math.max(1, ...ordre.map((u) => e.banque[u] ?? 0));
       return `${hud('QUITTE OU DOUBLE', total, total, false)}
         <h2 class="question centre-texte">Les banques</h2>
-        <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${e.banque[u] ?? 0} pts encaissés`, part: (e.banque[u] ?? 0) / max, moi: u === v.uid })))}</div>`;
+        <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${pts(e.banque[u] ?? 0)} encaissés`, part: (e.banque[u] ?? 0) / max, moi: u === v.uid })))}</div>`;
     }
 
     if (e.phase === 'question') {

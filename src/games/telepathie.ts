@@ -4,7 +4,7 @@
 // gagne. Mots presque pareils (voiture / auto) : le duo conteste et le groupe vote. Une fois par partie, chaque équipe
 // peut saboter une équipe adverse en lui imposant un mot interdit pour la manche suivante.
 // Avec un nombre impair de joueurs, il reste un arbitre, qui parie au début sur l'équipe gagnante et son nombre de manches.
-import { esc, melanger } from '../outils';
+import { esc, melanger, pts } from '../outils';
 import { majoriteOui, pointsDePlace } from '../score';
 import { maintenant } from '../firebase';
 import { attenteDes, chrono } from '../ecrans/commun';
@@ -349,7 +349,7 @@ export const telepathie: MiniJeu<Etat> = {
     </div>`;
     return `${tete}${boule()}<h2 class="question centre-texte">Les esprits ont parlé</h2>
       <div class="pile">${e.equipes.map((_, t) => film(t)).join('')}</div>
-      <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${score[u] ?? 0} pts${u === e.arbitre ? ' (arbitre)' : ''}`, part: (score[u] ?? 0) / max, moi: u === v.uid })))}</div>`;
+      <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${pts(score[u] ?? 0)}${u === e.arbitre ? ' (arbitre)' : ''}`, part: (score[u] ?? 0) / max, moi: u === v.uid })))}</div>`;
   },
 
   gestes: {

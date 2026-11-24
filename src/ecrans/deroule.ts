@@ -3,7 +3,7 @@ import { S, estHote } from '../etat';
 import { maintenant } from '../firebase';
 import { jeuParId } from '../games';
 import type { VueJeu } from '../games/interface';
-import { esc, auHasard } from '../outils';
+import { esc, auHasard, pts } from '../outils';
 import { majoriteOui, missionTrouvee, PARI_RATE, places, pointsMission, scoreVide, totalFinal, totalProvisoire, VOL_DETECTIVE } from '../score';
 import { avantPalierSuivant, classementSaison, niveauCuisson } from '../saison';
 import { NOMS_CUISSON } from '../mallow';
@@ -362,7 +362,7 @@ export function ecranFin(): string {
     const s = { ...scoreVide(), ...S.scores[u] };
     const t = (b?.titres ?? []).filter((x) => x.uid === u);
     return `<div class="boite detail-joueur">
-      <div class="ligne">${pastille(S.joueurs[u], 30)}<strong>${nom(u)}</strong><span class="total">${totalFinal(s)} pts</span></div>
+      <div class="ligne">${pastille(S.joueurs[u], 30)}<strong>${nom(u)}</strong><span class="total">${pts(totalFinal(s))}</span></div>
       <div class="chiffres"><span>Mini-jeux <b>${s.jeux + s.parieur}</b></span><span>Missions <b>${s.missions}</b></span>${s.flash ? `<span>Flash <b>+${s.flash}</b></span>` : ''}<span>Détective <b>${s.detective > 0 ? '+' : ''}${s.detective}</b></span>${s.grille ? `<span>Grillé ! <b>${s.grille > 0 ? '+' : ''}${s.grille}</b></span>` : ''}</div>
       ${t.length ? `<div class="titres">${t.map((x) => `<span class="titre-fun" title="${esc(x.pourquoi)}">${esc(x.titre)}</span>`).join('')}</div>` : ''}
     </div>`;

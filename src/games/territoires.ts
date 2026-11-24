@@ -6,7 +6,7 @@
 // rayée, cagnotte partagée). Si X te vole au lieu de s'allier : trahison, il te prend 2 parts. Si deux joueurs se
 // volent l'un l'autre : double trahison, chacun perd 1 part et la cagnotte grossit.
 // L'hôte tire le gagnant avant que la roue tourne ; tous les téléphones l'animent à la même heure (serveur).
-import { esc } from '../outils';
+import { esc, pts } from '../outils';
 import { pointsDePlace } from '../score';
 import { attenteDes } from '../ecrans/commun';
 import { roueHtml, tirerArret } from '../roue';
@@ -223,7 +223,7 @@ export const territoires: MiniJeu<Etat> = {
     const cartes = `<div class="joueurs-roue">${e.ordre.map((u, i) => {
       const b = e.phase === 'revelation' || e.phase === 'roue' || e.phase === 'gain' ? e.badges?.[u] : undefined;
       return `<div class="joueur-roue ${u === v.uid ? 'moi' : ''} ${b?.vise ? 'vise' : ''} ${spin && e.phase === 'gain' && spin.gagnant === u ? 'gagnant' : ''}" style="--k:${v.joueurs[u]?.couleur}">
-        <i></i>${nom(u)}<b>${Math.round(((e.parts[u] ?? 0) / Math.max(1, totalParts)) * 100)}%</b><span>${e.points[u] ?? 0} pts</span>
+        <i></i>${nom(u)}<b>${Math.round(((e.parts[u] ?? 0) / Math.max(1, totalParts)) * 100)}%</b><span>${pts(e.points[u] ?? 0)}</span>
         ${b ? `<em class="badge-action ${b.type}" style="animation-delay:${i * 0.35}s">${esc(b.texte)}</em>` : ''}</div>`;
     }).join('')}</div>`;
 
@@ -231,7 +231,7 @@ export const territoires: MiniJeu<Etat> = {
       const ordre = [...v.uids].sort((a, b) => (e.points[b] ?? 0) - (e.points[a] ?? 0));
       const max = Math.max(1, ...ordre.map((u) => e.points[u] ?? 0));
       return `${tete}<h2 class="question centre-texte">Les maîtres de la roue</h2>
-        <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${e.points[u] ?? 0} pts`, part: (e.points[u] ?? 0) / max, moi: u === v.uid })))}</div>`;
+        <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${pts(e.points[u] ?? 0)}`, part: (e.points[u] ?? 0) / max, moi: u === v.uid })))}</div>`;
     }
 
     if (e.phase === 'choix') {

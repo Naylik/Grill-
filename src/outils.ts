@@ -58,3 +58,6 @@ export function parmi<T>(liste: readonly T[], graine: string): T {
   for (let i = 0; i < graine.length; i++) h = (h * 31 + graine.charCodeAt(i)) >>> 0;
   return liste[h % liste.length];
 }
+
+/** « 0 pt », « 1 pt », « 5 pts » (singulier jusqu'à 1, comme en français). */
+export const pts = (n: number): string => `${n} pt${Math.abs(n) > 1 ? 's' : ''}`;

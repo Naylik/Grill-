@@ -462,3 +462,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 23/11/2026 · 2e partie complète par robot (Réflexe, Bon timing, Colis piégé, Champ de mines, Roue…) : aucune erreur.
   Corrigé : le Bon timing et le Colis piégé annonçaient un seul vainqueur en cas d'égalité ; tous les ex æquo sont
   maintenant nommés (« Kilyan, Manon et Cassie ont l'horloge dans la tête »), via `premiersEnGras` (arene.ts).
+- 24/11/2026 · 3e partie par robot avec jeux imposés (Dessin, Imposteur, Quitte ou Double, Parieur) : aucune erreur,
+  les 4 jeux vont jusqu'au bout. Corrigé : « 1 pts » sur les écrans de scores (helper `pts` dans outils.ts).
+  Robot : variable JEUX=… pour imposer les mini-jeux (marque les autres comme déjà joués).

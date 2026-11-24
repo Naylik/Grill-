@@ -245,7 +245,7 @@ export const champDeMines: MiniJeu<Etat> = {
       const ordre = [...v.uids].sort((a, b) => score(b) - score(a));
       const max = Math.max(1, ...ordre.map(score));
       return `${tete}<h2 class="question centre-texte">Les survivants</h2>
-        <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${score(u)} pts${e.bonus[u] ? ` (dont ${e.bonus[u]} de mine)` : ''}`, part: score(u) / max, moi: u === v.uid })))}</div>
+        <div class="pile">${classementBarres(ordre.map((u) => ({ joueur: v.joueurs[u], texte: `${pts(score(u))}${e.bonus[u] ? ` (dont ${e.bonus[u]} de mine)` : ''}`, part: score(u) / max, moi: u === v.uid })))}</div>
         ${grille(false, '')}`;
     }
 
