@@ -466,5 +466,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   les 4 jeux vont jusqu'au bout. Corrigé : « 1 pts » sur les écrans de scores (helper `pts` dans outils.ts).
   Robot : variable JEUX=… pour imposer les mini-jeux (marque les autres comme déjà joués).
 - 24/11/2026 · Missions flash ajoutées (choisies par Kilyan) : Combien (faire avouer sa vraie réponse à {cible}),
-  Imposteur (indice qui rime), Quitte ou Double (discours de victoire en encaissant), Télépathie (high five avec
+  Imposteur (indice qui rime, à chaque manche), Quitte ou Double (discours de victoire en encaissant), Télépathie (high five avec
   l'autre duo). Imposteur et Télépathie à 10 ; restent Combien 8, Juste Prix 8, Quitte ou Double 8.
