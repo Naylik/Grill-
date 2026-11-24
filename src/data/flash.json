@@ -510,6 +510,11 @@
     "texte": "Après chaque total, applaudis lentement, comme au théâtre."
   },
   {
+    "id": "f-combien-08",
+    "jeu": "combien",
+    "texte": "Après une question, fais avouer à {cible} sa vraie réponse, à voix haute."
+  },
+  {
     "id": "f-parieur-09",
     "jeu": "parieur",
     "texte": "Pendant chaque défi des autres, fais un roulement de tambour sur la table."
@@ -518,6 +523,11 @@
     "id": "f-imposteur-09",
     "jeu": "imposteur",
     "texte": "Commence chacun de tes indices par « Alors, figurez-vous… »."
+  },
+  {
+    "id": "f-imposteur-10",
+    "jeu": "imposteur",
+    "texte": "Donne un indice qui rime avec ton mot."
   },
   {
     "id": "f-reflexe-10",
@@ -535,6 +545,11 @@
     "texte": "Mets la main sur ton cœur chaque fois que tu doubles."
   },
   {
+    "id": "f-quitte-11",
+    "jeu": "quitte",
+    "texte": "Fais un petit discours de victoire (au moins une phrase) chaque fois que tu encaisses."
+  },
+  {
     "id": "f-mines-10",
     "jeu": "mines",
     "texte": "Fais un bruit d’explosion avec la bouche chaque fois qu’un autre joueur ouvre un colis."
@@ -543,6 +558,11 @@
     "id": "f-telepathie-09",
     "jeu": "telepathie",
     "texte": "Avant chaque manche, pose tes doigts sur tes tempes comme un voyant qui se concentre."
+  },
+  {
+    "id": "f-telepathie-10",
+    "jeu": "telepathie",
+    "texte": "Fais un « high five » avec l’autre duo quand ils se connectent."
   },
   {
     "id": "f-parieur-10",
