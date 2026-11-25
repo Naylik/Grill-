@@ -13,7 +13,7 @@ import { esc } from '../outils';
 import { hacher } from '../flash';
 import { pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
-import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, hud } from './arene';
 
 const NB_CASES = 20; // grille de 4 × 5
@@ -22,7 +22,6 @@ export const DETECTEURS = 1; // par joueur et par jeu : un seul, à utiliser au 
 const MANCHES: [number, number, number] = [2, 2, 2]; // Courte, Normale, Longue : 2 manches, une grille neuve à chaque fois
 const DUREE_ACTION = 20_000;
 const DUREE_BOUM = 4_000;
-const DUREE_BILAN = 6_500;
 const GAIN_MINE = 3; // au minimum, pour le poseur de la mine
 
 interface Etat extends EtatDeBase {
@@ -348,3 +347,5 @@ champDeMines.ecran = (v) => ecranDeBase(v) + (v.estHote && PHASES_SANS_CHRONO.in
 const commandeDeBase = champDeMines.commande;
 champDeMines.commande = (ctx, etat, valeur) =>
   valeur === 'forcerEtape' && PHASES_SANS_CHRONO.includes(etat.phase) ? { etat: { ...etat, fin: ctx.maintenant } } : commandeDeBase ? commandeDeBase(ctx, etat, valeur) : null;
+
+avecSuiteBilan(champDeMines);

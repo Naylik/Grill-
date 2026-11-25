@@ -8,7 +8,7 @@ import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
-import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
+import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, hud, introArene, noteReflexe, premiersEnGras } from './arene';
 import { minutageCourse } from '../course';
 
@@ -18,7 +18,6 @@ const ABSENT = 1500; // pas de réponse
 const DUREE_INTRO = 7000;
 const DUREE_PISTE = 8500; // la course rejouée (jusqu'à ~6 s avec le ralenti), puis le temps de lire le gagnant
 const DUREE_PISTE_CHOIX = 15_000; // le gagnant choisit sa victime : on attend son choix (15 s au plus)
-const DUREE_BILAN = 6500;
 
 interface Etat extends EtatDeBase {
   phase: 'intro' | 'attente' | 'resultat' | 'bilan';
@@ -250,3 +249,5 @@ export const reflexe: MiniJeu<Etat> = {
     },
   },
 };
+
+avecSuiteBilan(reflexe);

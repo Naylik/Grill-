@@ -124,3 +124,20 @@ export function etapeTerminee(ctx: ContexteHote, etape: string, fin?: number, qu
   const attendus = qui.filter((u) => ctx.connectes.includes(u));
   return attendus.every((u) => recues[u]) || (fin !== undefined && ctx.maintenant >= fin);
 }
+
+/** Écran final d'un mini-jeu (classement) : il reste affiché jusqu'à 30 s, l'hôte peut passer à la suite avant. */
+export const DUREE_BILAN = 30_000;
+
+/**
+ * Ajoute à un mini-jeu, sur son écran final (phase « bilan »), le bouton « Continuer » de l'hôte : il met fin à
+ * l'écran tout de suite. Les joueurs ont ainsi le temps de voir qui a gagné, sans attendre trop longtemps.
+ */
+export function avecSuiteBilan<E extends EtatDeBase & { phase: string }>(jeu: MiniJeu<E>): void {
+  const ecran = jeu.ecran;
+  jeu.ecran = (v) => ecran(v) + (v.etat.phase === 'bilan'
+    ? (v.estHote ? '<button class="bouton jaune" data-action="hote-jeu" data-valeur="suiteBilan">Continuer</button>' : '<p class="attente">L’hôte passe à la suite.</p>')
+    : '');
+  const commande = jeu.commande;
+  jeu.commande = (ctx, etat, valeur) =>
+    valeur === 'suiteBilan' && etat.phase === 'bilan' ? { etat: { ...etat, fin: ctx.maintenant } } : commande ? commande(ctx, etat, valeur) : null;
+}

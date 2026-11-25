@@ -9,14 +9,13 @@ import { majoriteOui, pointsDePlace } from '../score';
 import { maintenant } from '../firebase';
 import { attenteDes, chrono } from '../ecrans/commun';
 import { brouillons } from '../ui';
-import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, hud } from './arene';
 
 export const MAX_MANCHES = 8;
 export const DUREE_DECOMPTE = 4_500; // 3, 2, 1 puis « CRIEZ ! »
 const DUREE_MOT = 12_000;
 const DUREE_REVELE = 7_500;
-const DUREE_BILAN = 9_000;
 
 interface Interdit {
   mot: string;
@@ -430,3 +429,5 @@ telepathie.ecran = (v) => ecranDeBase(v) + (v.estHote && PHASES_SANS_CHRONO.incl
 const commandeDeBase = telepathie.commande;
 telepathie.commande = (ctx, etat, valeur) =>
   valeur === 'forcerEtape' && PHASES_SANS_CHRONO.includes(etat.phase) ? { etat: { ...etat, fin: ctx.maintenant } } : commandeDeBase ? commandeDeBase(ctx, etat, valeur) : null;
+
+avecSuiteBilan(telepathie);

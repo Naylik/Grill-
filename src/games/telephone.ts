@@ -8,7 +8,7 @@ import { pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
 import { brouillons } from '../ui';
 import { COULEURS, GOMME, outil, sablier, toileAVoir, traitsDe, type Trait } from '../dessin';
-import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, hud } from './arene';
 
 const NB_ETAPES: [number, number, number] = [3, 4, 5]; // Courte, Normale, Longue (jamais plus que de joueurs)
@@ -17,7 +17,6 @@ export const REACTIONS = ['😂', '🔥', '💀', '👏'];
 const DUREE_DESSIN = 60_000;
 const DUREE_DEVINETTE = 35_000;
 const DUREE_VOTE = 45_000;
-const DUREE_BILAN = 7_000;
 
 interface Maillon {
   auteur: string;
@@ -378,3 +377,5 @@ export const telephone: MiniJeu<Etat> = {
     },
   },
 };
+
+avecSuiteBilan(telephone);

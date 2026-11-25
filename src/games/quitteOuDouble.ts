@@ -7,7 +7,7 @@ import questions from '../data/quiz.json';
 import { esc, fraisDabord, melanger, pts } from '../outils';
 import { pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
-import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, hud } from './arene';
 import { fuseeHtml } from '../fusee';
 import { sons } from '../son';
@@ -16,7 +16,6 @@ const NB_QUESTIONS: [number, number, number] = [8, 10, 12]; // Courte, Normale, 
 const DUREE_QUESTION = 15_000;
 const DUREE_RESULTAT = 6_000;
 const DUREE_CHOIX = 12_000;
-const DUREE_BILAN = 6_500;
 const NOMS_NIVEAUX = ['', 'facile', 'moyen', 'difficile', 'très difficile'];
 
 
@@ -240,3 +239,5 @@ export const quitteOuDouble: MiniJeu<Etat> = {
     },
   },
 };
+
+avecSuiteBilan(quitteOuDouble);

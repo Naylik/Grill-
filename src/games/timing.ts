@@ -6,7 +6,7 @@ import { panneauStop } from '../stickers';
 import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
-import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat } from './interface';
+import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, finPiste, hud, introArene, noteTiming, piste, premiersEnGras } from './arene';
 
 const CIBLES = [5, 7, 10, 6, 12, 15]; // secondes, une par manche
@@ -14,7 +14,6 @@ const NB_MANCHES: [number, number, number] = [2, 3, 4]; // Courte, Normale, Long
 const DECOMPTE = 3500; // « Prêts ? 3, 2, 1, partez ! »
 const DUREE_INTRO = 7000;
 const DUREE_PISTE = 5000;
-const DUREE_BILAN = 6500;
 
 interface Etat extends EtatDeBase {
   phase: 'intro' | 'chrono' | 'resultat' | 'bilan';
@@ -172,3 +171,5 @@ export const timing: MiniJeu<Etat> = {
     },
   },
 };
+
+avecSuiteBilan(timing);

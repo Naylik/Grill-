@@ -474,3 +474,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Les 12 mini-jeux ont maintenant 10 missions flash chacun (120 au total).
 - 25/11/2026 · Champ de mines, mission flash « bruit d'explosion » : trop dure (à chaque colis ouvert par un autre),
   maintenant seulement quand quelqu'un saute sur une mine.
+- 25/11/2026 · Écran final des mini-jeux (classement) : il restait 6,5 à 9 s, trop court pour voir qui a gagné. Il reste
+  maintenant jusqu'à 30 s, et l'hôte a un bouton « Continuer » pour passer avant (`avecSuiteBilan`, interface.ts).
+  Concerne les 8 jeux à écran final automatique (Réflexe, Bon timing, Colis, Quitte ou Double, Dessin, Champ de mines,
+  Roue, Télépathie) ; les autres attendaient déjà l'hôte.

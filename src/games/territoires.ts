@@ -10,7 +10,7 @@ import { esc, pts } from '../outils';
 import { pointsDePlace } from '../score';
 import { attenteDes } from '../ecrans/commun';
 import { roueHtml, tirerArret } from '../roue';
-import { etapeTerminee, reponsesDe, selonFormat, type EtatDeBase, type MiniJeu } from './interface';
+import { etapeTerminee, reponsesDe, selonFormat, type EtatDeBase, type MiniJeu, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, hud } from './arene';
 
 const NB_MANCHES: [number, number, number] = [4, 6, 8]; // Courte, Normale, Longue
@@ -20,7 +20,6 @@ const POT_DEPART = 6;
 const DUREE_REVELATION = 4_500;
 const DUREE_ROUE = 6_000;
 const DUREE_GAIN = 3_500;
-const DUREE_BILAN = 6_500;
 
 export type Action = 'agrandir' | 'voler' | 'proteger' | 'pacte';
 interface Badge { type: 'agrandit' | 'vole' | 'rate' | 'protege' | 'victime' | 'pauvre' | 'pacte' | 'trahi'; texte: string; vise?: boolean }
@@ -284,3 +283,5 @@ export const territoires: MiniJeu<Etat> = {
     },
   },
 };
+
+avecSuiteBilan(territoires);

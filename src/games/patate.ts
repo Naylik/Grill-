@@ -8,7 +8,7 @@ import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
 import { esc } from '../outils';
 import { pointsDePlace } from '../score';
-import { reponsesDe, type EtatDeBase, type MiniJeu } from './interface';
+import { reponsesDe, type EtatDeBase, type MiniJeu, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, hud, introArene, premiersEnGras } from './arene';
 
 const DUREE_INTRO = 7000;
@@ -16,7 +16,6 @@ const PRETS = 3000; // « La patate arrive… »
 const EXPLOSION_MIN = 10_000;
 const EXPLOSION_MAX = 55_000;
 const DUREE_BOUM = 4500;
-const DUREE_BILAN = 6500;
 
 const THEMES = ['Un animal', 'Un pays', 'Un prénom', 'Un fruit ou un légume', 'Une marque', 'Un métier', 'Un objet de la maison', 'Un sport', 'Une ville', 'Un film ou une série', 'Un plat', 'Une célébrité', 'Un mot anglais', 'Un instrument', 'Un vêtement'];
 const LETTRES = 'ABCDEFGHJLMNPRST';
@@ -286,3 +285,5 @@ export const patate: MiniJeu<Etat> = {
     },
   },
 };
+
+avecSuiteBilan(patate);
