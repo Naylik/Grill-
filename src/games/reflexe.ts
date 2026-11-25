@@ -6,7 +6,7 @@
 // seulement, Mallow « chauffe » (lueur et flammes) un instant avant le vrai feu, pour la pousser au faux départ.
 import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
-import { esc } from '../outils';
+import { esc, listeNoms } from '../outils';
 import { pointsDePlace } from '../score';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, hud, introArene, noteReflexe, premiersEnGras } from './arene';
@@ -133,7 +133,7 @@ export const reflexe: MiniJeu<Etat> = {
       const moyennes = Object.fromEntries(Object.entries(etat.cumul).map(([u, c]) => [u, Math.round(c / n)]));
       const meilleure = Math.min(...Object.values(moyennes));
       const premiers = Object.keys(moyennes).filter((u) => moyennes[u] === meilleure).map((u) => ctx.joueurs[u]?.prenom);
-      const resume = premiers.length ? `${premiers.join(' et ')} : ${meilleure} ms en moyenne.` : undefined;
+      const resume = premiers.length ? `${listeNoms(premiers)} : ${meilleure} ms en moyenne.` : undefined;
       return { etat, fin: { points: pointsDePlace(moyennes, false), sorte: 'place', resume } };
     }
     return null;

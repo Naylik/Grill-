@@ -61,3 +61,6 @@ export function parmi<T>(liste: readonly T[], graine: string): T {
 
 /** « 0 pt », « 1 pt », « 5 pts » (singulier jusqu'à 1, comme en français). */
 export const pts = (n: number): string => `${n} pt${Math.abs(n) > 1 ? 's' : ''}`;
+
+/** « Kilyan », « Kilyan et Manon », « Kilyan, Manon et Cassie ». */
+export const listeNoms = (noms: string[]): string => (noms.length > 1 ? `${noms.slice(0, -1).join(', ')} et ${noms[noms.length - 1]}` : noms[0] ?? '');

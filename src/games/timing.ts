@@ -4,7 +4,7 @@
 import { maintenant } from '../firebase';
 import { panneauStop } from '../stickers';
 import { mallow } from '../mallow';
-import { esc } from '../outils';
+import { esc, listeNoms } from '../outils';
 import { pointsDePlace } from '../score';
 import { etapeTerminee, reponsesDe, type EtatDeBase, type MiniJeu, selonFormat, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, finPiste, hud, introArene, noteTiming, piste, premiersEnGras } from './arene';
@@ -86,7 +86,7 @@ export const timing: MiniJeu<Etat> = {
     if (etat.phase === 'bilan' && ctx.maintenant >= (etat.fin ?? 0)) {
       const meilleur = Math.min(...Object.values(etat.cumul));
       const premiers = Object.keys(etat.cumul).filter((u) => etat.cumul[u] === meilleur).map((u) => ctx.joueurs[u]?.prenom);
-      const resume = premiers.length ? `${premiers.join(' et ')} : ${formaterSecondes(meilleur)} d’écart au total.` : undefined;
+      const resume = premiers.length ? `${listeNoms(premiers)} : ${formaterSecondes(meilleur)} d’écart au total.` : undefined;
       return { etat, fin: { points: pointsDePlace(etat.cumul, false), sorte: 'place', resume } };
     }
     return null;

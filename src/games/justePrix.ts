@@ -1,7 +1,7 @@
 // « Le Juste Prix » : chacun estime en secret. Le plus proche gagne la manche ;
 // classement au nombre de manches gagnées.
 import questions from '../data/justeprix.json';
-import { esc, fraisDabord, melanger, parmi } from '../outils';
+import { esc, fraisDabord, melanger, parmi, listeNoms } from '../outils';
 import { DUREE_COMPTEUR } from '../animations';
 import { plusProches, pointsDePlace } from '../score';
 import { attenteDes, bulle, chrono } from '../ecrans/commun';
@@ -75,7 +75,7 @@ export const justePrix: MiniJeu<Etat> = {
     if (index >= etat.questions.length) {
       const max = Math.max(...Object.values(etat.manches));
       const champions = Object.keys(etat.manches).filter((u) => etat.manches[u] === max).map((u) => ctx.joueurs[u]?.prenom);
-      return { etat, fin: { points: pointsDePlace(etat.manches), sorte: 'place', resume: `${champions.join(' et ')} : ${max} manche${max > 1 ? 's' : ''} gagnée${max > 1 ? 's' : ''}.` } };
+      return { etat, fin: { points: pointsDePlace(etat.manches), sorte: 'place', resume: `${listeNoms(champions)} : ${max} manche${max > 1 ? 's' : ''} gagnée${max > 1 ? 's' : ''}.` } };
     }
     return { etat: { ...etat, etape: etapeDe(etat.numeroJeu, index), index, phase: 'question', fin: ctx.maintenant + DUREE, estimations: undefined, gagnants: undefined } };
   },

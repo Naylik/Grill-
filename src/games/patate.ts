@@ -6,7 +6,7 @@
 import { hacher, hasardDe } from '../flash';
 import { maintenant } from '../firebase';
 import { mallow } from '../mallow';
-import { esc } from '../outils';
+import { esc, listeNoms } from '../outils';
 import { pointsDePlace } from '../score';
 import { reponsesDe, type EtatDeBase, type MiniJeu, DUREE_BILAN, avecSuiteBilan } from './interface';
 import { classementBarres, hud, introArene, premiersEnGras } from './arene';
@@ -184,7 +184,7 @@ export const patate: MiniJeu<Etat> = {
       const cumul = etat.cumul ?? classementPatate(etat.elimines, etat.vivants);
       const meilleur = Math.max(...Object.values(cumul));
       const gagnants = Object.keys(cumul).filter((u) => cumul[u] === meilleur).map((u) => ctx.joueurs[u]?.prenom);
-      return { etat, fin: { points: pointsDePlace(cumul), sorte: 'place', resume: `${gagnants.join(' et ')} : le meilleur survivant des ${NB_TOURS} tours.` } };
+      return { etat, fin: { points: pointsDePlace(cumul), sorte: 'place', resume: `${listeNoms(gagnants)} : ${gagnants.length > 1 ? 'les meilleurs survivants' : 'le meilleur survivant'} des ${NB_TOURS} tours.` } };
     }
     return null;
   },

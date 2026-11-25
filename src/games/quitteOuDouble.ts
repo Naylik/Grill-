@@ -4,7 +4,7 @@
 // banque, à l'abri, et il repart de 0) ou doubler. Tout le monde joue toutes les questions ; la plus grosse banque gagne.
 // La bonne réponse reste chez l'hôte (prive/quitte) jusqu'au résultat : personne ne peut la lire avant.
 import questions from '../data/quiz.json';
-import { esc, fraisDabord, melanger, pts } from '../outils';
+import { esc, fraisDabord, melanger, pts, listeNoms } from '../outils';
 import { pointsDePlace } from '../score';
 import { attenteDes, chrono } from '../ecrans/commun';
 import { etapeTerminee, reponsesDe, selonFormat, type ContexteHote, type EtatDeBase, type MiniJeu, DUREE_BILAN, avecSuiteBilan } from './interface';
@@ -139,7 +139,7 @@ export const quitteOuDouble: MiniJeu<Etat> = {
       return {
         etat: e0,
         ecritures: { 'prive/quitte': null },
-        fin: { points: pointsDePlace(e0.banque), sorte: 'place', resume: champions.length ? `${champions.join(' et ')} : ${pts(meilleur)} encaissés au total.` : 'Personne n’a rien encaissé !' },
+        fin: { points: pointsDePlace(e0.banque), sorte: 'place', resume: champions.length ? `${listeNoms(champions)} : ${pts(meilleur)} encaissés au total.` : 'Personne n’a rien encaissé !' },
       };
     }
     return null;

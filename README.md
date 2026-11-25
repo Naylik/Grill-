@@ -482,3 +482,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   les 4 téléphones rechargés en même temps). Pour le long terme : identité Firebase gardée d'abord dans localStorage
   (lecture immédiate, jamais bloquée ; migration automatique depuis IndexedDB vérifiée : même uid), et sur la table
   virtuelle, plus de service worker ni de rechargement automatique de version (`joueurTest`).
+- 25/11/2026 · Vérifié par robot (2 parties, les 12 mini-jeux) : le classement provisoire s'affiche après chaque jeu,
+  Colis piégé compris (il attend toujours le bouton « Jeu suivant » de l'hôte). Corrigé au passage : résumé
+  « Yanis et Cassie et Kilyan : le meilleur survivant » → « Yanis, Cassie et Kilyan : les meilleurs survivants »
+  (helper `listeNoms`, utilisé par 5 jeux).
