@@ -57,9 +57,18 @@ describe('Quitte ou Double', () => {
     }
     expect(e.phase).toBe('bilan');
     expect(e.banque).toEqual({ a: 1 + 64, b: 32, c: 64 }); // a : 1 encaissé + 64 en jeu à la fin
-    t += 7000;
+    t += 30_000; // écran final : 30 s (ou « Continuer » de l’hôte)
     const fin = av().fin;
     expect(fin.points.a).toBe(5);
     expect(quitteOuDouble.contenus!(e)).toHaveLength(8);
+  });
+});
+
+describe('Quitte ou Double : écran final', () => {
+  it('l’hôte passe l’écran final avec « Continuer »', async () => {
+    const { quitteOuDouble: jeu } = await import('../src/games/quitteOuDouble');
+    const etat = { phase: 'bilan', fin: 1_000_000 } as never;
+    const r = jeu.commande!({ maintenant: 500 } as never, etat, 'suiteBilan');
+    expect((r!.etat as { fin: number }).fin).toBe(500);
   });
 });

@@ -81,7 +81,7 @@ describe('Télépathie', () => {
     expect(e.trouve[0]).toBe(3);
     expect(e.score[r]).toBeGreaterThan(e.score[p]);
     expect(e.score[e.arbitre]).toBe(2 + 1);
-    attendre(10000);
+    attendre(30_000); // écran final : 30 s (ou « Continuer » de l’hôte)
     expect(fin.sorte).toBe('place');
   });
 });
