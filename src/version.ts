@@ -1,4 +1,5 @@
 // Version de l'appli et mise à jour forcée.
+import { joueurTest } from './joueurTest';
 // Chaque téléphone publie sa version dans le salon. Si un autre joueur a une version plus récente,
 // ce téléphone se met à jour tout seul (sinon il pourrait ne pas connaître un nouveau mini-jeu et rester bloqué).
 declare const __VERSION__: number;
@@ -25,6 +26,8 @@ export async function mettreAJour(): Promise<void> {
 export function verifierVersion(versions: (number | undefined)[]): void {
   const max = Math.max(0, ...versions.filter((v): v is number => typeof v === 'number'));
   if (!VERSION || max <= VERSION) return;
+  // Table virtuelle : pas de rechargement automatique (4 téléphones qui redémarrent ensemble dans le même navigateur).
+  if (joueurTest !== null) return;
   try {
     if (sessionStorage.getItem('grille:maj') === String(max)) return;
     sessionStorage.setItem('grille:maj', String(max));

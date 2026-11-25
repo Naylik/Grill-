@@ -1,5 +1,5 @@
 // Table virtuelle : doit passer avant tout le reste (mémoire séparée pour chaque téléphone de test).
-import './joueurTest';
+import { joueurTest } from './joueurTest';
 // Polices hébergées avec l'appli (alphabet latin seulement) : pas d'appel à Google, et elles marchent hors connexion.
 import '@fontsource/unbounded/latin-600.css';
 import '@fontsource/unbounded/latin-800.css';
@@ -712,7 +712,8 @@ if (!configManquante) {
 
 // Mises à jour : l'appli vérifie s'il existe une nouvelle version à chaque retour sur l'écran (et toutes les heures)
 // et se recharge toute seule pour l'installer. La partie reprend ensuite automatiquement (tout est dans Firebase).
-registerSW({
+// Table virtuelle : pas de service worker (sinon une nouvelle version recharge les 4 téléphones d'un coup).
+if (joueurTest === null) registerSW({
   immediate: true,
   onRegisteredSW(_url, enregistrement) {
     retenirEnregistrement(enregistrement);

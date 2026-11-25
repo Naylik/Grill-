@@ -18,8 +18,10 @@ const app = initializeApp(
   joueurTest !== null ? `table-${joueurTest}` : undefined,
 );
 // Connexion anonyme seulement : sans le code des fenêtres de connexion Google/Facebook (plus léger).
-// Même mémoire que d'habitude, pour que chacun garde son identité après un rechargement.
-export const auth = initializeAuth(app, { persistence: [indexedDBLocalPersistence, browserLocalPersistence] });
+// Identité gardée d'abord dans le stockage simple du navigateur (localStorage) : lecture immédiate, jamais bloquée,
+// même quand plusieurs pages de l'appli se rechargent en même temps (table virtuelle, appli + onglet ouverts).
+// Une identité déjà rangée dans IndexedDB (anciennes versions) est retrouvée et recopiée automatiquement par Firebase.
+export const auth = initializeAuth(app, { persistence: [browserLocalPersistence, indexedDBLocalPersistence] });
 export const db = getDatabase(app);
 
 if (emulateur) {

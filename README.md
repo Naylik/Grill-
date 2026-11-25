@@ -478,3 +478,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   maintenant jusqu'à 30 s, et l'hôte a un bouton « Continuer » pour passer avant (`avecSuiteBilan`, interface.ts).
   Concerne les 8 jeux à écran final automatique (Réflexe, Bon timing, Colis, Quitte ou Double, Dessin, Champ de mines,
   Roue, Télépathie) ; les autres attendaient déjà l'hôte.
+- 25/11/2026 · Table virtuelle : Kilyan (hôte) a perdu son identité au retour sur l'onglet (nouvelle version publiée →
+  les 4 téléphones rechargés en même temps). Pour le long terme : identité Firebase gardée d'abord dans localStorage
+  (lecture immédiate, jamais bloquée ; migration automatique depuis IndexedDB vérifiée : même uid), et sur la table
+  virtuelle, plus de service worker ni de rechargement automatique de version (`joueurTest`).
