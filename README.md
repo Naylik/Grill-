@@ -472,3 +472,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Double (le coach de boxe, le geste porte-bonheur). Combien et Quitte ou Double à 10 ; reste le Juste Prix (8).
 - 24/11/2026 · Juste Prix : 2 missions flash ajoutées (taper une estimation avec le nez ; mimer son chiffre une fois).
   Les 12 mini-jeux ont maintenant 10 missions flash chacun (120 au total).
+- 25/11/2026 · Champ de mines, mission flash « bruit d'explosion » : trop dure (à chaque colis ouvert par un autre),
+  maintenant seulement quand quelqu'un saute sur une mine.

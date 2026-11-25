@@ -582,7 +582,7 @@
   {
     "id": "f-mines-10",
     "jeu": "mines",
-    "texte": "Fais un bruit d’explosion avec la bouche chaque fois qu’un autre joueur ouvre un colis."
+    "texte": "Fais un bruit d’explosion avec la bouche chaque fois que quelqu’un saute sur une mine."
   },
   {
     "id": "f-telepathie-09",
