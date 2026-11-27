@@ -542,3 +542,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   détective) est remis sous le tableau des points, avec les chiffres lus dans le barème (`resumeRegles`).
 - 27/11/2026 · Tableau des points plus lisible : chiffres en gros et en jaune, « (soirée de 6 jeux) » retiré,
   « Menteur démasqué » devient « Mentir quand on te grille » avec une explication, « Vengeance » expliquée (saison).
+- 27/11/2026 · Liste des jeux : le paragraphe explique le principe sans chiffres (mission principale, missions flash, pari
+  détective) et passe au-dessus du tableau des points, qui seul donne les chiffres (plus de répétition).

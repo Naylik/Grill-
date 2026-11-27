@@ -23,8 +23,8 @@ export function ecranListeJeux(): string {
       </div>
     </div>
     <div class="grille-jeux">${tuiles}</div>
-    ${tableauPoints()}
     ${resumeRegles()}
+    ${tableauPoints()}
     <button class="bouton jaune" data-action="vueAccueil" data-valeur="accueil">C’est parti</button>
   </section>`;
 }

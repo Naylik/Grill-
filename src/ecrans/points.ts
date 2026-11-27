@@ -33,13 +33,11 @@ export function tableauPoints(): string {
   </div>`;
 }
 
-/** Le résumé des règles de la soirée (paragraphe de l'ancienne liste des jeux, remis à la demande de Kilyan),
- *  avec les chiffres du barème. */
+/** Le principe des missions, sans chiffres (les points sont dans le tableau, juste en dessous). */
 export function resumeRegles(): string {
-  const v = VOL_DETECTIVE;
   return `<div class="boite resume-regles">
-    <p><strong>Mission principale :</strong> une par joueur pour toute la soirée, au choix entre une mission longue durée (${POINTS_MISSION.longue} pts) et une plus courte (facile ${POINTS_MISSION.facile} pts, difficile ${POINTS_MISSION.difficile} pts), pour une soirée de 6 jeux (×4/6 en court, ×8/6 en long). <strong>Missions flash :</strong> à chaque jeu, 1 ou 2 joueurs reçoivent en secret une petite mission liée au jeu (+${POINTS_FLASH} pts), révélée et votée juste après.</p>
-    <p><strong>Mini-jeux :</strong> 1er ${POINTS_PLACE[0]} pts, 2e ${POINTS_PLACE[1]} pts, 3e ${POINTS_PLACE[2]} pts, les autres 1 pt.</p>
-    <p><strong>Pari détective :</strong> avant la révélation, devine la mission principale d’un joueur. Juste : tu lui voles ${v.facile}, ${v.difficile} ou ${v.longue} pts (mission facile, difficile ou longue). Raté : −${-PARI_RATE} pts.</p>
+    <p><strong>Mission principale :</strong> une par joueur pour toute la soirée, à choisir entre une mission longue durée et une plus courte.</p>
+    <p><strong>Missions flash :</strong> à chaque mini-jeu, 1 ou 2 joueurs reçoivent en secret une petite mission liée au jeu, révélée et votée juste après.</p>
+    <p><strong>Pari détective :</strong> avant la révélation finale, devine la mission principale d’un autre joueur.</p>
   </div>`;
 }
