@@ -118,6 +118,19 @@ function bruit(debut: number, duree: number, de: number, vers: number, volume = 
 }
 
 export const sons = {
+  /** Mallow à griller (accueil) : un grésillement, plus fort et plus aigu à chaque cran (0 à 3). */
+  gresille(cran = 0): void {
+    bruit(0, 0.14 + cran * 0.03, 2600 + cran * 700, 5200 + cran * 600, 0.14 + cran * 0.06);
+  },
+  /** Mallow change de stade de cuisson : un « fssh » plus long. */
+  cuit(): void {
+    bruit(0, 0.45, 6000, 2500, 0.35);
+    note(660, 0.02, 0.18, 'triangle', 0.08);
+  },
+  /** Carte à gratter : petit frottement. */
+  gratte(): void {
+    bruit(0, 0.07, 2200, 3400, 0.07);
+  },
   /** Pschhh de grillade. */
   pschhh(debut = 0): void {
     bruit(debut, 1.3, 5000, 1800);

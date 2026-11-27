@@ -500,3 +500,10 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   longue durée et une plus courte quand c'est possible), au choix comme les autres, réservées dès la proposition,
   ×1,5 ; avant, une seule mission imposée. Phrase : « Manon va regretter de t’avoir grillé. Choisis ta mission. » La cible est comptée sans jamais être changée (`proposerMissionsVengeance`).
   Vérifié sur la table virtuelle.
+- 27/11/2026 · Accueil vivant (validé par Kilyan sur maquettes, `src/accueilVivant.ts`) :
+  Mallow à griller (4 taps par stade : Doré → Caramel → Flambé → Carbonisé, puis « PFFF… » et retour à Doré, jamais
+  cru ; écrasement, braises, lueur, jauge, grésillement qui monte, vibration) ; carte « TOP SECRET » à gratter (une vraie
+  mission douce au hasard, {cible} = « ton voisin de droite », son de grattage, ding à la révélation, sans bouton « une
+  autre ») ; retour du joueur (dernière saison de ce téléphone : cuisson de son Mallow, jauge vers le stade suivant,
+  revanche s'il s'est fait griller), affiché à la place des cartes. Les éléments animés sont marqués `data-garder`
+  (harmoniser ne les touche plus). En attente : compteur de parties, Mallow vivant.

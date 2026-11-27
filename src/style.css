@@ -1283,3 +1283,47 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 /* Vengeance : la phrase sous le titre, bien visible, le prénom de la cible en rose. */
 .phrase-vengeance { margin: 0; font-size: var(--txt-l); font-weight: 800; line-height: 1.3; color: var(--texte); text-wrap: balance; }
 .phrase-vengeance strong { color: var(--rose); }
+/* Accueil vivant (accueilVivant.ts) — Mallow à griller : il s'écrase sous le doigt, braises, lueur, jauge de cuisson. */
+.mallow-griller { position: relative; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; min-height: 172px; display: grid; justify-items: center; align-content: end; }
+.mallow-griller::before { content: ''; position: absolute; inset: 0 10%; border-radius: 50%; background: radial-gradient(circle, var(--feu), transparent 65%); opacity: var(--lueur, 0); transition: opacity var(--t-normal); pointer-events: none; }
+.corps-griller { position: relative; width: 132px; height: 165px; line-height: 0; transform-origin: 50% 90%; }
+/* Mallow flambé (flammes sur la tête) est plus haut : il dépasse vers le haut sans pousser le logo. */
+.corps-griller svg { position: absolute; left: 0; bottom: 0; }
+.corps-griller.tape { animation: ecrase-mallow .38s var(--rebond); }
+@keyframes ecrase-mallow { 25% { transform: scale(1.14, .82) translateY(8px); } 55% { transform: scale(.94, 1.1) translateY(-6px); } 80% { transform: scale(1.03, .97); } }
+.jauge-cuisson { width: 96px; height: 8px; margin-top: 6px; border-radius: var(--r-rond); background: var(--voile-1); overflow: hidden; opacity: 0; transition: opacity var(--t-normal); }
+.jauge-cuisson.on { opacity: 1; }
+.jauge-cuisson i { display: block; height: 100%; width: var(--j, 0%); border-radius: var(--r-rond); background: linear-gradient(90deg, var(--jaune-fort), var(--feu)); transition: width .15s ease-out; }
+.braise { position: absolute; left: 50%; top: 45%; width: 8px; height: 8px; border-radius: 50%; background: var(--jaune-fort); box-shadow: 0 0 8px var(--feu); pointer-events: none; animation: braise-mallow .7s ease-out forwards; }
+@keyframes braise-mallow { to { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(.3); } }
+.etiq-cuisson { position: absolute; left: 50%; top: 0; translate: -50% 0; padding: 3px 10px; border-radius: var(--r-rond); background: var(--fond-2); border: 1px solid var(--bord); font-size: var(--txt-xs); font-weight: 800; color: var(--jaune); white-space: nowrap; pointer-events: none; animation: etiq-cuisson 1.1s ease-out forwards; }
+.etiq-cuisson.carbonise { color: var(--feu); }
+@keyframes etiq-cuisson { 0% { opacity: 0; transform: translateY(6px) scale(.7); } 20%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-14px); } }
+.pfff-griller { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--titre); font-weight: 900; font-size: var(--txt-2xl); color: #fff; text-shadow: 0 0 14px var(--feu); pointer-events: none; animation: pfff-griller 1s ease-out forwards; }
+@keyframes pfff-griller { 0% { opacity: 0; transform: scale(.4); } 25% { opacity: 1; transform: scale(1.15); } 100% { opacity: 0; transform: scale(1.4) translateY(-30px); } }
+.fumee-griller { position: absolute; left: 50%; top: 10%; width: 90px; height: 90px; translate: -50% 0; border-radius: 50%; background: radial-gradient(circle, #c8c0ea99, transparent 70%); pointer-events: none; animation: fumee-griller 1.1s ease-out forwards; }
+@keyframes fumee-griller { from { opacity: .9; transform: scale(.5); } to { opacity: 0; transform: scale(2) translateY(-40px); } }
+/* Carte à gratter : la carte « TOP SECRET » grandit, on gratte, la mission apparaît. */
+button.carte-s.c { font: inherit; cursor: pointer; }
+.cartes:has(.grat) { height: auto; min-height: 160px; }
+.carte-s.c.grat { position: relative; width: 250px; height: 150px; margin: 0 -60px; padding: 0; overflow: hidden; animation: none; background: #FFF6EA; z-index: 5; transition: width .35s var(--rebond), height .35s var(--rebond); cursor: default; }
+.mission-grat { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 6px; padding: 14px 16px; text-align: center; color: var(--fond); }
+.mission-grat small { font-size: 10px; font-weight: 800; letter-spacing: .12em; color: #B32A12; }
+.mission-grat b { font-size: var(--txt-m); font-weight: 800; line-height: 1.25; }
+.carte-s.grat canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; transition: opacity var(--t-lent); }
+.carte-s.grat canvas.fini { opacity: 0; pointer-events: none; }
+/* Retour du joueur : la cuisson de son Mallow dans la saison, et la revanche. */
+.retour-joueur { display: grid; gap: 8px; }
+.carte-retour { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: center; padding: 12px 14px; border-radius: var(--r-l); background: var(--fond-2); border: 1px solid var(--bord); animation: arrive var(--t-lent) var(--rebond) both; }
+.tete-retour { grid-row: span 3; line-height: 0; }
+.carte-retour b { font-weight: 800; }
+.carte-retour em { font-style: normal; color: var(--jaune-fort); }
+.jauge-retour { height: 8px; border-radius: var(--r-rond); background: var(--voile-1); overflow: hidden; }
+.jauge-retour i { display: block; height: 100%; width: 0; border-radius: var(--r-rond); background: linear-gradient(90deg, var(--jaune), var(--feu)); animation: jauge-retour 1.2s ease-out .5s forwards; }
+@keyframes jauge-retour { to { width: var(--w); } }
+.carte-retour small { font-size: var(--txt-xs); font-weight: 700; color: var(--texte-2); }
+.carte-retour small strong { color: var(--jaune-fort); }
+.revanche-retour { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: var(--r-l); background: linear-gradient(90deg, color-mix(in srgb, var(--rose) 22%, transparent), transparent); border: 1px solid color-mix(in srgb, var(--rose) 45%, transparent); font-weight: 800; animation: arrive var(--t-lent) var(--rebond) 1.4s both; }
+.revanche-retour strong { color: var(--bonbon); }
+.revanche-retour span { font-size: var(--txt-xl); }
+@media (prefers-reduced-motion: reduce) { .corps-griller.tape, .braise, .jauge-retour i { animation: none; } .jauge-retour i { width: var(--w); } }

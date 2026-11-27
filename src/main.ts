@@ -24,6 +24,7 @@ import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from '.
 import { jeuParId } from './games';
 import { vueJeu } from './ecrans/deroule';
 import { localJeu } from './memoireJeu';
+import { chargerRetour } from './accueilVivant';
 import { animerCompteurs, animerCourses, animerLoupes } from './animations';
 import { ecranTuto, marquerTutoVu, tutoDejaVu } from './ecrans/tuto';
 import { action, afficher, brouillons, installer, vibrer } from './ui';
@@ -688,6 +689,7 @@ if (!configManquante) {
   connexion()
     .then(async (u) => {
       S.uid = u.uid;
+      void chargerRetour(u.uid, demanderAffichage);
       const precedent = localStorage.getItem('grille:salon');
       const lien = codeDuLien();
       const prenom = localStorage.getItem('grille:prenom');

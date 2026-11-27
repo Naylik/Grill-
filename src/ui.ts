@@ -101,6 +101,8 @@ export function harmoniser(cible: Node, source: Node): void {
     }
     const oe = o as Element;
     const ne = n as Element;
+    // data-garder : élément animé par le code (Mallow à griller, carte à gratter) ; on le laisse tel quel.
+    if (oe.hasAttribute('data-garder') && ne.hasAttribute('data-garder')) return;
     const enTransition = oe.classList.contains('entree-ecran'); // ne pas couper la transition d'écran en cours
     // data-style-libre : le style de cet élément est piloté par le code pendant un geste (colis qu'on fait glisser,
     // puis qui s'envole). Un rafraîchissement de l'écran ne doit pas le remettre à sa place en plein mouvement.
