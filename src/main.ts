@@ -17,7 +17,7 @@ import { S, brancherAffichage, demanderAffichage, ecouterSalon, estHote, memoire
 import { commandeHote, commandeJeu, piloter } from './hote';
 import { effetsJoueur, momentsForts, repondre } from './effets';
 import { basculerSon, debloquer, sons } from './son';
-import { choisirMission, prendreMissionVengeance } from './missions';
+import { choisirMission, proposerMissionsVengeance } from './missions';
 import { ouvrirStudio, videosAutomatiques } from './ecrans/video';
 import { vengeancesVues } from './ecrans/missions';
 import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from './saison';
@@ -371,8 +371,8 @@ action('vengeance', async (el) => {
     await set(ref(db, `secrets/${S.code}/${S.uid}/vengeanceChoix`), 'non');
     return;
   }
-  const mission = await prendreMissionVengeance(S.code, S.uid, S.joueurs, choix, memoireDuGroupe());
-  if (!mission) {
+  const nb = await proposerMissionsVengeance(S.code, S.uid, S.joueurs, choix, memoireDuGroupe());
+  if (!nb) {
     await set(ref(db, `secrets/${S.code}/${S.uid}/vengeanceChoix`), 'non');
     montrerToast('Pas de mission de vengeance disponible, désolé !');
     return;
