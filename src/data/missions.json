@@ -750,5 +750,37 @@
     "niveau": "soft",
     "categorie": "Manipulation",
     "texte": "Fais en sorte que {cible} t’explique les règles de 2 mini-jeux différents."
+  },
+  {
+    "id": "v44",
+    "type": "vie",
+    "difficulte": "facile",
+    "niveau": "soft",
+    "categorie": "Faire faire un geste",
+    "texte": "Fais en sorte que {cible} te tende un objet (une serviette, une télécommande, un stylo…) sans que tu le lui demandes."
+  },
+  {
+    "id": "v45",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais trinquer {cible} avec toi 3 fois dans la soirée (n’importe quelle boisson), sans jamais le lui proposer directement."
+  },
+  {
+    "id": "v46",
+    "type": "vie",
+    "difficulte": "difficile",
+    "niveau": "soft",
+    "categorie": "Faire dire",
+    "texte": "Fais dire à {cible} le prénom de tous les joueurs de la table, à la suite, sans que ça paraisse bizarre."
+  },
+  {
+    "id": "v47",
+    "type": "vie",
+    "difficulte": "facile",
+    "niveau": "soft",
+    "categorie": "Faire faire un geste",
+    "texte": "Fais compter {cible} jusqu’à 10 à voix haute, pour n’importe quelle raison."
   }
 ]
