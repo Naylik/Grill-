@@ -531,3 +531,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   et lance une onde jaune pour inviter à la toucher ; sans texte « touche ») ; Créer / Rejoindre côte à côte (la case du
   code n'apparaît qu'après « Rejoindre ») ; « Liste des jeux » gardé tel quel, sous les boutons ; prénom d'exemple
   « Ex. : Léa ». Tout tient dans un écran de téléphone.
+- 27/11/2026 · « Liste des jeux » devient une vitrine simple (validée par Kilyan sur maquette) : principe en une
+  phrase (« jusqu'à 8 mini-jeux, parmi 12 ») et une grille de 12 tuiles (icône, nom, accroche). Les règles détaillées et
+  les points sont retirés (chaque jeu montre ses règles avant de commencer ; plus rien à tenir à jour ici).

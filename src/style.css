@@ -1351,3 +1351,10 @@ button.carte-s.c { font: inherit; cursor: pointer; }
 .duo-accueil { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .accueil .pile.bas > .bouton-liste { align-self: center; margin-top: 4px; }
 @media (prefers-reduced-motion: reduce) { .carte-s.c[data-gratter], .carte-s.c[data-gratter]::after { animation: none; } }
+/* Liste des jeux : vitrine (grille de 12 tuiles, une accroche chacune). */
+.grille-jeux { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tuile-jeu { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 12px; border-radius: var(--r-l); background: var(--fond-2); border: 1.5px solid color-mix(in srgb, var(--c) 55%, transparent); box-shadow: 0 0 18px -10px var(--c); animation: arrive var(--t-lent) var(--rebond) calc(var(--i) * 40ms) both; }
+.tuile-icone { width: 34px; height: 34px; border-radius: var(--r-s); display: grid; place-items: center; background: var(--c); color: var(--fond); }
+.tuile-icone svg { width: 20px; height: 20px; }
+.tuile-jeu h3 { margin: 0; font-family: var(--titre); font-weight: 800; font-size: var(--txt-m); line-height: 1.15; color: var(--c); overflow-wrap: anywhere; }
+.tuile-jeu p { margin: 0; font-size: var(--txt-s); font-weight: 600; line-height: 1.35; color: var(--texte-2); }
