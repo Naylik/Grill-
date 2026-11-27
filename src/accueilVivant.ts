@@ -22,6 +22,11 @@ let taps = 0;
 /** Après « Carbonisé ! », Mallow ne réagit plus pendant 1 s : on voit l'animation même en tapant très vite. */
 const PAUSE_CARBONISE = 1000;
 let bloqueJusqua = 0;
+/** Vibration à jouer quand le doigt se lève : Chrome (Android) ne l'autorise pas toujours au moment du toucher. */
+let vibrationEnAttente: number | number[] | null = null;
+const vibrerAuRelacher = (motif: number | number[]) => {
+  vibrationEnAttente = motif;
+};
 
 export function mallowAccueil(): string {
   return `<div class="flotte mallow-griller" data-griller data-garder role="button" aria-label="Griller Mallow">
@@ -72,7 +77,7 @@ function taperMallow(zone: HTMLElement): void {
     bulle(zone, '', 'fumee-griller');
     bulle(zone, 'PFFF…', 'pfff-griller');
     sons.pschhh();
-    vibrer(60);
+    vibrerAuRelacher(80);
     return;
   }
   taps++;
@@ -83,7 +88,7 @@ function taperMallow(zone: HTMLElement): void {
     ecraser();
     braises(zone, 2);
     sons.gresille(stade);
-    vibrer(12);
+    vibrerAuRelacher(35);
     return;
   }
   taps = 0;
@@ -94,7 +99,7 @@ function taperMallow(zone: HTMLElement): void {
     braises(zone, 7);
     bulle(zone, NOMS_CUISSON[STADES[stade]]);
     sons.cuit();
-    vibrer(35);
+    vibrerAuRelacher(60);
   } else {
     corps.innerHTML = mallowGrille({ taille: 132 });
     braises(zone, 14);
@@ -103,7 +108,7 @@ function taperMallow(zone: HTMLElement): void {
     bloqueJusqua = performance.now() + PAUSE_CARBONISE;
     sons.cuit();
     sons.gresille(3);
-    vibrer([40, 30, 80]);
+    vibrerAuRelacher([60, 40, 120]);
   }
   ecraser();
 }
@@ -180,7 +185,7 @@ function ouvrirCarte(carte: HTMLElement): void {
     if (vide / (d.length / 40) > 0.55) {
       cv.classList.add('fini');
       sons.ding();
-      vibrer(30);
+      vibrer(50);
       if (legende) legende.textContent = 'Une des 100 missions du jeu… Qui va se faire griller ce soir ?';
     }
   };
@@ -245,6 +250,12 @@ export function blocRetour(r: RetourJoueur): string {
 }
 
 // ——— Branchement ———
+
+document.addEventListener('pointerup', () => {
+  if (vibrationEnAttente === null) return;
+  vibrer(vibrationEnAttente);
+  vibrationEnAttente = null;
+});
 
 document.addEventListener('pointerdown', (e) => {
   const cible = e.target as HTMLElement;

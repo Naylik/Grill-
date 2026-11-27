@@ -509,3 +509,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   (harmoniser ne les touche plus). En attente : compteur de parties, Mallow vivant.
 - 27/11/2026 · Mallow à griller : après « Carbonisé ! », 1 s sans réaction aux taps, pour bien voir l'animation même en
   tapant très vite.
+- 27/11/2026 · Vibrations de l'accueil (Android) : jouées quand le doigt se lève (Chrome ne les autorise pas toujours
+  au toucher) et plus longues (35 à 120 ms au lieu de 12 ms, trop court pour être senti). iPhone : pas de vibration
+  possible depuis un site (limite d'Apple).
