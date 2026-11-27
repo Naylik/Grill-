@@ -77,7 +77,7 @@ function ecranChoixMissionNormal(): string {
   if (!propositions?.length) return `<h2>${titre}</h2><p class="attente">Tirage de tes missions…</p>`;
   return `<h2>${titre}</h2>
     <p class="aide gauche">${propositions[0]?.vengeance && propositions[0].cible
-      ? `Ta vengeance contre <strong>${esc(S.joueurs[propositions[0].cible]?.prenom ?? '?')}</strong> : garde une de ces missions, en secret. Elle vaut ×1,5… mais ta cible se méfie.`
+      ? `<strong>${esc(S.joueurs[propositions[0].cible]?.prenom ?? '?')}</strong> va regretter de t’avoir grillé. Choisis ta mission.`
       : 'Garde-en une, en secret : elle dure toute la soirée. Cache ton écran ! Pendant les jeux, tu recevras peut-être aussi des missions flash.'}</p>
     ${propositions.map((m, i) => carteMission(m, { bouton: `<button class="bouton ${m.difficulte === 'facile' ? 'cyan' : 'rose'}" data-action="choisirMission" data-index="${i}">Je prends celle-ci</button>` })).join('')}`;
 }

@@ -498,5 +498,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   v49 se faire dire « merci » 3 fois par {cible} dans la soirée (longue). 100 grosses missions.
 - 27/11/2026 · Vengeance (saisons) : le joueur qui se venge reçoit maintenant 2 missions qui visent sa cible (une
   longue durée et une plus courte quand c'est possible), au choix comme les autres, réservées dès la proposition,
-  ×1,5 ; avant, une seule mission imposée. La cible est comptée sans jamais être changée (`proposerMissionsVengeance`).
+  ×1,5 ; avant, une seule mission imposée. Phrase : « Manon va regretter de t’avoir grillé. Choisis ta mission. » La cible est comptée sans jamais être changée (`proposerMissionsVengeance`).
   Vérifié sur la table virtuelle.
