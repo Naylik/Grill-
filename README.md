@@ -512,3 +512,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 27/11/2026 · Vibrations de l'accueil (Android) : jouées quand le doigt se lève (Chrome ne les autorise pas toujours
   au toucher) et plus longues (35 à 120 ms au lieu de 12 ms, trop court pour être senti). iPhone : pas de vibration
   possible depuis un site (limite d'Apple).
+- 27/11/2026 · Retour du joueur (option 3 choisie par Kilyan) : une ligne compacte au-dessus des cartes (« Kilyan, ton
+  Mallow est Tiède · plus que 2 missions pour Doré », revanche en rose, fine jauge en bas) ; tout le monde garde la
+  carte à gratter.

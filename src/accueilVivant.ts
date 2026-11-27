@@ -231,21 +231,17 @@ export async function chargerRetour(uid: string, rafraichir: () => void): Promis
   }
 }
 
+/** Le retour du joueur, en une ligne compacte au-dessus des cartes (choix de Kilyan : tout le monde garde la carte). */
 export function blocRetour(r: RetourJoueur): string {
   const n = niveauCuisson(r.missions);
   const reste = avantPalierSuivant(r.missions);
-  const prochain = reste !== null ? NOMS_CUISSON[n + 1] : null;
-  // Avancement vers le palier suivant (plein au maximum).
   const paliers = PALIERS_CUISSON;
   const part = reste === null ? 1 : (r.missions - paliers[n]) / (paliers[n + 1] - paliers[n]);
-  return `<div class="retour-joueur">
-    <div class="carte-retour">
-      <span class="tete-retour">${mallow({ vue: 'tete', taille: 52, cuisson: n })}</span>
-      <b>Salut ${esc(r.prenom)} ! Ton Mallow est <em>${NOMS_CUISSON[n]}</em></b>
-      <div class="jauge-retour" style="--w:${Math.round(part * 100)}%"><i></i></div>
-      <small>${prochain ? `Plus que ${reste} mission${reste! > 1 ? 's' : ''} réussie${reste! > 1 ? 's' : ''} pour passer <strong>${prochain}</strong>` : 'Cuisson maximale atteinte !'} · Saison « ${esc(r.nomSaison)} »</small>
-    </div>
-    ${r.revanche ? `<div class="revanche-retour"><span aria-hidden="true">😤</span><div>La dernière fois, <strong>${esc(r.revanche)}</strong> t’a grillé… Revanche ce soir ?</div></div>` : ''}
+  const suite = reste === null ? 'cuisson maximale !' : `plus que ${reste} mission${reste > 1 ? 's' : ''} pour <strong>${NOMS_CUISSON[n + 1]}</strong>`;
+  return `<div class="retour-joueur" title="Saison « ${esc(r.nomSaison)} »">
+    <span class="tete-retour">${mallow({ vue: 'tete', taille: 30, cuisson: n })}</span>
+    <span class="texte-retour">${esc(r.prenom)}, ton Mallow est <em>${NOMS_CUISSON[n]}</em> · ${suite}${r.revanche ? `<br><b class="revanche-retour">${esc(r.revanche)} t’a grillé… Revanche ce soir ?</b>` : ''}</span>
+    <span class="jauge-retour" style="--w:${Math.round(part * 100)}%" aria-hidden="true"><i></i></span>
   </div>`;
 }
 

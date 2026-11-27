@@ -16,7 +16,8 @@ export function ecranAccueil(codeLien: string | null): string {
       ${logo()}
       <p class="slogan">Qui va se faire griller ?</p>
     </div>
-    ${(() => { const r = retourJoueur(); return r ? blocRetour(r) : cartesAccueil(); })()}
+    ${(() => { const r = retourJoueur(); return r ? blocRetour(r) : ''; })()}
+    ${cartesAccueil()}
     <button class="bouton-liste" data-action="vueAccueil" data-valeur="jeux">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
       Liste des jeux

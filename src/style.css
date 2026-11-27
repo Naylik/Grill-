@@ -1312,18 +1312,13 @@ button.carte-s.c { font: inherit; cursor: pointer; }
 .mission-grat b { font-size: var(--txt-m); font-weight: 800; line-height: 1.25; }
 .carte-s.grat canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; transition: opacity var(--t-lent); }
 .carte-s.grat canvas.fini { opacity: 0; pointer-events: none; }
-/* Retour du joueur : la cuisson de son Mallow dans la saison, et la revanche. */
-.retour-joueur { display: grid; gap: 8px; }
-.carte-retour { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: center; padding: 12px 14px; border-radius: var(--r-l); background: var(--fond-2); border: 1px solid var(--bord); animation: arrive var(--t-lent) var(--rebond) both; }
-.tete-retour { grid-row: span 3; line-height: 0; }
-.carte-retour b { font-weight: 800; }
-.carte-retour em { font-style: normal; color: var(--jaune-fort); }
-.jauge-retour { height: 8px; border-radius: var(--r-rond); background: var(--voile-1); overflow: hidden; }
-.jauge-retour i { display: block; height: 100%; width: 0; border-radius: var(--r-rond); background: linear-gradient(90deg, var(--jaune), var(--feu)); animation: jauge-retour 1.2s ease-out .5s forwards; }
+/* Retour du joueur : une ligne compacte au-dessus des cartes, avec une fine jauge vers le stade suivant. */
+.retour-joueur { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; padding: 8px 12px 12px; border-radius: var(--r-m); background: var(--fond-2); border: 1px solid var(--bord); font-size: var(--txt-s); font-weight: 700; color: var(--texte-2); overflow: hidden; animation: arrive var(--t-lent) var(--rebond) both; }
+.tete-retour { line-height: 0; }
+.texte-retour em { font-style: normal; color: var(--jaune-fort); font-weight: 800; }
+.texte-retour strong { color: var(--texte); }
+.revanche-retour { color: var(--bonbon); font-weight: 800; }
+.jauge-retour { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--voile-1); }
+.jauge-retour i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--jaune), var(--feu)); animation: jauge-retour 1.2s ease-out .5s forwards; }
 @keyframes jauge-retour { to { width: var(--w); } }
-.carte-retour small { font-size: var(--txt-xs); font-weight: 700; color: var(--texte-2); }
-.carte-retour small strong { color: var(--jaune-fort); }
-.revanche-retour { display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: var(--r-l); background: linear-gradient(90deg, color-mix(in srgb, var(--rose) 22%, transparent), transparent); border: 1px solid color-mix(in srgb, var(--rose) 45%, transparent); font-weight: 800; animation: arrive var(--t-lent) var(--rebond) 1.4s both; }
-.revanche-retour strong { color: var(--bonbon); }
-.revanche-retour span { font-size: var(--txt-xl); }
 @media (prefers-reduced-motion: reduce) { .corps-griller.tape, .braise, .jauge-retour i { animation: none; } .jauge-retour i { width: var(--w); } }
