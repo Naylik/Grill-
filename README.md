@@ -515,3 +515,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 27/11/2026 · Retour du joueur (option 3 choisie par Kilyan) : une ligne compacte au-dessus des cartes (« Kilyan, ton
   Mallow est Tiède · plus que 2 missions pour Doré », revanche en rose, fine jauge en bas) ; tout le monde garde la
   carte à gratter.
+- 27/11/2026 · Carte à gratter : phrase après la révélation « Ça, c'est une grosse mission. Pendant les jeux, des
+  missions flash peuvent tomber à tout moment… » (l'ancienne répétait le slogan).

@@ -186,7 +186,7 @@ function ouvrirCarte(carte: HTMLElement): void {
       cv.classList.add('fini');
       sons.ding();
       vibrer(50);
-      if (legende) legende.textContent = 'Une des 100 missions du jeu… Qui va se faire griller ce soir ?';
+      if (legende) legende.textContent = 'Ça, c’est une grosse mission. Pendant les jeux, des missions flash peuvent tomber à tout moment…';
     }
   };
   cv.addEventListener('pointerdown', (e) => {
