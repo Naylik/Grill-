@@ -742,5 +742,13 @@
     "niveau": "soft",
     "categorie": "Manipulation",
     "texte": "Fais lire à voix haute les règles d’un mini-jeu à {cible}, pour toute la table."
+  },
+  {
+    "id": "j44",
+    "type": "jeu",
+    "difficulte": "difficile",
+    "niveau": "soft",
+    "categorie": "Manipulation",
+    "texte": "Fais en sorte que {cible} t’explique les règles de 2 mini-jeux différents."
   }
 ]
