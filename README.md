@@ -517,3 +517,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   carte à gratter.
 - 27/11/2026 · Carte à gratter : phrase après la révélation « Ça, c'est une grosse mission. Pendant les jeux, des
   missions flash peuvent tomber à tout moment… » (l'ancienne répétait le slogan).
+- 27/11/2026 · Vocabulaire (choix de Kilyan) : « grosse mission » devient « mission principale » partout dans le jeu
+  (accueil, carte à gratter, choix de mission, règles, GRILLÉ !, pari détective, révélations, classement, vidéo).
+  Les anciennes entrées de ce README gardent l'ancien terme.

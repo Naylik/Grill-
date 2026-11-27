@@ -20,7 +20,7 @@ export function choisirPropositions(opts: {
 }): MissionTiree[] {
   const hasard = opts.hasard ?? Math.random;
   const ok = (m: Mission) =>
-    // Une seule grosse mission par soirée : le type (vie / jeu) ne compte plus.
+    // Une seule mission principale par soirée : le type (vie / jeu) ne compte plus.
     NIVEAUX_AUTORISES[opts.niveau].includes(m.niveau) && !opts.prises.has(m.id) && !opts.exclues.includes(m.id);
   const ciblesLibres = melanger(opts.cibles.filter((c) => c.fois < 2), hasard).sort((a, b) => a.fois - b.fois);
   const res: MissionTiree[] = [];
@@ -55,7 +55,7 @@ async function etatTirage(code: string, uid: string, joueurs: Record<string, Jou
   return { prises, cibles };
 }
 
-/** Tire et enregistre (en secret) les 2 propositions de grosse mission du joueur, si ce n'est pas déjà fait. */
+/** Tire et enregistre (en secret) les 2 propositions de mission principale du joueur, si ce n'est pas déjà fait. */
 export async function preparerPropositions(code: string, uid: string, joueurs: Record<string, Joueur>, secrets: Secrets, dejaJouees: Record<string, boolean> = {}): Promise<void> {
   const cle = 'propositions1';
   if (secrets[cle]?.length) return;

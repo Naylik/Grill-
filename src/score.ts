@@ -3,12 +3,12 @@ import type { Difficulte, Score } from './types';
 
 /** Points de place : 1er 5, 2e 3, 3e 2, au-delà 1. Les ex aequo reçoivent les mêmes points. */
 export const POINTS_PLACE = [5, 3, 2];
-/** Grosse mission (format normal, 6 jeux). Court ×4/6, long ×8/6 : une mission longue ≈ gagner la moitié des jeux. */
+/** Mission principale (format normal, 6 jeux). Court ×4/6, long ×8/6 : une mission longue ≈ gagner la moitié des jeux. */
 export const POINTS_MISSION: Record<Difficulte, number> = { facile: 6, difficile: 10, longue: 15 };
 /** Vol du bouton GRILLÉ ! (ou du pari détective) : à peu près la moitié de la mission. */
 export const VOL_DETECTIVE: Record<Difficulte, number> = { facile: 3, difficile: 5, longue: 8 };
 export const BONUS_VENGEANCE = 1.5;
-/** Points d'une grosse mission selon le format de la soirée (4, 6 ou 8 jeux). */
+/** Points d'une mission principale selon le format de la soirée (4, 6 ou 8 jeux). */
 export const pointsGrosse = (d: Difficulte, duree = 6, vengeance = false): number =>
   Math.round(POINTS_MISSION[d] * (duree / 6) * (vengeance ? BONUS_VENGEANCE : 1));
 /** Au Parieur (vrais points), un joueur ne peut ni gagner ni perdre plus que ça sur le jeu entier. */

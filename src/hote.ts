@@ -310,7 +310,7 @@ function bilanFinal(): Ecritures {
   const compte = (f: (u: string) => number) => uids().map((u) => ({ u, n: f(u) }));
   for (const u of uids()) {
     const reussies = missions[u].filter((m) => m.reussie);
-    if (reussies.length) enPlus.push({ uid: u, titre: 'Agent secret', pourquoi: 'grosse mission réussie', force: pts.missions[u] ?? 0 });
+    if (reussies.length) enPlus.push({ uid: u, titre: 'Agent secret', pourquoi: 'mission principale réussie', force: pts.missions[u] ?? 0 });
     if (reussies.some((m) => m.vengeance)) enPlus.push({ uid: u, titre: 'Vengeur', pourquoi: 'mission de vengeance réussie', force: 1 });
   }
   const meilleurJeux = Math.max(...uids().map((u) => scores[u].jeux ?? 0));
@@ -408,7 +408,7 @@ export async function commandeHote(valeur: string): Promise<void> {
   const d = S.deroule;
   let e: Ecritures | null = null;
   if (valeur === 'suivant' && d.phase === 'classement') {
-    // Une seule grosse mission par soirée : plus de 2e mission à la mi-partie.
+    // Une seule mission principale par soirée : plus de 2e mission à la mi-partie.
     if (d.numeroJeu >= S.infos.duree) e = { 'deroule/phase': 'detective', reponses: null, attente: null };
     else e = entrerChoixJeu(d.numeroJeu + 1);
   } else if (d.phase === 'revelation' && d.revelation) {

@@ -186,7 +186,7 @@ export function ecranClassement(): string {
     ${d.dernierJeu?.resume ? `<p class="aide gauche">${esc(d.dernierJeu.resume)}</p>` : ''}
     <h2>Classement provisoire</h2>
     <div class="pile">${lignes}</div>
-    <p class="aide">⚡ = mission flash réussie. Les points des grosses missions tombent à la fin.</p>
+    <p class="aide">⚡ = mission flash réussie. Les points des missions principales tombent à la fin.</p>
     ${d.vanne ? bulle(esc(d.vanne)) : ''}
     <button class="rappel" data-action="onglet" data-valeur="missions">${rappel.texte}</button>
     ${boutonsVideo({ numeroJeu: d.numeroJeu })}
@@ -214,11 +214,11 @@ export function ecranDetective(): string {
   const cible = brouillons.cible;
   const autres = uids().filter((u) => u !== S.uid);
   return `<h2>Pari détective</h2>
-    <p class="aide gauche">Devine la <strong>grosse mission</strong> d’un joueur, celle de toute la soirée, et écris-la en secret. Les missions flash ne comptent pas : elles ont déjà été révélées après chaque jeu.</p>
+    <p class="aide gauche">Devine la <strong>mission principale</strong> d’un joueur, celle de toute la soirée, et écris-la en secret. Les missions flash ne comptent pas : elles ont déjà été révélées après chaque jeu.</p>
     <p class="aide gauche"><strong>Juste</strong> : tu lui voles ${VOL_DETECTIVE.facile}, ${VOL_DETECTIVE.difficile} ou ${VOL_DETECTIVE.longue} pts (mission facile, difficile ou longue). <strong>Raté</strong> : −${-PARI_RATE} pts.</p>
     <div class="options deux">${autres.map((u) => `<button class="option ${cible === u ? 'actif jaune' : ''}" data-action="choisirCible" data-valeur="${u}">${nom(u)}</button>`).join('')}</div>
     ${cible ? flashsDejaRevelees(cible) : ''}
-    <label class="champ"><span>Sa grosse mission, à ton avis</span>
+    <label class="champ"><span>Sa mission principale, à ton avis</span>
       <textarea name="pari" rows="3" maxlength="160" placeholder="Il ou elle devait me faire dire « t’as raison »…">${esc(brouillons.pari ?? '')}</textarea></label>
     <div class="pile bas">
       <button class="bouton jaune" data-action="parier" ${cible ? '' : 'disabled'}>Valider mon pari</button>
@@ -249,7 +249,7 @@ export function ecranRevelation(): string {
   }
   const grillees = missionsGrillees(S.accusations, sujet);
   const marqueGrillee = (n: number) => `<div class="verdict grille"><strong>Grillée en direct par ${nom(grillees[n])}</strong><span>ratée</span></div>`;
-  const cartes = missions.map((m, i) => `<p class="intitule">${missions.length > 1 ? `Mission ${i + 1}` : 'Sa grosse mission'}</p>${carteMission({ ...m, id: '', type: m.type as 'vie' | 'jeu' })}${grillees[i + 1] ? marqueGrillee(i + 1) : ''}`);
+  const cartes = missions.map((m, i) => `<p class="intitule">${missions.length > 1 ? `Mission ${i + 1}` : 'Sa mission principale'}</p>${carteMission({ ...m, id: '', type: m.type as 'vie' | 'jeu' })}${grillees[i + 1] ? marqueGrillee(i + 1) : ''}`);
 
   if (r.etape === 'recit') {
     // Pas de chrono : on raconte, on rit, on débat… puis le joueur révélé lance le vote (l'hôte peut aussi).
@@ -273,8 +273,8 @@ export function ecranRevelation(): string {
     const blocs = (r.paris ?? []).map((p) => {
       const peutVoter = S.uid !== p.de && S.uid !== sujet;
       return `<div class="boite"><p><strong>${nom(p.de)}</strong> pense que ${nom(sujet)} devait :</p><p class="texte-mission">« ${esc(p.texte)} »</p>
-        ${peutVoter ? `<p class="aide gauche">C’est sa grosse mission ?</p>${boutonsVote(`d-${p.de}`, [
-          ...missions.map((_, i) => ({ valeur: String(i + 1), texte: missions.length > 1 ? `Oui, sa mission ${i + 1}` : 'Oui, c’est sa grosse mission', couleur: 'vert' })),
+        ${peutVoter ? `<p class="aide gauche">C’est sa mission principale ?</p>${boutonsVote(`d-${p.de}`, [
+          ...missions.map((_, i) => ({ valeur: String(i + 1), texte: missions.length > 1 ? `Oui, sa mission ${i + 1}` : 'Oui, c’est sa mission principale', couleur: 'vert' })),
           { valeur: '0', texte: 'À côté', couleur: 'rose' },
         ])}` : `<p class="aide">${S.uid === p.de ? 'C’est ton pari : les autres jugent.' : 'Les autres jugent.'}</p>`}</div>`;
     });

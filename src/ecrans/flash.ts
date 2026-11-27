@@ -40,7 +40,7 @@ export function ecranFlash(): string {
     const uids = Object.entries(S.joueurs).sort((a, b) => a[1].rejointLe - b[1].rejointLe).map(([u]) => u);
     return `<h2 class="titre-flash">Dernière chance !</h2>
       ${chrono(f.fin)}
-      <p class="consigne-tele">Quelqu’un avait peut-être une mission flash pendant ce jeu… ou fait sa grosse mission en douce.</p>
+      <p class="consigne-tele">Quelqu’un avait peut-être une mission flash pendant ce jeu… ou fait sa mission principale en douce.</p>
       <p class="aide">Appuie sur <strong>GRILLÉ !</strong> en bas à droite pour l’accuser. Vu juste : tu lui voles des points. Raté : −2 pts.</p>
       <div class="pile bas">
         ${passe ? '<p class="attente">Rien à signaler. On attend les autres…</p>' : '<button class="bouton discret" data-action="passerGrillage">Rien à signaler</button>'}

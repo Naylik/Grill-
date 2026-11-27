@@ -19,7 +19,7 @@ export const PENALITE_MENSONGE = 3;
 const JEUX_ACTION: Record<string, string[]> = { reflexe: ['attente'], timing: ['chrono'], patate: ['jeu'], telephone: ['etape'], mines: ['pose', 'tour'], territoires: ['roue'], telepathie: ['decompte', 'mot'] };
 
 export interface MissionDevoilee {
-  numero: number; // 1 = la grosse mission ; 100 + numéro du jeu = une mission flash
+  numero: number; // 1 = la mission principale ; 100 + numéro du jeu = une mission flash
   texte: string;
   difficulte: Difficulte;
 }

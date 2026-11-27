@@ -129,7 +129,7 @@ export function cartesAccueil(): string {
     <button class="carte-s c" data-gratter aria-label="Gratter une mission secrète">${ICONE_CADENAS}<span>TOP SECRET</span></button>
     <div class="carte-s d" aria-hidden="true"><i></i><i style="width:60%"></i><i style="width:80%"></i></div>
   </div>
-  <p class="legende-cartes">1 grosse mission + des missions flash t’attendent</p>
+  <p class="legende-cartes">1 mission principale + des missions flash t’attendent</p>
 </div>`;
 }
 
@@ -186,7 +186,7 @@ function ouvrirCarte(carte: HTMLElement): void {
       cv.classList.add('fini');
       sons.ding();
       vibrer(50);
-      if (legende) legende.textContent = 'Ça, c’est une grosse mission. Pendant les jeux, des missions flash peuvent tomber à tout moment…';
+      if (legende) legende.textContent = 'Ça, c’est une mission principale. Pendant les jeux, des missions flash peuvent tomber à tout moment…';
     }
   };
   cv.addEventListener('pointerdown', (e) => {

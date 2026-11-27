@@ -1,6 +1,6 @@
 // Vidéos « Grillé ! » à partager (format story 9:16) : fabriquées sur le téléphone, sans serveur.
 // Une toile est dessinée image par image, filmée (MediaRecorder) avec les bruitages de l'appli, puis partagée.
-//  - A · Récap de la soirée (≈ 35 s) : logo, podium, grosses missions révélées, titres, fin.
+//  - A · Récap de la soirée (≈ 35 s) : logo, podium, missions principales révélées, titres, fin.
 //  - B · Moment GRILLÉ ! (≈ 12 s) : l'accusation, Mallow qui prend feu, la mission démasquée.
 import { mallow, mallowGrille } from './mallow';
 import { formatVideo } from './formatVideo';
@@ -221,7 +221,7 @@ async function videoRecap(d: DonneesRecap): Promise<Video> {
           c.restore();
         });
       }
-      // Grosses missions.
+      // Missions principales.
       missions.forEach((m, i) => {
         const debut = tM + i * DM;
         const am = opaciteScene(t, debut, DM);

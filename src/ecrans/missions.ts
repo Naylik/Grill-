@@ -66,7 +66,7 @@ function ecranChoixMissionNormal(): string {
   const uids = Object.keys(S.joueurs);
   const prets = S.attente?.etape === 'mission1' ? S.attente.uids ?? [] : [];
   const forcer = estHote() ? `<button class="bouton discret" data-action="hote" data-valeur="forcer">Continuer sans attendre</button>` : '';
-  const titre = 'Ta grosse mission';
+  const titre = 'Ta mission principale';
   if (choisie) {
     return `<h2>${titre}</h2>
       ${bulle('Mission acceptée. Maintenant, sois naturel. Enfin, essaie.')}
@@ -90,7 +90,7 @@ export function ongletMissions(): string {
     <h2>Mes missions</h2>
     ${alerteVengeance()}
     ${flash ? `<p class="intitule">⚡ Mission flash (ce jeu)</p><article class="mission flash"><div class="tags"><span class="tag eclair">Flash · +${POINTS_FLASH} pts</span></div><p class="texte-secret" data-appui>${esc(flash.texte)}</p><p class="aide">Appuie longtemps pour lire</p></article>` : ''}
-    ${liste.length ? liste.map((m, i) => `<p class="intitule">${i === 0 ? 'Grosse mission (toute la soirée)' : 'Mission 2'}</p>${carteMission(m, { secret: true })}`).join('') : '<p class="attente">Pas encore de mission. Elle arrive au début de la partie.</p>'}
+    ${liste.length ? liste.map((m, i) => `<p class="intitule">${i === 0 ? 'Mission principale (toute la soirée)' : 'Mission 2'}</p>${carteMission(m, { secret: true })}`).join('') : '<p class="attente">Pas encore de mission. Elle arrive au début de la partie.</p>'}
     ${flash ? '' : '<p class="aide">Pendant les jeux, tu peux recevoir une mission flash : ton téléphone vibre.</p>'}
   </section>`;
 }
