@@ -494,3 +494,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   (facile), v45 trinquer 3 fois avec {cible} dans la soirée, n'importe quelle boisson (longue), v46 faire dire à
   {cible} le prénom de tous les joueurs, subtilement (difficile), v47 faire compter {cible} jusqu'à 10 (facile).
   98 grosses missions.
+- 27/11/2026 · 2 grosses missions inspirées du Killer : v48 faire dire son nom de famille par {cible} (difficile),
+  v49 se faire dire « merci » 3 fois par {cible} dans la soirée (longue). 100 grosses missions.

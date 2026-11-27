@@ -782,5 +782,21 @@
     "niveau": "soft",
     "categorie": "Faire faire un geste",
     "texte": "Fais compter {cible} jusqu’à 10 à voix haute, pour n’importe quelle raison."
+  },
+  {
+    "id": "v48",
+    "type": "vie",
+    "difficulte": "difficile",
+    "niveau": "soft",
+    "categorie": "Faire dire",
+    "texte": "Fais dire ton nom de famille à voix haute par {cible}."
+  },
+  {
+    "id": "v49",
+    "type": "vie",
+    "difficulte": "longue",
+    "niveau": "soft",
+    "categorie": "Longue durée",
+    "texte": "Fais en sorte que {cible} te dise « merci » 3 fois dans la soirée."
   }
 ]
