@@ -540,3 +540,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   L'ancien texte du pari détective (« 4 ou 6 pts ») était faux : c'est 3, 5 ou 8.
 - 27/11/2026 · Liste des jeux : le paragraphe de résumé des règles (mission principale, missions flash, mini-jeux, pari
   détective) est remis sous le tableau des points, avec les chiffres lus dans le barème (`resumeRegles`).
+- 27/11/2026 · Tableau des points plus lisible : chiffres en gros et en jaune, « (soirée de 6 jeux) » retiré,
+  « Menteur démasqué » devient « Mentir quand on te grille » avec une explication, « Vengeance » expliquée (saison).

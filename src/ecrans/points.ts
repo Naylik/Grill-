@@ -14,17 +14,18 @@ export function lignePointsJeu(idJeu: string): string {
   return `<p class="points-jeu">🏆 Pour la soirée : ${texte}</p>`;
 }
 
-/** Le tableau « Les points » de la liste des jeux. */
+/** Le tableau « Les points » de la liste des jeux. Les chiffres sont en gras jaune (classe .pt). */
 export function tableauPoints(): string {
   const v = VOL_DETECTIVE;
+  const pt = (n: number | string) => `<b class="pt">${n}</b>`;
   const lignes: [string, string][] = [
-    ['Mini-jeu', `${PLACES} (au Parieur : les points misés)`],
-    ['Mission principale réussie', `facile ${POINTS_MISSION.facile} · difficile ${POINTS_MISSION.difficile} · longue durée ${POINTS_MISSION.longue} (soirée de 6 jeux)`],
-    ['Mission flash réussie', `+${POINTS_FLASH}`],
-    ['GRILLÉ ! vu juste', `tu voles ${VOL_FLASH} (flash) ou ${v.facile} à ${v.longue} (principale) · raté : −${PENALITE_ACCUSATION}`],
-    ['Pari détective juste', `tu voles ${v.facile}, ${v.difficile} ou ${v.longue} selon la mission · raté : −${-PARI_RATE}`],
-    ['Menteur démasqué', `−${PENALITE_MENSONGE}`],
-    ['Vengeance (saisons)', `mission principale ×${String(BONUS_VENGEANCE).replace('.', ',')}`],
+    ['Mini-jeu', `1er ${pt(POINTS_PLACE[0])} · 2e ${pt(POINTS_PLACE[1])} · 3e ${pt(POINTS_PLACE[2])} · les autres ${pt(1)}<br><small>Au Parieur : les points misés</small>`],
+    ['Mission principale réussie', `facile ${pt(POINTS_MISSION.facile)} · difficile ${pt(POINTS_MISSION.difficile)} · longue durée ${pt(POINTS_MISSION.longue)}`],
+    ['Mission flash réussie', pt(`+${POINTS_FLASH}`)],
+    ['GRILLÉ ! vu juste', `tu lui voles ${pt(VOL_FLASH)} (flash) ou ${pt(`${v.facile} à ${v.longue}`)} (principale)<br><small>Accusation ratée : ${pt(`−${PENALITE_ACCUSATION}`)}</small>`],
+    ['Pari détective juste', `tu lui voles ${pt(v.facile)}, ${pt(v.difficile)} ou ${pt(v.longue)} selon sa mission<br><small>Pari raté : ${pt(`−${-PARI_RATE}`)}</small>`],
+    ['Mentir quand on te grille', `${pt(`−${PENALITE_MENSONGE}`)}<br><small>Tu as répondu « raté » alors que c’était bien ta mission, et le groupe le découvre à la fin</small>`],
+    ['Vengeance', `mission principale ${pt(`×${String(BONUS_VENGEANCE).replace('.', ',')}`)}<br><small>Dans une saison (plusieurs soirées entre les mêmes amis), celui qui s’est fait griller peut se venger à la soirée suivante</small>`],
   ];
   return `<div class="tableau-points">
     <h2>Les points</h2>
