@@ -538,3 +538,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   « 🏆 Pour la soirée : 1er 5 · 2e 3 · 3e 2 · les autres 1 pts » (Parieur : points misés) sur l'écran des règles de
   chaque mini-jeu. Les chiffres sont lus dans le code du barème (`src/ecrans/points.ts`) : ils suivront les changements.
   L'ancien texte du pari détective (« 4 ou 6 pts ») était faux : c'est 3, 5 ou 8.
+- 27/11/2026 · Liste des jeux : le paragraphe de résumé des règles (mission principale, missions flash, mini-jeux, pari
+  détective) est remis sous le tableau des points, avec les chiffres lus dans le barème (`resumeRegles`).

@@ -3,7 +3,7 @@
 import { JEUX } from '../games';
 import { esc } from '../outils';
 import { mallow } from '../mallow';
-import { tableauPoints } from './points';
+import { resumeRegles, tableauPoints } from './points';
 
 export function ecranListeJeux(): string {
   const tuiles = JEUX.map(
@@ -24,6 +24,7 @@ export function ecranListeJeux(): string {
     </div>
     <div class="grille-jeux">${tuiles}</div>
     ${tableauPoints()}
+    ${resumeRegles()}
     <button class="bouton jaune" data-action="vueAccueil" data-valeur="accueil">C’est parti</button>
   </section>`;
 }
