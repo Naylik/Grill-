@@ -507,3 +507,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   autre ») ; retour du joueur (dernière saison de ce téléphone : cuisson de son Mallow, jauge vers le stade suivant,
   revanche s'il s'est fait griller), affiché à la place des cartes. Les éléments animés sont marqués `data-garder`
   (harmoniser ne les touche plus). En attente : compteur de parties, Mallow vivant.
+- 27/11/2026 · Mallow à griller : après « Carbonisé ! », 1 s sans réaction aux taps, pour bien voir l'animation même en
+  tapant très vite.

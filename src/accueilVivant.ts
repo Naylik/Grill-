@@ -19,6 +19,9 @@ const STADES = [2, 3, 4];
 
 let stade = 0; // index dans STADES ; STADES.length = carbonisé
 let taps = 0;
+/** Après « Carbonisé ! », Mallow ne réagit plus pendant 1 s : on voit l'animation même en tapant très vite. */
+const PAUSE_CARBONISE = 1000;
+let bloqueJusqua = 0;
 
 export function mallowAccueil(): string {
   return `<div class="flotte mallow-griller" data-griller data-garder role="button" aria-label="Griller Mallow">
@@ -49,6 +52,7 @@ function bulle(zone: HTMLElement, texte: string, classe = 'etiq-cuisson'): void 
 }
 
 function taperMallow(zone: HTMLElement): void {
+  if (performance.now() < bloqueJusqua) return;
   const corps = zone.querySelector<HTMLElement>('.corps-griller')!;
   const jauge = zone.querySelector<HTMLElement>('.jauge-cuisson')!;
   const ecraser = () => {
@@ -96,6 +100,7 @@ function taperMallow(zone: HTMLElement): void {
     braises(zone, 14);
     jauge.classList.remove('on');
     bulle(zone, 'Carbonisé !', 'etiq-cuisson carbonise');
+    bloqueJusqua = performance.now() + PAUSE_CARBONISE;
     sons.cuit();
     sons.gresille(3);
     vibrer([40, 30, 80]);
