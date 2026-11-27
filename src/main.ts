@@ -38,7 +38,7 @@ import { esc, normaliserCode, nettoyerPrenom } from './outils';
 import { copier, imagePodium, partager } from './partage';
 import { totalFinal } from './score';
 import { ErreurSalon, MIN_JOUEURS, changerReglages, creerSalon, quitterSalon, rejoindreSalon } from './salon';
-import { ecranAccueil } from './ecrans/accueil';
+import { ecranAccueil, montrerCode } from './ecrans/accueil';
 import { ecranListeJeux } from './ecrans/jeux';
 import { ecranSalon, lienSalon } from './ecrans/salon';
 import { ecranPartie } from './ecrans/partie';
@@ -174,6 +174,12 @@ action('creer', async (el) => {
   } catch (e) {
     signalerErreur(e);
   }
+});
+
+action('montrerCode', () => {
+  montrerCode();
+  demanderAffichage();
+  requestAnimationFrame(() => document.querySelector<HTMLInputElement>('input[name="code"]')?.focus());
 });
 
 action('rejoindre', async (el) => {

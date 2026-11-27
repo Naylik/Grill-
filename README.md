@@ -526,3 +526,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   espace insécable normale (l'espace fine n'existe pas dans la police Unbounded ; corrige aussi le Juste Prix).
   ⚠️ Nouvelle règle « stats » à publier dans la console Firebase.
 - 27/11/2026 · Compteur de l'accueil : « 🔥 N parties lancées » (au lieu de « soirées grillées », choix de Kilyan).
+- 27/11/2026 · Accueil aéré et simplifié (validé par Kilyan) : slogan « Qui va se faire griller ? » retiré, remplacé
+  par « Missions secrètes et mini-jeux, chacun sur son téléphone. » ; phrase sous les cartes retirée (la carte frétille
+  et lance une onde jaune pour inviter à la toucher ; sans texte « touche ») ; Créer / Rejoindre côte à côte (la case du
+  code n'apparaît qu'après « Rejoindre ») ; « Liste des jeux » gardé tel quel, sous les boutons ; prénom d'exemple
+  « Ex. : Léa ». Tout tient dans un écran de téléphone.

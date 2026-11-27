@@ -130,7 +130,7 @@ export function cartesAccueil(): string {
     <button class="carte-s c" data-gratter aria-label="Gratter une mission secrète">${ICONE_CADENAS}<span>TOP SECRET</span></button>
     <div class="carte-s d" aria-hidden="true"><i></i><i style="width:60%"></i><i style="width:80%"></i></div>
   </div>
-  <p class="legende-cartes">1 mission principale + des missions flash t’attendent</p>
+  <p class="legende-cartes"></p>
 </div>`;
 }
 
@@ -163,7 +163,6 @@ function ouvrirCarte(carte: HTMLElement): void {
   let dernier: [number, number] | null = null;
   let dernierSon = 0;
   const legende = carte.closest('.cartes-secretes')?.querySelector<HTMLElement>('.legende-cartes');
-  if (legende) legende.textContent = 'Gratte la carte…';
   const pos = (e: PointerEvent): [number, number] => {
     const r = cv.getBoundingClientRect();
     return [((e.clientX - r.left) * 500) / r.width, ((e.clientY - r.top) * 300) / r.height];

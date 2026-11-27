@@ -1339,3 +1339,15 @@ button.carte-s.c { font: inherit; cursor: pointer; }
 .plus-soirees.on { animation: plus-soirees 1.4s ease-out; }
 @keyframes plus-soirees { 0% { opacity: 0; transform: translateY(6px); } 20% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-12px); } }
 @media (prefers-reduced-motion: reduce) { .corps-griller .yeux, .live-soirees { animation: none; } }
+/* Accueil aéré (27/11) : phrase d'explication, carte qui appelle le doigt, Créer / Rejoindre côte à côte. */
+.accueil { gap: 22px; }
+.pitch-accueil { margin: 4px auto 0; max-width: 30ch; text-align: center; font-size: var(--txt-m); font-weight: 600; line-height: 1.4; color: var(--texte-2); }
+.compteur-soirees { margin-top: 6px; }
+.legende-cartes:empty { display: none; }
+.carte-s.c[data-gratter] { position: relative; animation: eventail .7s var(--rebond) .9s both, respire 2.4s ease-in-out 1.8s infinite, appel-carte 3.2s ease-in-out 2.5s infinite; }
+.carte-s.c[data-gratter]::after { content: ''; position: absolute; inset: -6px; border-radius: calc(var(--r-m) + 4px); border: 2px solid var(--jaune); opacity: 0; pointer-events: none; animation: onde-carte 2.4s ease-out 2s infinite; }
+@keyframes appel-carte { 0%, 80%, 100% { rotate: 0deg; } 84% { rotate: -6deg; } 88% { rotate: 6deg; } 92% { rotate: -3deg; } }
+@keyframes onde-carte { 0% { opacity: .8; transform: scale(.95); } 100% { opacity: 0; transform: scale(1.18); } }
+.duo-accueil { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.accueil .pile.bas > .bouton-liste { align-self: center; margin-top: 4px; }
+@media (prefers-reduced-motion: reduce) { .carte-s.c[data-gratter], .carte-s.c[data-gratter]::after { animation: none; } }
