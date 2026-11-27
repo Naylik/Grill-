@@ -534,3 +534,7 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 27/11/2026 · « Liste des jeux » devient une vitrine simple (validée par Kilyan sur maquette) : principe en une
   phrase (« jusqu'à 8 mini-jeux, parmi 12 ») et une grille de 12 tuiles (icône, nom, accroche). Les règles détaillées et
   les points sont retirés (chaque jeu montre ses règles avant de commencer ; plus rien à tenir à jour ici).
+- 27/11/2026 · Les points expliqués (demande de Kilyan) : tableau « Les points » dans la liste des jeux, et une ligne
+  « 🏆 Pour la soirée : 1er 5 · 2e 3 · 3e 2 · les autres 1 pts » (Parieur : points misés) sur l'écran des règles de
+  chaque mini-jeu. Les chiffres sont lus dans le code du barème (`src/ecrans/points.ts`) : ils suivront les changements.
+  L'ancien texte du pari détective (« 4 ou 6 pts ») était faux : c'est 3, 5 ou 8.

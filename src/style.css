@@ -1358,3 +1358,12 @@ button.carte-s.c { font: inherit; cursor: pointer; }
 .tuile-icone svg { width: 20px; height: 20px; }
 .tuile-jeu h3 { margin: 0; font-family: var(--titre); font-weight: 800; font-size: var(--txt-m); line-height: 1.15; color: var(--c); overflow-wrap: anywhere; }
 .tuile-jeu p { margin: 0; font-size: var(--txt-s); font-weight: 600; line-height: 1.35; color: var(--texte-2); }
+/* Les points : une ligne avant chaque jeu, un tableau dans la liste des jeux (points.ts). */
+.points-jeu { margin: 0; padding: 8px 12px; border-radius: var(--r-m); background: var(--voile-1); border: 1px solid var(--bord); font-size: var(--txt-s); font-weight: 700; color: var(--texte-2); }
+.tableau-points { display: grid; gap: 10px; }
+.tableau-points h2 { margin: 0; }
+.tableau-points dl { margin: 0; display: grid; gap: 0; border-radius: var(--r-l); background: var(--fond-2); border: 1px solid var(--bord); overflow: hidden; }
+.tableau-points dl > div { display: grid; grid-template-columns: minmax(0, 40%) 1fr; gap: 10px; padding: 10px 14px; border-top: 1px solid var(--bord); }
+.tableau-points dl > div:first-child { border-top: 0; }
+.tableau-points dt { font-weight: 800; font-size: var(--txt-s); }
+.tableau-points dd { margin: 0; font-size: var(--txt-s); color: var(--texte-2); font-variant-numeric: tabular-nums; }

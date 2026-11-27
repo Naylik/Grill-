@@ -15,6 +15,7 @@ import { blocFlash } from './flash';
 import { POINTS_FLASH } from '../flash';
 import { localJeu } from '../memoireJeu';
 import { DUREE_OUVERTURE } from '../animations';
+import { lignePointsJeu } from './points';
 import { boutonsVideo } from './video';
 import { mallow, sequenceGrille } from '../mallow';
 import { missionsGrillees, PENALITE_MENSONGE } from '../accusations';
@@ -86,6 +87,7 @@ export function ecranRegles(): string {
       </div>`;
   return `<div class="entete-jeu regles" style="--c:${jeu.couleur}"><span class="icone-jeu"><svg viewBox="0 0 24 24" aria-hidden="true">${jeu.icone}</svg></span><span>Jeu ${d.numeroJeu}/${S.infos!.duree} · les règles</span><strong>${esc(jeu.nom)}</strong></div>
     ${regles}
+    ${lignePointsJeu(jeu.id)}
     ${blocFlash()}
     <div class="pile bas">
       ${pret

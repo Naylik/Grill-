@@ -1,8 +1,9 @@
 // Écran « Liste des jeux » : une vitrine simple (le principe en une phrase, puis les 12 mini-jeux avec leur accroche).
-// Les règles détaillées et les points ne sont plus ici : chaque jeu les montre juste avant de commencer (27/11).
+// Les règles détaillées sont sur l'écran des règles de chaque jeu ; les points, ici et avant chaque jeu (points.ts).
 import { JEUX } from '../games';
 import { esc } from '../outils';
 import { mallow } from '../mallow';
+import { tableauPoints } from './points';
 
 export function ecranListeJeux(): string {
   const tuiles = JEUX.map(
@@ -22,6 +23,7 @@ export function ecranListeJeux(): string {
       </div>
     </div>
     <div class="grille-jeux">${tuiles}</div>
+    ${tableauPoints()}
     <button class="bouton jaune" data-action="vueAccueil" data-valeur="accueil">C’est parti</button>
   </section>`;
 }
