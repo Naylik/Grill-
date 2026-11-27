@@ -283,7 +283,7 @@ export function suivreCompteur(rafraichir: () => void): void {
 
 export function compteurAccueil(): string {
   if (parties === null || parties < SEUIL_COMPTEUR) return '';
-  return `<p class="compteur-soirees" data-compteur-soirees data-garder><span class="live-soirees" aria-hidden="true"></span><span>🔥 <b data-compteur="${parties}" data-final="${parties.toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0')}">${parties.toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0')}</b> soirées grillées</span><span class="plus-soirees" aria-hidden="true">+1</span></p>`;
+  return `<p class="compteur-soirees" data-compteur-soirees data-garder><span class="live-soirees" aria-hidden="true"></span><span>🔥 <b data-compteur="${parties}" data-final="${parties.toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0')}">${parties.toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0')}</b> parties lancées</span><span class="plus-soirees" aria-hidden="true">+1</span></p>`;
 }
 
 // ——— Mallow vivant : il sue quand on s'apprête à créer une partie (on tape son prénom) ———

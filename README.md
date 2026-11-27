@@ -525,3 +525,4 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   direct) ; Mallow vivant (cligne, regarde à gauche/droite, sue quand on tape son prénom). Séparateur des milliers :
   espace insécable normale (l'espace fine n'existe pas dans la police Unbounded ; corrige aussi le Juste Prix).
   ⚠️ Nouvelle règle « stats » à publier dans la console Firebase.
+- 27/11/2026 · Compteur de l'accueil : « 🔥 N parties lancées » (au lieu de « soirées grillées », choix de Kilyan).
