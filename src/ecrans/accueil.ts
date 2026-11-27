@@ -4,7 +4,7 @@ import { S } from '../etat';
 import { logo } from '../mallow';
 import { boutonSon, erreur } from './commun';
 import { sonActif } from '../son';
-import { blocRetour, cartesAccueil, mallowAccueil, retourJoueur } from '../accueilVivant';
+import { blocRetour, cartesAccueil, compteurAccueil, mallowAccueil, retourJoueur } from '../accueilVivant';
 
 export function ecranAccueil(codeLien: string | null): string {
   const prenom = esc(brouillons.prenom ?? localStorage.getItem('grille:prenom') ?? '');
@@ -15,6 +15,7 @@ export function ecranAccueil(codeLien: string | null): string {
       ${mallowAccueil()}
       ${logo()}
       <p class="slogan">Qui va se faire griller ?</p>
+      ${compteurAccueil()}
     </div>
     ${(() => { const r = retourJoueur(); return r ? blocRetour(r) : ''; })()}
     ${cartesAccueil()}

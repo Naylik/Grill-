@@ -1322,3 +1322,20 @@ button.carte-s.c { font: inherit; cursor: pointer; }
 .jauge-retour i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--jaune), var(--feu)); animation: jauge-retour 1.2s ease-out .5s forwards; }
 @keyframes jauge-retour { to { width: var(--w); } }
 @media (prefers-reduced-motion: reduce) { .corps-griller.tape, .braise, .jauge-retour i { animation: none; } .jauge-retour i { width: var(--w); } }
+/* Mallow vivant : il cligne et regarde à gauche, à droite ; il sue quand on tape son prénom (avant de créer). */
+.corps-griller .yeux { transform-box: fill-box; transform-origin: center; animation: cligne-mallow 3.4s infinite, regarde-mallow 7s ease-in-out infinite; }
+@keyframes cligne-mallow { 0%, 46%, 50%, 100% { scale: 1 1; } 48% { scale: 1 .1; } }
+@keyframes regarde-mallow { 0%, 12% { translate: 0 0; } 18%, 32% { translate: -5px 0; } 38%, 52% { translate: 5px 0; } 58%, 100% { translate: 0 0; } }
+.mallow-griller.suspect .corps-griller .yeux { animation: cligne-mallow 1.2s infinite; translate: 5px 4px; }
+.goutte-mallow { position: absolute; left: calc(50% + 46px); top: 36px; width: 12px; height: 17px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #9FE3FF; border: 2px solid #24123A; opacity: 0; pointer-events: none; }
+.mallow-griller.suspect .goutte-mallow { animation: coule-mallow 1.1s ease-in infinite; }
+@keyframes coule-mallow { 0% { opacity: 0; transform: none; } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(34px); } }
+/* Compteur de soirées grillées (visible à partir de 500 parties). */
+.compteur-soirees { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; font-size: var(--txt-s); font-weight: 700; color: var(--texte-2); }
+.compteur-soirees b { font-family: var(--titre); font-weight: 900; font-size: var(--txt-l); color: var(--jaune); font-variant-numeric: tabular-nums; }
+.live-soirees { width: 8px; height: 8px; border-radius: 50%; background: var(--feu); box-shadow: 0 0 8px var(--feu); animation: live-soirees 1.2s infinite; }
+@keyframes live-soirees { 50% { opacity: .3; } }
+.plus-soirees { font-family: var(--titre); font-weight: 900; font-size: var(--txt-xs); color: var(--vert); opacity: 0; }
+.plus-soirees.on { animation: plus-soirees 1.4s ease-out; }
+@keyframes plus-soirees { 0% { opacity: 0; transform: translateY(6px); } 20% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-12px); } }
+@media (prefers-reduced-motion: reduce) { .corps-griller .yeux, .live-soirees { animation: none; } }

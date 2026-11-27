@@ -520,3 +520,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 27/11/2026 · Vocabulaire (choix de Kilyan) : « grosse mission » devient « mission principale » partout dans le jeu
   (accueil, carte à gratter, choix de mission, règles, GRILLÉ !, pari détective, révélations, classement, vidéo).
   Les anciennes entrées de ce README gardent l'ancien terme.
+- 27/11/2026 · Accueil (validé sur maquette) : compteur public « 🔥 N soirées grillées » (stats/parties, +1 à chaque
+  partie lancée par l'hôte ; règle Firebase : seulement +1 à la fois ; caché sous 500 ; défile au chargement, « +1 » en
+  direct) ; Mallow vivant (cligne, regarde à gauche/droite, sue quand on tape son prénom). Séparateur des milliers :
+  espace insécable normale (l'espace fine n'existe pas dans la police Unbounded ; corrige aussi le Juste Prix).
+  ⚠️ Nouvelle règle « stats » à publier dans la console Firebase.

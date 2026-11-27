@@ -25,7 +25,7 @@ interface Etat extends EtatDeBase {
 }
 
 const etapeDe = (n: number, i: number) => `prix-${n}-${i}`;
-export const formater = (n: number) => n.toLocaleString('fr-FR');
+export const formater = (n: number) => n.toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0'); // espace fine absente de la police
 /** « 42 195 », « 3,5 » ou « 1 789 » → nombre. */
 export function lireNombre(saisie: string): number | null {
   const propre = saisie.replace(/[\s\u202F\u00A0]/g, '').replace(',', '.');

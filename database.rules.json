@@ -1,5 +1,12 @@
 {
   "rules": {
+    "stats": {
+      "parties": {
+        ".read": true,
+        ".write": "auth != null",
+        ".validate": "newData.isNumber() && newData.val() === (data.exists() ? data.val() : 0) + 1"
+      }
+    },
     "salons": {
       "$code": {
         ".write": "auth != null && $code.matches(/^[A-Z]{4}$/) && data.child('infos/hote').val() === auth.uid",

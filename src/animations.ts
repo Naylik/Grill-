@@ -14,7 +14,7 @@ export function animerCompteurs(): void {
     if (!debuts.has(el)) debuts.set(el, maintenant);
     const x = Math.min(1, (maintenant - debuts.get(el)!) / DUREE_COMPTEUR);
     const cible = Number(el.dataset.compteur);
-    const texte = x >= 1 ? el.dataset.final ?? String(cible) : Math.round(cible * (1 - (1 - x) ** 3)).toLocaleString('fr-FR');
+    const texte = x >= 1 ? el.dataset.final ?? String(cible) : Math.round(cible * (1 - (1 - x) ** 3)).toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0') // espace fine absente de la police : espace insécable normale;
     if (el.textContent !== texte) el.textContent = texte;
   });
 }

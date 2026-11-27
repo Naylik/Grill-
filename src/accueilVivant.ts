@@ -1,7 +1,7 @@
 // L'accueil vivant : Mallow qu'on grille à coups de taps, la carte « TOP SECRET » à gratter, et le retour du joueur
 // (cuisson de son Mallow dans sa dernière saison, et revanche s'il s'est fait griller). Validé par Kilyan le 27/11.
 // Mallow et la carte sont marqués data-garder : le rafraîchissement de l'écran ne les touche pas (ui.ts › harmoniser).
-import { get, ref } from 'firebase/database';
+import { get, onValue, ref } from 'firebase/database';
 import { db } from './firebase';
 import { mallow, mallowGrille, NOMS_CUISSON } from './mallow';
 import { sons } from './son';
@@ -31,6 +31,7 @@ const vibrerAuRelacher = (motif: number | number[]) => {
 export function mallowAccueil(): string {
   return `<div class="flotte mallow-griller" data-griller data-garder role="button" aria-label="Griller Mallow">
     <div class="corps-griller">${mallow({ taille: 132, cuisson: STADES[0] })}</div>
+    <span class="goutte-mallow" aria-hidden="true"></span>
     <div class="jauge-cuisson" aria-hidden="true"><i></i></div>
   </div>`;
 }
@@ -244,6 +245,55 @@ export function blocRetour(r: RetourJoueur): string {
     <span class="jauge-retour" style="--w:${Math.round(part * 100)}%" aria-hidden="true"><i></i></span>
   </div>`;
 }
+
+// ——— Compteur de soirées grillées ———
+
+/** Le compteur n'apparaît qu'à partir de ce nombre de parties (un petit chiffre donnerait l'impression d'un jeu vide). */
+export const SEUIL_COMPTEUR = 500;
+let parties: number | null = null;
+let ecoute = false;
+
+/** Suit le compteur public (stats/parties) ; redessine l'accueil quand il change. */
+export function suivreCompteur(rafraichir: () => void): void {
+  if (ecoute) return;
+  ecoute = true;
+  onValue(
+    ref(db, 'stats/parties'),
+    (s) => {
+      const avant = parties;
+      parties = typeof s.val() === 'number' ? s.val() : null;
+      const el = document.querySelector<HTMLElement>('[data-compteur-soirees]');
+      if (el && avant !== null && parties !== null && parties > avant && parties >= SEUIL_COMPTEUR) {
+        // Une partie vient d'être lancée quelque part : le chiffre monte, un « +1 » s'envole.
+        const b = el.querySelector<HTMLElement>('b')!;
+        b.dataset.compteur = String(parties);
+        b.dataset.final = parties.toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0');
+        b.textContent = b.dataset.final;
+        const plus = el.querySelector<HTMLElement>('.plus-soirees')!;
+        plus.classList.remove('on');
+        void plus.offsetWidth;
+        plus.classList.add('on');
+        return;
+      }
+      rafraichir();
+    },
+    () => undefined,
+  );
+}
+
+export function compteurAccueil(): string {
+  if (parties === null || parties < SEUIL_COMPTEUR) return '';
+  return `<p class="compteur-soirees" data-compteur-soirees data-garder><span class="live-soirees" aria-hidden="true"></span><span>🔥 <b data-compteur="${parties}" data-final="${parties.toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0')}">${parties.toLocaleString('fr-FR').replace(/\u202f/g, '\u00a0')}</b> soirées grillées</span><span class="plus-soirees" aria-hidden="true">+1</span></p>`;
+}
+
+// ——— Mallow vivant : il sue quand on s'apprête à créer une partie (on tape son prénom) ———
+
+document.addEventListener('focusin', (e) => {
+  if ((e.target as HTMLElement).matches?.('input[name="prenom"]')) document.querySelector('[data-griller]')?.classList.add('suspect');
+});
+document.addEventListener('focusout', (e) => {
+  if ((e.target as HTMLElement).matches?.('input[name="prenom"]')) document.querySelector('[data-griller]')?.classList.remove('suspect');
+});
 
 // ——— Branchement ———
 

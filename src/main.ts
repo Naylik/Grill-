@@ -24,7 +24,7 @@ import { nouvelIdSaison, retenirSaison, saisonsConnues, tirerVengeance } from '.
 import { jeuParId } from './games';
 import { vueJeu } from './ecrans/deroule';
 import { localJeu } from './memoireJeu';
-import { chargerRetour } from './accueilVivant';
+import { chargerRetour, suivreCompteur } from './accueilVivant';
 import { animerCompteurs, animerCourses, animerLoupes } from './animations';
 import { ecranTuto, marquerTutoVu, tutoDejaVu } from './ecrans/tuto';
 import { action, afficher, brouillons, installer, vibrer } from './ui';
@@ -209,6 +209,8 @@ action('lancer', async () => {
     vengeance: offre ? { offre: { [offre.de]: { choix: Object.fromEntries(offre.choix.map((u) => [u, true])) } } } : null,
     deroule: { phase: 'missions', numeroJeu: 0, partieId: `${S.code}-${Date.now()}` },
   });
+  // Compteur public « soirées grillées » (accueil) : +1 à chaque partie lancée. Sans réseau ou sans règle : tant pis.
+  void runTransaction(ref(db, 'stats/parties'), (n: number | null) => (n ?? 0) + 1).catch(() => undefined);
 });
 
 action('quitter', async () => {
@@ -690,6 +692,7 @@ if (!configManquante) {
     .then(async (u) => {
       S.uid = u.uid;
       void chargerRetour(u.uid, demanderAffichage);
+      suivreCompteur(demanderAffichage);
       const precedent = localStorage.getItem('grille:salon');
       const lien = codeDuLien();
       const prenom = localStorage.getItem('grille:prenom');
