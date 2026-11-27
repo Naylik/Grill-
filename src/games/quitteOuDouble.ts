@@ -67,7 +67,7 @@ export const quitteOuDouble: MiniJeu<Etat> = {
     comment: 'Une question à 4 choix, tout le monde répond en même temps. Bonne réponse : ta cagnotte passe à 1 point, puis double à chaque fois (2, 4, 8…). Mauvaise réponse : tu perds ta cagnotte en cours. Après chaque bonne réponse, tu choisis en secret : encaisser (tes points passent dans ta banque, à l’abri, et tu repars de 0) ou doubler.',
     gagner: 'Le plus gros total encaissé gagne. Tout le monde joue toutes les questions, de plus en plus dures (8 à 12 selon le format).',
   },
-  icone: '<path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z" fill="currentColor"/>',
+  icone: '<path d="M2.5 8.5l2-2L8 10l3.5-3.5 2 2L10 12l3.5 3.5-2 2L8 14l-3.5 3.5-2-2L6 12z" fill="currentColor"/><path d="M14.5 9.5c0-2 1.6-3.3 3.6-3.3s3.4 1.3 3.4 3c0 2.6-3.5 4.3-4.6 6h4.8V18h-7.4v-1.9c1-2.5 4.4-4.2 4.4-6.6 0-.8-.5-1.3-1.2-1.3-.8 0-1.3.6-1.3 1.5z" fill="currentColor"/>',
   couleur: '#FFD84A',
   autorise: () => true,
   tours: (duree) => `${selonFormat(duree, NB_QUESTIONS)} questions`,

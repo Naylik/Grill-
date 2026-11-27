@@ -72,7 +72,7 @@ export const imposteur: MiniJeu<Etat> = {
     gagner: 'Si l’imposteur s’en sort, il gagne 3 points. S’il est démasqué, chaque joueur qui a voté contre lui gagne 1 point. 2 à 4 manches selon le format.',
     note: 'À partir de 4 joueurs.',
   },
-  icone: '<path d="M3 9c3-3 15-3 18 0-1 6-4 9-9 9S4 15 3 9z" fill="currentColor"/><ellipse cx="8.5" cy="11" rx="2" ry="1.4" fill="#0D0A1E"/><ellipse cx="15.5" cy="11" rx="2" ry="1.4" fill="#0D0A1E"/>',
+  icone: '<path d="M2 9c3 0 5-2 10-2s7 2 10 2c0 5-3 8-6 8-2 0-3-2-4-2s-2 2-4 2c-3 0-6-3-6-8z" fill="currentColor"/><ellipse cx="7.5" cy="11" rx="2.2" ry="1.5" fill="#0D0A1E"/><ellipse cx="16.5" cy="11" rx="2.2" ry="1.5" fill="#0D0A1E"/>',
   couleur: '#B18CFF',
   tours: (duree) => `${selonFormat(duree, NB_MANCHES)} manches`,
   contenus: (e) => e.pairesJouees ?? [],

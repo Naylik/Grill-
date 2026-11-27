@@ -41,7 +41,7 @@ export const justePrix: MiniJeu<Etat> = {
     comment: 'Une question de culture ou une question fun (« Combien mesure la tour Eiffel ? »). Chacun tape son estimation en secret, puis on découvre la bonne réponse et celles des autres.',
     gagner: 'Le plus proche gagne la manche. Celui qui gagne le plus de manches gagne le jeu (4 à 8 manches selon le format).',
   },
-  icone: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/>',
+  icone: '<path d="M3 12.5V4.5A1.5 1.5 0 0 1 4.5 3h8l8.5 8.5-9.5 9.5z" fill="currentColor"/><circle cx="8" cy="8" r="2" fill="#0D0A1E"/>',
   couleur: '#FFD23F',
   tours: (duree) => `${selonFormat(duree, NB_MANCHES)} manches`,
   contenus: (e) => e.questions.map((q) => q.id).filter((id): id is string => !!id),

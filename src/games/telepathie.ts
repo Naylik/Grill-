@@ -100,7 +100,7 @@ export const telepathie: MiniJeu<Etat> = {
     comment: 'Des duos sont tirés au sort. À chaque manche, l’appli fait 3-2-1 et chaque duo crie un mot en même temps, puis le tape. D’abord n’importe quel mot ; ensuite, un mot « entre » vos deux derniers mots (chat + lion → tigre ?), jusqu’à dire le même. Une fois par partie, chaque équipe peut saboter une autre équipe en lui imposant un mot interdit.',
     gagner: 'L’équipe qui trouve en le moins de manches gagne (8 maximum). Mots presque pareils : le groupe vote. Avec un nombre impair de joueurs, l’arbitre parie au début sur l’équipe gagnante (+2) et son nombre de manches (+2, ou +1 à une manche près).',
   },
-  icone: '<circle cx="12" cy="10" r="7" fill="currentColor"/><path d="M6 21h12l-2-4H8z" fill="currentColor" opacity=".6"/>',
+  icone: '<circle cx="12" cy="10" r="7.5" fill="currentColor"/><path d="M6 21h12l-2-3.5H8z" fill="currentColor" opacity=".6"/><path d="M10 6.5l.8 1.8 1.8.8-1.8.8-.8 1.8-.8-1.8-1.8-.8 1.8-.8z" fill="#fff" opacity=".8"/><circle cx="14.5" cy="12" r="1" fill="#fff" opacity=".6"/>',
   couleur: '#FF8FC8',
   autorise: (_n, nb) => nb >= 4,
   tours: () => `jusqu’à ${MAX_MANCHES} manches`,

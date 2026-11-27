@@ -140,7 +140,7 @@ export const territoires: MiniJeu<Etat> = {
     gagner: 'Le plus de points à la fin des manches gagne.',
     note: 'Négocier à voix haute est autorisé. Tenir parole, beaucoup moins.',
   },
-  icone: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M12 3v9l7 5" stroke="currentColor" stroke-width="2.5" fill="none"/>',
+  icone: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M12 12V3M12 12l7.8 4.5M12 12l-7.8 4.5" stroke="currentColor" stroke-width="2.5"/><path d="M12 3 12 12 19.8 7.5A9 9 0 0 0 12 3z" fill="currentColor"/><path d="M12 0.5l-2.2 3h4.4z" fill="currentColor"/>',
   couleur: '#B18CFF',
   autorise: (_n, nb) => nb >= 3,
   tours: (duree) => `${selonFormat(duree, NB_MANCHES)} manches`,

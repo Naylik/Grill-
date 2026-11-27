@@ -544,3 +544,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   « Menteur démasqué » devient « Mentir quand on te grille » avec une explication, « Vengeance » expliquée (saison).
 - 27/11/2026 · Liste des jeux : le paragraphe explique le principe sans chiffres (mission principale, missions flash, pari
   détective) et passe au-dessus du tableau des points, qui seul donne les chiffres (plus de répétition).
+- 27/11/2026 · Pictogrammes des mini-jeux (validés par Kilyan) : Juste Prix → étiquette de prix, Imposteur → masque,
+  Quitte ou Double → « ×2 », Champ de mines → bombe, Roue des territoires → roue en parts, Télépathie → boule de cristal.
+  Parieur : à revoir (la pile de jetons n'a pas été retenue).

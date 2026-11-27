@@ -135,7 +135,7 @@ export const champDeMines: MiniJeu<Etat> = {
     gagner: 'Le plus de points gagne : ceux encaissés et ceux gagnés quand quelqu’un saute sur ta mine.',
     note: 'Détecteur secret : 1 seul par joueur, à garder pour le bon moment. Activé avant d’ouvrir un colis, il te montre (à toi seul) le nombre de mines dans les 8 cases autour. Les autres voient juste une loupe. Tu vois aussi ta propre mine. Conseiller à voix haute est autorisé… et pas forcément honnête.',
   },
-  icone: '<rect x="4" y="9" width="16" height="11" rx="2" fill="currentColor"/><path d="M12 9c1-3 3-5 6-5" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="19" cy="4" r="2" fill="currentColor"/>',
+  icone: '<circle cx="11" cy="14" r="7" fill="currentColor"/><rect x="14" y="5" width="4" height="4" rx="1" transform="rotate(40 16 7)" fill="currentColor"/><path d="M18 5q2-3 4-1" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="8.5" cy="11.5" r="1.6" fill="#fff" opacity=".5"/>',
   couleur: '#E0A060',
   autorise: (_n, nb) => nb >= 3,
   tours: (duree) => `${selonFormat(duree, MANCHES)} manches`,
