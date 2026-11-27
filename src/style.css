@@ -1280,3 +1280,6 @@ button.case-champ.fermee:active { transform: translateY(4px); box-shadow: 0 1px 
 .elimine-patate { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0; padding: 10px 14px; border-radius: var(--r-rond); background: var(--voile-1); border: 1px dashed var(--bord); font-weight: 800; color: var(--texte-2); }
 .elimine-patate span { font-size: var(--txt-2xl); animation: flotte-fantome 2.4s ease-in-out infinite; }
 @keyframes flotte-fantome { 50% { transform: translateY(-6px) rotate(-6deg); } }
+/* Vengeance : la phrase sous le titre, bien visible, le prénom de la cible en rose. */
+.phrase-vengeance { margin: 0; font-size: var(--txt-l); font-weight: 800; line-height: 1.3; color: var(--texte); text-wrap: balance; }
+.phrase-vengeance strong { color: var(--rose); }

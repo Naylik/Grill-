@@ -75,10 +75,11 @@ function ecranChoixMissionNormal(): string {
       <div class="pile bas">${forcer}</div>`;
   }
   if (!propositions?.length) return `<h2>${titre}</h2><p class="attente">Tirage de tes missions…</p>`;
-  return `<h2>${titre}</h2>
-    <p class="aide gauche">${propositions[0]?.vengeance && propositions[0].cible
-      ? `<strong>${esc(S.joueurs[propositions[0].cible]?.prenom ?? '?')}</strong> va regretter de t’avoir grillé. Choisis ta mission.`
-      : 'Garde-en une, en secret : elle dure toute la soirée. Cache ton écran ! Pendant les jeux, tu recevras peut-être aussi des missions flash.'}</p>
+  const venge = propositions[0]?.vengeance && propositions[0].cible ? propositions[0].cible : null;
+  return `<h2>${venge ? 'Vengeance !' : titre}</h2>
+    ${venge
+      ? `<p class="phrase-vengeance"><strong>${esc(S.joueurs[venge]?.prenom ?? '?')}</strong> va regretter de t’avoir grillé. Choisis ta mission.</p>`
+      : '<p class="aide gauche">Garde-en une, en secret : elle dure toute la soirée. Cache ton écran ! Pendant les jeux, tu recevras peut-être aussi des missions flash.</p>'}
     ${propositions.map((m, i) => carteMission(m, { bouton: `<button class="bouton ${m.difficulte === 'facile' ? 'cyan' : 'rose'}" data-action="choisirMission" data-index="${i}">Je prends celle-ci</button>` })).join('')}`;
 }
 
