@@ -486,3 +486,5 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   Colis piégé compris (il attend toujours le bouton « Jeu suivant » de l'hôte). Corrigé au passage : résumé
   « Yanis et Cassie et Kilyan : le meilleur survivant » → « Yanis, Cassie et Kilyan : les meilleurs survivants »
   (helper `listeNoms`, utilisé par 5 jeux).
+- 27/11/2026 · Nouvelle grosse mission (idée de Kilyan) : j43 « Fais lire à voix haute les règles d'un mini-jeu à
+  {cible}, pour toute la table. » (mini-jeux, facile, 6 pts). 93 grosses missions.

@@ -734,5 +734,13 @@
     "niveau": "soft",
     "categorie": "Longue durée",
     "texte": "À un moment, sors de la pièce sans explication (ni pour les toilettes, ni pour la salle de bain)."
+  },
+  {
+    "id": "j43",
+    "type": "jeu",
+    "difficulte": "facile",
+    "niveau": "soft",
+    "categorie": "Manipulation",
+    "texte": "Fais lire à voix haute les règles d’un mini-jeu à {cible}, pour toute la table."
   }
 ]
