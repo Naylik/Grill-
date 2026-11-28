@@ -1393,3 +1393,8 @@ button.carte-s.c { font: inherit; cursor: pointer; }
 .mallow-volonte { display: grid; place-items: center; }
 .missions-volonte .verdict { margin-top: 6px; }
 .grille-jeux.choix-volonte .tuile-jeu[aria-disabled="true"] { cursor: default; }
+/* Dessin à la chaîne : chaque devinette se juge 👍 ou 👎 ; « Valider » reste grisé tant que le vote est incomplet. */
+.duo-juge { display: flex; gap: 8px; flex-wrap: wrap; }
+.vote-rate { justify-self: start; padding: 6px 12px; border-radius: var(--r-rond); border: 2px solid var(--bord); background: none; color: var(--texte-2); font-family: var(--titre); font-weight: 700; font-size: var(--txt-xs); cursor: pointer; }
+.vote-rate.actif { border-color: var(--rose); color: var(--rose); background: color-mix(in srgb, var(--rose) 12%, transparent); }
+.bouton[aria-disabled="true"] { opacity: .45; cursor: default; }

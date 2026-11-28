@@ -1,6 +1,6 @@
 // Dessin à la chaîne : chacun passe par toutes les chaînes sans voir la sienne, et le score suit les votes.
 import { describe, expect, it } from 'vitest';
-import { chaineDe, devinetteJuste, jugesDe, scoreTelephone, telephone } from '../src/games/telephone';
+import { chaineDe, devinetteJuste, jugesDe, scoreTelephone, telephone, voteIncomplet } from '../src/games/telephone';
 
 describe('Dessin à la chaîne', () => {
   it('à chaque étape, chacun a une chaîne différente, et jamais la même deux fois', () => {
@@ -63,5 +63,15 @@ describe('Dessin à la chaîne : devinette jugée juste', () => {
     expect(devinetteJuste([true, false, false])).toBe(false);
     expect(devinetteJuste([true, true, false])).toBe(true);
     expect(devinetteJuste([])).toBe(false);
+  });
+});
+
+describe('Dessin à la chaîne : vote complet avant de valider', () => {
+  const chaine = [{ auteur: 'b', dessin: [] }, { auteur: 'c', texte: 'un chat' }, { auteur: 'd', dessin: [] }, { auteur: 'a', texte: 'un chien' }];
+  it('il faut juger chaque devinette (sauf la sienne) et choisir le plus drôle', () => {
+    expect(voteIncomplet(chaine as never, {}, 'a')).toBe('Encore 1 devinette + le plus drôle');
+    expect(voteIncomplet(chaine as never, { rates: [1] }, 'a')).toBe('Choisis le dessin le plus drôle');
+    expect(voteIncomplet(chaine as never, { bons: [1], favori: '0-0' }, 'a')).toBe('');
+    expect(voteIncomplet(chaine as never, { favori: '0-0' }, 'b')).toBe('Encore 2 devinettes à juger');
   });
 });

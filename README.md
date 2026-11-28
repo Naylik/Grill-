@@ -552,3 +552,6 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
   (mission principale, flash, GRILLÉ !, révélées et votées à la fin, sans points, puis un bilan des missions) ou sans.
   Pas de saison, de pari détective ni de vidéo. Argument : 12 jeux de soirée dans une seule appli. Futur mode payant :
   verrou prêt dans `src/volonte.ts` (`VOLONTE_PAYANT`), éteint pendant les tests.
+- 28/11/2026 · Dessin à la chaîne : chaque devinette se juge 👍 Bien deviné ou 👎 Raté, et « Valider mon vote » reste
+  grisé tant que tout n'est pas jugé et que le dessin le plus drôle n'est pas choisi (le bouton dit ce qui manque).
+  À la fin du chrono, le vote part quand même avec ce qui est fait.

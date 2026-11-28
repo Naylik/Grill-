@@ -66,6 +66,20 @@ export const jugesDe = (chaine: Maillon[], s: number, votants: string[]): string
   votants.filter((u) => u !== chaine[s]?.auteur);
 
 /** Devinette jugée juste : au moins la moitié des juges disent oui (égalité = juste). */
+/** Vote de l'album : dessin le plus drôle, devinettes jugées justes (👍) ou ratées (👎). Seuls « bons » partent à l'hôte. */
+type ChoixVote = { favori?: string; bons?: number[]; rates?: number[] };
+
+/** Ce qui manque avant de pouvoir valider (texte du bouton), ou '' si le vote est complet. */
+export function voteIncomplet(chaine: Maillon[], choix: ChoixVote, uid: string): string {
+  const aJuger = chaine.filter((m, s) => !m.dessin && jugesDe(chaine, s, [uid]).length > 0)
+    .map((m) => chaine.indexOf(m))
+    .filter((s) => !(choix.bons ?? []).includes(s) && !(choix.rates ?? []).includes(s)).length;
+  const favori = !choix.favori && chaine.some((m) => m.dessin && m.auteur !== uid);
+  if (aJuger && favori) return `Encore ${aJuger} devinette${aJuger > 1 ? 's' : ''} + le plus drôle`;
+  if (aJuger) return `Encore ${aJuger} devinette${aJuger > 1 ? 's' : ''} à juger`;
+  return favori ? 'Choisis le dessin le plus drôle' : '';
+}
+
 export const devinetteJuste = (votes: boolean[]): boolean => votes.length > 0 && votes.filter(Boolean).length * 2 >= votes.length;
 
 /**
@@ -226,7 +240,7 @@ export const telephone: MiniJeu<Etat> = {
       const chaine = e.chaines[c] ?? [];
       const ma = v.local[e.etape] as { envoye?: boolean } | undefined;
       const envoye = v.maReponse?.etape === e.etape || !!ma?.envoye;
-      const choix = (v.local[`${e.etape}-choix`] as { favori?: string; bons?: number[] } | undefined) ?? {};
+      const choix = (v.local[`${e.etape}-choix`] as ChoixVote | undefined) ?? {};
       const devoile = Math.max(0, (e.affiches ?? 1) - 1); // maillons visibles (sans la phrase de départ)
       const complet = toutDevoile(e);
       const depart = e.phrases[c];
@@ -241,7 +255,9 @@ export const telephone: MiniJeu<Etat> = {
             <div class="contenu-album"><span class="qui-album">${nom(m.auteur)} ${m.dessin ? 'a dessiné' : 'a deviné'}</span>
             ${m.dessin ? `<div class="cadre-album">${toileAVoir(`tel-${e.numeroJeu}-${cle}`, m.dessin, '', true)}</div>` : `<p class="texte-album">« ${esc(m.texte ?? '')} »</p>`}
             ${peutVoter ? `<button class="vote-drole ${choix.favori === cle ? 'actif' : ''}" data-action="jeu" data-geste="favori" data-valeur="${cle}">${choix.favori === cle ? '★ Le plus drôle' : '☆ Le plus drôle'}</button>` : ''}
-            ${peutJuger(s) ? `<button class="vote-bien ${(choix.bons ?? []).includes(s) ? 'actif' : ''}" data-action="jeu" data-geste="bien" data-valeur="${s}">${(choix.bons ?? []).includes(s) ? '👍 Bien deviné !' : '👍 Bien deviné ?'}</button>` : ''}
+            ${peutJuger(s) ? `<div class="duo-juge">
+              <button class="vote-bien ${(choix.bons ?? []).includes(s) ? 'actif' : ''}" data-action="jeu" data-geste="bien" data-valeur="${s}" aria-pressed="${(choix.bons ?? []).includes(s)}">👍 Bien deviné</button>
+              <button class="vote-rate ${(choix.rates ?? []).includes(s) ? 'actif' : ''}" data-action="jeu" data-geste="rate" data-valeur="${s}" aria-pressed="${(choix.rates ?? []).includes(s)}">👎 Raté</button></div>` : ''}
             ${complet && !m.dessin && m.auteur === v.uid ? '<span class="pas-de-vote">Ta devinette : les autres jugent</span>' : ''}</div></div>`;
         }).join('')}
       </div>`;
@@ -254,13 +270,14 @@ export const telephone: MiniJeu<Etat> = {
             ? `<p class="aide">C’est toi qui tournes les pages de l’album, pour tout le monde. Les votes s’ouvrent à la dernière page.</p><button class="bouton jaune" data-action="hote-jeu" data-valeur="suivant">Montrer la suite (${devoile + 1}/${chaine.length})</button>`
             : `<p class="attente">C’est l’hôte qui tourne les pages de l’album (${devoile}/${chaine.length})… Le vote arrive à la fin de la chaîne.</p>`}</div>`;
       }
+      const manque = voteIncomplet(chaine, choix, v.uid);
       return `${hud('DESSIN À LA CHAÎNE', c, n, true)}${chrono(e.fin)}
         <p class="petit centre-texte">L’ALBUM · CHAÎNE ${c + 1}/${n} · À VOUS DE VOTER</p>
         ${album}${reactions}
         ${envoye
           ? '<p class="attente">Vote envoyé. On attend les autres…</p>'
-          : `<p class="aide gauche">Touche 👍 sous chaque devinette juste, et ☆ sur le dessin le plus drôle.</p>
-            <button class="bouton jaune" data-action="jeu" data-geste="voter" data-envoi-auto="${e.fin}">Valider mon vote</button>`}
+          : `<p class="aide gauche">Juge chaque devinette (👍 ou 👎), et mets ☆ sur le dessin le plus drôle.</p>
+            <button class="bouton jaune" data-action="jeu" data-geste="voter" data-envoi-auto="${e.fin}" ${manque ? 'aria-disabled="true"' : ''}>${manque || 'Valider mon vote'}</button>`}
         ${attenteDes(v.uids, v.joueurs, (u) => v.ontRepondu.includes(u) || (u === v.uid && envoye))}`;
     }
 
@@ -360,22 +377,33 @@ export const telephone: MiniJeu<Etat> = {
       o.rafraichir();
     },
     bien(el, o, v) {
-      const cle = `${v.etat.etape}-choix`;
-      const choix = (o.local[cle] as { bons?: number[] }) ?? {};
-      const s = Number(el.dataset.valeur);
-      const bons = choix.bons ?? [];
-      o.local[cle] = { ...choix, bons: bons.includes(s) ? bons.filter((x) => x !== s) : [...bons, s] };
-      o.rafraichir();
+      juger(el, o, v, 'bons');
     },
-    async voter(_el, o, v) {
+    rate(el, o, v) {
+      juger(el, o, v, 'rates');
+    },
+    async voter(el, o, v) {
       const e = v.etat;
       if (e.phase !== 'revue' || (o.local[e.etape] as { envoye?: boolean } | undefined)?.envoye) return;
-      const choix = (o.local[`${e.etape}-choix`] as { favori?: string; bons?: number[] }) ?? {};
+      const choix = (o.local[`${e.etape}-choix`] as ChoixVote) ?? {};
+      // Vote incomplet : on ne valide pas… sauf à la fin du chrono (envoi automatique de ce qui est fait).
+      if (voteIncomplet(e.chaines[e.revue ?? 0] ?? [], choix, v.uid) && el.dataset.envoye !== '1') return;
       o.local[e.etape] = { envoye: true };
       o.rafraichir();
       await o.repondre({ ...(choix.favori ? { favori: choix.favori } : {}), bons: choix.bons ?? [] });
     },
   },
 };
+
+/** 👍 ou 👎 sur une devinette : un seul des deux à la fois ; retoucher le même l'enlève. */
+function juger(el: HTMLElement, o: { local: Record<string, unknown>; rafraichir: () => void }, v: { etat: { etape: string } }, sens: 'bons' | 'rates'): void {
+  const cle = `${v.etat.etape}-choix`;
+  const choix = (o.local[cle] as ChoixVote) ?? {};
+  const s = Number(el.dataset.valeur);
+  const autre = sens === 'bons' ? 'rates' : 'bons';
+  const deja = (choix[sens] ?? []).includes(s);
+  o.local[cle] = { ...choix, [sens]: deja ? (choix[sens] ?? []).filter((x) => x !== s) : [...(choix[sens] ?? []), s], [autre]: (choix[autre] ?? []).filter((x) => x !== s) };
+  o.rafraichir();
+}
 
 avecSuiteBilan(telephone);
