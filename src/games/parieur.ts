@@ -31,7 +31,7 @@ export const parieur: MiniJeu<Etat> = {
     gagner: 'Les gagnants se partagent les mises des perdants. Le joueur défié gagne 1 point par personne qui a parié sur lui, s’il réussit.',
     note: 'Jamais dans les 2 premiers jeux, pour que tout le monde ait des points à miser.',
   },
-  icone: '<rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="8.5" cy="8.5" r="1.8" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.8" fill="currentColor"/><circle cx="12" cy="12" r="1.8" fill="currentColor"/>',
+  icone: '<circle cx="12" cy="12" r="9.5" fill="currentColor"/><path d="M12 2.5v3.4M12 18.1v3.4M2.5 12h3.4M18.1 12h3.4M5.3 5.3l2.4 2.4M16.3 16.3l2.4 2.4M18.7 5.3l-2.4 2.4M7.7 16.3l-2.4 2.4" stroke="#5BE37D" stroke-width="2.2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="#5BE37D" stroke-width="1.6"/>',
   couleur: '#5BE37D',
   contenus: (e) => (e.defis ?? []).map((d) => d.id).filter((id): id is string => !!id),
   autorise: (numeroJeu) => numeroJeu > 2,
