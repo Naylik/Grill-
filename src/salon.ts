@@ -16,10 +16,10 @@ const chemin = (code: string, ...suite: string[]) => ref(db, ['salons', code, ..
 
 export class ErreurSalon extends Error {}
 
-export async function creerSalon(uid: string, prenom: string, duree: Duree, modeChoix: ModeChoix): Promise<string> {
+export async function creerSalon(uid: string, prenom: string, duree: Duree, modeChoix: ModeChoix, mode: Pick<Infos, 'mode' | 'missions'> = {}): Promise<string> {
   for (let essai = 0; essai < 12; essai++) {
     const code = codeAleatoire();
-    const infos: Infos = { hote: uid, duree, modeChoix, creeLe: maintenant() };
+    const infos: Infos = { hote: uid, duree, modeChoix, creeLe: maintenant(), ...mode };
     // On réserve le code d'un coup : si un salon récent l'utilise déjà, on en tire un autre.
     const res = await runTransaction(chemin(code, 'infos'), (actuel: Infos | null) => {
       if (actuel && actuel.creeLe > maintenant() - 12 * 3600_000) return undefined;
@@ -96,7 +96,7 @@ export async function reprendreLaMain(uid: string, code: string, ancienHote: str
   return res.committed;
 }
 
-export async function changerReglages(code: string, reglages: Partial<Pick<Infos, 'duree' | 'modeChoix'>>): Promise<void> {
+export async function changerReglages(code: string, reglages: Partial<Pick<Infos, 'duree' | 'modeChoix' | 'missions'>>): Promise<void> {
   await update(chemin(code, 'infos'), reglages);
 }
 

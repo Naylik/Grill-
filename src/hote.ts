@@ -14,6 +14,7 @@ import { accusationEnCours, accusationsADoubler, liste as listeAccusations, manc
 import { vanneDuClassement } from './narrateur';
 import type { Bilan, Deroule, EtatFlash, EtatRevelation, Score } from './types';
 import { flashReussie, nbPorteurs, POINTS_FLASH } from './flash';
+import { avecMissions, enVolonte, jouableEnVolonte } from './volonte';
 
 const DUREE_ROUE = 5_500;
 const DUREE_VOTE_JEU = 20_000;
@@ -78,6 +79,17 @@ function entrerChoixJeu(numeroJeu: number): Ecritures {
   return { ...base, 'deroule/propositions': null, 'deroule/roue': { gagnant, options, lanceLe: maintenant() }, 'deroule/finChrono': maintenant() + DUREE_ROUE };
 }
 
+/** À volonté : l'hôte choisit lui-même le jeu dans la grille des 12 (pas de roue, pas de chrono). */
+function entrerChoixVolonte(numeroJeu: number): Ecritures {
+  return { 'deroule/phase': 'choixJeu', 'deroule/numeroJeu': numeroJeu, 'deroule/propositions': null, 'deroule/roue': null, 'deroule/finChrono': null, 'deroule/vanne': null, 'deroule/flash': null, 'reponses': null, 'attente': null };
+}
+
+/** À volonté, quand on arrête : avec missions, on les révèle (sans pari détective) ; sinon, retour au salon. */
+async function terminerVolonte(): Promise<Ecritures> {
+  if (avecMissions()) return entrerRevelation();
+  return retourAuSalon();
+}
+
 function resultatVoteJeu(d: Deroule): string {
   const votes: Record<string, number> = {};
   for (const u of uids()) {
@@ -90,13 +102,15 @@ function resultatVoteJeu(d: Deroule): string {
 }
 
 /** Avant chaque jeu : l'écran des règles, le temps que tout le monde lise et appuie sur « Je suis prêt ». */
-function entrerRegles(id: string): Ecritures {
+function entrerRegles(id: string, numero = S.deroule?.numeroJeu ?? 0): Ecritures {
+  // À volonté sans missions : pas de missions flash.
+  if (!avecMissions()) return { 'deroule/phase': 'regles', 'deroule/numeroJeu': numero, 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null, 'deroule/flashTirage': null, 'deroule/flash': null, 'reponses': null, 'attente': null };
   return {
-    'deroule/phase': 'regles', 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null,
+    'deroule/phase': 'regles', 'deroule/numeroJeu': numero, 'deroule/jeuEnCours': id, 'deroule/finChrono': null, 'deroule/roue': null, 'deroule/propositions': null,
     // Missions flash : l'hôte publie seulement une graine ; chaque téléphone en déduit s'il est porteur, et laquelle.
     // Tirage dès l'écran des règles : tout le monde y voit le même encart, porteur ou non.
     // Au moins un porteur par jeu, choisi parmi les joueurs présents (un téléphone déconnecté ne peut pas la révéler).
-    'deroule/flashTirage': { numero: S.deroule?.numeroJeu ?? 0, graine: 1 + Math.floor(Math.random() * 2_000_000_000), nb: Math.min(nbPorteurs(uids().length), Math.max(1, connectes().length)), joueurs: connectes().length ? connectes() : uids() }, 'deroule/flash': null,
+    'deroule/flashTirage': { numero, graine: 1 + Math.floor(Math.random() * 2_000_000_000), nb: Math.min(nbPorteurs(uids().length), Math.max(1, connectes().length)), joueurs: connectes().length ? connectes() : uids() }, 'deroule/flash': null,
     'reponses': null, 'attente': null,
   };
 }
@@ -135,15 +149,18 @@ function appliquer(av: Avancee<unknown>, jeuId = S.deroule?.jeuEnCours): Ecritur
   const classement = uids()
     .map((u) => ({ prenom: S.joueurs[u].prenom, points: totalProvisoire(scores[u]) }))
     .sort((a, b) => b.points - a.points);
+  // À volonté sans missions : pas de missions flash, on passe tout de suite à « Et maintenant ? ».
+  const suite = avecMissions()
+    ? { 'deroule/phase': 'flash', 'deroule/flash': { numero: d.numeroJeu, etape: 'grillage', fin: maintenant() + DUREE_GRILLAGE } }
+    : { 'deroule/phase': 'classement', 'deroule/flash': null };
   return {
     ...e,
     scores,
     // Avant le classement : les missions flash de ce jeu sont révélées et votées.
-    'deroule/phase': 'flash',
-    'deroule/flash': { numero: d.numeroJeu, etape: 'grillage', fin: maintenant() + DUREE_GRILLAGE },
+    ...suite,
     'deroule/jeuxJoues': [...(d.jeuxJoues ?? []), d.jeuEnCours],
     'deroule/dernierJeu': { id: d.jeuEnCours, points: Object.fromEntries(uids().map((u) => [u, scores[u].detail![d.numeroJeu]])), sorte: av.fin.sorte, ...(av.fin.resume ? { resume: av.fin.resume } : {}) },
-    'deroule/vanne': vanneDuClassement(classement),
+    'deroule/vanne': enVolonte() ? null : vanneDuClassement(classement),
     'attente': null,
   };
 }
@@ -343,9 +360,10 @@ function calculer(): Ecritures | null {
   let e: Ecritures | null = null;
   switch (d.phase) {
     case 'missions':
-      if (tousPrets('mission1')) e = entrerChoixJeu(1);
+      if (tousPrets('mission1')) e = enVolonte() ? entrerChoixVolonte(1) : entrerChoixJeu(1);
       break;
     case 'choixJeu': {
+      if (enVolonte()) break; // l'hôte choisit à la main (commande « jouer:… »)
       const fini = now >= (d.finChrono ?? 0) || (d.propositions && tousPrets(`choix-${d.numeroJeu}`));
       if (fini) e = entrerRegles(d.roue?.gagnant ?? (d.propositions?.length ? resultatVoteJeu(d) : JEUX[0].id));
       break;
@@ -407,7 +425,15 @@ export async function commandeHote(valeur: string): Promise<void> {
   if (!estHote() || !S.code || !S.deroule || !S.infos) return;
   const d = S.deroule;
   let e: Ecritures | null = null;
-  if (valeur === 'suivant' && d.phase === 'classement') {
+  if (enVolonte() && d.phase === 'choixJeu' && valeur.startsWith('jouer:')) {
+    const jeu = jeuParId(valeur.slice(6));
+    if (jeu && jouableEnVolonte(jeu, uids().length)) e = entrerRegles(jeu.id, d.numeroJeu);
+  } else if (enVolonte() && d.phase === 'classement' && ['encore', 'changer', 'terminer'].includes(valeur)) {
+    // « Et maintenant ? » : le même jeu, un autre jeu, ou on s'arrête.
+    if (valeur === 'encore' && d.jeuEnCours) e = entrerRegles(d.jeuEnCours, d.numeroJeu + 1);
+    else if (valeur === 'changer') e = entrerChoixVolonte(d.numeroJeu + 1);
+    else if (valeur === 'terminer') e = await terminerVolonte();
+  } else if (valeur === 'suivant' && d.phase === 'classement') {
     // Une seule mission principale par soirée : plus de 2e mission à la mi-partie.
     if (d.numeroJeu >= S.infos.duree) e = { 'deroule/phase': 'detective', reponses: null, attente: null };
     else e = entrerChoixJeu(d.numeroJeu + 1);
@@ -430,11 +456,7 @@ export async function commandeHote(valeur: string): Promise<void> {
       e = { 'deroule/revelation/fin': maintenant() - 1 };
     }
   } else if (valeur === 'rejouer' && d.phase === 'fin') {
-    await remove(ref(db, `secrets/${S.code}`));
-    e = {
-      deroule: { phase: 'salon', numeroJeu: 0 }, jeu: null, scores: null, reponses: null, compteurs: null, tirage: null,
-      revelation: null, votes: null, paris: null, motsImposteur: null, attente: null, prive: null, accusations: null, vengeance: null,
-    };
+    e = await retourAuSalon();
   } else if (valeur === 'forcer' && d.phase === 'flash') {
     // L'hôte peut passer les missions flash (un porteur absent, un vote qui traîne).
     e = d.flash?.etape === 'vote' || d.flash?.etape === 'grillage' ? { 'deroule/flash/fin': maintenant() - 1 } : { 'deroule/phase': 'classement' };
@@ -442,9 +464,18 @@ export async function commandeHote(valeur: string): Promise<void> {
     e = demarrerJeu(d.jeuEnCours);
   } else if (valeur === 'forcer' && ['missions', 'detective'].includes(d.phase)) {
     // L'hôte peut avancer sans attendre un joueur absent ou trop lent.
-    e = d.phase === 'detective' ? entrerRevelation() : entrerChoixJeu(d.phase === 'missions' ? 1 : d.numeroJeu + 1);
+    e = d.phase === 'detective' ? entrerRevelation() : enVolonte() ? entrerChoixVolonte(1) : entrerChoixJeu(d.phase === 'missions' ? 1 : d.numeroJeu + 1);
   }
   if (e) await ecrire(e);
+}
+
+/** Retour au salon (« Rejouer », ou fin d'une session À volonté sans missions) : on efface la partie, on garde les joueurs. */
+async function retourAuSalon(): Promise<Ecritures> {
+  await remove(ref(db, `secrets/${S.code}`));
+  return {
+    deroule: { phase: 'salon', numeroJeu: 0 }, jeu: null, scores: null, reponses: null, compteurs: null, tirage: null,
+    revelation: null, votes: null, paris: null, motsImposteur: null, attente: null, prive: null, accusations: null, vengeance: null,
+  };
 }
 
 /** Ajoute des contenus joués à la mémoire du groupe (sans attendre : une erreur ne bloque pas la partie). */

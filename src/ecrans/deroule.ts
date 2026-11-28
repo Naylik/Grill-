@@ -19,6 +19,8 @@ import { lignePointsJeu } from './points';
 import { boutonsVideo } from './video';
 import { mallow, sequenceGrille } from '../mallow';
 import { missionsGrillees, PENALITE_MENSONGE } from '../accusations';
+import { JEUX } from '../games';
+import { avecMissions, enVolonte, jouableEnVolonte, LIBELLE_VOLONTE } from '../volonte';
 
 
 const uids = () => Object.entries(S.joueurs).sort((a, b) => a[1].rejointLe - b[1].rejointLe).map(([u]) => u);
@@ -26,12 +28,37 @@ const nom = (u: string) => esc(S.joueurs[u]?.prenom ?? '?');
 const boutonHote = (valeur: string, texte: string, couleur = 'jaune') =>
   estHote() ? `<button class="bouton ${couleur}" data-action="hote" data-valeur="${valeur}">${texte}</button>` : '';
 
+/** « Jeu 3/6 » en soirée, « ∞ À volonté » en mode À volonté. */
+const libelleJeu = (n: number) => (enVolonte() ? LIBELLE_VOLONTE : `Jeu ${n}/${S.infos!.duree}`);
+
 // ——— Choix du jeu ———
+
+/** À volonté : la grille des 12 jeux. L'hôte en touche un puis lance ; les autres regardent son choix arriver. */
+function ecranChoixVolonte(): string {
+  const nb = uids().length;
+  const hote = estHote();
+  const choisi = hote ? jeuParId(brouillons.jeuVolonte) : undefined;
+  const ok = choisi && jouableEnVolonte(choisi, nb);
+  const tuiles = JEUX.map((j, i) => {
+    const jouable = jouableEnVolonte(j, nb);
+    const info = jouable ? '' : `<span class="joue">Dès ${j.autorise(99, 4) ? 4 : 5} joueurs</span>`;
+    return `<button class="tuile-jeu ${ok && choisi!.id === j.id ? 'choisi' : ''}" style="--c:${j.couleur};--i:${i}" ${!jouable ? 'disabled' : hote ? `data-action="choisirJeuVolonte" data-valeur="${j.id}"` : 'tabindex="-1" aria-disabled="true"'} aria-pressed="${!!ok && choisi!.id === j.id}">
+      <span class="tuile-icone"><svg viewBox="0 0 24 24" aria-hidden="true">${j.icone}</svg></span><h3>${esc(j.nom)}</h3>${info}</button>`;
+  }).join('');
+  const hoteNom = nom(S.infos!.hote);
+  return `<span class="pastille-volonte">∞ À VOLONTÉ</span>
+    <h2 class="centre-texte">${hote ? 'On joue à quoi ?' : `${hoteNom} choisit le jeu…`}</h2>
+    <div class="grille-jeux choix-volonte">${tuiles}</div>
+    <div class="pile bas">${hote
+      ? `<button class="bouton jaune" data-action="lancerVolonte" ${ok ? '' : 'disabled'}>${ok ? `C’est parti !<span class="sous">${esc(choisi!.nom)}</span>` : 'Touche un jeu'}</button>`
+      : '<p class="attente">Le jeu démarre dès que l’hôte a choisi.</p>'}</div>`;
+}
 
 /** Noms courts pour la roue (les noms complets dépassent des parts). */
 const NOMS_ROUE: Record<string, string> = { combien: 'Combien ?', justeprix: 'Juste Prix', parieur: 'Parieur', imposteur: 'Imposteur', reflexe: 'Réflexe', timing: 'Timing', patate: 'Colis', quitte: 'Quitte/Double', telephone: 'Dessin', mines: 'Mines', territoires: 'Territoires', telepathie: 'Télépathie' };
 
 export function ecranChoixJeu(): string {
+  if (enVolonte()) return ecranChoixVolonte();
   const d = S.deroule!;
   const total = S.infos!.duree;
   const entete = `<p class="petit centre-texte">Jeu ${d.numeroJeu} sur ${total} · manche ${d.numeroJeu <= total / 2 ? 1 : 2}</p>`;
@@ -85,9 +112,9 @@ export function ecranRegles(): string {
         <div class="regle-arene"><b>★</b><span>${esc(jeu.explication.gagner)}</span></div>
         ${jeu.explication.note ? `<div class="regle-arene"><b>!</b><span>${esc(jeu.explication.note)}</span></div>` : ''}
       </div>`;
-  return `<div class="entete-jeu regles" style="--c:${jeu.couleur}"><span class="icone-jeu"><svg viewBox="0 0 24 24" aria-hidden="true">${jeu.icone}</svg></span><span>Jeu ${d.numeroJeu}/${S.infos!.duree} · les règles</span><strong>${esc(jeu.nom)}</strong></div>
+  return `<div class="entete-jeu regles" style="--c:${jeu.couleur}"><span class="icone-jeu"><svg viewBox="0 0 24 24" aria-hidden="true">${jeu.icone}</svg></span><span>${libelleJeu(d.numeroJeu)} · les règles</span><strong>${esc(jeu.nom)}</strong></div>
     ${regles}
-    ${lignePointsJeu(jeu.id)}
+    ${enVolonte() ? '' : lignePointsJeu(jeu.id)}
     ${blocFlash()}
     <div class="pile bas">
       ${pret
@@ -125,7 +152,7 @@ export function ecranJeu(): string {
       <button class="bouton jaune" data-action="majAppli">Mettre à jour</button>`;
   }
   if (!S.jeu || (S.jeu as { jeuId?: string }).jeuId !== jeu.id) return `<p class="attente">Chargement du jeu…</p>`;
-  return `${ouvertureEtRideau(jeu)}<div class="entete-jeu ${jeu.nom.length > 16 ? 'nom-long' : ''}" style="--c:${jeu.couleur}"><span>Jeu ${S.deroule!.numeroJeu}/${S.infos!.duree}</span><strong>${esc(jeu.nom)}</strong></div>${jeu.ecran(vueJeu())}`;
+  return `${ouvertureEtRideau(jeu)}<div class="entete-jeu ${jeu.nom.length > 16 ? 'nom-long' : ''}" style="--c:${jeu.couleur}"><span>${libelleJeu(S.deroule!.numeroJeu)}</span><strong>${esc(jeu.nom)}</strong></div>${jeu.ecran(vueJeu())}`;
 }
 
 /**
@@ -145,7 +172,7 @@ function ouvertureEtRideau(jeu: { id: string; nom: string; couleur: string; icon
   if (depuis(`ouverture-${n}`) < DUREE_OUVERTURE) {
     return `<div class="ouverture-jeu" style="--c:${jeu.couleur}" aria-hidden="true"><div class="carte-ouverture">
       <span class="icone-ouverture"><svg viewBox="0 0 24 24">${jeu.icone}</svg></span>
-      <span>Jeu ${n}/${S.infos!.duree}</span><strong>${esc(jeu.nom)}</strong><em>C’est parti !</em></div></div>`;
+      <span>${libelleJeu(n)}</span><strong>${esc(jeu.nom)}</strong><em>C’est parti !</em></div></div>`;
   }
   const m = j.manche ?? j.index;
   if (typeof m !== 'number' || m <= 0 || j.phase === 'bilan') return '';
@@ -156,7 +183,30 @@ function ouvertureEtRideau(jeu: { id: string; nom: string; couleur: string; icon
 // ——— Classement provisoire ———
 
 let rappel = { numero: -1, texte: '' };
+/** À volonté, après chaque partie : pas de classement, juste « Et maintenant ? ». */
+function ecranSuiteVolonte(): string {
+  const d = S.deroule!;
+  const jeu = jeuParId(d.jeuEnCours ?? d.dernierJeu?.id);
+  const carte = jeu
+    ? `<div class="tuile-jeu carte-fin-volonte" style="--c:${jeu.couleur};--i:0"><span class="tuile-icone"><svg viewBox="0 0 24 24" aria-hidden="true">${jeu.icone}</svg></span><h3>${esc(jeu.nom)}</h3><p>Partie terminée !</p></div>`
+    : '';
+  const bas = estHote()
+    ? `<div class="suite-volonte">
+        ${jeu ? `<button class="bouton jaune" data-action="hote" data-valeur="encore">Encore une !<span class="sous">${esc(jeu.nom)}</span></button>` : ''}
+        <button class="bouton cyan" data-action="hote" data-valeur="changer">Changer de jeu</button>
+        <button class="bouton rose" data-action="hote" data-valeur="terminer">Terminer${avecMissions() ? '<span class="sous">et révéler les missions</span>' : ''}</button>
+      </div>`
+    : '<p class="attente">L’hôte choisit : encore une, un autre jeu, ou on s’arrête.</p>';
+  return `<span class="pastille-volonte">∞ À VOLONTÉ</span>
+    ${carte}
+    <div class="mallow-volonte">${mallow({ taille: 110 })}</div>
+    <h2 class="centre-texte">Et maintenant ?</h2>
+    ${avecMissions() ? `<button class="rappel" data-action="onglet" data-valeur="missions">${RAPPELS_MISSION[d.numeroJeu % RAPPELS_MISSION.length]}</button>` : ''}
+    <div class="pile bas">${bas}</div>`;
+}
+
 export function ecranClassement(): string {
+  if (enVolonte()) return ecranSuiteVolonte();
   const d = S.deroule!;
   const total = S.infos!.duree;
   if (rappel.numero !== d.numeroJeu) rappel = { numero: d.numeroJeu, texte: auHasard(RAPPELS_MISSION) };
@@ -293,15 +343,15 @@ export function ecranRevelation(): string {
           { valeur: '0', texte: 'Il a dit vrai', couleur: 'vert' },
         ]) : ''}</div>`;
     });
-    return `${entete}${chrono(r.fin)}${bulle(`${nom(sujet)} a-t-il menti quand on l’a accusé ? S’il a menti : −${PENALITE_MENSONGE} pts.`)}${cartes.join('')}${blocs.join('')}
+    return `${entete}${chrono(r.fin)}${bulle(`${nom(sujet)} a-t-il menti quand on l’a accusé ? ${enVolonte() ? 'Que le groupe juge !' : `S’il a menti : −${PENALITE_MENSONGE} pts.`}`)}${cartes.join('')}${blocs.join('')}
       <div class="pile bas">${boutonHote('cloreVote', 'Clore le vote', 'discret')}</div>`;
   }
   // Résultat pour ce joueur (calculé ici à partir des votes, comme le fera l'hôte à la fin).
   const verdicts = missions.map((m, i) => {
-    if (grillees[i + 1]) return `<div class="verdict grille"><strong>Mission ${i + 1} : grillée en direct</strong><span>0 pt</span></div>`;
+    if (grillees[i + 1]) return `<div class="verdict grille"><strong>Mission ${i + 1} : grillée en direct</strong><span>${enVolonte() ? '' : '0 pt'}</span></div>`;
     const ok = majoriteOui(Object.values(S.votes[`m${i + 1}-${sujet}`] ?? {}).map((v) => v === true));
     const pts = pointsMission({ difficulte: m.difficulte, reussie: true, vengeance: m.vengeance }, S.infos?.duree ?? 6);
-    return `<div class="verdict ${ok ? 'ok' : 'ko'}"><strong>Mission ${i + 1} : ${ok ? 'réussie' : 'ratée'}${m.vengeance ? ' (vengeance)' : ''}</strong><span>${ok ? `+${pts} pts` : '0 pt'}</span></div>`;
+    return `<div class="verdict ${ok ? 'ok' : 'ko'}"><strong>Mission ${i + 1} : ${ok ? 'réussie' : 'ratée'}${m.vengeance ? ' (vengeance)' : ''}</strong><span>${enVolonte() ? '' : ok ? `+${pts} pts` : '0 pt'}</span></div>`;
   });
   const grillages = (r.paris ?? []).map((p) => {
     const n = missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number));
@@ -310,7 +360,7 @@ export function ecranRevelation(): string {
   });
   const menteur = (r.mensonges ?? []).map((m) => {
     const n = missionTrouvee(Object.values(S.votes[`l-${m.cle}`] ?? {}).map(Number));
-    return `<div class="verdict ${n ? 'grille' : 'ok'}"><strong>${n ? `Menteur ! ${nom(m.de)} avait vu juste` : `Accusation de ${nom(m.de)} : il a dit vrai`}</strong><span>${n ? `−${PENALITE_MENSONGE} pts` : 'rien'}</span></div>`;
+    return `<div class="verdict ${n ? 'grille' : 'ok'}"><strong>${n ? `Menteur ! ${nom(m.de)} avait vu juste` : `Accusation de ${nom(m.de)} : il a dit vrai`}</strong><span>${enVolonte() ? '' : n ? `−${PENALITE_MENSONGE} pts` : 'rien'}</span></div>`;
   });
   const dernier = r.index + 1 >= r.ordre.length;
   const grille = (r.paris ?? []).some((p) => missionTrouvee(Object.values(S.votes[`d-${p.de}`] ?? {}).map(Number)) > 0)
@@ -320,7 +370,7 @@ export function ecranRevelation(): string {
     : '';
   return `${moment}${entete}<div class="pile">${verdicts.join('')}${grillages.join('')}${menteur.join('')}</div>
     ${bulle(verdicts.every((v) => v.includes('ok')) ? `${nom(sujet)}, agent d’élite. Ça fait peur.` : `${nom(sujet)}, l’espionnage, ce n’est peut-être pas pour toi.`)}
-    <div class="pile bas">${estHote() ? boutonHote('suivant', dernier ? 'Voir le podium' : 'Joueur suivant') : '<p class="attente">L’hôte passe à la suite.</p>'}</div>`;
+    <div class="pile bas">${estHote() ? boutonHote('suivant', dernier ? (enVolonte() ? 'Voir le bilan' : 'Voir le podium') : 'Joueur suivant') : '<p class="attente">L’hôte passe à la suite.</p>'}</div>`;
 }
 
 // ——— Saison ———
@@ -350,7 +400,29 @@ export function classementDeSaison(): string {
 
 // ——— Fin ———
 
+/** À volonté avec missions : pas de podium, le bilan des missions de chacun. */
+function ecranFinVolonte(): string {
+  const b = S.deroule!.bilan;
+  const blocs = uids().map((u) => {
+    const missions = b?.missions?.[u] ?? [];
+    const reussies = missions.filter((m) => m.reussie).length;
+    return `<div class="boite detail-joueur missions-volonte">
+      <div class="ligne">${pastille(S.joueurs[u], 30)}<strong>${nom(u)}</strong><span class="total">${reussies}/${missions.length}</span></div>
+      ${missions.map((m) => `<div class="verdict ${m.reussie ? 'ok' : 'ko'}"><strong>${esc(m.texte)}</strong><span>${m.reussie ? 'réussie' : 'ratée'}</span></div>`).join('')}
+    </div>`;
+  }).join('');
+  const total = uids().reduce((t, u) => t + (b?.missions?.[u] ?? []).filter((m) => m.reussie).length, 0);
+  return `<span class="pastille-volonte">∞ À VOLONTÉ</span>
+    <h2 class="centre-texte">Bilan des missions</h2>
+    <div class="mallow-podium"><div class="danse">${mallow({ taille: 96 })}</div><p>${total ? `<strong>${total} mission${total > 1 ? 's' : ''}</strong> réussie${total > 1 ? 's' : ''} ce soir` : 'Aucune mission réussie : vous étiez tous trop surveillés'}</p></div>
+    ${blocs}
+    <div class="pile bas">
+      ${estHote() ? boutonHote('rejouer', 'Retour au salon') : '<p class="attente">L’hôte peut relancer une session.</p>'}
+      <button class="bouton discret" data-action="quitter">Quitter</button></div>`;
+}
+
 export function ecranFin(): string {
+  if (enVolonte()) return ecranFinVolonte();
   const b = S.deroule!.bilan;
   const liste = uids().sort((a, c) => totalFinal(S.scores[c]) - totalFinal(S.scores[a]));
   const podium = [1, 0, 2]

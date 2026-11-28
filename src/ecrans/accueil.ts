@@ -4,6 +4,7 @@ import { S } from '../etat';
 import { logo } from '../mallow';
 import { boutonSon, erreur } from './commun';
 import { sonActif } from '../son';
+import { volonteDebloque } from '../volonte';
 import { blocRetour, cartesAccueil, compteurAccueil, mallowAccueil, retourJoueur } from '../accueilVivant';
 
 /** Accueil sans lien d'invitation : la case du code n'apparaît qu'après « Rejoindre ». */
@@ -11,6 +12,12 @@ let voirCode = false;
 export const montrerCode = (): void => {
   voirCode = true;
 };
+
+/** Mode À volonté : on choisit son mini-jeu et on le rejoue sans fin (futur mode payant, ouvert pendant les tests). */
+const INFINI = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" aria-hidden="true"><path d="M12 12c-2-2.6-3.6-4-5.5-4a4 4 0 0 0 0 8c1.9 0 3.5-1.4 5.5-4zm0 0c2 2.6 3.6 4 5.5 4a4 4 0 0 0 0-8c-1.9 0-3.5 1.4-5.5 4z"/></svg>';
+const boutonVolonte = (): string => (volonteDebloque()
+  ? `<button class="bouton-volonte" data-action="creerVolonte"><span class="infini">${INFINI}</span><span><strong>Mode À volonté</strong><small>Les 12 jeux, sans points. Rejoue ton préféré à l’infini.</small></span><span class="fleche" aria-hidden="true">›</span></button>`
+  : '');
 
 const BOUTON_LISTE = `<button class="bouton-liste" data-action="vueAccueil" data-valeur="jeux">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
@@ -49,6 +56,7 @@ export function ecranAccueil(codeLien: string | null): string {
       </label>
       ${erreur(S.erreur)}
       ${actions}
+      ${codeLien || voirCode ? '' : boutonVolonte()}
       ${BOUTON_LISTE}
     </div>
   </section>`;

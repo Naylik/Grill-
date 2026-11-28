@@ -1370,3 +1370,26 @@ button.carte-s.c { font: inherit; cursor: pointer; }
 .tableau-points dd .pt { font-family: var(--titre); font-weight: 900; font-size: var(--txt-m); color: var(--jaune); white-space: nowrap; }
 .tableau-points dd small { display: block; margin-top: 2px; font-size: var(--txt-xs); line-height: 1.35; color: var(--texte-3); }
 .tableau-points dd small .pt { font-size: var(--txt-s); }
+
+/* ——— Mode À volonté (violet : la couleur du mode) ——— */
+.bouton-volonte { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 62px; padding: 10px 16px; border-radius: var(--r-l); border: 2px solid color-mix(in srgb, var(--violet) 70%, transparent); background: linear-gradient(135deg, color-mix(in srgb, var(--electrique) 32%, var(--fond-2)), var(--fond-2)); color: var(--texte); cursor: pointer; text-align: left; box-shadow: 0 0 22px -10px var(--violet); font: inherit; }
+.bouton-volonte .infini { flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; background: var(--violet); display: grid; place-items: center; color: var(--fond); }
+.bouton-volonte strong { display: block; font-family: var(--titre); font-weight: 800; font-size: var(--txt-m); }
+.bouton-volonte small { display: block; font-size: var(--txt-xs); font-weight: 600; color: var(--texte-2); margin-top: 2px; }
+.bouton-volonte .fleche { margin-left: auto; color: var(--violet); font-size: 22px; font-weight: 800; }
+.pastille-volonte { align-self: center; display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: var(--r-rond); background: var(--violet); color: var(--fond); font-family: var(--titre); font-weight: 800; font-size: var(--txt-xs); letter-spacing: .5px; }
+.volonte-salon { text-align: center; }
+.volonte-salon .intitule { text-align: left; }
+.grille-jeux.choix-volonte .tuile-jeu { cursor: pointer; text-align: left; font: inherit; color: inherit; position: relative; }
+.grille-jeux.choix-volonte .tuile-jeu.choisi { background: color-mix(in srgb, var(--c) 22%, var(--fond-2)); border: 3px solid var(--c); box-shadow: 0 0 26px -6px var(--c); transform: scale(1.03); }
+.grille-jeux.choix-volonte .tuile-jeu.choisi::after { content: '✓'; position: absolute; top: 8px; right: 10px; width: 24px; height: 24px; border-radius: 50%; background: var(--c); color: var(--fond); display: grid; place-items: center; font-weight: 900; font-size: 14px; }
+.grille-jeux.choix-volonte .tuile-jeu:disabled { opacity: .35; filter: grayscale(1); cursor: default; }
+.grille-jeux.choix-volonte .tuile-jeu .joue { font-size: var(--txt-xs); font-weight: 700; color: var(--texte); }
+.suite-volonte { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.suite-volonte .bouton:first-child { grid-column: 1 / -1; }
+.bouton .sous { display: block; font-family: var(--corps); font-size: var(--txt-xs); font-weight: 700; opacity: .8; margin-top: 2px; }
+.carte-fin-volonte { align-items: center; text-align: center; padding: 22px; }
+.carte-fin-volonte h3 { font-size: var(--txt-xl); }
+.mallow-volonte { display: grid; place-items: center; }
+.missions-volonte .verdict { margin-top: 6px; }
+.grille-jeux.choix-volonte .tuile-jeu[aria-disabled="true"] { cursor: default; }

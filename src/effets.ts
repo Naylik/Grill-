@@ -18,6 +18,10 @@ import { accusationEnCours } from './accusations';
 import { envolerReaction } from './dessin';
 import { REACTIONS } from './games/telephone';
 const reactionsVues = new Map<string, number>();
+import { enVolonte } from './volonte';
+
+/** À volonté : pas de classement affiché, donc pas de mission qui en dépend. */
+const SANS_CLASSEMENT = { h19: true };
 import { VERSION, verifierVersion } from './version';
 
 export function repondre(etape: string, valeurs: Record<string, unknown> = {}): Promise<void> {
@@ -52,7 +56,7 @@ export function effetsJoueur(): void {
   if (d.phase === 'missions') {
     // Pas de propositions tant que le joueur tiré au sort n'a pas répondu à l'offre de vengeance.
     const attendVengeance = charges.has('offreVengeance') ? !!S.offreVengeance && !secrets.vengeanceChoix : true;
-    if (!secrets.mission1 && !secrets.propositions1?.length && !attendVengeance) une('p1', () => preparerPropositions(code, S.uid, S.joueurs, secrets, memoireDuGroupe()));
+    if (!secrets.mission1 && !secrets.propositions1?.length && !attendVengeance) une('p1', () => preparerPropositions(code, S.uid, S.joueurs, secrets, enVolonte() ? { ...memoireDuGroupe(), ...SANS_CLASSEMENT } : memoireDuGroupe()));
     if (secrets.mission1 && S.maReponse?.etape !== 'mission1') une('r1', () => repondre('mission1'));
   }
   // Mission flash : au début du jeu, je regarde si je suis tiré au sort, et je tire ma mission (en secret).

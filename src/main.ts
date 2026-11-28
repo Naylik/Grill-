@@ -40,6 +40,7 @@ import { totalFinal } from './score';
 import { ErreurSalon, MIN_JOUEURS, changerReglages, creerSalon, quitterSalon, rejoindreSalon } from './salon';
 import { ecranAccueil, montrerCode } from './ecrans/accueil';
 import { ecranListeJeux } from './ecrans/jeux';
+import { avecMissions, enVolonte, volonteDebloque } from './volonte';
 import { ecranSalon, lienSalon } from './ecrans/salon';
 import { ecranPartie } from './ecrans/partie';
 import type { Duree, ModeChoix } from './types';
@@ -176,6 +177,18 @@ action('creer', async (el) => {
   }
 });
 
+// Mode À volonté : même salon, mais on choisit le mini-jeu et on le rejoue sans fin, sans points.
+action('creerVolonte', async (el) => {
+  const prenom = prenomSaisi();
+  if (!prenom || !volonteDebloque()) return;
+  (el as HTMLButtonElement).disabled = true;
+  try {
+    await entrer(await creerSalon(S.uid, prenom, 6, 'roue', { mode: 'volonte', missions: true }));
+  } catch (e) {
+    signalerErreur(e);
+  }
+});
+
 action('montrerCode', () => {
   montrerCode();
   demanderAffichage();
@@ -206,14 +219,18 @@ action('reglages', () => {
 });
 action('duree', (el) => changerReglages(S.code!, { duree: Number(el.dataset.valeur) as Duree }));
 action('mode', (el) => changerReglages(S.code!, { modeChoix: el.dataset.valeur as ModeChoix }));
+action('missionsVolonte', (el) => changerReglages(S.code!, { missions: el.dataset.valeur === 'oui' }));
 
 action('lancer', async () => {
   if (!estHote() || Object.keys(S.joueurs).length < MIN_JOUEURS) return;
   // Saison : au plus une vengeance par partie, tirée au hasard parmi les joueurs grillés la dernière fois.
-  const offre = tirerVengeance(S.saison, Object.keys(S.joueurs));
+  const offre = enVolonte() ? null : tirerVengeance(S.saison, Object.keys(S.joueurs));
   await update(ref(db, `salons/${S.code}`), {
     vengeance: offre ? { offre: { [offre.de]: { choix: Object.fromEntries(offre.choix.map((u) => [u, true])) } } } : null,
-    deroule: { phase: 'missions', numeroJeu: 0, partieId: `${S.code}-${Date.now()}` },
+    // À volonté sans missions : on passe directement au choix du jeu.
+    deroule: enVolonte() && !avecMissions()
+      ? { phase: 'choixJeu', numeroJeu: 1, partieId: `${S.code}-${Date.now()}` }
+      : { phase: 'missions', numeroJeu: 0, partieId: `${S.code}-${Date.now()}` },
   });
   // Compteur public « soirées grillées » (accueil) : +1 à chaque partie lancée. Sans réseau ou sans règle : tant pis.
   void runTransaction(ref(db, 'stats/parties'), (n: number | null) => (n ?? 0) + 1).catch(() => undefined);
@@ -311,6 +328,14 @@ action('pret', async (el) => {
   sons.ding();
   await repondre(`pret-${S.deroule.numeroJeu}`);
 });
+
+// À volonté : l'hôte touche une tuile (choix local), puis « C'est parti ! » envoie le jeu.
+action('choisirJeuVolonte', (el) => {
+  brouillons.jeuVolonte = el.dataset.valeur!;
+  sons.ding();
+  demanderAffichage();
+});
+action('lancerVolonte', () => (brouillons.jeuVolonte ? commandeHote(`jouer:${brouillons.jeuVolonte}`) : undefined));
 
 action('voterJeu', (el) => {
   sons.ding();

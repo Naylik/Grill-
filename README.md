@@ -547,3 +547,8 @@ Ouvre plusieurs fenêtres de navigation privée : chacune compte comme un joueur
 - 27/11/2026 · Pictogrammes des mini-jeux (validés par Kilyan) : Juste Prix → étiquette de prix, Imposteur → masque,
   Quitte ou Double → « ×2 », Champ de mines → bombe, Roue des territoires → roue en parts, Télépathie → boule de cristal.
   Parieur → jeton de casino (choix C ; la pile de jetons n'avait pas été retenue).
+- 28/11/2026 · Mode « À volonté » (bouton violet sur l'accueil) : on choisit un des 12 mini-jeux et on le rejoue sans fin
+  (Encore une ! / Changer de jeu / Terminer). Jamais de points ni de classement. Missions au choix de l'hôte : avec
+  (mission principale, flash, GRILLÉ !, révélées et votées à la fin, sans points, puis un bilan des missions) ou sans.
+  Pas de saison, de pari détective ni de vidéo. Argument : 12 jeux de soirée dans une seule appli. Futur mode payant :
+  verrou prêt dans `src/volonte.ts` (`VOLONTE_PAYANT`), éteint pendant les tests.

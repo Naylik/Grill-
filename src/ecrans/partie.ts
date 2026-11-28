@@ -8,6 +8,7 @@ import { coucheGrille } from './accusation';
 import { fenetreVengeance } from './missions';
 import { ecranFlash } from './flash';
 import { ecranRegles } from './deroule';
+import { avecMissions } from '../volonte';
 import { ecranChoixJeu, ecranClassement, ecranDetective, ecranFin, ecranJeu, ecranRevelation } from './deroule';
 
 function bandeau(): string {
@@ -22,10 +23,10 @@ function bandeau(): string {
       <p>Quitter la partie ? Tu pourras revenir plus tard avec le code <strong>${S.code}</strong>, tes missions et tes points seront gardés.</p>
       <div class="options deux"><button class="option" data-action="annulerQuitter">Rester</button><button class="option actif rose" data-action="quitter">Quitter</button></div>
     </div>` : ''}
-    <nav class="onglets">
+    ${avecMissions() ? `<nav class="onglets">
       <button class="${S.onglet === 'partie' ? 'actif' : ''}" data-action="onglet" data-valeur="partie">Partie</button>
       <button class="${S.onglet === 'missions' ? 'actif' : ''}" data-action="onglet" data-valeur="missions">Mes missions${badge}</button>
-    </nav>
+    </nav>` : ''}
   </header>`;
 }
 
@@ -45,6 +46,8 @@ function contenuPartie(): string {
 }
 
 export function ecranPartie(): string {
+  // À volonté sans missions : ni onglet « Mes missions », ni bouton GRILLÉ !
+  if (!avecMissions()) return bandeau() + `<section class="ecran phase-${S.deroule!.phase}">${contenuPartie()}</section>`;
   const contenu = S.onglet === 'missions' ? ongletMissions() : `<section class="ecran phase-${S.deroule!.phase}">${contenuPartie()}</section>`;
   return bandeau() + contenu + (fenetreVengeance() || coucheGrille());
 }

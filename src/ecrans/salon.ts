@@ -7,6 +7,7 @@ import type { Joueur } from '../types';
 import { esc } from '../outils';
 import { brouillons } from '../ui';
 import { classementSaison, niveauCuisson, saisonsConnues } from '../saison';
+import { enVolonte } from '../volonte';
 
 /** Choix de la saison (hôte) : nouvelle saison, une saison déjà jouée, ou sans saison. */
 function blocSaison(hote: boolean): string {
@@ -79,7 +80,19 @@ export function ecranSalon(qr: string): string {
     `<button class="option ${valeur === actuel ? `actif ${classe}` : ''}" aria-pressed="${valeur === actuel}"
       ${hote ? `data-action="${groupe}" data-valeur="${valeur}"` : 'disabled'}>${libelle}</button>`;
   const resume = `${({ 4: 'Courte', 6: 'Normale', 8: 'Longue' } as Record<number, string>)[infos.duree] ?? ''} · ${infos.modeChoix === 'vote' ? 'Vote entre 2' : 'La roue'}${infos.saison ? ` · Saison « ${esc(infos.nomSaison ?? '')} »` : ''}`;
-  const reglages = S.reglagesOuverts
+  // À volonté : pas de durée, de roue ni de saison ; seulement les missions, avec ou sans.
+  const avec = infos.missions !== false;
+  const reglagesVolonte = `<div class="boite pile volonte-salon">
+      <span class="pastille-volonte">∞ À VOLONTÉ</span>
+      <p class="aide">Pas de points : vous choisissez un mini-jeu et vous y jouez autant que vous voulez.</p>
+      <span class="intitule">Missions secrètes</span>
+      <div class="options deux">
+        ${choix('missionsVolonte', 'oui', avec ? 'oui' : 'non', 'Avec<small>juste pour le fun</small>', 'vert')}
+        ${choix('missionsVolonte', 'non', avec ? 'oui' : 'non', 'Sans<small>que les jeux</small>', 'vert')}
+      </div>
+      <p class="aide">${avec ? 'Chacun a sa mission et le bouton GRILLÉ ! marche. On révèle tout à la fin, sans points.' : 'Juste les mini-jeux : pas de missions, pas de bouton GRILLÉ !'}</p>
+    </div>`;
+  const reglages = enVolonte() ? reglagesVolonte : S.reglagesOuverts
     ? `<div class="boite reglages-salon">
       <div class="pile">
         <span class="intitule">Durée</span>
@@ -115,7 +128,7 @@ export function ecranSalon(qr: string): string {
     ${erreur(S.erreur)}
     <div class="pile bas">
       ${hote
-        ? `<button class="bouton jaune" data-action="lancer" ${n < MIN_JOUEURS ? 'disabled' : ''}>${n < MIN_JOUEURS ? `Encore ${MIN_JOUEURS - n} joueur${MIN_JOUEURS - n > 1 ? 's' : ''}…` : 'Lancer la partie'}</button>`
+        ? `<button class="bouton jaune" data-action="lancer" ${n < MIN_JOUEURS ? 'disabled' : ''}>${n < MIN_JOUEURS ? `Encore ${MIN_JOUEURS - n} joueur${MIN_JOUEURS - n > 1 ? 's' : ''}…` : enVolonte() ? 'Choisir le jeu' : 'Lancer la partie'}</button>`
         : `<p class="attente">L’hôte lance la partie quand tout le monde est là.</p>`}
       <button class="bouton cyan" data-action="inviter">Inviter des amis</button>
       <button class="bouton discret" data-action="quitter">Quitter le salon</button>

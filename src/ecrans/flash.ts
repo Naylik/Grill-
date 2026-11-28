@@ -4,6 +4,7 @@ import { S, estHote } from '../etat';
 import { esc } from '../outils';
 import { POINTS_FLASH, delaiCarteFlash } from '../flash';
 import { attenteDes, chrono, pastille } from './commun';
+import { enVolonte } from '../volonte';
 
 const nom = (u: string) => esc(S.joueurs[u]?.prenom ?? '?');
 
@@ -41,7 +42,7 @@ export function ecranFlash(): string {
     return `<h2 class="titre-flash">Dernière chance !</h2>
       ${chrono(f.fin)}
       <p class="consigne-tele">Quelqu’un avait peut-être une mission flash pendant ce jeu… ou fait sa mission principale en douce.</p>
-      <p class="aide">Appuie sur <strong>GRILLÉ !</strong> en bas à droite pour l’accuser. Vu juste : tu lui voles des points. Raté : −2 pts.</p>
+      <p class="aide">Appuie sur <strong>GRILLÉ !</strong> en bas à droite pour l’accuser.${enVolonte() ? '' : ' Vu juste : tu lui voles des points. Raté : −2 pts.'}</p>
       <div class="pile bas">
         ${passe ? '<p class="attente">Rien à signaler. On attend les autres…</p>' : '<button class="bouton discret" data-action="passerGrillage">Rien à signaler</button>'}
         <p class="compte-rien">${uids.filter((u) => ont.includes(u) || (u === S.uid && passe)).length}/${uids.length} ont dit « Rien à signaler »</p>
@@ -64,7 +65,7 @@ export function ecranFlash(): string {
     let bas = '';
     if (f.etape === 'resultat') {
       const ok = f.resultats?.[u];
-      bas = `<p class="verdict-flash ${ok ? 'ok' : 'rate'}">${ok ? `RÉUSSIE · +${POINTS_FLASH} pts` : grillee ? 'GRILLÉE en direct' : 'RATÉE'}</p>`;
+      bas = `<p class="verdict-flash ${ok ? 'ok' : 'rate'}">${ok ? (enVolonte() ? 'RÉUSSIE' : `RÉUSSIE · +${POINTS_FLASH} pts`) : grillee ? 'GRILLÉE en direct' : 'RATÉE'}</p>`;
     } else if (grillee) {
       bas = '<p class="verdict-flash rate">Grillée en direct : ratée</p>';
     } else if (u === S.uid) {

@@ -5,6 +5,7 @@ import { esc } from '../outils';
 import { brouillons } from '../ui';
 import { sequenceGrille } from '../mallow';
 import { VOL_DETECTIVE } from '../score';
+import { enVolonte } from '../volonte';
 import { accusationEnCours, mancheAction, missionsGrillees, peutAccuser, PENALITE_ACCUSATION, PENALITE_MENSONGE, type AccusationListee } from '../accusations';
 import type { MissionTiree } from '../types';
 import { carteMission } from './missions';
@@ -56,7 +57,9 @@ function fenetreAccuser(): string {
     <div class="options deux">${autres.map((u) => `<button class="option ${cible === u ? 'actif rose' : ''}" data-action="choisirAccuse" data-valeur="${u}">${nom(u)}</button>`).join('')}</div>
     <label class="champ"><span>Sa mission (grosse ou flash), à ton avis</span>
       <textarea name="accusation" rows="3" maxlength="160" placeholder="Il essaie de me faire dire « franchement »…">${esc(brouillons.accusation ?? '')}</textarea></label>
-    <p class="aide gauche"><strong>Vu juste</strong> : tu lui voles des points (${VOL_FLASH} pour une mission flash, 3 à 8 pour sa mission principale) et sa mission est ratée. <strong>Raté</strong> : −${PENALITE_ACCUSATION} pts. Une accusation par manche.</p>
+    <p class="aide gauche">${enVolonte()
+      ? '<strong>Vu juste</strong> : sa mission est ratée. Une accusation par manche.'
+      : `<strong>Vu juste</strong> : tu lui voles des points (${VOL_FLASH} pour une mission flash, 3 à 8 pour sa mission principale) et sa mission est ratée. <strong>Raté</strong> : −${PENALITE_ACCUSATION} pts. Une accusation par manche.`}</p>
     <div class="options deux"><button class="option" data-action="fermerAccuser">Annuler</button><button class="option actif rose" data-action="accuser" ${cible ? '' : 'disabled'}>Accuser !</button></div>
   </div></div>`;
 }
@@ -75,7 +78,7 @@ function fenetreProces(): string {
     const vol = a.mission ? (a.mission.numero >= 100 ? VOL_FLASH : VOL_DETECTIVE[a.mission.difficulte]) : 0;
     return `<div class="proces grille" role="alert"><div class="proces-carte">
       <div class="moment-grille">${sequenceGrille(130)}<p class="titre-grille">GRILLÉ !</p></div>
-      <p class="proces-verdict"><strong>${nom(a.de)}</strong> a grillé <strong>${nom(a.cible)}</strong> : +${vol} pts pour ${nom(a.de)}, −${vol} pts pour ${nom(a.cible)}.</p>
+      <p class="proces-verdict"><strong>${nom(a.de)}</strong> a grillé <strong>${nom(a.cible)}</strong>${enVolonte() ? ' !' : ` : +${vol} pts pour ${nom(a.de)}, −${vol} pts pour ${nom(a.cible)}.`}</p>
       ${a.mission ? `<p class="aide">${a.mission.numero >= 100 ? 'Sa mission flash' : 'Sa mission principale'} est ratée : « ${esc(a.mission.texte)} »</p>` : ''}
     </div></div>`;
   }
@@ -84,7 +87,7 @@ function fenetreProces(): string {
     return `<div class="proces rate" role="alert"><div class="proces-carte">
       <p class="proces-titre">RATÉ !</p>
       ${enTete(a)}
-      <p class="proces-verdict">${nonConvaincu ? 'Le groupe n’est pas convaincu.' : `${nom(a.cible)} dit que ce n’est pas ça.`} ${nom(a.de)} perd ${PENALITE_ACCUSATION} pts.</p>
+      <p class="proces-verdict">${nonConvaincu ? 'Le groupe n’est pas convaincu.' : `${nom(a.cible)} dit que ce n’est pas ça.`} ${enVolonte() ? '' : `${nom(a.de)} perd ${PENALITE_ACCUSATION} pts.`}</p>
       ${nonConvaincu ? '' : '<p class="aide">S’il a menti, ça se verra à la révélation…</p>'}
     </div></div>`;
   }
@@ -115,7 +118,7 @@ function fenetreProces(): string {
            ${actives.map(({ numero, mission }) => `<p class="intitule">${intituleMission(numero)}</p>${carteMission(mission, { secret: true, bouton: `<button class="bouton rose" data-action="repondreAccusation" data-valeur="eu" data-numero="${numero}">Il m’a eu</button>` })}`).join('')}`
         : '<p class="aide gauche">Tu n’as pas de mission en cours : forcément, c’est raté !</p>'}
       <button class="bouton vert" data-action="repondreAccusation" data-valeur="rate">Raté, ce n’est pas ça</button>
-      <p class="aide">Si tu réponds « Raté » alors que c’est juste, ça se verra à la fin : −${PENALITE_MENSONGE} pts.</p>
+      <p class="aide">Si tu réponds « Raté » alors que c’est juste, ça se verra à la fin${enVolonte() ? '.' : ` : −${PENALITE_MENSONGE} pts.`}</p>
     </div></div>`;
   }
   return `<div class="proces" role="status"><div class="proces-carte">

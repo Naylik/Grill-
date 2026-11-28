@@ -6,13 +6,14 @@ import type { MissionTiree } from '../types';
 import { attenteDes, bulle } from './commun';
 import { maFlashEnCours } from './flash';
 import { POINTS_FLASH } from '../flash';
+import { enVolonte } from '../volonte';
 
 const ETIQUETTE_TYPE = { vie: 'Vie réelle', jeu: 'Dans les mini-jeux' } as const;
 const NIVEAU = { facile: 'Facile', difficile: 'Difficile', longue: 'Longue durée' } as const;
 
 export function carteMission(m: MissionTiree, opts: { secret?: boolean; bouton?: string } = {}): string {
   return `<article class="mission ${m.difficulte}">
-    <div class="tags">${m.vengeance ? '<span class="tag vengeance">Vengeance ×1,5</span>' : ''}<span class="tag">${NIVEAU[m.difficulte]} · ${pointsGrosse(m.difficulte, S.infos?.duree ?? 6, m.vengeance)} pts</span><span class="tag discret">${ETIQUETTE_TYPE[m.type]}</span></div>
+    <div class="tags">${m.vengeance ? '<span class="tag vengeance">Vengeance ×1,5</span>' : ''}<span class="tag">${NIVEAU[m.difficulte]}${enVolonte() ? '' : ` · ${pointsGrosse(m.difficulte, S.infos?.duree ?? 6, m.vengeance)} pts`}</span><span class="tag discret">${ETIQUETTE_TYPE[m.type]}</span></div>
     ${opts.secret
       ? `<p class="texte-secret" data-appui>${esc(m.texte)}</p><p class="aide">Appuie longtemps pour lire</p>`
       : `<p class="texte-mission">${esc(m.texte)}</p>`}
@@ -89,7 +90,7 @@ export function ongletMissions(): string {
   return `<section class="ecran">
     <h2>Mes missions</h2>
     ${alerteVengeance()}
-    ${flash ? `<p class="intitule">⚡ Mission flash (ce jeu)</p><article class="mission flash"><div class="tags"><span class="tag eclair">Flash · +${POINTS_FLASH} pts</span></div><p class="texte-secret" data-appui>${esc(flash.texte)}</p><p class="aide">Appuie longtemps pour lire</p></article>` : ''}
+    ${flash ? `<p class="intitule">⚡ Mission flash (ce jeu)</p><article class="mission flash"><div class="tags"><span class="tag eclair">Flash${enVolonte() ? '' : ` · +${POINTS_FLASH} pts`}</span></div><p class="texte-secret" data-appui>${esc(flash.texte)}</p><p class="aide">Appuie longtemps pour lire</p></article>` : ''}
     ${liste.length ? liste.map((m, i) => `<p class="intitule">${i === 0 ? 'Mission principale (toute la soirée)' : 'Mission 2'}</p>${carteMission(m, { secret: true })}`).join('') : '<p class="attente">Pas encore de mission. Elle arrive au début de la partie.</p>'}
     ${flash ? '' : '<p class="aide">Pendant les jeux, tu peux recevoir une mission flash : ton téléphone vibre.</p>'}
   </section>`;

@@ -27,6 +27,10 @@ export interface Infos {
   /** Saison choisie par l'hôte (facultatif). */
   saison?: string;
   nomSaison?: string;
+  /** Mode de jeu : la soirée classique (par défaut) ou « À volonté » (un mini-jeu choisi, rejoué sans fin, sans points). */
+  mode?: 'soiree' | 'volonte';
+  /** À volonté : missions secrètes activées (par défaut oui). */
+  missions?: boolean;
   /** Mémoire du groupe sans saison : contenus déjà joués dans ce salon (survit à « Rejouer »). */
   memoire?: Record<string, boolean>;
 }

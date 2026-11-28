@@ -6,6 +6,7 @@ import { localJeu } from '../memoireJeu';
 import { VOL_FLASH } from '../flash';
 import { totalFinal, VOL_DETECTIVE } from '../score';
 import { videoPossible } from '../formatVideo';
+import { enVolonte } from '../volonte';
 import type { DonneesMoment, DonneesRecap, JoueurVideo } from '../video';
 
 const joueur = (u: string): JoueurVideo => ({ prenom: S.joueurs[u]?.prenom ?? '?', couleur: S.joueurs[u]?.couleur ?? '#fff' });
@@ -117,7 +118,8 @@ let finVueLe = 0;
  */
 export function videosAutomatiques(): void {
   const d = S.deroule;
-  if (ouvert || !S.code || !d) return;
+  // À volonté : pas de vidéo (le récap et les temps forts parlent de points et de podium).
+  if (ouvert || !S.code || !d || enVolonte()) return;
   if (d.phase === 'fin' && d.bilan) {
     finVueLe ||= Date.now();
     if (!localJeu['video-recap'] && Date.now() - finVueLe >= ATTENTE_RECAP) {
